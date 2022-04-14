@@ -260,8 +260,8 @@ section .title::before{
     border-radius: 10px;
  }
  #black-icon:hover{
-  -webkit-filter: drop-shadow(0 0 10px  #000000);
-  filter: drop-shadow(0 0 10px #000000);
+  -webkit-filter: drop-shadow(0 0 20px  #000000);
+  filter: drop-shadow(0 0 20px #ffffff);
 }
 
  #git-icon:hover{
