@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+		<link rel="stylesheet" href="./assets/css/style.css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js" integrity="sha512-3J8teBiHrSyaaRBajZyIEtpDsXdPq1gsznKWIVb5CnorQuFhjWGhWe54z8YNnHHr7MZuExb9m5kvf964HiT1Sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script src="./assets/js/script.js"></script>
+		<script src="https://unpkg.com/aos@next/dist/aos.js">
+		</script>
+		<script>
+		AOS.init({
+			easing: 'ease-in',
+			delay: 100,
+			duration: 300,
+			offset: 100
+		});
+		window.addEventListener('load', AOS.refresh);
+		</script>
+		<script>
+		window.onscroll = function() {
+			var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+			var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+			var scrolled = (winScroll / height) * 100;
+			document.getElementById("myBar").style.width = scrolled + "%";
+		};
+		</script>
+		<!-- FONT AWESOME -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+		<title> Anish Shobith's Website </title>
+	</head>
+
+<body>
+	<section class="home" id="home">
+		<div class="max-width">
+			<div class="home-content">
+				<div class="text-1" data-aos="fade-up">Hello, my name is</div>
+				<div class="text-2">Anish Shobith P S</div>
+				<div class="text-3">Im a <span class="typing"></span></div>
+				<div class="socials" id="socials">
+					<a href="https://linkedin.com/in/anish-shobith-p-s-869433207"> <i class="fab fa-linkedin fa-4x" id="black-icon" data-aos="flip-left"> </i></a>
+					<a href="https://github.com/Anish-Shobith"> <i class="fab fa-github fa-4x" id="black-icon" data-aos="flip-left"> </i></a>
+					<a href="https://discord.gg/H5NQcKJEa7"> <i class="fab fa-discord fa-4x" id="black-icon" data-aos="flip-left"> </i></a>
+					<a href="https://instagram.com/anish_shobith"> <i class="fab fa-instagram fa-4x" id="black-icon" data-aos="flip-left"> </i></a>
+					<a href="https://open.spotify.com/user/goshcrm0y9jzum2lffvu6f4hz"> <i class="fab fa-spotify fa-4x" id="black-icon" data-aos="flip-left"> </i></a>
+					<a href="https://stackoverflow.com/users/11995214"> <i class="fab fa-stack-overflow fa-4x" id="black-icon" data-aos="flip-left"> </i></a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="about" id="about">
+		<div class="max-width">
+			<h2 class="title" data-aos="fade-down">About Me</h2>
+			<div class="about-content">
+				<div class="column left" data-aos="fade-right"> <img src="https://static.wixstatic.com/media/5b9a0d_0e9d2bdf9e1d47f4b9d4abdb43204105~mv2.jpg/v1/crop/x_0,y_72,w_637,h_496/fill/w_456,h_355,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/anish.jpg" alt="" /> </div>
+				<div class="column right" data-aos="fade-up">
+					<div class="text"> I'm Anish Shobith and I'm Proficent in <span class="typing-2"></span> </div>
+					<p class="paragraph"> something </p>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="skills" id="skills">
+		<div class="max-width" data-aos="fade-down">
+			<h2 class="title" data-aos="fade-up">My Skills</h2>
+			<div class="skills-content">
+				<div class="column left">
+					<div class="text"> My creative skills & experiences. </div>
+					<p class="paragraph-2"> something </div>
+				<div class="column right skill-box">
+					<div class="icons"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/c.svg" alt="c" id="c-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/cpp.svg" alt="cpp" id="cpp-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/elixir.svg" alt="elixir" id="elixir-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/html.svg" alt="html" id="html-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/javascript.svg" alt="javascript" id="js-icon" data-aos="flip-left"> </div>
+					<div class="icons"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/typescript.svg" alt="typescript" id="ts-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/languages/ruby.svg" alt="ruby" id="ruby-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/docker.svg" alt="docker" id="vscode-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/git.svg" alt="git" id="git-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/googlecloud.svg" alt="googlecloud" id="gc-icon" data-aos="flip-left"> </div>
+					<div class="icons"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/heroku.svg" alt="heroku" id="elixir-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/intellij.svg" alt="intellij" id="ruby-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/linux.svg" alt="linux" id="linux-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/nodejs.svg" alt="node.js" id="nodejs-icon" data-aos="flip-left"> 
+						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/visualstudiocode.svg" alt="vsc" id="vscode-icon" data-aos="flip-left"> </div>
+	</section>
+	<footer>
+		<div class="text-center"> <span>
+        Created By <a href="#"> Anish Shobith P S </a> | <span class="far fa-copyright"> </span>
+			<script>
+			document.write(new Date().getFullYear())
+			</script> All rights reserved.
+			</span>
+		</div>
+	</footer>
+</body>
+</html>
