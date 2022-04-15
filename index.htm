@@ -93,10 +93,11 @@
 						<img width="75px" src="https://raw.githubusercontent.com/Anish-Shobith/Anish-Shobith/master/assets/tools/visualstudiocode.svg" alt="vsc" id="vscode-icon" data-aos="flip-left"> </div>
 	</section>
 	<footer>
-		<div class="text-center"> <span>
-        Created By <a href="#"> Anish Shobith P S </a> | <span class="far fa-copyright"> </span>
+		<div class="text-center" id="footer">
+			<span>
 			<script>
-			document.write(new Date().getFullYear())
+			var div = document.getElementById("footer");
+			div.innerHTML = ['Created By <a href="#"> <font color = "25e70c"> Anish Shobith P S </font> </a> | <span class="far fa-copyright"> </span>', new Date().getFullYear()].join(" ");
 			</script> All rights reserved.
 			</span>
 		</div>
@@ -121,7 +122,5 @@
 		document.getElementById("myBar").style.width = scrolled + "%";
 	};
 	</script>
-
-
 </body>
 </html>
