@@ -9,11 +9,6 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 		<link rel="stylesheet" href="./assets/css/style.css">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js" integrity="sha512-3J8teBiHrSyaaRBajZyIEtpDsXdPq1gsznKWIVb5CnorQuFhjWGhWe54z8YNnHHr7MZuExb9m5kvf964HiT1Sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<script src="./assets/js/script.js"></script>
 		<!-- FONT AWESOME -->
 		<title> Anish Shobith's Website </title>
 	</head>
@@ -97,7 +92,7 @@
 			<span>
 			<script>
 			var div = document.getElementById("footer");
-			div.innerHTML = ['Created By <a href="#"> <font color = "25e70c"> Anish Shobith P S </font> </a> | <span class="far fa-copyright"> </span>', new Date().getFullYear()].join(" ");
+			div.innerHTML = ['Created By <a href="#"> <font color = "25e70c"> Anish Shobith P S </font> </a> | <span class="far fa-copyright"> </span>', new Date().getFullYear(), "All rights reserved."].join(" ");
 			</script> All rights reserved.
 			</span>
 		</div>
@@ -114,13 +109,10 @@
 	});
 	window.addEventListener('load', AOS.refresh);
 	</script>
-	<script>
-	window.onscroll = function() {
-		var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-		var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-		var scrolled = (winScroll / height) * 100;
-		document.getElementById("myBar").style.width = scrolled + "%";
-	};
-	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js" integrity="sha512-3J8teBiHrSyaaRBajZyIEtpDsXdPq1gsznKWIVb5CnorQuFhjWGhWe54z8YNnHHr7MZuExb9m5kvf964HiT1Sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="./assets/js/script.js"></script>
 </body>
 </html>

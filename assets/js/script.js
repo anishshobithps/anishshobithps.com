@@ -21,19 +21,9 @@ $(document).ready(function () {
         
     });
     var typed = new Typed(".typing-2",{
-        strings: ["JavaScript","TypeScript","C","C++", "HTML", "Heroku", "Git", "Github"],
+        strings: ["JavaScript", "TypeScript", "C", "C++", "HTML", "Git", "Github"],
         typeSpeed: 100,
         backSpeed: 60,
         loop: true,
-    });
-});
-
-// Scroll to top button script
-const btnScrollToTop = document.querySelector("#btnScrollToTop");
-    btnScrollToTop.addEventListener("click", function() {
-        window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth"
     });
 });
