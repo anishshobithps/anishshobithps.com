@@ -1,11 +1,22 @@
 <script>
 	import { ProgramingLanguagesAndTools } from "../scripts/constants";
+	
+	function preload(src) {
+  		return new Promise(function(resolve) {
+    	let img = new Image()
+    	img.onload = resolve
+    	img.src = src
+  	});
+}
+let src = "https://cdn.jsdelivr.net/gh/Anish-Shobith/website/assets/images/anish.webp";
 </script>
 
 <div class="about-flex">
 	<div>
 		<div style="padding-right: 20px;">
-			<div class="pfp cursor-pointer"/>
+			{#await preload(src) then _}
+  			<img class="pfp" {src} alt="Not Rick Astley">
+		{/await}
 		</div>
 	</div>
 
@@ -38,10 +49,8 @@
 		width: 300px;
 		height: 300px;
 		border-radius: 6px;
-		background: url('https://cdn.jsdelivr.net/gh/Anish-Shobith/website/assets/images/anish.webp') no-repeat;
 		background-size: cover;
 	}
-
 	.text {
 		opacity: .85;
 		font-size: 18px;
