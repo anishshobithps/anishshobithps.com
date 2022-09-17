@@ -20,7 +20,7 @@
 		<div class="flex flex-wrap" style="margin-top: 8px;">
 			{#each ProgramingLanguagesAndTools as thing}
 				<img 
-					src="https://raw.githubusercontent.com/devicons/devicon/master/icons/{thing[0]}/{thing[0]}-{thing[1]}.svg"
+					src="https://cdn.statically.io/gh/devicons/devicon/master/icons/{thing[0]}/{thing[0]}-{thing[1]}.svg"
 					draggable="false" 
 					alt={thing[0]} 
 					width=70 
