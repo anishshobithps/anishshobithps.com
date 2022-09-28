@@ -46,7 +46,7 @@ let src = "https://cdn.jsdelivr.net/gh/Anish-Shobith/website/assets/images/anish
 
 <style>
 	.pfp {
-		width: 300px;
+		width: 400px;
 		height: 300px;
 		border-radius: 6px;
 		background-size: cover;
