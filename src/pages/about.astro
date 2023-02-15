@@ -1,0 +1,52 @@
+---
+import { SITE } from '~/ts/config';
+import Layout from '~/layouts/PageLayout.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Tech from '~/components/widgets/Tech.astro';
+
+import { technologies } from '~/ts/data'; 
+
+const meta = {
+  title: 'About',
+  description: SITE.description,
+};
+
+---
+
+<Layout {meta}>
+  <Steps
+  title="About me"
+  items={[
+    {
+      title: 'Student',
+      description: 'I am studying Computer Science Engineering at <a class="text-accent dark:text-purple-500 highlight" href="https://sjec.ac.in" aria-label="SJEC website"> SJEC</a>',
+      icon: 'mdi:work',
+    },
+    {
+      title: 'Open Source',
+      description:
+        'I enjoy contributing to open source and am a fan of FOSS.',
+      icon: 'ri:open-source-fill',
+    },
+    {
+      title: 'Expirements',
+      description: 'I also enjoy experimenting with cutting-edge technology.',
+      icon: 'mdi:test-tube',
+    },
+    {
+      title: 'Thank you for reading!',
+      icon: 'cil:mood-very-good',
+    },
+  ]}
+  image={{ src: import('~/assets/images/me.jpg'), alt: 'My picture' }}
+  />
+  <section class="mx-24 pb-10">
+    <h1 class="mb-6 text-3xl md:text-4xl font-semibold">Tech Stack</h1>
+    <p>I enjoy learning about new libraries and frameworks. Here is a list of technologies that I am learning and implementing in my side projects.</p>
+    <ul class="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 mt-7">
+      {
+        technologies.map((tech) => <Tech logo={tech.logo} text={tech.text} />)
+      }
+    </ul>
+  </section>
+</Layout>

@@ -1,0 +1,10 @@
+---
+import { Card } from '~/components/widgets/Card'
+const { title } = Astro.props
+---
+<Card as="li">
+  <Card.Title>
+    {title}
+  </Card.Title>
+    <slot />
+</Card>

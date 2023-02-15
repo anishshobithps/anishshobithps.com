@@ -1,0 +1,103 @@
+---
+import { Icon } from 'astro-icon';
+import { Picture } from '@astrojs/image/components';
+import { SocialLinks } from '~/ts/data';
+
+interface Resume {
+  text: string;
+  href: string;
+  icon?: string;
+}
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  page?: string | Resume;
+  image?: string | any;
+}
+
+const {
+  page = await Astro.slots.render('page'),
+  image = await Astro.slots.render('image'),
+} = Astro.props;
+---
+<div class="w-full py-16 flex flex-col items-center space-y-8 shadow-inner">
+    <div class="bg-[#e8dede] dark:bg-zinc-700 drop-shadow-2xl duration-500 hover:drop-shadow-none p-2 mb-8 rounded-full">
+      {image && (
+        <div class="relative m-auto max-w-5xl">
+          {typeof image === "string" ? (
+            <Fragment set:html={image} />
+          ) : (
+            <Picture
+              class="w-128 h-128 sm:w-128 sm:h-128 rounded-full"
+              widths={[400, 768, 1024, 2040]}
+              sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+              aspectRatio={600 / 600}
+              loading="eager"
+              width={192}
+              height={192}
+              {...image}
+            />
+          )}
+        </div>
+      )}
+    </div>
+    <h2 class="text-5xl font-bold text-center inactive">
+        <span class="text-accent dark:text-purple-500 highlight link-underline">Anish</span> Shobith P S
+    </h2>
+    <p class="text-2xl text-center font-semibold mx-8 inactive">
+        Computer Science Student. Software Developer
+    </p>
+
+    <div class="inactive max-w-xs sm:max-w-md m-auto flex flex-col sm:flex-row sm:justify-center gap-4 lg:justify-start lg:m-0 lg:max-w-7xl">
+      {
+        SocialLinks && (
+          SocialLinks.map(social => (
+            <a href={social.url} aria-label={social.name} target="_blank" rel="noopener">
+              <Icon name={`socials/${social.name}`} class="h-8" />
+            </a>
+          ))
+        )
+      }
+    </div>
+    <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 lg:justify-start lg:m-0 lg:max-w-7xl">
+      {
+        page && (
+        <div class="flex w-full sm:w-auto">
+          {typeof page === "string" ? (
+            <Fragment set:html={page} />
+          ) : (
+            <a
+              class="btn btn-primary sm:mb-0 w-full"
+              href={page?.href}
+            >
+              {page?.icon && (
+                <>
+                  <Icon name={page.icon} class="w-5 h-5 mr-1 -ml-1.5" />{" "}
+                </>
+              )}
+              {page?.text}
+            </a>
+          )}
+        </div>
+      )
+    }
+    </div>
+</div>
+
+<style>
+	.link-underline {
+		border-bottom-width: 0;
+		background-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+		background-size: 0 3px;
+		background-position: 0 100%;
+		background-repeat: no-repeat;
+		transition: background-size .5s ease-in-out;
+	}
+
+	.link-underline:hover {
+		background-size: 100% 3px;
+		background-position: 0 100%
+	}
+
+</style>

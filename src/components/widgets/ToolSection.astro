@@ -1,0 +1,14 @@
+---
+import type { Props as SectionProps } from '~/components/widgets/Section.astro'
+import Section from '~/components/widgets/Section.astro'
+
+interface Props extends SectionProps {}
+
+const { props } = Astro
+---
+
+<Section {...props}>
+  <ul role="list" class="space-y-4">
+    <slot />
+  </ul>
+</Section>

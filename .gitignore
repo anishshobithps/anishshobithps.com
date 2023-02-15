@@ -102,19 +102,10 @@ dist
 
 # TernJS port file
 .tern-port
-# Yarn files
-.yarn/install-state.gz
-.yarn/build-state.yml
 
-# Build Artifacts
-dist/
-# build/
-docs/
-test_out/
-*.tsbuildinfo
-*.zip
-*.tar
-*.tar.xz
-*.tar.gz
-*.7z
-*.rar
+# .yarn
+.yarn/cache/
+.yarn/install-state.gz
+
+# Jampack
+.jampack/
