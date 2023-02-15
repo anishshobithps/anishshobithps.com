@@ -1,6 +1,5 @@
 {
-  "name": "gdsc-website",
-  "packageManager": "yarn@3.4.1",
+  "name": "anish-shobith",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
