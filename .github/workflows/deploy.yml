@@ -3,29 +3,23 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v3
-      - name: Install, build, and upload your site
-        uses: withastro/action@v0
+    name: Node v${{ matrix.node-version }} - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [18.x]
+        os: [ubuntu-latest]
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+    - uses: actions/checkout@v2
+
+    - name: Install and Build
+      run: yarn && yarn run build	
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@4.1.5
+      with:
+        branch: gh-pages
+        folder: public
