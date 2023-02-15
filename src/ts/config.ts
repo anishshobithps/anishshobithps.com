@@ -1,4 +1,4 @@
-import defaultImage from '~/assets/images/defaul.png';
+import defaultImage from '../assets/images/default.png';
 
 const CONFIG = {
   name: 'Anish Shobith P S',
