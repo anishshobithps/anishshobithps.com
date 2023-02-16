@@ -24,7 +24,7 @@ jobs:
 
       - name: yarn install and build
         run: |
-          yarn install
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
           yarn build
 
       - name: Save page
