@@ -16,7 +16,7 @@ const {
   title = 'The gear I own',
   subtitle = 'If you’re like me and you enjoy geeking out over tech, setups, software, equipment and all that then you’re probably curious what I use.',
   highlight,
-  image = { src: import('~/assets/images/setup.jpg'), alt: 'My setup' },
+  image = { src: import('~/assets/images/setup.webp'), alt: 'My setup' },
 } = Astro.props;
 ---
 <Layout {meta}>
@@ -56,6 +56,7 @@ const {
               class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
               width={500}
               height={500}
+              loading={"eager"}
               widths={[400, 768]}
               sizes="(max-width: 768px) 100vw, 432px"
               aspectRatio="1:1"

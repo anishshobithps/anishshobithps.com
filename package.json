@@ -13,13 +13,13 @@
   "devDependencies": {
     "@astrojs/image": "^0.14.0",
     "@astrojs/preact": "^2.0.3",
-    "@astrojs/react": "^2.0.2",
     "@astrojs/tailwind": "^3.0.1",
     "@astrolib/seo": "^0.3.0",
     "@babel/eslint-parser": "^7.19.1",
     "@divriots/jampack": "0.8.1",
     "@fontsource/inter": "^4.5.15",
     "@tailwindcss/typography": "^0.5.9",
+    "@types/babel__core": "^7.20.0",
     "@types/eslint": "^8",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2",
@@ -43,5 +43,6 @@
     "svgo": "2.8.0",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.9.5"
-  }
+  },
+  "packageManager": "yarn@3.4.1"
 }

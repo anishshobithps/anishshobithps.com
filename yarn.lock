@@ -125,21 +125,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/react@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@astrojs/react@npm:2.0.2"
-  dependencies:
-    "@babel/core": ">=7.0.0-0 <8.0.0"
-    "@babel/plugin-transform-react-jsx": ^7.17.12
-  peerDependencies:
-    "@types/react": ^17.0.50 || ^18.0.21
-    "@types/react-dom": ^17.0.17 || ^18.0.6
-    react: ^17.0.2 || ^18.0.0
-    react-dom: ^17.0.2 || ^18.0.0
-  checksum: af7738b435bc233db42b632b1256cf897a17499813a41027bc0564e52db88441eac03474e2c2650bdd907fd80a78db19c58293bfefee533dcb0e1c4c1f39e9e8
-  languageName: node
-  linkType: hard
-
 "@astrojs/tailwind@npm:^3.0.1":
   version: 3.0.1
   resolution: "@astrojs/tailwind@npm:3.0.1"
@@ -1150,7 +1135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__core@npm:^7.1.19":
+"@types/babel__core@npm:^7.1.19, @types/babel__core@npm:^7.20.0":
   version: 7.20.0
   resolution: "@types/babel__core@npm:7.20.0"
   dependencies:
@@ -1677,13 +1662,13 @@ __metadata:
   dependencies:
     "@astrojs/image": ^0.14.0
     "@astrojs/preact": ^2.0.3
-    "@astrojs/react": ^2.0.2
     "@astrojs/tailwind": ^3.0.1
     "@astrolib/seo": ^0.3.0
     "@babel/eslint-parser": ^7.19.1
     "@divriots/jampack": 0.8.1
     "@fontsource/inter": ^4.5.15
     "@tailwindcss/typography": ^0.5.9
+    "@types/babel__core": ^7.20.0
     "@types/eslint": ^8
     "@types/node": ^18.11.18
     "@types/prettier": ^2
