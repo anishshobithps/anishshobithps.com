@@ -3,7 +3,9 @@ import { SITE } from '~/ts/config';
 import Layout from '~/layouts/PageLayout.astro';
 
 import Hero from '~/components/widgets/Hero.astro';
+import About from '~/components/content/About.astro';
 import { getPermalink } from '~/ts/utils';
+import Gear from '~/components/content/Gear.astro';
 
 const meta = {
   title: SITE.title,
@@ -17,4 +19,6 @@ const meta = {
     image={{ src: import('~/assets/images/me.webp'), alt: 'My Picture'}}
     page={{ text: 'About Me', href: getPermalink('/about') }}
   />
+  <About />
+  <Gear />
 </Layout>

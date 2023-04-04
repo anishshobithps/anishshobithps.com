@@ -1,16 +1,8 @@
 ---
-import { SITE } from '~/ts/config';
-import Layout from '~/layouts/PageLayout.astro';
 import { Picture } from '@astrojs/image/components';
-
 import { gear } from '~/ts/data';
 import Tool from '~/components/widgets/Tool.astro';
 import ToolsSection from '~/components/widgets/ToolSection.astro';
-
-const meta = {
-  title: 'Gear',
-  description: SITE.description,
-};
 
 const {
   title = 'The gear I own',
@@ -19,8 +11,8 @@ const {
   image = { src: import('~/assets/images/setup.webp'), alt: 'My setup' },
 } = Astro.props;
 ---
-<Layout {meta}>
-<section class='py-16 md:py-20'>
+<div id="gear">
+<section class="py-16 md:py-20">
   <div class="max-w-xl sm:mx-auto lg:max-w-2xl">
     {
       (title || subtitle || highlight) && (
@@ -45,39 +37,37 @@ const {
     }
   </div>
   <div class="space-x-10 space-y-20">
-  <div aria-hidden="true" class="mt-10 md:mt-0">
-    {
-      image && (
-        <div class="relative m-auto max-w-4xl">
-          {typeof image === 'string' ? (
-            <Fragment set:html={image} />
-          ) : (
-            <Picture
-              class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
-              width={500}
-              height={500}
-              loading={"eager"}
-              widths={[400, 768]}
-              sizes="(max-width: 768px) 100vw, 432px"
-              aspectRatio="1:1"
-              {...image}
-            />
-          )}
-        </div>
-      )
-    }
-  </div>
+    <div aria-hidden="true" class="mt-10 md:mt-0">
+      {
+        image && (
+          <div class="relative m-auto max-w-4xl">
+            {typeof image === 'string' ? (
+              <Fragment set:html={image} />
+            ) : (
+              <Picture
+                class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
+                width={500}
+                height={500}
+                loading={'eager'}
+                widths={[400, 768]}
+                sizes="(max-width: 768px) 100vw, 432px"
+                aspectRatio="1:1"
+                {...image}
+              />
+            )}
+          </div>
+        )
+      }
+    </div>
     {
       gear.map(({ name, items }) => (
         <ToolsSection title={name}>
-          {
-            items.map(item => (
-              <Tool title={item} />
-            ))
-          }  
+          {items.map((item) => (
+            <Tool title={item} />
+          ))}
         </ToolsSection>
       ))
     }
-    </div>
-  </section>
-</Layout>
+  </div>
+</section>
+</div>

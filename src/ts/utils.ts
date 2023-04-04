@@ -30,8 +30,8 @@ const formatter =
 export const getFormattedDate = (date: Date) => (date ? formatter.format(date) : '');
 
 export const trim = (str = '', ch?: string) => {
-  let start = 0,
-    end = str.length || 0;
+  let start = 0;
+  let end = str.length || 0;
   while (start < end && str[start] === ch) ++start;
   while (end > start && str[end - 1] === ch) --end;
   return start > 0 || end < str.length ? str.substring(start, end) : str;
@@ -44,7 +44,7 @@ const createPath = (...params: string[]) => {
     .map((el) => trimSlash(el))
     .filter((el) => !!el)
     .join('/');
-  return '/' + paths + (SITE.trailingSlash && paths ? '/' : '');
+  return `/${paths}${(SITE.trailingSlash && paths ? '/' : '')}`;
 };
 
 const BASE_PATHNAME = SITE.basePathname;
@@ -78,11 +78,10 @@ export const getHomePermalink = (): string => getPermalink('/');
 
 
 export const getAsset = (path: string): string =>
-  '/' +
-  [BASE_PATHNAME, path]
+  `/${[BASE_PATHNAME, path]
     .map((el) => trimSlash(el))
     .filter((el) => !!el)
-    .join('/');
+    .join('/')}`;
 
 const definitivePermalink = (permalink: string): string => createPath(BASE_PATHNAME, permalink);
 
@@ -96,9 +95,12 @@ const load = async function () {
     return images;
 };
   
+
+// @ts-expect-error _images is not defined
 let _images;
 
 export const fetchLocalImages = async () => {
+    // @ts-expect-error _images is not defined
     _images = _images || load();
     return await _images;
 };

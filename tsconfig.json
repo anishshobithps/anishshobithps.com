@@ -1,7 +1,6 @@
 {
-  "extends": "astro/tsconfigs/base",
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": false,
     "strictNullChecks": true,
     "allowJs": true,
     "baseUrl": ".",

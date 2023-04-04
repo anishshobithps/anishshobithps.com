@@ -85,7 +85,7 @@ export const headerData = {
   links: [
     {
       text: 'About',
-      href: getPermalink('/about'),
+      href: getPermalink('#about'),
     },
     // {
     //   text: 'Projects',
@@ -93,7 +93,7 @@ export const headerData = {
     // },
     {
       text: 'Gear',
-      href: getPermalink('/gear'),
+      href: getPermalink('#gear'),
     },
     // {
     //   text: 'Contact',

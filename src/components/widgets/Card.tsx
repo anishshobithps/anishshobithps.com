@@ -1,28 +1,16 @@
 import clsx from 'clsx';
 
-export function Card({
-  as: Component = 'div',
-  className = undefined,
-  children,
-}) {
-  return (
-    <Component
-      className={clsx(className, 'group relative flex flex-col items-start')}
-    >
-      {children}
-    </Component>
-  )
+export function Card({ as: Component = 'div', className = undefined, children }) {
+  return <Component className={clsx(className, 'group relative flex flex-col items-start')}>{children}</Component>;
 }
-
-
 
 Card.Title = function CardTitle({ as: Component = 'h2', children }) {
   return (
     <Component className="text-base font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">
       {children}
     </Component>
-  )
-}
+  );
+};
 
 Card.Eyebrow = function CardEyebrow({
   as: Component = 'p',
@@ -40,7 +28,7 @@ Card.Eyebrow = function CardEyebrow({
       )}
       {...props}
     >
-    {children}
+      {children}
     </Component>
-  )
-}
+  );
+};
