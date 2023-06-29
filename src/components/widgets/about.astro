@@ -1,0 +1,117 @@
+---
+import { SITE } from '~/ts/config';
+import Layout from '~/layouts/PageLayout.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import Tech from '~/components/widgets/Tech.astro';
+import AboutCard from '~/components/widgets/AboutCard.astro';
+
+import { technologies } from '~/ts/data';
+
+const meta = {
+  title: 'About',
+  description: SITE.description,
+};
+
+const infos = [
+  {
+    title: '📚 Education',
+    content: [
+      {
+        msg: 'Computer Science and Engineering (2020 - present)',
+      },
+    ],
+  },
+  {
+    title: '👔 Work Experience',
+    content: [
+      {
+        msg: 'Freelance Developer (2018 - present)',
+      },
+      {
+        msg:'Software Developer Intern at Akto (2023 - present)'
+      }
+    ],
+  },
+  {
+    title: '🏅 Certificates',
+    content: [
+      {
+        href: 'https://coursera.org/share/13bd38af98d908a64da1a17546c6ef26',
+        msg: 'Crash Course on Python (Google)',
+      },
+      {
+        href: 'https://www.coursera.org/account/accomplishments/certificate/GMPWQPB7A4PH',
+        msg: 'Java Programming: Solving Problems with Software(Coursera)',
+      },
+      {
+        href: 'https://www.coursera.org/account/accomplishments/certificate/YGBENLXQYQEQ',
+        msg: 'Data Structures (Coursera)',
+      },
+      {
+        href: 'https://certificate.givemycertificate.com/c/03343c6f-5b7e-4a6e-9a64-f28c9951c63e',
+        msg: 'DevHost:22 (Sahyadri Open Source Community)',
+      },
+    ],
+  },
+  {
+    title: '💕 Hobbies',
+    content: [
+      {
+        msg: 'Coding - JavaScript, TypeScript, Python, Java, C/C++, Ruby ...',
+      },
+      {
+        msg: "Music - EDM's",
+      },
+      {
+        msg: 'Games - GTA V, Just Cause - 4, Fall Guys ...',
+      },
+    ],
+  },
+];
+---
+
+<Steps
+  title="About me"
+  items={[
+    {
+      title: 'Student',
+      description:
+        'I am studying Computer Science Engineering at <a class="text-accent dark:text-purple-500 highlight" href="https://sjec.ac.in" aria-label="SJEC website"> SJEC</a>',
+      icon: 'mdi:work',
+    },
+    {
+      title: 'Open Source',
+      description: 'I enjoy contributing to open source and am a fan of FOSS.',
+      icon: 'ri:open-source-fill',
+    },
+    {
+      title: 'Expirements',
+      description: 'I also enjoy experimenting with cutting-edge technology.',
+      icon: 'mdi:test-tube',
+    },
+    {
+      title: 'Thank you for reading!',
+      icon: 'cil:mood-very-good',
+    },
+  ]}
+  image={{ src: import('~/assets/images/about.webp'), alt: 'My picture' }}
+/>
+<section class="mx-24 pb-10">
+  <ul class="pt-4 divide-y divide-slate-300 dark:divide-slate-700">
+    {
+      infos.map((info, index) => (
+        <li class="animate-leftslide" style={`animation-delay: ${index * 0.2}s;`}>
+          <AboutCard {...info} />
+        </li>
+      ))
+    }
+  </ul>
+  <h1 class="mb-6 text-3xl md:text-4xl font-semibold">Tech Stack</h1>
+  <p>
+    I enjoy learning about new libraries and frameworks. Here is a list of technologies that I am learning and
+    implementing in my side projects.
+  </p>
+  <ul class="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 mt-7">
+    {technologies.map((tech) => <Tech logo={tech.logo} text={tech.text} />)}
+  </ul>
+</section>

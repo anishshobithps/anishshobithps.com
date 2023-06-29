@@ -1,12 +1,13 @@
 import { getPermalink } from '~/ts/utils';
 
 export const SocialLinks = [
-	{ name: 'linkedin', url: 'https://www.linkedin.com/in/anish-shobith-p-s-869433207'},
-	{ name: 'twitter', url: 'https://twitter.com/anish-shobith'},
-	{ name: 'discord', url: 'https://discord.gg/H5NQcKJEa7'},
-	{ name: 'instagram', url: 'https://www.instagram.com/anish_shobith/'},
-	{ name: 'stackoverflow', url: 'https://stackoverflow.com/users/11995214'},
-	{ name: 'spotify', url: 'https://open.spotify.com/user/goshcrm0y9jzum2lffvu6f4hz'},
+  { name: 'mdi:github', url: 'https://github.com/Anish-Shobith'},
+	{ name: 'mdi:linkedin', url: 'https://www.linkedin.com/in/anish-shobith-p-s-869433207'},
+	{ name: 'mdi:twitter', url: 'https://twitter.com/anish-shobith'},
+	{ name: 'mdi:discord', url: 'https://discord.gg/H5NQcKJEa7'},
+	{ name: 'mdi:instagram', url: 'https://www.instagram.com/anish_shobith/'},
+	{ name: 'tabler:brand-stackoverflow', url: 'https://stackoverflow.com/users/11995214'},
+	{ name: 'mdi:spotify', url: 'https://open.spotify.com/user/goshcrm0y9jzum2lffvu6f4hz'},
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const technologies = [
@@ -85,24 +86,20 @@ export const headerData = {
   links: [
     {
       text: 'About',
-      href: getPermalink('/about'),
+      href: getPermalink('/#about'),
+    },
+    {
+      text: 'Projects',
+      href: getPermalink('/#projects'),
+    },
+    {
+      text: 'Contact',
+      href: getPermalink('/#contact'),
     },
     // {
-    //   text: 'Projects',
-    //   href: getPermalink('/projects'),
+    //   text: 'Gear',
+    //   href: getPermalink('/#gear'),
     // },
-    {
-      text: 'Gear',
-      href: getPermalink('/gear'),
-    },
-    // {
-    //   text: 'Contact',
-    //   href: getPermalink('/contact'),
-    // },
-    {
-      text: 'Github',
-      href: 'https://github.com/Anish-Shobith'
-    }
   ]
 };
 

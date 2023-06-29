@@ -1,0 +1,38 @@
+<script is:inline>
+    class CurrentTimeIST extends HTMLElement {
+      updateTime() {
+        const currentTime = new Date();
+        const options = { timeZone: 'Asia/Kolkata', hour12: true };
+        const formattedTime = currentTime.toLocaleTimeString('en-US', options);
+        this.timeDisplay.innerHTML = formattedTime;
+      }
+  
+      startTimer() {
+        this.updateTime();
+        const timer = setInterval(() => {
+          this.updateTime();
+        }, 1000);
+      }
+  
+      connectedCallback() {
+        this.innerHTML = `
+        <div class="flex justify-center lg:justify-start gap-5">
+          <div>
+            <span class="current-time font-mono text-4xl">
+              <span class="time-display"></span>
+            </span>
+            IST
+          </div> 
+        </div>
+        `;
+        this.timeDisplay = this.querySelector('.time-display');
+        this.startTimer();
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      window.customElements.define('current-time-ist', CurrentTimeIST);
+    });
+  </script>
+  
+  <current-time-ist></current-time-ist>
