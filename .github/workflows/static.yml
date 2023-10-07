@@ -43,7 +43,7 @@ jobs:
         env:
           PUBLIC_EMAILJS_SERVICE_ID: ${{ secrets.PUBLIC_EMAILJS_SERVICE_ID }}
           PUBLIC_EMAILJS_TEMPLATE_ID:  ${{ secrets.PUBLIC_EMAILJS_TEMPLATE_ID }}
-          PUBLIC_EMAILJS_USER_ID: ${{ secrets.PUBLIC_EMAILJS_USER_ID }}
+          PUBLIC_EMAILJS_USER_ID: ${{ secrets. PUBLIC_EMAILJS_USER_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Pages
         uses: actions/configure-pages@v3
