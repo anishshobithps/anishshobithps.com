@@ -4,10 +4,10 @@
 
 @layer base {
   *::-webkit-scrollbar {
-    @apply w-2 h-2 bg-light dark:bg-dark;
+    @apply w-2 h-2 bg-neutral-100 dark:bg-neutral-900;
   }
   *::-webkit-scrollbar-thumb {
-    @apply w-2 h-2 rounded bg-light dark:bg-dark;
+    @apply w-2 h-2 rounded bg-neutral-300 dark:bg-neutral-700;
   }
 }
 
@@ -21,11 +21,11 @@
   }
 
   .bg-light {
-    @apply bg-gradient-to-b from-sky-400 to-sky-200;
+    background-color: var(--aw-color-bg-page);
   }
 
   .bg-dark {
-    @apply bg-gradient-to-b from-gray-900 to-gray-600 bg-gradient-to-r;
+    @apply bg-neutral-900;
   }
 
   
@@ -38,12 +38,12 @@
   }
 
   .btn-primary {
-    @apply font-semibold bg-primary text-sky-400 border-primary hover:bg-zinc-900 hover:border-zinc-900 hover:text-[#e8dede] dark:bg-light dark:bg-light dark:bg-light dark:hover:bg-light dark:hover:bg-light;
+    @apply font-semibold bg-primary text-white border-primary hover:bg-zinc-900 hover:border-zinc-900 hover:text-[#e8dede] dark:text-[#18181b] dark:bg-[#e8dede] dark:border-[#e8dede] dark:hover:border-[#e8dede] dark:hover:bg-[#e8dede];
   }
 }
 
 #header.scroll {
-  @apply shadow-md md:shadow-lg bg-sky-400/90 md:bg-sky-400/90 md:backdrop-blur-sm dark:bg-dark dark:md:bg-gray-900/90;
+  @apply shadow-md md:shadow-lg bg-[#e8dede] md:bg-[#e8dede]/90 md:backdrop-blur-sm dark:bg-neutral-900 dark:md:bg-neutral-900/90;
 }
 
 .dropdown:hover .dropdown-menu {

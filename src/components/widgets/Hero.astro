@@ -1,7 +1,6 @@
 ---
 import { Icon } from 'astro-icon';
 import { Picture } from '@astrojs/image/components';
-import Time from './Time.astro';
 import { SocialLinks } from '~/ts/data';
 
 interface Resume {
@@ -43,22 +42,45 @@ const {
         </div>
       )}
     </div>
-    <h1 class="text-5xl font-bold text-center inactive">
+    <h2 class="text-5xl font-bold text-center inactive">
         <span class="text-accent dark:text-purple-500 highlight">Anish</span> Shobith P S
-    </h1>
+    </h2>
     <p class="text-2xl text-center font-semibold mx-8 inactive">  
         Computer Science Student. Software Developer
     </p>
-    <Time />
+
     <div class="flex flex-row sm:flex-row justify-center items-center sm:items-center gap-10">
       {
         SocialLinks && (
           SocialLinks.map(social => (
             <a href={social.url} aria-label={social.name} target="_blank" rel="noopener">
-              <Icon name={`${social.name}`} class="h-8" />
+              <Icon name={`socials/${social.name}`} class="h-8" />
             </a>
           ))
         )
       }
+    </div>
+    <div class="flex flex-col sm:flex-row">
+      {
+        page && (
+        <div class="flex w-full sm:w-auto">
+          {typeof page === "string" ? (
+            <Fragment set:html={page} />
+          ) : (
+            <a
+              class="btn btn-primary sm:mb-0 w-full"
+              href={page?.href}
+            >
+              {page?.icon && (
+                <>
+                  <Icon name={page.icon} class="w-5 h-5 mr-1 -ml-1.5" />{" "}
+                </>
+              )}
+              {page?.text}
+            </a>
+          )}
+        </div>
+      )
+    }
     </div>
 </div>

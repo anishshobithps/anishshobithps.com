@@ -4,9 +4,6 @@ import Layout from '~/layouts/PageLayout.astro';
 
 import Hero from '~/components/widgets/Hero.astro';
 import { getPermalink } from '~/ts/utils';
-import About from '../components/widgets/about.astro';
-import Contact from '~/components/widgets/Contact.astro';
-import Projects from '~/components/widgets/projects.astro';
 
 const meta = {
   title: SITE.title,
@@ -16,21 +13,8 @@ const meta = {
 ---
 
 <Layout {meta}>
-    <div id="home">
-      <Hero
-        image={{ src: import('~/assets/images/me.webp'), alt: 'My Picture' }}
-        page={{ text: 'About Me', href: getPermalink('/about') }}
-      />
-    </div>
-    <div id="about">
-      <About />
-    </div>
-    <div id="projects">
-      <Projects
-       />
-    </div>
-    <div id="contact">
-      <Contact
-       />
-    </div>
+  <Hero
+    image={{ src: import('~/assets/images/me.webp'), alt: 'My Picture'}}
+    page={{ text: 'About Me', href: getPermalink('/about') }}
+  />
 </Layout>

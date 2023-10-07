@@ -1,8 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  presets: [require('tailwindcss/defaultConfig')],
-  content: ['./src/**/*.{astro,html,js,jsx,md,svelte,ts,tsx,vue}', './node_modules/xtendui/src/*.mjs'],
+  content: ['./src/**/*.{astro,html,js,jsx,md,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
       colors: {
@@ -18,6 +17,6 @@ module.exports = {
     },
   },
   
-  plugins: [require('@tailwindcss/typography'), require("daisyui")],
+  plugins: [require('@tailwindcss/typography')],
   darkMode: 'class',
 };

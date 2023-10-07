@@ -74,7 +74,7 @@ export const getPermalink = (slug = '', type = 'page'): string => {
   return definitivePermalink(permalink);
 };
 
-export const getHomePermalink = (): string => getPermalink('/#home');
+export const getHomePermalink = (): string => getPermalink('/');
 
 
 export const getAsset = (path: string): string =>
