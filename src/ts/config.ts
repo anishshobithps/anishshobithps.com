@@ -2,7 +2,7 @@ import defaultImage from '../assets/images/default.png';
 
 const CONFIG = {
   name: 'Anish Shobith P S',
-  origin: 'https://anishshobithps.is-a.dev',
+  origin: 'https://www.anishshobithps.com',
   basePathname: '/',
   trailingSlash: false,
   title: 'Anish Shobith P S',
