@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon';
-import { Picture } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
+import me from "~/assets/images/about.webp";
 
 interface Item {
   title: string;
@@ -11,17 +12,15 @@ interface Item {
 export interface Props {
   title?: string;
   items: Array<Item>;
-  image?: string | any;
 }
 
 const {
   title = await Astro.slots.render('title'),
   items = [],
-  image = await Astro.slots.render('image'),
 } = Astro.props;
 ---
 
-<section class="px-4 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-6xl">
+<section class="px-6 py-16 sm:px-6 mx-auto lg:px-8 lg:py-20 max-w-6xl">
   <div class="grid gap-6 row-gap-10 md:grid-cols-2">
     <div class="md:py-4 md:pr-16 mb-4 md:mb-0">
       {title && <h2 class="mb-8 text-3xl lg:text-4xl font-bold font-heading" set:html={title} />}
@@ -54,21 +53,13 @@ const {
     </div>
     <div class="relative">
       {
-        image &&
-          (typeof image === 'string' ? (
-            <Fragment set:html={image} />
-          ) : (
-            <Picture
-              class="inset-0 object-cover object-top w-full rounded-md shadow-lg md:absolute md:h-full bg-gray-400 dark:bg-slate-700"
-              widths={[400, 768]}
+            <Image
+              src={me}
+              alt="Image of Anish"
+              class="inset-0 object-cover object-middle w-full rounded-md shadow-lg md:absolute md:h-full bg-gray-400 dark:bg-slate-700"
               sizes="(max-width: 768px) 100vw, 432px"
-              aspectRatio="1:1"
               loading={"eager"}
-              width={432}
-              height={768}
-              {...image}
             />
-          ))
       }
     </div>
   </div>

@@ -1,7 +1,6 @@
 ---
 import { SITE } from '~/ts/config';
 ---
-
 <script is:inline define:vars={{ defaultTheme: SITE.defaultTheme }}>
   function applyTheme(theme) {
     if (theme === 'dark') {
@@ -83,17 +82,4 @@ import { SITE } from '~/ts/config';
     document.getElementById('header')?.classList.remove('h-screen');
     document.querySelector('#header nav')?.classList.add('hidden');
   };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('active');
-      } else {
-        entry.target.classList.remove('active');
-      }
-    });
-  });
-
-  const hiddenElements = document.querySelectorAll('.inactive');
-  hiddenElements.forEach((el) => observer.observe(el));
 </script>

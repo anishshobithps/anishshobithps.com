@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon';
-import { Picture } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
+import me from "~/assets/images/me.webp";
 import { SocialLinks } from '~/ts/data';
 
 interface Resume {
@@ -28,23 +29,23 @@ const {
           {typeof image === "string" ? (
             <Fragment set:html={image} />
           ) : (
-            <Picture
+            <Image
+              src={me}
+              alt="Image of Anish"
               class="w-128 h-128 sm:w-128 sm:h-128 rounded-full"
-              widths={[400, 768, 1024, 2040]}
+              width={[400, 768, 1024, 2040]}
               sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-              aspectRatio={600 / 600}
               loading="eager"
               width={192}
               height={192}
-              {...image}
             />
           )}
         </div>
       )}
     </div>
-    <h2 class="text-5xl font-bold text-center inactive">
+    <h1 class="text-5xl font-bold text-center inactive">
         <span class="text-accent dark:text-purple-500 highlight">Anish</span> Shobith P S
-    </h2>
+    </h1>
     <p class="text-2xl text-center font-semibold mx-8 inactive">  
         Computer Science Student. Software Developer
     </p>

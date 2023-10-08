@@ -1,7 +1,8 @@
 ---
 import { SITE } from '~/ts/config';
 import Layout from '~/layouts/PageLayout.astro';
-import { Picture } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
+import me from "~/assets/images/setup.webp";
 
 import { gear } from '~/ts/data';
 import Tool from '~/components/widgets/Tool.astro';
@@ -52,15 +53,12 @@ const {
           {typeof image === 'string' ? (
             <Fragment set:html={image} />
           ) : (
-            <Picture
+            <Image
+              src={me}
+              alt="My setup"
               class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg"
-              width={500}
-              height={500}
               loading={"eager"}
-              widths={[400, 768]}
               sizes="(max-width: 768px) 100vw, 432px"
-              aspectRatio="1:1"
-              {...image}
             />
           )}
         </div>
