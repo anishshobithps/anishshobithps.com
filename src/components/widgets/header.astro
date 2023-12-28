@@ -1,0 +1,68 @@
+---
+import Link from "@/components/ui/link.astro";
+
+interface NavItem {
+  name: string;
+  href: string;
+}
+
+const nav: NavItem[] = [
+  {
+    name: "Home",
+    href: "/",
+  },
+  {
+    name: "About",
+    href: "/about",
+  },
+  {
+    name: "Projects",
+    href: "/projects",
+  },
+  {
+    name: "Uses",
+    href: "/uses",
+  },
+];
+---
+
+<header
+  class="z-20 w-max fixed top-0 left-1/2 border px-4 py-2 my-8 rounded-full backdrop-blur-md -translate-x-1/2 flex items-center gap-2 right-0"
+>
+  <nav
+    class="capitalize text-xs sm:text-sm flex gap-1 items-center"
+    id="main-nav"
+  >
+    {
+      nav.map(({ name, href }) => (
+        <Link
+          href={href}
+          class="py-2 rounded-full w-20 sm:w-24 text-center aria-[current=true]:bg-secondary transition-colors sm:w-22 aria-[current=true]:backdrop-blur-md hover:bg-accent hover:text-accent-foreground"
+        >
+          {name}
+        </Link>
+      ))
+    }
+  </nav>
+</header>
+
+<script>
+  const mainNav = document.querySelector("#main-nav");
+
+  if (!mainNav) {
+    throw new Error("Main nav not found");
+  }
+
+  const allAnchors = mainNav.querySelectorAll("a");
+
+  const selectCurrentAnchor = () => {
+    const currentPath = window.location.pathname.split("/")[1];
+    allAnchors.forEach((anchor) => {
+      anchor.setAttribute("aria-current", "false");
+      if (anchor.getAttribute("href") === `/${currentPath}`.trim()) {
+        anchor.setAttribute("aria-current", "true");
+      }
+    });
+  };
+  selectCurrentAnchor();
+</script>

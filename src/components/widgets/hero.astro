@@ -1,0 +1,107 @@
+---
+import { Image } from "astro:assets";
+import Strong from "@/components/ui/strong.astro";
+import Link from "@/components/ui/link.astro";
+import { Button } from "@/components/ui/button";
+import ProfileImage from "@/assets/profile.png";
+
+import {
+    Github,
+    Linkedin,
+    Twitter,
+    Instagram,
+    type LucideIcon,
+} from "lucide-react";
+
+interface Social {
+    name: string;
+    href: string;
+    icon: LucideIcon;
+}
+
+const socials: Social[] = [
+    {
+        name: "github",
+        href: "https://www.github.com/anishshobithps",
+        icon: Github,
+    },
+    {
+        name: "linkedin",
+        href: "https://www.linkedin.com/in/anishshobithps",
+        icon: Linkedin,
+    },
+    {
+        name: "twitter",
+        href: "https://twitter.com/anishshobithps",
+        icon: Twitter,
+    },
+    {
+        name: "instagram",
+        href: "https://www.instagram.com/anishshobithps/",
+        icon: Instagram,
+    },
+];
+---
+
+<section
+    id="about"
+    class="pt-[calc(var(--header-height)+3rem)] flex justify-between flex-col-reverse gap-3 md:flex-row"
+>
+    <div class="space-y-3">
+        <h1 class="capitalize text-4xl leading-tight inline">
+            <Strong>Anish</Strong> Shobith P S,
+            <br />
+             Software Engineer
+        </h1>
+        <p class="text-muted-foreground text-lg">
+            I'm an engineering student in my final year at St. Joseph
+            Engineering College from
+            <Link
+                variant="wavy"
+                href="https://www.google.com/maps/place/Mangaluru,+Karnataka/@12.9229922,74.8520636,12z/data=!3m1!4b1!4m6!3m5!1s0x3ba35a4c37bf488f:0x827bbc7a74fcfe64!8m2!3d12.9141417!4d74.8559568!16zL20vMDFzdjZr?entry=ttu"
+                target="_blank"
+            >
+                Mangaluru, India
+            </Link>.
+            <br />
+             Passionate about
+            <Strong>Web</Strong>
+             and
+            <Strong>Automation.</Strong>
+        </p>
+
+        <div class="flex gap-3">
+            {
+                socials.map((social) => (
+                    <Button variant={"link"} size={"icon"}>
+                        <Link
+                            href={social.href}
+                            target={"_blank"}
+                            aria-label={social.name}
+                        >
+                            {<social.icon />}
+                            <span class="sr-only">{social.name}</span>
+                        </Link>
+                    </Button>
+                ))
+            }
+        </div>
+        <div class="flex gap-4">
+            <Button>Resume</Button>
+            <Button
+                variant={"secondary"}
+                data-cal-link="anishshobithps/meet"
+                data-cal-namespace="meet"
+                data-cal-config='{"layout":"month_view"}'
+            >
+                Schedule a Call
+            </Button>
+        </div>
+    </div>
+    <Image
+        src={ProfileImage}
+        alt="Anish Shobith P S"
+        width={256}
+        height={295}
+    />
+</section>

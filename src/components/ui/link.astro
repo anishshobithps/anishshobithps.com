@@ -1,0 +1,34 @@
+---
+import { type VariantProps, cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a"> & VariantProps<typeof anchorVariants>;
+
+const { size, variant, class: className, ...rest } = Astro.props;
+
+const anchorVariants = cva(
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+    {
+        variants: {
+            variant: {
+                default: "",
+                wavy: "decoration-wavy underline decoration-accent-foreground/20 hover:decoration-accent-foreground/50 hover:text-foreground transition-colors",
+                accent: "px-8 py-2 font-semibold text-muted-foreground rounded-md border backdrop-blur-md border-primary bg-accent-foreground/20 inline-flex hover:text-current hover:bg-accent-foreground/30 transition-colors",
+                underline: "text-accent-foreground hover:underline",
+            },
+            size: {
+                default: "",
+            },
+        },
+        defaultVariants: {
+            variant: "default",
+            size: "default",
+        },
+    },
+);
+---
+
+<a class={cn(anchorVariants({ variant, size, class: className }))} {...rest}>
+    <slot />
+</a>

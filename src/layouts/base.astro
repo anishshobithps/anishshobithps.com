@@ -1,0 +1,86 @@
+---
+import { ViewTransitions } from "astro:transitions";
+
+import "@/styles/globals.css";
+import Header from "@/components/widgets/header.astro";
+import Glow from "@/components/shared/glow";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Astro</title>
+        <ViewTransitions />
+    </head>
+    <body class="relative min-h-screen antialiased">
+        <Glow client:load />
+        <Header />
+        <main class="px-max-width space-y-16">
+            <article>
+                <slot />
+            </article>
+        </main>
+        <script is:inline type="text/javascript">
+            (function (window, scriptSrc, namespace) {
+                const document = window.document;
+                const Cal =
+                    window.Cal ||
+                    function () {
+                        const cal = Cal;
+                        const args = arguments;
+
+                        if (!cal.loaded) {
+                            cal.ns = {};
+                            cal.q = cal.q || [];
+                            document.head.appendChild(
+                                document.createElement("script"),
+                            ).src = scriptSrc;
+                            cal.loaded = true;
+                        }
+
+                        if (args[0] === namespace) {
+                            const api = function () {
+                                api.q.push(arguments);
+                            };
+
+                            const nsArg = args[1];
+                            api.q = api.q || [];
+
+                            if (typeof nsArg === "string") {
+                                cal.ns[nsArg] = api;
+                                api(args);
+                            } else {
+                                cal.q.push(args);
+                            }
+
+                            return;
+                        }
+
+                        cal.q.push(args);
+                    };
+
+                window.Cal = Cal;
+            })(window, "https://app.cal.com/embed/embed.js", "init");
+
+            Cal("init", "meet", { origin: "https://cal.com" });
+
+            // Important: Please add the following attributes to the element that should trigger the calendar to open upon clicking.
+            // `data-cal-link="anishshobithps/meet"`
+            // data-cal-namespace="meet"
+            // `data-cal-config='{"layout":"month_view"}'`
+
+            Cal.ns.meet("ui", {
+                cssVarsPerTheme: {
+                    light: {
+                        "--cal-brand-color": "#000000",
+                    },
+                },
+                hideEventTypeDetails: false,
+                layout: "month_view",
+            });
+        </script>
+    </body>
+</html>
