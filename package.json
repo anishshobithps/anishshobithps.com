@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@anishshobithps/tailwind-breakpoints": "^0.0.1",
-    "@astrojs/partytown": "^2.0.3",
+    "@astrojs/check": "^0.3.4",
     "@astrojs/react": "^3.0.8",
     "@astrojs/tailwind": "^5.0.4",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -24,15 +24,13 @@
     "astro": "^4.0.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lqip-modern": "^2.0.0",
     "lucide-react": "^0.302.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.69.5",
-    "sharp": "^0.33.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@types/lqip-modern": "^1.1.7",

@@ -1,6 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss';
 
-module.exports = {
+const config: Config = {
   darkMode: ["class"],
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   prefix: "",
@@ -93,4 +93,6 @@ module.exports = {
     require("tailwindcss-animate"),
     require("@anishshobithps/tailwind-breakpoints")
   ]
-}
+} satisfies Config;
+
+export default config;
