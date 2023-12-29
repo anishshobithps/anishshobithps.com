@@ -3,8 +3,6 @@ type Soical = {
     link: string;
 }
 
-
-
 type config = {
     name: 'Anish Shobith P S',
     description: '',

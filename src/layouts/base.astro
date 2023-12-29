@@ -1,18 +1,17 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-
 import "@/styles/globals.css";
 import Header from "@/components/widgets/header.astro";
+import Footer from "@/components/widgets/footer.astro";
 import Glow from "@/components/shared/glow";
 ---
-
 <html lang="en">
     <head>
         <meta charset="utf-8" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
-        <title>Astro</title>
+        <title>Anish Shobith P S</title>
         <ViewTransitions />
     </head>
     <body class="relative min-h-screen antialiased">
@@ -23,7 +22,8 @@ import Glow from "@/components/shared/glow";
                 <slot />
             </article>
         </main>
-        <script is:inline type="text/javascript">
+        <Footer />
+        <script is:inline type="text/javascript" aria-hidden="true">
             (function (window, scriptSrc, namespace) {
                 const document = window.document;
                 const Cal =

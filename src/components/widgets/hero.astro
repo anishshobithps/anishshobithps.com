@@ -4,13 +4,14 @@ import Strong from "@/components/ui/strong.astro";
 import Link from "@/components/ui/link.astro";
 import { Button } from "@/components/ui/button";
 import ProfileImage from "@/assets/profile.png";
+import Hover from "@/components/widgets/hover";
 
 import {
-    Github,
-    Linkedin,
-    Twitter,
-    Instagram,
     type LucideIcon,
+    GithubIcon,
+    LinkedinIcon,
+    TwitterIcon,
+    InstagramIcon,
 } from "lucide-react";
 
 interface Social {
@@ -21,24 +22,24 @@ interface Social {
 
 const socials: Social[] = [
     {
-        name: "github",
+        name: "GitHub",
         href: "https://www.github.com/anishshobithps",
-        icon: Github,
+        icon: GithubIcon,
     },
     {
-        name: "linkedin",
+        name: "LinkedIn",
         href: "https://www.linkedin.com/in/anishshobithps",
-        icon: Linkedin,
+        icon: LinkedinIcon,
     },
     {
-        name: "twitter",
+        name: "Twitter",
         href: "https://twitter.com/anishshobithps",
-        icon: Twitter,
+        icon: TwitterIcon,
     },
     {
-        name: "instagram",
+        name: "Instagram",
         href: "https://www.instagram.com/anishshobithps/",
-        icon: Instagram,
+        icon: InstagramIcon,
     },
 ];
 ---
@@ -46,6 +47,7 @@ const socials: Social[] = [
 <section
     id="about"
     class="pt-[calc(var(--header-height)+3rem)] flex justify-between flex-col-reverse gap-3 md:flex-row"
+    aria-labelledby="Hero"
 >
     <div class="space-y-3">
         <h1 class="capitalize text-4xl leading-tight inline">
@@ -60,14 +62,23 @@ const socials: Social[] = [
                 variant="wavy"
                 href="https://www.google.com/maps/place/Mangaluru,+Karnataka/@12.9229922,74.8520636,12z/data=!3m1!4b1!4m6!3m5!1s0x3ba35a4c37bf488f:0x827bbc7a74fcfe64!8m2!3d12.9141417!4d74.8559568!16zL20vMDFzdjZr?entry=ttu"
                 target="_blank"
+                aria-label="Mangaluru, Karnataka, India"
             >
                 Mangaluru, India
             </Link>.
             <br />
              Passionate about
-            <Strong>Web</Strong>
+            <Hover
+                text="Web"
+                description="A system of interconnected public webpages accessible through the Internet."
+                client:load
+            />
              and
-            <Strong>Automation.</Strong>
+            <Hover
+                text="Automation"
+                description="The use of technology to perform tasks with reduced human assistance."
+                client:load
+            />.
         </p>
 
         <div class="flex gap-3">
@@ -77,7 +88,8 @@ const socials: Social[] = [
                         <Link
                             href={social.href}
                             target={"_blank"}
-                            aria-label={social.name}
+                            aria-label={`${social.name} of Anish Shobith P S`}
+                            role="button"
                         >
                             {<social.icon />}
                             <span class="sr-only">{social.name}</span>
@@ -87,8 +99,12 @@ const socials: Social[] = [
             }
         </div>
         <div class="flex gap-4">
-            <Button>Resume</Button>
+            <Button aria-label="Resume of Anish Shobith P S">
+                <Link href="/resume.pdf" target={"_blank"}>Resume</Link>
+            </Button>
             <Button
+                aria-label="Schedule a Call"
+                aria-expanded="false"
                 variant={"secondary"}
                 data-cal-link="anishshobithps/meet"
                 data-cal-namespace="meet"
@@ -99,9 +115,9 @@ const socials: Social[] = [
         </div>
     </div>
     <Image
+        class="fade-in-bottom size-60 sm:size-40 md:size-50 lg:size-60 rounded-full object-cover transition-transform transform hover:scale-105"
+        aria-hidden="true"
         src={ProfileImage}
         alt="Anish Shobith P S"
-        width={256}
-        height={295}
     />
 </section>

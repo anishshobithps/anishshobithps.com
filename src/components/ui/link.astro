@@ -29,6 +29,6 @@ const anchorVariants = cva(
 );
 ---
 
-<a class={cn(anchorVariants({ variant, size, class: className }))} {...rest}>
+<a class={cn(anchorVariants({ variant, size, class: className }), 'cursor-pointer')} {...rest}>
     <slot />
 </a>

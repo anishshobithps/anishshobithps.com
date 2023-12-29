@@ -9,7 +9,17 @@ const config: Config = {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        xs: '420px',
+        sm: '550px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1440px',
+        'md-lg': { min: '768px', max: '1023.98px' },
+        '<xs': { max: '419.98px' },
+        '<sm': { max: '549.98px' },
+        '<md': { max: '767.98px' },
+        '<lg': { max: '1023.98px' },
+        '<xl': { max: '1439.98px' },
       },
     },
     extend: {
