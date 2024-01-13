@@ -7,9 +7,14 @@ import robotsTxt from "astro-robots-txt";
 import { VitePWA } from "vite-plugin-pwa";
 import { manifest } from "./src/lib/manifest";
 import react from "@astrojs/react";
-import path from "path";
-
+import { dirname, resolve } from "path";
+import { fileURLToPath } from 'url';
 import icon from "astro-icon";
+
+// Use import.meta.url to get the URL of the current module
+const __filename = fileURLToPath(import.meta.url);
+// Use dirname to get the directory name
+const __dirname = dirname(__filename);
 
 // https://astro.build/config
 export default defineConfig({
@@ -55,13 +60,13 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
-        "@layouts": path.resolve("./src/layouts"),
-        "@components": path.resolve("./src/components"),
-        "@config": path.resolve("./src/config"),
-        "@content": path.resolve("./src/content"),
-        "@styles": path.resolve("./src/styles"),
-        "@icons": path.resolve("./src/components/icons"),
+        "@": resolve(__dirname, "./src"),
+        "@layouts": resolve("./src/layouts"),
+        "@components": resolve("./src/components"),
+        "@config": resolve("./src/config"),
+        "@content": resolve("./src/content"),
+        "@styles": resolve("./src/styles"),
+        "@icons": resolve("./src/components/icons"),
       },
     },
     plugins: [
