@@ -7,6 +7,8 @@ import CategoryIcon from "@icons/CategoryIcon.astro";
 import { Image } from "astro:assets";
 import config from "@config/config.json";
 import { slugify } from "@src/lib/slug";
+import { buttonVariants } from "@components/ui/button";
+import { cn } from "@src/lib/utils";
 
 import ProfileImage from "@src/assets/profile.png";
 
@@ -61,7 +63,7 @@ const { title, description, pubDate, heroImage, categories, tags } =
             categories?.slice(0, 1).map((category) => (
               <a
                 href={`/categories/${slugify(category)}`}
-                class="mr-2 hover:text-primary font-medium capitalize"
+                class="mr-2 hover:text-primary font-medium capitalize cursor-pointer"
               >
                 {category}
               </a>
@@ -78,7 +80,7 @@ const { title, description, pubDate, heroImage, categories, tags } =
         tags?.map((tag) => (
           <a
             href={`/tags/${slugify(tag)}`}
-            class="capitalize inline-blockrounded-full px-3 py-1 text-sm font-semiboldmr-2 mb-2"
+            class={cn(`${buttonVariants({ variant: "ghost" })}}`, 'cursor-pointer capitalize')}
           >
             #{tag}
           </a>

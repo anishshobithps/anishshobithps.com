@@ -61,6 +61,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
+    "astro-capo": "^0.0.1",
     "astro-compressor": "^0.4.1",
     "astro-icon": "^1.0.2",
     "astro-seo": "^0.8.0",

@@ -15,7 +15,7 @@ const Hover: React.FC<HoverProps> = ({ text, description }) => {
     <HoverCard>
       <HoverCardTrigger asChild>
         <span
-          className="font-normal text-accent-foreground"
+          className="font-normal text-accent-foreground cursor-pointer"
           aria-label={text}
           aria-haspopup="true"
           aria-expanded="false"

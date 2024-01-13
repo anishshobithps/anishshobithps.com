@@ -39,12 +39,11 @@ type PostType = {
                 <Image
                   class="transition duration-300 ease-in-out hover:scale-110 cursor-pointer"
                   src={import("src/assets/blogs/640x360.png")}
-                  alt={post.data.title}
+                  alt={post.data.description}
                   width={960}
                   height={480}
                   decoding="async"
                   loading="lazy"
-                  aria-label={post.data.title}
                 />
               </figure>
             </a>

@@ -1,8 +1,10 @@
 ---
 import Base from "@src/layouts/BaseLayout.astro";
 import { getTaxonomy } from "@src/lib/getAllTags";
+import { cn } from "@src/lib/utils";
 
 const tags = await getTaxonomy("blog", "tags");
+
 
 const textClasses: string[] = [
   "text-3xl text-cyan-400 capitalize",
@@ -29,7 +31,7 @@ const getRandomClass = (classList: string[]): string => {
         tags.map((tag) => (
           <li>
             <a
-              class={getRandomClass(textClasses)}
+              class={cn(`${getRandomClass(textClasses)}}`, 'cursor-pointer')}
               href={`/tags/${tag.slug}`}
               title={`View posts with the tag: ${tag.name}`}
             >

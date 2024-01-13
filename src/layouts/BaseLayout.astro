@@ -6,6 +6,7 @@ import config from "@config/config.json";
 import { createOgImage } from "@src/lib/createOgImage";
 import MouseGlow from "@src/components/shared/Mouseglow";
 import SEO from "@components/shared/SEO.astro";
+import { Head } from 'astro-capo'
 
 import "@styles/global.css";
 
@@ -31,7 +32,7 @@ const ogImage = createOgImage({
 
 <!doctype html>
 <html lang={config.site.lang}>
-  <head>
+  <Head>
     <SEO
       title={title}
       meta_title={meta_title}
@@ -39,7 +40,7 @@ const ogImage = createOgImage({
       noindex={noindex}
     />
     <ViewTransitions />
-  </head>
+  </Head>
   <body>
     <MouseGlow client:load />
     <Header />
@@ -108,4 +109,3 @@ const ogImage = createOgImage({
     </script>
   </body>
 </html>
-@/components/shared/Glow@src/components/shared/Mouseglow

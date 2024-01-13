@@ -20,20 +20,20 @@ const { main }: { main: NavigationLink[] } = menu;
     <div
       class="flex items-start justify-between gap-2 sm:gap-4 md:items-center"
     >
-      <div class="dark:block">
-        <a href="/" class="logo flex items-center" aria-current="page">
-          <figure>
-            <Image
-              src={Logo}
-              alt={config.site.title}
-              class="sm:size-20 size-10 rounded"
-              decoding="async"
-              loading="lazy"
-            />
-            <span class="sr-only">Anish Shobith P S's logo</span>
-          </figure>
-        </a>
-      </div>
+      <a href="/" class="logo flex items-center">
+        <figure>
+          <Image
+            src={Logo}
+            alt={config.site.title}
+            width={Logo.width / 2}
+            height={Logo.height / 2}
+            class="rounded cursor-pointer"
+            decoding="async"
+            loading="lazy"
+          />
+          <span class="sr-only">Anish Shobith P S's logo</span>
+        </figure>
+      </a>
       <div class="relative order-3 flex md:hidden">
         <Menu client:load>
           <ul class="py-2">

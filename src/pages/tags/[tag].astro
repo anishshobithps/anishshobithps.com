@@ -27,7 +27,7 @@ const filterByTags = taxonomyFilter(posts, "tags", tag);
       filterByTags?.map((post) => (
         <li class="flex items-center space-x-1">
           <CategoryIcon />
-          <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+          <a class="cursor-pointer" href={`/blog/${post.slug}`}>{post.data.title}</a>
         </li>
       ))
     }
