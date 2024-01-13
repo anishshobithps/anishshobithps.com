@@ -1,7 +1,7 @@
 ---
 import Base from "@layouts/Base.astro";
 import CategoryIcon from "@icons/CategoryIcon.astro";
-import { getTaxonomy } from "@/lib/getAllTags";
+import { getTaxonomy } from "@src/lib/getAllTags";
 
 const allCategories = await getTaxonomy("blog", "categories");
 const uniqueCategories = [
