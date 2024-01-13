@@ -6,6 +6,10 @@ import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import react from "@astrojs/react";
 import icon from "astro-icon";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
@@ -48,4 +52,18 @@ export default defineConfig({
       brotli: true,
     }),
   ],
+  vite: {
+    resolve: {
+      alias: {
+        "@src": path.resolve(__dirname, "./src"),
+        "@layouts": path.resolve(__dirname,"./src/layouts"),
+        "@components": path.resolve(__dirname,"./src/components"),
+        "@config": path.resolve(__dirname,"./src/config"),
+        "@content": path.resolve(__dirname,"./src/content"),
+        "@styles": path.resolve(__dirname,"./src/styles"),
+        "@utils": path.resolve(__dirname,"./src/utils"),
+        "@icons": path.resolve(__dirname,"./src/components/icons")
+      },
+    },
+  },
 });

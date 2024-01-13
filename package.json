@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/anishshobithps/ev0-astro-theme.dev.git"
+    "url": "https://github.com/anishshobithps/anish-shobith.github.io.git"
   },
   "scripts": {
     "dev": "astro dev",
@@ -41,22 +41,10 @@
     "@astrojs/rss": "4.0.2",
     "@astrojs/sitemap": "3.0.4",
     "@astrojs/tailwind": "5.1.0",
-    "@tailwindcss/aspect-ratio": "0.4.2",
-    "@tailwindcss/typography": "0.5.10",
-    "@typescript-eslint/eslint-plugin": "6.18.1",
-    "@typescript-eslint/parser": "6.18.1",
     "astro": "4.1.2",
     "astro-md-generator": "1.0.0",
     "astro-robots-txt": "1.0.0",
-    "dotenv": "16.3.1",
-    "eslint": "8.56.0",
-    "eslint-plugin-astro": "0.31.0",
-    "eslint-plugin-jsx-a11y": "6.8.0",
-    "prettier": "3.2.1",
-    "prettier-plugin-astro": "0.12.3",
-    "prettier-plugin-tailwindcss": "0.5.11",
-    "tailwindcss": "3.4.1",
-    "vite-plugin-pwa": "0.17.4"
+    "tailwindcss": "3.4.1"
   },
   "resolutions": {
     "astro/sharp": "0.33.1",
@@ -70,6 +58,7 @@
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
     "astro-compressor": "^0.4.1",
