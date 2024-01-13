@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { getCollection } from 'astro:content';
-import type { MDXInstance } from 'astro';
-import { slugify, deslugify } from './slug';
+import { getCollection } from "astro:content";
+import type { MDXInstance } from "astro";
+import { slugify, deslugify } from "./slug";
 
 interface Post {
   title: string;
@@ -47,4 +47,8 @@ export const getSinglePage = async (collection: any) => {
 };
 
 export const taxonomyFilter = (posts: any[], name: string, key: any) =>
-  posts.filter((post) => post.data[name].map((name: string) => deslugify(name)).includes(deslugify(key)));
+  posts.filter((post) =>
+    post.data[name]
+      .map((name: string) => deslugify(name))
+      .includes(deslugify(key))
+  );

@@ -47,7 +47,6 @@ html {
 
     --radius: 0.5rem;
   }
-
 }
 
 @layer base {
@@ -59,7 +58,6 @@ html {
     @apply bg-background text-foreground bg-topo;
   }
 }
-
 
 .brush {
   @apply bg-brush pl-4 pr-4 pb-2;

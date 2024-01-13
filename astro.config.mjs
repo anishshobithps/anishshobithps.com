@@ -5,14 +5,7 @@ import compressor from "astro-compressor";
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import react from "@astrojs/react";
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
 import icon from "astro-icon";
-
-// Use import.meta.url to get the URL of the current module
-const __filename = fileURLToPath(import.meta.url);
-// Use dirname to get the directory name
-const __dirname = dirname(__filename);
 
 // https://astro.build/config
 export default defineConfig({
@@ -55,17 +48,4 @@ export default defineConfig({
       brotli: true,
     }),
   ],
-  vite: {
-    resolve: {
-      alias: {
-        "@": resolve(__dirname, "./src"),
-        "@layouts": resolve(__dirname, "./src/layouts"),
-        "@components": resolve(__dirname, "./src/components"),
-        "@config": resolve(__dirname, "./src/config"),
-        "@content": resolve(__dirname, "./src/content"),
-        "@styles": resolve(__dirname, "./src/styles"),
-        "@icons": resolve(__dirname, "./src/components/icons"),
-      },
-    },
-  },
 });

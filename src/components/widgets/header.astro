@@ -59,7 +59,10 @@ const { main }: { main: NavigationLink[] } = menu;
         {
           main?.map((menu) => (
             <li class="text-md block rounded-lg px-2 py-2">
-              <a href={menu?.url} class="relative flex items-center cursor-pointer">
+              <a
+                href={menu?.url}
+                class="relative flex items-center cursor-pointer"
+              >
                 {menu?.name}
               </a>
             </li>

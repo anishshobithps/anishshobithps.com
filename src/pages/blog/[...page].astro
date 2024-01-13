@@ -6,7 +6,6 @@ import Posts from "@layouts/Posts.astro";
 import config from "@config/config.json";
 import { BlogPagination } from "@/components/widgets/BlogPagination";
 
-
 type Paginate = (data: any[], options: { pageSize: number }) => any[];
 
 export async function getStaticPaths({ paginate }: { paginate: Paginate }) {

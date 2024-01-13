@@ -1,4 +1,10 @@
-export const createOgImage = ({ title, meta }: { title: string; meta: string }) =>
+export const createOgImage = ({
+  title,
+  meta,
+}: {
+  title: string;
+  meta: string;
+}) =>
   [
     // ACCOUNT PREFIX
     // Add your own Cloudinary account ID.
@@ -17,7 +23,7 @@ export const createOgImage = ({ title, meta }: { title: string; meta: string }) 
     `fl_layer_apply,g_south_west,x_100,y_100`,
     // IMAGE
     `<YOUR IMAGE ID>`,
-  ].join('/');
+  ].join("/");
 
 // double escape for commas and slashes
 const e = (str: string) => encodeURIComponent(encodeURIComponent(str));
