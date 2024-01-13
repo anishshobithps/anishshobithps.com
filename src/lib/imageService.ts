@@ -1,5 +1,5 @@
 // Credits: https://github.com/Princesseuh/erika.florist/blob/main/src/imageService.ts
-import { getBaseSiteURL } from "@/lib/utils";
+import { getBaseSiteURL } from "@src/lib/utils";
 import type { LocalImageService } from "astro";
 import sharpService from "astro/assets/services/sharp";
 import { readFileSync } from "fs";

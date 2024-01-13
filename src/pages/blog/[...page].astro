@@ -4,7 +4,7 @@ import { getCollection } from "astro:content";
 import Base from "@layouts/Base.astro";
 import Posts from "@layouts/Posts.astro";
 import config from "@config/config.json";
-import { BlogPagination } from "@/components/widgets/BlogPagination";
+import { BlogPagination } from "@src/components/widgets/BlogPagination";
 
 type Paginate = (data: any[], options: { pageSize: number }) => any[];
 
