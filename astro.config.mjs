@@ -7,6 +7,7 @@ import robotsTxt from "astro-robots-txt";
 import { VitePWA } from "vite-plugin-pwa";
 import { manifest } from "./src/lib/manifest";
 import react from "@astrojs/react";
+import path from "path";
 
 import icon from "astro-icon";
 
@@ -52,6 +53,17 @@ export default defineConfig({
     }),
   ],
   vite: {
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+        "@layouts": path.resolve("./src/layouts"),
+        "@components": path.resolve("./src/components"),
+        "@config": path.resolve("./src/config"),
+        "@content": path.resolve("./src/content"),
+        "@styles": path.resolve("./src/styles"),
+        "@icons": path.resolve("./src/components/icons"),
+      },
+    },
     plugins: [
       VitePWA({
         registerType: "autoUpdate",
