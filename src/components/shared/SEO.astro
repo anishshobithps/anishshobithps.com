@@ -9,7 +9,7 @@ export interface Props {
   noindex?: boolean;
 }
 
-const { title, meta_title, description, noindex } = Astro.props;
+const { title, meta_title, description } = Astro.props;
 ---
 
 <Seo
@@ -54,8 +54,7 @@ const { title, meta_title, description, noindex } = Astro.props;
       { name: "theme-name", content: "dark" },
       { name: "msapplication-TileColor", content: "#000000" },
       { httpEquiv: "Content-Type", content: "text/html; charset=UTF-8" },
-      noindex ? { name: "robots", content: "noindex,nofollow" } : undefined,
-    ].filter(Boolean) as Partial<Meta>[],
+    ],
   }}
 >
   <Seo />

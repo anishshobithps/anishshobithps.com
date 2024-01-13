@@ -6,7 +6,7 @@ import config from "@config/config.json";
 import { createOgImage } from "@src/lib/createOgImage";
 import MouseGlow from "@src/components/shared/Mouseglow";
 import SEO from "@components/shared/SEO.astro";
-import { Head } from 'astro-capo'
+import { Head } from "astro-capo";
 
 import "@styles/global.css";
 
@@ -17,12 +17,11 @@ export interface Props {
   meta_title?: string;
   description?: string;
   image?: string;
-  noindex?: boolean;
   canonical?: string;
   blogpost?: boolean;
 }
 
-const { title, meta_title, description, noindex, blogpost } = Astro.props;
+const { title, meta_title, description, blogpost } = Astro.props;
 
 const ogImage = createOgImage({
   title: meta_title ? meta_title : title ? title : config.site.title,
@@ -33,12 +32,7 @@ const ogImage = createOgImage({
 <!doctype html>
 <html lang={config.site.lang}>
   <Head>
-    <SEO
-      title={title}
-      meta_title={meta_title}
-      description={description}
-      noindex={noindex}
-    />
+    <SEO title={title} meta_title={meta_title} description={description} />
     <ViewTransitions />
   </Head>
   <body>
