@@ -1,12 +1,12 @@
 ---
+import config from "@config/config.json";
+const year = new Date().getFullYear();
 ---
 
-<footer class="px-max-width mt-16">
-    <div
-        class="flex items-center text-sm font-light text-muted-foreground justify-center py-5 border-t"
-    >
-        <p class="capitalize" aria-label="Footer content">
-            © 2022 - Present, Anish Shobith P S
-        </p>
-    </div>
+<footer class="mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
+  <div class="border-t border-zinc-10">
+    <p class="text-center text-xs/relaxed mt-8 mb-8">
+      &copy; 2022 - {year}. {config.site.title}. All rights Reserved.
+    </p>
+  </div>
 </footer>

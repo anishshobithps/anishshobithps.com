@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 
 interface MousePosition {
   x: number;
@@ -25,36 +25,30 @@ const Glow: React.FC = () => {
       setIsMouseInViewport(false);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseenter", handleMouseEnter);
-    document.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseenter', handleMouseEnter);
+    document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseenter", handleMouseEnter);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      document.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
 
   const glowStyle: React.CSSProperties = {
-    position: "fixed" as const,
+    position: 'fixed' as const,
     top: mousePosition.y,
     left: mousePosition.x,
-    width: "400px",
-    height: "400px",
-    backgroundColor: "rgba(64, 64, 64, 0.3)",
-    borderRadius: "50%",
-    transform: "translate(-50%, -50%)",
-    display: isMouseInViewport ? "block" : "none",
+    width: '175px',
+    height: '175px',
+    backgroundColor: 'hsla(23, 68%, 37%, 0.25)',
+    borderRadius: '50%',
+    transform: 'translate(-50%, -50%)',
+    display: isMouseInViewport ? 'block' : 'hidden',
   };
 
-  return (
-    <div
-      ref={glowRef}
-      className="blur-3xl pointer-events-none -z-30"
-      style={glowStyle}
-    />
-  );
+  return <div ref={glowRef} className="pointer-events-none -z-30 blur-3xl" style={glowStyle} />;
 };
 
 export default Glow;

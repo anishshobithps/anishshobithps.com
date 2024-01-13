@@ -1,30 +1,20 @@
-import type { Config } from 'tailwindcss';
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   darkMode: ["class"],
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
-        xs: '420px',
-        sm: '550px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1440px',
-        'md-lg': { min: '768px', max: '1023.98px' },
-        '<xs': { max: '419.98px' },
-        '<sm': { max: '549.98px' },
-        '<md': { max: '767.98px' },
-        '<lg': { max: '1023.98px' },
-        '<xl': { max: '1439.98px' },
+        "2xl": "1400px",
       },
     },
     extend: {
       backgroundImage: {
-        topo: "url(/topography.svg)"
+        topo: "url(/topography.svg)",
+        brush: "url('/brush.svg')",
       },
       cursor: {
         default: "url(/cursors/pointer.cur), default",
@@ -84,25 +74,10 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      padding: {
-        "max-width":
-          "max(calc((100vw - var(--max-width-container)) / 2), 1.25rem)",
-        "header-height": "var(--header-height)",
-      },
-
-      height: {
-        header: "var(--header-height)",
-      },
-
-      margin: {
-        "header-height": "var(--header-height)",
-      },
     },
   },
   plugins: [
     require("tailwindcss-animate"),
-    require("@anishshobithps/tailwind-breakpoints")
-  ]
-} satisfies Config;
-
-export default config;
+    require("@tailwindcss/aspect-ratio"),
+  ],
+};

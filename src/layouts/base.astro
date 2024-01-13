@@ -1,29 +1,56 @@
 ---
+import Header from "@/components/widgets/Header.astro";
+import Hero from "@/sections/Hero.astro";
+import Footer from "@/components/widgets/Footer.astro";
+import config from "@config/config.json";
+import { createOgImage } from "@/lib/createOgImage";
+import MouseGlow from "@components/shared/glow";
+import SEO from "@/components/shared/SEO.astro";
+
+import "@styles/global.css";
+
 import { ViewTransitions } from "astro:transitions";
-import "@/styles/globals.css";
-import Header from "@/components/widgets/header.astro";
-import Footer from "@/components/widgets/footer.astro";
-import Glow from "@/components/shared/glow";
+
+export interface Props {
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  canonical?: string;
+  blogpost?: boolean;
+}
+
+const { title, meta_title, description, noindex, blogpost } = Astro.props;
+
+const ogImage = createOgImage({
+  title: meta_title ? meta_title : title ? title : config.site.title,
+  meta: [config.site.title, config.site.base_url].join(" · "),
+});
 ---
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <title>Anish Shobith P S</title>
-        <ViewTransitions />
-    </head>
-    <body class="relative min-h-screen antialiased">
-        <Glow client:load />
-        <Header />
-        <main class="px-max-width space-y-16">
-            <article>
-                <slot />
-            </article>
-        </main>
-        <Footer />
-        <script is:inline type="text/javascript" aria-hidden="true">
+
+<!doctype html>
+<html lang={config.site.lang}>
+  <head>
+    <SEO
+      title={title}
+      meta_title={meta_title}
+      description={description}
+      noindex={noindex}
+    />
+    <ViewTransitions />
+  </head>
+  <body>
+    
+    <MouseGlow client:load/>
+    <Header />
+    {!blogpost && <Hero />}
+    <main class="mx-auto max-w-screen-lg px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+          <script is:inline type="text/javascript" aria-hidden="true">
             (function (window, scriptSrc, namespace) {
                 const document = window.document;
                 const Cal =
@@ -82,5 +109,4 @@ import Glow from "@/components/shared/glow";
                 layout: "month_view",
             });
         </script>
-    </body>
 </html>

@@ -1,68 +1,71 @@
 ---
-import Link from "@/components/ui/link.astro";
+import { Image } from "astro:assets";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@components/ui/button";
+import menu from "@config/menu.json";
+import config from "@config/config.json";
+import Logo from "@/assets/logo.svg";
+import { Menu } from "@components/widgets/Menu";
 
-interface NavItem {
+export interface NavigationLink {
   name: string;
-  href: string;
+  url: string;
 }
 
-const nav: NavItem[] = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "About",
-    href: "/about",
-  },
-  {
-    name: "Projects",
-    href: "/projects",
-  },
-  {
-    name: "Uses",
-    href: "/uses",
-  },
-];
+const { main }: { main: NavigationLink[] } = menu;
 ---
 
-<header
-  class="z-20 w-max fixed top-0 left-1/2 border px-4 py-2 my-8 rounded-full backdrop-blur-md -translate-x-1/2 flex items-center gap-2 right-0"
->
-  <nav
-    class="capitalize text-xs sm:text-sm flex gap-1 items-center"
-    id="main-nav"
-  >
-    {
-      nav.map(({ name, href }) => (
-        <Link
-          href={href}
-          class="py-2 rounded-full w-20 sm:w-24 text-center aria-[current=true]:bg-secondary transition-colors sm:w-22 aria-[current=true]:backdrop-blur-md hover:bg-accent hover:text-accent-foreground"
-        >
-          {name}
-        </Link>
-      ))
-    }
-  </nav>
+<header>
+  <div class="mx-auto max-w-screen-lg px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <div
+      class="flex items-start justify-between gap-2 sm:gap-4 md:items-center"
+    >
+      <div class="dark:block">
+        <a href="/" class="logo flex items-center" aria-current="page">
+          <figure>
+            <Image
+              src={Logo}
+              alt={config.site.title}
+              class="sm:size-20 size-10 rounded"
+              decoding="async"
+              loading="lazy"
+            />
+            <span class="sr-only">Anish Shobith P S's logo</span>
+          </figure>
+        </a>
+      </div>
+      <div class="relative order-3 flex md:hidden">
+        <Menu client:load>
+          <ul class="py-2">
+            {
+              main?.map((menu) => (
+                <li>
+                  <a
+                    href={menu?.url}
+                    class={cn(
+                      `${buttonVariants({ variant: "link" })}}`,
+                      "block rounded-lg px-4 py-2 text-lg"
+                    )}
+                  >
+                    {menu?.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </Menu>
+      </div>
+      <ul class="ml-auto hidden items-center gap-6 md:flex lg:flex">
+        {
+          main?.map((menu) => (
+            <li class="text-md block rounded-lg px-2 py-2">
+              <a href={menu?.url} class="relative flex items-center cursor-pointer">
+                {menu?.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
 </header>
-
-<script>
-  const mainNav = document.querySelector("#main-nav");
-
-  if (!mainNav) {
-    throw new Error("Main nav not found");
-  }
-
-  const allAnchors = mainNav.querySelectorAll("a");
-
-  const selectCurrentAnchor = () => {
-    const currentPath = window.location.pathname.split("/")[1];
-    allAnchors.forEach((anchor) => {
-      anchor.setAttribute("aria-current", "false");
-      if (anchor.getAttribute("href") === `/${currentPath}`.trim()) {
-        anchor.setAttribute("aria-current", "true");
-      }
-    });
-  };
-  selectCurrentAnchor();
-</script>
