@@ -55,14 +55,14 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        "@src": path.resolve(__dirname, "./src"),
-        "@layouts": path.resolve(__dirname,"./src/layouts"),
-        "@components": path.resolve(__dirname,"./src/components"),
-        "@config": path.resolve(__dirname,"./src/config"),
-        "@content": path.resolve(__dirname,"./src/content"),
-        "@styles": path.resolve(__dirname,"./src/styles"),
-        "@utils": path.resolve(__dirname,"./src/utils"),
-        "@icons": path.resolve(__dirname,"./src/components/icons")
+        "@src": path.resolve("./src"),
+        "@layouts": path.resolve("./src/layouts"),
+        "@components": path.resolve("./src/components"),
+        "@config": path.resolve("./src/config"),
+        "@content": path.resolve("./src/content"),
+        "@styles": path.resolve("./src/styles"),
+        "@utils": path.resolve("./src/utils"),
+        "@icons": path.resolve("./src/components/icons")
       },
     },
   },
