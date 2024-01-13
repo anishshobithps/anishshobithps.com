@@ -1,10 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import FormattedDate from "@components/widgets/FormattedDate.astro";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { buttonVariants } from "@components/ui/button";
+import { cn } from "@src/lib/utils";
 import config from "@config/config.json";
-import { slugify } from "@/lib/slug";
+import { slugify } from "@src/lib/slug";
 
 const { posts } = Astro.props;
 

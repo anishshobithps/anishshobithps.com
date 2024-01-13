@@ -7,7 +7,7 @@ import {
   PaginationEllipsis,
   PaginationPrevious,
   PaginationNext,
-} from "@/components/ui/pagination";
+} from "@components/ui/pagination";
 
 interface BlogPaginationProps {
   length: number;

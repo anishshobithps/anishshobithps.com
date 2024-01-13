@@ -1,8 +1,8 @@
 ---
 import Base from "@layouts/Base.astro";
 import CategoryIcon from "@components/icons/CategoryIcon.astro";
-import { getTaxonomy, getSinglePage, taxonomyFilter } from "@/lib/getAllTags";
-import { deslugify } from "@/lib/slug";
+import { getTaxonomy, getSinglePage, taxonomyFilter } from "@src/lib/getAllTags";
+import { deslugify } from "@src/lib/slug";
 
 export async function getStaticPaths() {
   const tags = await getTaxonomy("blog", "tags");
