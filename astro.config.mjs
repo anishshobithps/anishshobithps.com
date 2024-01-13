@@ -4,11 +4,9 @@ import tailwind from "@astrojs/tailwind";
 import compressor from "astro-compressor";
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
-import { VitePWA } from "vite-plugin-pwa";
-import { manifest } from "./src/lib/manifest";
 import react from "@astrojs/react";
 import { dirname, resolve } from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 import icon from "astro-icon";
 
 // Use import.meta.url to get the URL of the current module
@@ -69,18 +67,5 @@ export default defineConfig({
         "@icons": resolve("./src/components/icons"),
       },
     },
-    plugins: [
-      VitePWA({
-        registerType: "autoUpdate",
-        manifest,
-        workbox: {
-          globDirectory: "dist",
-          globPatterns: [
-            "**/*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}",
-          ],
-          navigateFallback: null,
-        },
-      }),
-    ],
   },
 });
