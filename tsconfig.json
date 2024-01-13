@@ -15,6 +15,7 @@
       "@utils/*": ["./src/utils/*"],
       "@icons/*": ["./src/components/icons/*"]
     },
+    "include": ["**/*"],
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   }
