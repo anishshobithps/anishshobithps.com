@@ -28,14 +28,36 @@ const Glow: React.FC = () => {
       setIsMouseInViewport(false);
     };
 
+    const handleTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      setMousePosition({ x: touch.clientX, y: touch.clientY });
+      setIsMouseInViewport(true);
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      setMousePosition({ x: touch.clientX, y: touch.clientY });
+      setIsMouseInViewport(true);
+    };
+
+    const handleTouchEnd = () => {
+      setIsMouseInViewport(false);
+    };
+
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchmove", handleTouchMove);
+    document.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
