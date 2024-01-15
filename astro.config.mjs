@@ -17,11 +17,6 @@ export default defineConfig({
       enabled: true
     }
   }),
-  image: {
-    service: {
-      entrypoint: "./src/lib/imageService.ts",
-    },
-  },
   markdown: {
     drafts: true,
     shikiConfig: {
