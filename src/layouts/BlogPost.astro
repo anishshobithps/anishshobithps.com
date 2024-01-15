@@ -25,7 +25,7 @@ const { title, description, pubDate, heroImage, categories, tags } =
         heroImage && (
           <Image
             class="transition duration-300 ease-in-out hover:scale-110"
-            src={heroImage}
+            src={import(`/src/assets/blogs/${heroImage}.jpg`)}
             alt={title}
             width={960}
             height={480}
