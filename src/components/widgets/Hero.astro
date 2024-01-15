@@ -1,87 +1,117 @@
 ---
-import { Icon } from 'astro-icon';
-import { Image } from 'astro:assets';
-import me from "~/assets/images/me.webp";
-import { SocialLinks } from '~/ts/data';
+import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import { Button, buttonVariants } from "@components/ui/button";
+import Hover from "@src/components/widgets/HoverCard";
+import config from "@config/config.json";
+import { cn } from "@src/lib/utils";
+import ProfileImage from "@src/assets/profile.png";
 
-interface Resume {
-  text: string;
-  href: string;
-  icon?: string;
+interface SocialItem {
+  name: string;
+  url: string;
+  msg: string;
 }
 
-export interface Props {
-  title?: string;
-  subtitle?: string;
-  page?: string | Resume;
-  image?: string | any;
-}
-
-const {
-  page = await Astro.slots.render('page'),
-  image = await Astro.slots.render('image'),
-} = Astro.props;
+const socialData: SocialItem[] = [
+  {
+    name: "github",
+    url: "https://github.com/anishshobithps",
+    msg: "Follow",
+  },
+  {
+    name: "instagram",
+    url: "https://instagram.com/anishshobithps",
+    msg: "Follow",
+  },
+  {
+    name: "twitter",
+    url: "https://x.com/anishshobithps",
+    msg: "Follow",
+  },
+  {
+    name: "linkedin",
+    url: "https://linkedin.com/in/anishshobithps",
+    msg: "Follow",
+  },
+];
 ---
-<div class="w-full py-16 flex flex-col items-center space-y-8 shadow-inner">
-    <div class="flex flex-col items-center dark:bg-[#e8dede] bg-zinc-700 p-2 mb-8 rounded-full">
-      {image && (
-        <div class="relative m-auto max-w-5xl">
-          {typeof image === "string" ? (
-            <Fragment set:html={image} />
-          ) : (
-            <Image
-              src={me}
-              alt="Image of Anish"
-              class="w-128 h-128 sm:w-128 sm:h-128 rounded-full"
-              width={[400, 768, 1024, 2040]}
-              sizes="(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
-              loading="eager"
-              width={192}
-              height={192}
-            />
-          )}
-        </div>
-      )}
-    </div>
-    <h1 class="text-5xl font-bold text-center inactive">
-        <span class="text-accent dark:text-purple-500 highlight">Anish</span> Shobith P S
-    </h1>
-    <p class="text-2xl text-center font-semibold mx-8 inactive">  
-        Computer Science Student. Software Developer
-    </p>
 
-    <div class="flex flex-row sm:flex-row justify-center items-center sm:items-center gap-10">
-      {
-        SocialLinks && (
-          SocialLinks.map(social => (
-            <a href={social.url} aria-label={social.name} target="_blank" rel="noopener">
-              <Icon name={`socials/${social.name}`} class="h-8" />
-            </a>
-          ))
-        )
-      }
-    </div>
-    <div class="flex flex-col sm:flex-row">
-      {
-        page && (
-        <div class="flex w-full sm:w-auto">
-          {typeof page === "string" ? (
-            <Fragment set:html={page} />
-          ) : (
-            <a
-              class="btn btn-primary sm:mb-0 w-full"
-              href={page?.href}
-            >
-              {page?.icon && (
-                <>
-                  <Icon name={page.icon} class="w-5 h-5 mr-1 -ml-1.5" />{" "}
-                </>
-              )}
-              {page?.text}
-            </a>
-          )}
+<section>
+  <div class="mx-auto max-w-screen-lg px-4 py-0 sm:px-6 pb-6 sm:pb-12 lg:px-8">
+    <div class="flex items-start justify-between">
+      <div class="rounded-lg w-3/5">
+        <h1 class="font-extrabold sm:text-4xl text-lg">
+          {config.author.name},
+        </h1>
+        <h2 class="text-medium font-semibold inline italic">
+          {config.author.designation}
+        </h2>
+        <h3 class="mt-3 text-sm md:text-lg">
+          Self taught programmer, passionate about
+          <Hover
+            text="Web"
+            description="A system of interconnected public webpages accessible through the Internet."
+            client:load
+          />
+          and
+          <Hover
+            text="Automation"
+            description="The use of technology to perform tasks with reduced human assistance."
+            client:load
+          />
+        </h3>
+        <div class="flex pt-4 m-auto space-x-2">
+          {
+            socialData.map((item) => (
+              <a
+                class={cn(
+                  `${buttonVariants({ variant: "link", size: "icon" })}}`,
+                  `cursor-pointer`
+                )}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name={`mdi:${item.name}`} class="size-8 cursor-pointer" />
+                <span class="sr-only">{item.name}</span>
+              </a>
+            ))
+          }
         </div>
-      )
-    }
+        <div class="flex space-x-5 pt-8 m-auto cursor-pointer">
+          <a
+            class={cn(
+              `${buttonVariants({ variant: "default" })}}`,
+              "cursor-pointer"
+            )}
+            href="/resume.pdf"
+            target={"_blank"}>Resume</a
+          >
+          <Button
+            className="cursor-pointer"
+            aria-label="Schedule a Call"
+            aria-expanded="false"
+            variant={"secondary"}
+            data-cal-link="anishshobithps/meet"
+            data-cal-namespace="meet"
+            data-cal-config='{"layout":"month_view"}'
+          >
+            Schedule a Call
+          </Button>
+        </div>
+      </div>
+      <div class="rounded-lg">
+        <figure class="right-0">
+          <Image
+            class="rounded-xl w-24 md:w-32"
+            src={ProfileImage}
+            alt={config.author.name}
+            decoding="async"
+            loading="lazy"
+          />
+        </figure>
+      </div>
     </div>
-</div>
+  </div>
+</section>

@@ -1,0 +1,80 @@
+---
+import { Image } from "astro:assets";
+import FormattedDate from "@components/widgets/FormattedDate.astro";
+import { buttonVariants } from "@components/ui/button";
+import { cn } from "@src/lib/utils";
+import config from "@config/config.json";
+import { slugify } from "@src/lib/slug";
+
+const { posts } = Astro.props;
+
+type PostType = {
+  id: string;
+  slug: string;
+  body: string;
+  collection: string;
+  data: {
+    title: string;
+    description: string;
+    heroImage: string;
+    pubDate: Date;
+    categories: string[];
+    tags: string[];
+    autors: string[];
+  };
+};
+---
+
+<div
+  class="mx-auto grid grid-cols-1 mt-4 md:grid-cols-2 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+>
+  {
+    posts?.slice(0, config.site.pageSize).map((post: PostType) => (
+      <article class="flex w-full flex-col items-start">
+        <div class="rounded-lg block overflow-hidden mb-4">
+          {post.data.heroImage && (
+            <a class="cursor-pointer" href={`/blog/${post.slug}/`}>
+              <span class="sr-only">{post.data.title}</span>
+              <figure class="w-auto h-auto md:h-[150px] object-cover">
+                <Image
+                  class="transition duration-300 ease-in-out hover:scale-110 cursor-pointer"
+                  src={import(`@src/assets/blogs/${post.data.heroImage}.jpg`)}
+                  alt={post.data.description}
+                  width={960}
+                  height={480}
+                  decoding="async"
+                  loading="lazy"
+                />
+              </figure>
+            </a>
+          )}
+        </div>
+        <div class="flex items-center gap-x-4 text-xs">
+          <FormattedDate date={post.data.pubDate} />
+          {post.data.categories.slice(0, 2).map((item) => (
+            <a
+              href={`/categories/${slugify(item)}`}
+              class={cn(
+                `${buttonVariants({ variant: "secondary", size: "sm" })}}`,
+                `cursor-pointer`
+              )}
+            >
+              {item}
+            </a>
+          ))}
+        </div>
+        <div class="relative">
+          <h2 class="mt-3 text-xl font-semibold leading-6">
+            <a href={`/blog/${post.slug}/`}>
+              <span class="absolute inset-0 cursor-pointer" />
+              {post.data.title}
+            </a>
+          </h2>
+          <p class="mt-5 line-clamp-3 text-sm leading-6">
+            {post.data.description}
+          </p>
+        </div>
+      </article>
+    ))
+  }
+</div>

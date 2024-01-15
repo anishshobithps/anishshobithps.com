@@ -1,0 +1,8 @@
+---
+import Section from "@layouts/Section.astro";
+import { ContactForm } from "@components/widgets/contactForm";
+---
+
+<Section title="Contact Me">
+  <ContactForm token={import.meta.env.TOKEN} client:load />
+</Section>

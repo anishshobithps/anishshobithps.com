@@ -1,0 +1,18 @@
+---
+
+interface Props {
+  title: string;
+  sub?: boolean;
+}
+
+const { title, sub = false } = Astro.props;
+---
+
+<div class="min-w-full mb-5">
+  <span
+    class={`${
+      !sub ? "text-2xl font-extrabold" : "text-xl"
+    } font-bold`}>{title}</span
+  >
+  <slot />
+</div>

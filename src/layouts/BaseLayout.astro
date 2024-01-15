@@ -1,33 +1,108 @@
 ---
-import '~/assets/styles/base.css';
+import Header from "@src/components/widgets/AppHeader.astro";
+import Hero from "@src/components/widgets/Hero.astro";
+import Footer from "@src/components/widgets/AppFooter.astro";
+import config from "@config/config.json";
+import { createOgImage } from "@src/lib/createOgImage";
+import MouseGlow from "@src/components/shared/Mouseglow";
+import SEO from "@components/shared/SEO.astro";
+import { Head } from "astro-capo";
+import { Toaster } from "@components/ui/toaster"
 
-import MetaTags from '~/components/common/MetaTags.astro';
-import BasicScripts from '~/components/common/Scripts.astro';
+import "@styles/global.css";
+import 'dotenv/config';
 
-import { MetaSEO } from '~/env';
-import { SITE } from '~/ts/config';
+import { ViewTransitions } from "astro:transitions";
 
 export interface Props {
-  meta?: MetaSEO;
+  title?: string;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  blogpost?: boolean;
 }
 
-const { meta = {} } = Astro.props;
-const { language = 'en', textDirection = 'ltr' } = SITE;
+const { title, meta_title, description, blogpost } = Astro.props;
+
+const ogImage = createOgImage({
+  title: meta_title ? meta_title : title ? title : config.site.title,
+  meta: [config.site.title, config.site.base_url].join(" · "),
+});
 ---
 
-<!DOCTYPE html>
-<html lang={language} dir={textDirection} class="2xl:text-[20px]">
-  <head>
-    <MetaTags {...meta} />
-  </head>
+<!doctype html>
+<html lang={config.site.lang}>
+  <Head>
+    <SEO title={title} meta_title={meta_title} description={description} />
+    <ViewTransitions />
+  </Head>
+  <body>
+    <MouseGlow client:load />
+    <Toaster client:load />
+    <Header />
+    {!blogpost && <Hero />}
+    <main class="mx-auto max-w-screen-lg px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline type="text/javascript" aria-hidden="true">
+      (function (window, scriptSrc, namespace) {
+        const document = window.document;
+        const Cal =
+          window.Cal ||
+          function () {
+            const cal = Cal;
+            const args = arguments;
 
-  <body transition:animate="slide" class="antialiased text-page bg-light dark:text-slate-300 tracking-tight dark:bg-dark">
-    <slot />
-    <BasicScripts />
-    <style is:global>
-      img {
-        content-visibility: auto;
-      }
-    </style>
+            if (!cal.loaded) {
+              cal.ns = {};
+              cal.q = cal.q || [];
+              document.head.appendChild(document.createElement("script")).src =
+                scriptSrc;
+              cal.loaded = true;
+            }
+
+            if (args[0] === namespace) {
+              const api = function () {
+                api.q.push(arguments);
+              };
+
+              const nsArg = args[1];
+              api.q = api.q || [];
+
+              if (typeof nsArg === "string") {
+                cal.ns[nsArg] = api;
+                api(args);
+              } else {
+                cal.q.push(args);
+              }
+
+              return;
+            }
+
+            cal.q.push(args);
+          };
+
+        window.Cal = Cal;
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      Cal("init", "meet", { origin: "https://cal.com" });
+
+      // Important: Please add the following attributes to the element that should trigger the calendar to open upon clicking.
+      // `data-cal-link="anishshobithps/meet"`
+      // data-cal-namespace="meet"
+      // `data-cal-config='{"layout":"month_view"}'`
+
+      Cal.ns.meet("ui", {
+        cssVarsPerTheme: {
+          light: {
+            "--cal-brand-color": "#000000",
+          },
+        },
+        hideEventTypeDetails: false,
+        layout: "month_view",
+      });
+    </script>
   </body>
 </html>

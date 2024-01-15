@@ -1,0 +1,36 @@
+---
+import Base from "@src/layouts/BaseLayout.astro";
+import CategoryIcon from "@components/icons/CategoryIcon.astro";
+import { getTaxonomy, getSinglePage, taxonomyFilter } from "@src/lib/getAllTags";
+import { deslugify } from "@src/lib/slug";
+
+export async function getStaticPaths() {
+  const tags = await getTaxonomy("blog", "tags");
+
+  return tags.map((tag) => {
+    return {
+      params: { tag: tag.slug },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+
+const posts = await getSinglePage("blog");
+const filterByTags = taxonomyFilter(posts, "tags", tag);
+export const prerender = true;
+---
+
+<Base>
+  <h1 class="text-2xl md:text-3xl font-bold mb-8">Tag: {deslugify(tag)}</h1>
+  <ul class="space-y-4 text-left ml-4">
+    {
+      filterByTags?.map((post) => (
+        <li class="flex items-center space-x-1">
+          <CategoryIcon />
+          <a class="cursor-pointer" href={`/blog/${post.slug}`}>{post.data.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

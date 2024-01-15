@@ -1,0 +1,91 @@
+---
+import Base from "@src/layouts/BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@components/widgets/FormattedDate.astro";
+import CalendarIcon from "@icons/CalendarIcon.astro";
+import CategoryIcon from "@icons/CategoryIcon.astro";
+import { Image } from "astro:assets";
+import config from "@config/config.json";
+import { slugify } from "@src/lib/slug";
+import { buttonVariants } from "@components/ui/button";
+import { cn } from "@src/lib/utils";
+
+import ProfileImage from "@src/assets/profile.png";
+
+type Props = CollectionEntry<"blog">["data"];
+
+const { title, description, pubDate, heroImage, categories, tags } =
+  Astro.props;
+---
+
+<Base meta_title={title} description={description} image={heroImage} blogpost>
+  <article>
+    <div class="rounded-lg block overflow-hidden mb-8">
+      {
+        heroImage && (
+          <Image
+            class="transition duration-300 ease-in-out hover:scale-110"
+            src={import(`@src/assets/blogs/${heroImage}.jpg`)}
+            alt={title}
+            width={960}
+            height={480}
+            decoding="async"
+            loading="lazy"
+            aria-label={title}
+          />
+        )
+      }
+    </div>
+    <div class="md:col-10 text-center mb-12">
+      <h1 class="text-2xl md:text-4xl font-bold">{title}</h1>
+      <div class="mt-4 flex flex-wrap items-center justify-center text-text">
+        <div class="mx-3 flex items-center flex-wrap font-medium mt-2">
+          <figure>
+            <Image
+              alt={config.author.name}
+              class="mr-2 h-6 w-6 rounded-full"
+              width={50}
+              height={50}
+              src={ProfileImage}
+              decoding="async"
+              loading="lazy"
+            />
+          </figure>
+          <span>{config.author.name}</span>
+        </div>
+        <div class="mx-3 flex items-center flex-wrap font-medium mt-2">
+          <CalendarIcon />
+          <FormattedDate date={pubDate} />
+        </div>
+        <div class="mx-3 flex items-center flex-wrap font-medium mt-2">
+          <CategoryIcon />
+          {
+            categories?.slice(0, 1).map((category) => (
+              <a
+                href={`/categories/${slugify(category)}`}
+                class="mr-2 hover:text-primary font-medium capitalize cursor-pointer"
+              >
+                {category}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <div class="prose prose-green prose-md md:prose-lg min-w-full">
+      <slot />
+    </div>
+    <div class="mt-8">
+      {
+        tags?.map((tag) => (
+          <a
+            href={`/tags/${slugify(tag)}`}
+            class={cn(`${buttonVariants({ variant: "ghost" })}}`, 'cursor-pointer capitalize')}
+          >
+            #{tag}
+          </a>
+        ))
+      }
+    </div>
+  </article>
+</Base>

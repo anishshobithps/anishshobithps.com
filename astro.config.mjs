@@ -1,49 +1,74 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import preact from '@astrojs/preact';
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+import tailwind from "@astrojs/tailwind";
+import compressor from "astro-compressor";
+import sitemap from "@astrojs/sitemap";
+import robotsTxt from "astro-robots-txt";
+import react from "@astrojs/react";
+import icon from "astro-icon";
+import path from "node:path";
 import vercel from '@astrojs/vercel/serverless';
-import compress from 'astro-compress';
-import { SITE } from './src/ts/config';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// https://astro.build/config
 export default defineConfig({
-  site: SITE.origin,
-  base: SITE.basePathname,
-  trailingSlash: SITE.trailingSlash ? 'always' : 'never',
-  output: 'server',
+  output: "server",
+  site: "http://localhost:4321/",
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true
+    },
+    imagesConfig: {
+      domains: ['anishshobithps.com'],
+      sizes: [320, 640, 1280],
+    },
+    devImageService: "squoosh",
+    imageService: true
+  }),
+  markdown: {
+    drafts: true,
+    shikiConfig: {
+      theme: "github-dark",
+      wrap: true,
+    },
+  },
   integrations: [
+    mdx({
+      syntaxHighlight: "shiki",
+      shikiConfig: {
+        theme: "material-theme-palenight",
+        wrap: true,
+      },
+      drafts: true,
+    }),
+    sitemap(),
     tailwind({
-      config: {
-        applyBaseStyles: false,
+      applyBaseStyles: false,
+    }),
+    ,
+    robotsTxt(),
+    react(),
+    icon({
+      iconDir: "src/assets/icons",
+      include: {
+        mdi: ["*"], // (Default) Loads entire Material Design Icon set
+        devicon: ["*"],
       },
     }),
-    preact({ compact: true }),
-    compress({
-      css: true,
-      html: {
-        removeAttributeQuotes: false,
-      },
-      img: true,
-      js: true,
-      svg: true,
-    }),
-    vercel({
-      webAnalytics: {
-        enabled: true
-      }
+    compressor({
+      gzip: true,
+      brotli: true,
     }),
   ],
   vite: {
-    ssr: {
-      external: ['svgo'],
-    },
     resolve: {
       alias: {
-        '~': path.resolve(__dirname, './src'),
+        "@src": path.resolve("./src"),
+        "@layouts": path.resolve("./src/layouts"),
+        "@components": path.resolve("./src/components"),
+        "@config": path.resolve("./src/config"),
+        "@content": path.resolve("./src/content"),
+        "@styles": path.resolve("./src/styles"),
+        "@utils": path.resolve("./src/utils"),
+        "@icons": path.resolve("./src/components/icons"),
       },
     },
   },

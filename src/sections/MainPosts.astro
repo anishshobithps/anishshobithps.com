@@ -1,0 +1,15 @@
+---
+import Section from "@layouts/Section.astro";
+import { getCollection } from "astro:content";
+import HomePagination from "@components/widgets/HomePagination.astro";
+import Posts from "@layouts/Posts.astro";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Section title="Blogs">
+  <Posts posts={posts} />
+  <HomePagination />
+</Section>
