@@ -7,6 +7,14 @@
     {
       "name": "Blog",
       "url": "/blog"
+    },
+    {
+      "name": "Categories",
+      "url": "/categories"
+    },
+    {
+      "name": "Tags",
+      "url": "/tags"
     }
   ]
 }

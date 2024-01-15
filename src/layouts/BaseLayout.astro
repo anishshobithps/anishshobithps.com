@@ -1,14 +1,16 @@
 ---
 import Header from "@src/components/widgets/AppHeader.astro";
-import Hero from "@src/sections/Hero.astro";
+import Hero from "@src/components/widgets/Hero.astro";
 import Footer from "@src/components/widgets/AppFooter.astro";
 import config from "@config/config.json";
 import { createOgImage } from "@src/lib/createOgImage";
 import MouseGlow from "@src/components/shared/Mouseglow";
 import SEO from "@components/shared/SEO.astro";
 import { Head } from "astro-capo";
+import { Toaster } from "@components/ui/toaster"
 
 import "@styles/global.css";
+import 'dotenv/config';
 
 import { ViewTransitions } from "astro:transitions";
 
@@ -37,6 +39,7 @@ const ogImage = createOgImage({
   </Head>
   <body>
     <MouseGlow client:load />
+    <Toaster client:load />
     <Header />
     {!blogpost && <Hero />}
     <main class="mx-auto max-w-screen-lg px-4 py-8 sm:px-6 sm:py-12 lg:px-8">

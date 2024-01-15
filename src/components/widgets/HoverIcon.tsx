@@ -6,24 +6,17 @@ import {
 } from "@components/ui/hover-card";
 
 interface HoverProps {
-  text: string;
-  description: string;
-}
+    description: string;
+    children: React.ReactNode;
+  }
 
-const Hover: React.FC<HoverProps> = ({ text, description }) => {
+const HoverIcon: React.FC<HoverProps> = ({ children, description }) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <span
-          className="font-normal text-accent-foreground cursor-pointer underline decoration-wavy"
-          aria-label={text}
-          aria-haspopup="true"
-          aria-expanded="false"
-          role="button"
-        >
-          {" "}
-          {text}{" "}
-        </span>
+        <div className="cursor-pointer">
+          {children}
+        </div>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">
         <div className="flex items-center">
@@ -36,4 +29,4 @@ const Hover: React.FC<HoverProps> = ({ text, description }) => {
   );
 };
 
-export default Hover;
+export default HoverIcon;

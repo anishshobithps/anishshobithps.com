@@ -18,6 +18,7 @@ const { category } = Astro.params;
 
 const posts = await getSinglePage("blog");
 const filterByCategory = taxonomyFilter(posts, "categories", category);
+export const prerender = true;
 ---
 
 <Base>

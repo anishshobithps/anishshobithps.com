@@ -59,6 +59,6 @@ html {
   }
 }
 
-.brush {
-  @apply bg-brush pl-4 pr-4 pb-2;
+p {
+  @apply mt-2;
 }

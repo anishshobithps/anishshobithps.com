@@ -21,6 +21,7 @@ const getRandomClass = (classList: string[]): string => {
   const randomIndex: number = Math.floor(Math.random() * classList.length);
   return classList[randomIndex];
 };
+export const prerender = true;
 ---
 
 <Base>

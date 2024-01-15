@@ -41,38 +41,27 @@ const socialData: SocialItem[] = [
   <div class="mx-auto max-w-screen-lg px-4 py-0 sm:px-6 pb-6 sm:pb-12 lg:px-8">
     <div class="flex items-start justify-between">
       <div class="rounded-lg w-3/5">
-        <h1 class="text-lg md:text-2xl font-bold sm:text-3xl mb-0">
-          {config.author.name}, <span
-            class="text-medium font-semibold inline brush"
-            >{config.author.designation}</span
-          >
+        <h1 class="font-extrabold sm:text-4xl text-lg">
+          {config.author.name},
         </h1>
-        <p class="mt-1.5 text-sm md:text-lg">
-          I'm an engineering student in my final year at St. Joseph Engineering
-          College from
-          <a
-            href="https://www.google.com/maps/place/Mangaluru,+Karnataka/@12.9229922,74.8520636,12z/data=!3m1!4b1!4m6!3m5!1s0x3ba35a4c37bf488f:0x827bbc7a74fcfe64!8m2!3d12.9141417!4d74.8559568!16zL20vMDFzdjZr?entry=ttu"
-            target="_blank"
-          >
-            Mangaluru, India
-          </a>.
-          <br />
-          <br />
-           Passionate about
+        <h2 class="text-medium font-semibold inline italic">
+          {config.author.designation}
+        </h2>
+        <h3 class="mt-3 text-sm md:text-lg">
+          Self taught programmer, passionate about
           <Hover
             text="Web"
             description="A system of interconnected public webpages accessible through the Internet."
             client:load
           />
-           and
+          and
           <Hover
-            aria-label="Automation"
             text="Automation"
             description="The use of technology to perform tasks with reduced human assistance."
             client:load
-          />.
-        </p>
-        <div class="flex pt-8 m-auto space-x-2">
+          />
+        </h3>
+        <div class="flex pt-4 m-auto space-x-2">
           {
             socialData.map((item) => (
               <a

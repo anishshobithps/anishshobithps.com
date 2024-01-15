@@ -1,0 +1,170 @@
+---
+import Section from "@layouts/Section.astro";
+import { Icon } from "astro-icon/components";
+import HoverIcon from "@components/widgets/HoverIcon";
+
+interface Technology {
+  name: string;
+  description: string;
+  icon: string;
+}
+
+interface Category {
+  categoryName: string;
+  technologies: Technology[];
+}
+
+const technologyCategories: Category[] = [
+  {
+    categoryName: "Tools",
+    technologies: [
+      {
+        name: "Github",
+        icon: "mdi:github",
+        description:
+          "GitHub is a web-based platform for software developers to collaborate and control versions.",
+      },
+      {
+        name: "Git",
+        icon: "devicon:git",
+        description:
+          '"Git" is an acronym for "Global Information Tracker". It\'s primarily used as a version control system for software development.',
+      },
+      {
+        name: "Code",
+        icon: "devicon:vscode",
+        description:
+          "Visual Studio Code (VS Code) is a free, open-source source-code editor developed by Microsoft. It's available for Windows, Linux, and macOS.",
+      },
+      {
+        name: "Docker",
+        icon: "devicon:docker",
+        description:
+          "Docker is a software platform that allows developers to build, ship, and run applications in containers.",
+      },
+      {
+        name: "Linux",
+        icon: "devicon:linux",
+        description:
+          "Linux® is an open source operating system (OS). An operating system is the software that directly manages a system's hardware and resources, like CPU, memory, and storage.",
+      },
+    ],
+  },
+  {
+    categoryName: "Languages",
+    technologies: [
+      {
+        name: "JavaScript",
+        icon: "devicon:javascript",
+        description:
+          "JavaScript is a high-level, interpreted programming language. This means that it is easy to read and write, and it does not need to be compiled before it can be run. JavaScript is also a dynamic programming language, which means that it can change its behavior at runtime.",
+      },
+      {
+        name: "Python",
+        icon: "devicon:python",
+        description:
+          "Python is an interpreted high-level general-purpose programming language. Its language concept and object-oriented approach aim to help programmers write clear, logical code for small and large-scale projects.",
+      },
+      {
+        name: "Java",
+        icon: "devicon:java",
+        description:
+          "Java is a high-level, class-based, object-oriented programming language designed for having lesser implementation dependencies. It is a compiled language and not an interpreted language.",
+      },
+      {
+        name: "TypeScript",
+        icon: "devicon:typescript",
+        description:
+          "TypeScript is a programming language that builds on JavaScript, adding static type definitions. This makes it easier to catch errors and write more reliable code. TypeScript is compiled to JavaScript, so it can be used anywhere that JavaScript can be used.",
+      },
+      {
+        name: "C",
+        icon: "devicon:c",
+        description:
+          "C is a general-purpose programming language used for system administration, network programming, and embedded software. It's a procedural language that provides low-level access to system memory.",
+      },
+      {
+        name: "CPP",
+        icon: "devicon:cplusplus",
+        description:
+          "C++ is a cross-platform language that can be used to create high-performance applications. C++ was developed by Bjarne Stroustrup, as an extension to the C language. C++ gives programmers a high level of control over system resources and memory.",
+      },
+      {
+        name: "CSS",
+        icon: "devicon:css3",
+        description:
+          "CSS stands for Cascading Style Sheets. It's a programming language that helps build websites and web applications. CSS is a fundamental part of web design, along with HTML. It describes how elements should be rendered on screen, on paper, in speech, or on other media.",
+      },
+      {
+        name: "HTML",
+        icon: "devicon:html5",
+        description:
+          "HTML stands for HyperText Markup Language. It's a standard markup language used to create web pages that display in web browsers. It's a set of markup symbols or codes inserted into a file that tells web browsers how to display a web page's words and images.",
+      },
+    ],
+  },
+  {
+    categoryName: "Libraries",
+    technologies: [
+      {
+        name: "Astro",
+        icon: "astro",
+        description:
+          "Astro is the web framework for building content-driven websites like blogs, marketing, and e-commerce. Astro is best-known for pioneering a new frontend architecture to reduce JavaScript overhead and complexity compared to other frameworks.",
+      },
+      {
+        name: "react",
+        icon: "devicon:react",
+        description:
+          "React (also known as React. js or ReactJS) is a free and open-source front-end JavaScript library for building user interfaces based on components. It is maintained by Meta (formerly Facebook) and a community of individual developers and companies.",
+      },
+      {
+        name: "mongodb",
+        icon: "devicon:mongodb",
+        description:
+          "MongoDB is a non-relational document database that provides support for JSON-like storage. The MongoDB database has a flexible data model that enables you to store unstructured data, and it provides full indexing support, and replication with rich and intuitive APIs.",
+      },
+      {
+        name: "prisma",
+        icon: "devicon:prisma",
+        description:
+          "Prisma is a next-generation object–relational mapper (ORM) that claims to help developers build faster and make fewer errors. Prisma takes a different approach to ORMs compared to traditional ORMs. It uses a custom Schema Definition Language (SDL) that automatically writes migrations and generates type-safe code.",
+      },
+      {
+        name: "tailwind",
+        icon: "devicon:tailwindcss",
+        description:
+          "Tailwind CSS is a utility-first CSS (Cascading Style Sheets) framework with predefined classes that you can use to build and design web pages directly in your markup. It lets you write CSS in your HTML in the form of predefined classes.",
+      },
+    ],
+  },
+];
+---
+
+<Section title="Technology">
+  <p>
+    In the dynamic world of technology, I actively contribute to the open-source
+    community and relish the opportunity to connect with like-minded
+    individuals. I also love to explore tech and learn them. Below are the few
+    technologies I have worked with so far.
+  </p>
+  {
+    technologyCategories
+      .sort((techA, techB) =>
+        techA.categoryName.localeCompare(techB.categoryName)
+      )
+      .map((category) => (
+        <Section title={category.categoryName} sub={true}>
+          <div class="flex gap-3 mt-3">
+            {category.technologies
+              .sort((techA, techB) => techA.name.localeCompare(techB.name))
+              .map((technology) => (
+                <HoverIcon description={technology.description} client:load>
+                  <Icon name={technology.icon} class="size-10 cursor-pointer" />
+                </HoverIcon>
+              ))}
+          </div>
+        </Section>
+      ))
+  }
+</Section>

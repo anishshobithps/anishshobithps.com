@@ -18,6 +18,7 @@ const { tag } = Astro.params;
 
 const posts = await getSinglePage("blog");
 const filterByTags = taxonomyFilter(posts, "tags", tag);
+export const prerender = true;
 ---
 
 <Base>

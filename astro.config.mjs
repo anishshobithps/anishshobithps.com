@@ -7,13 +7,16 @@ import robotsTxt from "astro-robots-txt";
 import react from "@astrojs/react";
 import icon from "astro-icon";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import vercel from '@astrojs/vercel/serverless';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// https://astro.build/config
 export default defineConfig({
+  output: "server",
   site: "http://localhost:4321/",
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true
+    }
+  }),
   image: {
     service: {
       entrypoint: "./src/lib/imageService.ts",
@@ -43,8 +46,10 @@ export default defineConfig({
     robotsTxt(),
     react(),
     icon({
+      iconDir: "src/assets/icons",
       include: {
         mdi: ["*"], // (Default) Loads entire Material Design Icon set
+        devicon: ["*"],
       },
     }),
     compressor({
@@ -62,7 +67,7 @@ export default defineConfig({
         "@content": path.resolve("./src/content"),
         "@styles": path.resolve("./src/styles"),
         "@utils": path.resolve("./src/utils"),
-        "@icons": path.resolve("./src/components/icons")
+        "@icons": path.resolve("./src/components/icons"),
       },
     },
   },

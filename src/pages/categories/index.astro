@@ -7,6 +7,7 @@ const allCategories = await getTaxonomy("blog", "categories");
 const uniqueCategories = [
   ...new Set(allCategories.map((item) => item.slug)),
 ].map((slug) => allCategories.find((cat) => cat.slug === slug));
+export const prerender = true;
 ---
 
 <Base>
