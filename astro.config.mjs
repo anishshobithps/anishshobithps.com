@@ -17,6 +17,7 @@ export default defineConfig({
       enabled: true
     },
     imagesConfig: {
+      domains: ['anishshobithps.com'],
       sizes: [320, 640, 1280],
     },
     devImageService: "squoosh",
