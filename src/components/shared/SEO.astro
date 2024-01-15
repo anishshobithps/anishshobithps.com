@@ -20,7 +20,7 @@ const { title, meta_title, description } = Astro.props;
     basic: {
       title: meta_title ? meta_title : title ? title : config.site.title,
       type: "image",
-      image: "/og.png",
+      image: "/og.jpg",
       url: `${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`,
     },
     optional: {
