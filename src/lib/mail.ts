@@ -9,7 +9,6 @@ export interface Mail {
 }
 
 export async function sendMail(mail: Mail) {
-  console.log(mail);
   const body = JSON.stringify({
     name: mail.name,
     email: mail.email,
