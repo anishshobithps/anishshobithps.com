@@ -7,10 +7,12 @@ import { createOgImage } from "@src/lib/createOgImage";
 import MouseGlow from "@src/components/shared/Mouseglow";
 import SEO from "@components/shared/SEO.astro";
 import { Head } from "astro-capo";
-import { Toaster } from "@components/ui/toaster"
+import { Toaster } from "@components/ui/toaster";
+// @ts-expect-error
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 import "@styles/global.css";
-import 'dotenv/config';
+import "dotenv/config";
 
 import { ViewTransitions } from "astro:transitions";
 
@@ -36,6 +38,7 @@ const ogImage = createOgImage({
   <Head>
     <SEO title={title} meta_title={meta_title} description={description} />
     <ViewTransitions />
+    <SpeedInsights />
   </Head>
   <body>
     <MouseGlow client:load />
