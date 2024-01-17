@@ -49,8 +49,8 @@ export default defineConfig({
     icon({
       iconDir: "src/assets/icons",
       include: {
-        mdi: ["*"], // (Default) Loads entire Material Design Icon set
-        devicon: ["*"],
+        mdi: ["github", "arrow-right", "instagram", "twitter", "linkedin"],
+        devicon: ["git", "vscode", "docker", "linux", "javascript", "python", "java", "typescript", "c", "cplusplus", "css3", "html5", "react", "mongodb", "prisma", "tailwindcss"],
       },
     }),
     compressor({
