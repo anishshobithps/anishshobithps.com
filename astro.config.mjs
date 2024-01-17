@@ -1,4 +1,4 @@
-import { defineConfig } from "astro/config";
+import { defineConfig, passthroughImageService } from "astro/config";
 import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import compressor from "astro-compressor";
@@ -20,7 +20,7 @@ export default defineConfig({
       domains: ['anishshobithps.com'],
       sizes: [320, 640, 1280],
     },
-    devImageService: "squoosh",
+    devImageService: passthroughImageService(),
     imageService: true
   }),
   markdown: {

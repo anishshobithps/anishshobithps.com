@@ -20,6 +20,12 @@ module.exports = {
         default: "url(/cursors/pointer.cur), default",
         pointer: "url(/cursors/link.cur), pointer",
       },
+      dropShadow: {
+        glow: [
+          "0 0px 20px rgba(255,255, 255, 0.35)",
+          "0 0px 65px rgba(255, 255,255, 0.2)"
+        ]
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
