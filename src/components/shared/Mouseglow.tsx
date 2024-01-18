@@ -67,7 +67,7 @@ const Glow: React.FC = () => {
     left: mousePosition.x,
     width: "175px",
     height: "175px",
-    backgroundColor: "hsla(23, 68%, 37%, 0.25)",
+    backgroundColor: "hsla(23, 68%, 37%, 0.5)",
     borderRadius: "50%",
     transform: "translate(-50%, -50%)",
     display: isMouseInViewport ? "block" : "hidden",
