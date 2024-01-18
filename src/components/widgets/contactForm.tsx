@@ -126,7 +126,7 @@ export function ContactForm({ token }: { token: string }) {
           )}
         />
 
-        <Button type="submit" className="mt-5 cursor-pointer">
+        <Button type="submit" className="mt-5">
           Submit
         </Button>
       </form>

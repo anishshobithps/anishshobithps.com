@@ -35,7 +35,7 @@ const { main }: { main: NavigationLink[] } = menu;
         </figure>
       </a>
       <div class="relative order-3 flex md:hidden">
-        <Menu client:load>
+        <Menu client:visible>
           <ul class="py-2">
             {
               main?.map((menu) => (

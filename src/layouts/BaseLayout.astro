@@ -10,6 +10,7 @@ import { Head } from "astro-capo";
 import { Toaster } from "@components/ui/toaster";
 // @ts-expect-error
 import SpeedInsights from "@vercel/speed-insights/astro";
+import { AstroFont } from "astro-font";
 
 import "@styles/global.css";
 import "dotenv/config";
@@ -39,6 +40,20 @@ const ogImage = createOgImage({
     <SEO title={title} meta_title={meta_title} description={description} />
     <ViewTransitions />
     <SpeedInsights />
+    <AstroFont
+      config={[
+        {
+          src: [],
+          name: "Poppins",
+          googleFontsURL:
+            "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,400;1,700&display=swap",
+          preload: true,
+          display: "swap",
+          selector: "body",
+          fallback: "sans-serif",
+        },
+      ]}
+    />
   </Head>
   <body>
     <MouseGlow client:load />

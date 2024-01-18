@@ -8,7 +8,12 @@ import react from "@astrojs/react";
 import icon from "astro-icon";
 import path from "node:path";
 import vercel from '@astrojs/vercel/serverless';
+import sentry from "@sentry/astro";
+import spotlightjs from "@spotlightjs/astro";
 
+import fontPicker from "astro-font-picker";
+
+// https://astro.build/config
 export default defineConfig({
   output: "server",
   site: "http://localhost:4321/",
@@ -18,7 +23,7 @@ export default defineConfig({
     },
     imagesConfig: {
       domains: ['anishshobithps.com'],
-      sizes: [320, 640, 1280],
+      sizes: [320, 640, 1280]
     },
     devImageService: passthroughImageService(),
     imageService: true
@@ -27,37 +32,28 @@ export default defineConfig({
     drafts: true,
     shikiConfig: {
       theme: "github-dark",
-      wrap: true,
-    },
+      wrap: true
+    }
   },
-  integrations: [
-    mdx({
-      syntaxHighlight: "shiki",
-      shikiConfig: {
-        theme: "material-theme-palenight",
-        wrap: true,
-      },
-      drafts: true,
-    }),
-    sitemap(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    ,
-    robotsTxt(),
-    react(),
-    icon({
-      iconDir: "src/assets/icons",
-      include: {
-        mdi: ["github", "arrow-right", "instagram", "twitter", "linkedin"],
-        devicon: ["git", "vscode", "docker", "linux", "javascript", "python", "java", "typescript", "c", "cplusplus", "css3", "html5", "react", "mongodb", "prisma", "tailwindcss"],
-      },
-    }),
-    compressor({
-      gzip: true,
-      brotli: true,
-    }),
-  ],
+  integrations: [mdx({
+    syntaxHighlight: "shiki",
+    shikiConfig: {
+      theme: "material-theme-palenight",
+      wrap: true
+    },
+    drafts: true
+  }), sitemap(), tailwind({
+    applyBaseStyles: false
+  }),, robotsTxt(), react(), icon({
+    iconDir: "src/assets/icons",
+    include: {
+      mdi: ["github", "arrow-right", "instagram", "twitter", "linkedin"],
+      devicon: ["git", "vscode", "docker", "linux", "javascript", "python", "java", "typescript", "c", "cplusplus", "css3", "html5", "react", "mongodb", "prisma", "tailwindcss"]
+    }
+  }), compressor({
+    gzip: true,
+    brotli: true
+  }), sentry(), spotlightjs(), fontPicker()],
   vite: {
     resolve: {
       alias: {
@@ -68,8 +64,8 @@ export default defineConfig({
         "@content": path.resolve("./src/content"),
         "@styles": path.resolve("./src/styles"),
         "@utils": path.resolve("./src/utils"),
-        "@icons": path.resolve("./src/components/icons"),
-      },
-    },
-  },
+        "@icons": path.resolve("./src/components/icons")
+      }
+    }
+  }
 });
