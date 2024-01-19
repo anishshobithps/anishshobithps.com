@@ -1,11 +1,11 @@
 ---
-import { Image } from "astro:assets";
-import { cn } from "@src/lib/utils";
 import { buttonVariants } from "@components/ui/button";
-import menu from "@config/menu.json";
-import config from "@config/config.json";
-import Logo from "@src/assets/logo.svg";
 import { Menu } from "@components/widgets/Menu";
+import config from "@config/config.json";
+import menu from "@config/menu.json";
+import Logo from "@src/assets/logo.svg";
+import { cn } from "@src/lib/utils";
+import { Image } from "astro:assets";
 
 export interface NavigationLink {
   name: string;
@@ -27,7 +27,7 @@ const { main }: { main: NavigationLink[] } = menu;
             alt={config.site.title}
             width={Logo.width / 2}
             height={Logo.height / 2}
-            class="rounded cursor-pointer"
+            class="cursor-pointer rounded"
             decoding="async"
             loading="lazy"
           />
@@ -44,7 +44,7 @@ const { main }: { main: NavigationLink[] } = menu;
                     href={menu?.url}
                     class={cn(
                       `${buttonVariants({ variant: "link" })}}`,
-                      "block rounded-lg px-4 py-2 text-lg"
+                      "block rounded-lg px-4 py-2 text-lg",
                     )}
                   >
                     {menu?.name}
@@ -61,7 +61,7 @@ const { main }: { main: NavigationLink[] } = menu;
             <li class="text-md block rounded-lg px-2 py-2">
               <a
                 href={menu?.url}
-                class="relative flex items-center cursor-pointer"
+                class="relative flex cursor-pointer items-center"
               >
                 {menu?.name}
               </a>

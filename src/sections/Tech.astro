@@ -1,7 +1,7 @@
 ---
+import HoverIcon from "@components/widgets/HoverIcon";
 import Section from "@layouts/Section.astro";
 import { Icon } from "astro-icon/components";
-import HoverIcon from "@components/widgets/HoverIcon";
 
 interface Technology {
   name: string;
@@ -151,11 +151,11 @@ const technologyCategories: Category[] = [
   {
     technologyCategories
       .sort((techA, techB) =>
-        techA.categoryName.localeCompare(techB.categoryName)
+        techA.categoryName.localeCompare(techB.categoryName),
       )
       .map((category) => (
         <Section title={category.categoryName} sub={true}>
-          <div class="flex gap-3 mt-3">
+          <div class="mt-3 flex gap-3">
             {category.technologies
               .sort((techA, techB) => techA.name.localeCompare(techB.name))
               .map((technology) => (

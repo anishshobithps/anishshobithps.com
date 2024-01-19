@@ -6,7 +6,7 @@ export function Menu({ children }: { children: React.ReactNode }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <MenuIcon aria-hidden="true"/>
+        <MenuIcon aria-hidden="true" />
       </SheetTrigger>
       <SheetContent>
         <div className="grid gap-4 py-4">{children}</div>

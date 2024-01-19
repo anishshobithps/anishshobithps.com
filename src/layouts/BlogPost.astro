@@ -1,14 +1,14 @@
 ---
-import Base from "@src/layouts/BaseLayout.astro";
-import type { CollectionEntry } from "astro:content";
+import { buttonVariants } from "@components/ui/button";
 import FormattedDate from "@components/widgets/FormattedDate.astro";
+import config from "@config/config.json";
 import CalendarIcon from "@icons/CalendarIcon.astro";
 import CategoryIcon from "@icons/CategoryIcon.astro";
-import { Image } from "astro:assets";
-import config from "@config/config.json";
+import Base from "@src/layouts/BaseLayout.astro";
 import { slugify } from "@src/lib/slug";
-import { buttonVariants } from "@components/ui/button";
 import { cn } from "@src/lib/utils";
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
 
 import ProfileImage from "@src/assets/profile.png";
 
@@ -20,7 +20,7 @@ const { title, description, pubDate, heroImage, categories, tags } =
 
 <Base meta_title={title} description={description} image={heroImage} blogpost>
   <article>
-    <div class="rounded-lg block overflow-hidden mb-8">
+    <div class="mb-8 block overflow-hidden rounded-lg">
       {
         heroImage && (
           <Image
@@ -36,10 +36,10 @@ const { title, description, pubDate, heroImage, categories, tags } =
         )
       }
     </div>
-    <div class="md:col-10 text-center mb-12">
-      <h1 class="text-2xl md:text-4xl font-bold">{title}</h1>
-      <div class="mt-4 flex flex-wrap items-center justify-center text-text">
-        <div class="mx-3 flex items-center flex-wrap font-medium mt-2">
+    <div class="md:col-10 mb-12 text-center">
+      <h1 class="text-2xl font-bold md:text-4xl">{title}</h1>
+      <div class="text-text mt-4 flex flex-wrap items-center justify-center">
+        <div class="mx-3 mt-2 flex flex-wrap items-center font-medium">
           <figure>
             <Image
               alt={config.author.name}
@@ -53,17 +53,17 @@ const { title, description, pubDate, heroImage, categories, tags } =
           </figure>
           <span>{config.author.name}</span>
         </div>
-        <div class="mx-3 flex items-center flex-wrap font-medium mt-2">
+        <div class="mx-3 mt-2 flex flex-wrap items-center font-medium">
           <CalendarIcon />
           <FormattedDate date={pubDate} />
         </div>
-        <div class="mx-3 flex items-center flex-wrap font-medium mt-2">
+        <div class="mx-3 mt-2 flex flex-wrap items-center font-medium">
           <CategoryIcon />
           {
             categories?.slice(0, 1).map((category) => (
               <a
                 href={`/categories/${slugify(category)}`}
-                class="mr-2 hover:text-primary font-medium capitalize cursor-pointer"
+                class="mr-2 cursor-pointer font-medium capitalize hover:text-primary"
               >
                 {category}
               </a>
@@ -72,7 +72,9 @@ const { title, description, pubDate, heroImage, categories, tags } =
         </div>
       </div>
     </div>
-    <div class="prose prose-green prose-md md:prose-lg min-w-full">
+    <div
+      class="prose-md prose min-w-full text-white md:prose-lg prose-headings:mt-10 prose-headings:font-bold prose-headings:text-[#5383ec] prose-a:text-[#f1bf42] prose-a:hover:cursor-pointer prose-blockquote:text-indigo-500 prose-strong:text-[#f1bf42]"
+    >
       <slot />
     </div>
     <div class="mt-8">
@@ -80,7 +82,10 @@ const { title, description, pubDate, heroImage, categories, tags } =
         tags?.map((tag) => (
           <a
             href={`/tags/${slugify(tag)}`}
-            class={cn(`${buttonVariants({ variant: "ghost" })}}`, 'cursor-pointer capitalize')}
+            class={cn(
+              `${buttonVariants({ variant: "ghost" })}}`,
+              "cursor-pointer capitalize",
+            )}
           >
             #{tag}
           </a>
