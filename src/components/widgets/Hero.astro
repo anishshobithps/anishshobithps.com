@@ -6,6 +6,7 @@ import Hover from "@src/components/widgets/HoverCard";
 import config from "@config/config.json";
 import { cn } from "@src/lib/utils";
 import ProfileImage from "@src/assets/profile.png";
+import { Spotlight } from "@src/components/shared/Spotlight";
 
 interface SocialItem {
   name: string;
@@ -38,6 +39,11 @@ const socialData: SocialItem[] = [
 ---
 
 <section>
+  <Spotlight
+    className="-top-80 left-0 md:left-60 md:-top-20"
+    fill="hsla(23, 68%, 37%, 1)"
+    client:load
+  />
   <div class="mx-auto max-w-screen-lg px-4 py-0 sm:px-6 pb-6 sm:pb-12 lg:px-8">
     <div class="flex items-start justify-between">
       <div class="rounded-lg w-3/5">
