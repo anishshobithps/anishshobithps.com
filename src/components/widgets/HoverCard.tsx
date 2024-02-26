@@ -1,9 +1,9 @@
-import React from "react";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@components/ui/hover-card";
+import React from "react";
 
 interface HoverProps {
   text: string;
@@ -15,7 +15,7 @@ const Hover: React.FC<HoverProps> = ({ text, description }) => {
     <HoverCard>
       <HoverCardTrigger asChild>
         <span
-          className="text-accent-foreground cursor-pointer font-bold"
+          className="cursor-pointer font-bold text-accent-foreground"
           aria-label={text}
           aria-haspopup="true"
           aria-expanded="false"
@@ -28,7 +28,7 @@ const Hover: React.FC<HoverProps> = ({ text, description }) => {
       <HoverCardContent className="w-80">
         <div className="flex items-center">
           <div>
-            <h4 className="text-sm font-semibold mb-1">{description}</h4>
+            <h4 className="mb-1 text-sm font-semibold">{description}</h4>
           </div>
         </div>
       </HoverCardContent>

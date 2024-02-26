@@ -38,7 +38,7 @@ html {
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 10, 100%, 64%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 240 3.7% 15.9%;
@@ -51,11 +51,11 @@ html {
 
 @layer base {
   * {
-    @apply border-border cursor-default;
+    @apply cursor-default border-border;
   }
 
   body {
-    @apply bg-background text-foreground bg-topo;
+    @apply bg-background bg-topo text-foreground;
   }
 }
 

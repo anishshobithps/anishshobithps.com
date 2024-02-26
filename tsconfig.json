@@ -13,10 +13,10 @@
       "@content/*": ["./src/content/*"],
       "@styles/*": ["./src/styles/*"],
       "@utils/*": ["./src/utils/*"],
-      "@icons/*": ["./src/components/icons/*"]
+      "@icons/*": ["./src/components/icons/*"],
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
   },
   "include": ["**/*"],
 }

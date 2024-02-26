@@ -1,10 +1,10 @@
 ---
-import { Image } from "astro:assets";
-import FormattedDate from "@components/widgets/FormattedDate.astro";
 import { buttonVariants } from "@components/ui/button";
-import { cn } from "@src/lib/utils";
+import FormattedDate from "@components/widgets/FormattedDate.astro";
 import config from "@config/config.json";
 import { slugify } from "@src/lib/slug";
+import { cn } from "@src/lib/utils";
+import { Image } from "astro:assets";
 
 const { posts } = Astro.props;
 
@@ -26,18 +26,18 @@ type PostType = {
 ---
 
 <div
-  class="mx-auto grid grid-cols-1 mt-4 md:grid-cols-2 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+  class="mx-auto mt-4 grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3"
 >
   {
     posts?.slice(0, config.site.pageSize).map((post: PostType) => (
       <article class="flex w-full flex-col items-start">
-        <div class="rounded-lg block overflow-hidden mb-4">
+        <div class="mb-4 block overflow-hidden rounded-lg">
           {post.data.heroImage && (
             <a class="cursor-pointer" href={`/blog/${post.slug}/`}>
               <span class="sr-only">{post.data.title}</span>
-              <figure class="w-auto h-auto md:h-[150px] object-cover">
+              <figure class="h-auto w-auto object-cover md:h-[150px]">
                 <Image
-                  class="transition duration-300 ease-in-out hover:scale-110 cursor-pointer"
+                  class="cursor-pointer transition duration-300 ease-in-out hover:scale-110"
                   src={import(`@src/assets/blogs/${post.data.heroImage}.jpg`)}
                   alt={post.data.description}
                   width={960}
@@ -56,7 +56,7 @@ type PostType = {
               href={`/categories/${slugify(item)}`}
               class={cn(
                 `${buttonVariants({ variant: "secondary", size: "sm" })}}`,
-                `cursor-pointer`
+                `cursor-pointer`,
               )}
             >
               {item}

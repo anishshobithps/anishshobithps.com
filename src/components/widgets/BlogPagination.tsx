@@ -1,13 +1,13 @@
-import React from "react";
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationEllipsis,
-  PaginationPrevious,
   PaginationNext,
+  PaginationPrevious,
 } from "@components/ui/pagination";
+import React from "react";
 
 interface BlogPaginationProps {
   length: number;

@@ -1,7 +1,11 @@
 ---
-import Base from "@src/layouts/BaseLayout.astro";
 import CategoryIcon from "@components/icons/CategoryIcon.astro";
-import { getTaxonomy, getSinglePage, taxonomyFilter } from "@src/lib/getAllTags";
+import Base from "@src/layouts/BaseLayout.astro";
+import {
+  getSinglePage,
+  getTaxonomy,
+  taxonomyFilter,
+} from "@src/lib/getAllTags";
 import { deslugify } from "@src/lib/slug";
 
 export async function getStaticPaths() {
@@ -22,15 +26,17 @@ export const prerender = true;
 ---
 
 <Base>
-  <h1 class="text-2xl md:text-3xl font-bold mb-8 capitalize">
+  <h1 class="mb-8 text-2xl font-bold capitalize md:text-3xl">
     Category: {deslugify(category)}
   </h1>
-  <ul class="space-y-4 text-left ml-4">
+  <ul class="ml-4 space-y-4 text-left">
     {
       filterByCategory?.map((post) => (
         <li class="flex items-center space-x-1">
           <CategoryIcon />
-          <a class="cursor-pointer" href={`/blog/${post.slug}`}>{post.data.title}</a>
+          <a class="cursor-pointer" href={`/blog/${post.slug}`}>
+            {post.data.title}
+          </a>
         </li>
       ))
     }
