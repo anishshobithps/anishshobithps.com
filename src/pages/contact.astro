@@ -1,0 +1,55 @@
+---
+import ContactForm from "components/ContactForm";
+import PlatformCard from "components/PlatformCard.astro";
+import FeaturePage from "layouts/FeaturePage.astro";
+import { Github, Mail, Music, Twitter } from "preact-feather";
+
+const platforms = [
+  {
+    name: "Mail",
+    icon: Mail,
+    href: "mailto:anish.shobith19@gmail.com",
+  },
+  {
+    name: "GitHub",
+    icon: Github,
+    href: "https://github.com/Anish-Shobith",
+  },
+  {
+    name: "Spotify",
+    icon: Music,
+    href: "https://open.spotify.com/user/goshcrm0y9jzum2lffvu6f4hz",
+  },
+  {
+    name: "Twitter",
+    icon: Twitter,
+    href: "https://twitter.com/Anish_Shobith",
+  },
+];
+---
+
+<FeaturePage
+  title="Contact"
+  description="Reach me in various ways. Let's connect!"
+>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-16 pt-12">
+    <section class="animate-leftslide">
+      <h2 class="mb-6 font-bold text-2xl">Via e-mail</h2>
+      <div>
+        <ContactForm client:idle />
+      </div>
+    </section>
+    <section class="animate-rightslide">
+      <h2 class="mb-6 font-bold text-2xl">Via platforms</h2>
+      <ul class="flex flex-wrap gap-4">
+        {
+          platforms.map((platform) => (
+            <li>
+              <PlatformCard {...platform} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</FeaturePage>

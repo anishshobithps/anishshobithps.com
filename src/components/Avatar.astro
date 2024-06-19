@@ -1,0 +1,25 @@
+---
+import avatar from "assets/avatar.webp";
+---
+
+<div class="relative m-6">
+  <img
+    src={avatar}
+    alt="Anish Shobith P S's avatar."
+    width="192"
+    height="192"
+    class="w-40 h-40 sm:w-48 sm:h-48 rounded-full"
+  />
+  <span
+    aria-hidden="true"
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+16px)] h-[calc(100%+16px)] rounded-full border-2 border-slate-500"
+  ></span>
+  <span
+    aria-hidden="true"
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+16px)] h-[calc(100%+16px)] rounded-full border-2 border-slate-500 opacity-0 origin-center motion-safe:animate-[avatarring_2s_linear_2]"
+  ></span>
+  <span
+    aria-hidden="true"
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+16px)] h-[calc(100%+16px)] rounded-full border-2 border-slate-500 opacity-0 origin-center motion-safe:animate-[avatarring_2s_linear_1s]"
+  ></span>
+</div>

@@ -1,23 +1,40 @@
-# build output
-dist/
-# generated types
-.astro/
-
 # dependencies
-node_modules/
+node_modules
+.pnp
+.pnp.js
 
-# logs
+# output
+dist
+build
+out
+.next
+
+# testing
+coverage
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
+.pnpm-debug.log*
 
+# log
+logs
+*.log
 
-# environment variables
-.env
-.env.production
+# env
+.env*
 
-# macOS-specific files
+# turbo
+.turbo
+
+# misc
+temp
+next-env.d.ts
+*.tgz
+*.tsbuildinfo
 .DS_Store
+*.pem
 
-.vercel/
+# Yarn v3
+install-state.gz

@@ -1,0 +1,59 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image = "/banner.png" } = Astro.props;
+---
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} - Anish Shobith PS</title>
+  <meta name="description" content={description} />
+  <link rel="icon" href="/logo.svg" />
+  <link rel="canonical" href={Astro.url.href} />
+  <meta name="robots" content="index, follow" />
+
+  <meta property="og:title" content={title} />
+  <slot>
+    <meta property="og:type" content="website" />
+  </slot>
+  <meta property="og:image" content={image} />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content={Astro.url.href} />
+  <meta property="og:description" content={description} />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Anish_Shobith" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+  <meta name="twitter:creator" content="@Anish_Shobith" />
+
+  <script is:inline>
+    function getUserTheme() {
+      try {
+        return localStorage.getItem("theme");
+      } catch {
+        return null;
+      }
+    }
+
+    const userTheme = getUserTheme();
+    const isDarkOs = matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = userTheme === "dark" || (!userTheme && isDarkOs);
+
+    const html = document.documentElement;
+    if (isDark) {
+      html.classList.add("dark");
+    } else {
+      html.classList.remove("dark");
+    }
+  </script>
+</head>

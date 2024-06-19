@@ -1,0 +1,22 @@
+---
+import BaseHead from "components/Head/BaseHead.astro";
+import Page from "./Page.astro";
+
+export interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Page>
+  <BaseHead slot="head" title={title} description={description} />
+  <main class="max-w-5xl min-h-screen px-8 py-20 mx-auto">
+    <h1 class="py-3 sm:py-4 font-bold text-4xl sm:text-5xl">{title}</h1>
+    <p class="font-medium text-lg text-slate-600 dark:text-slate-400">
+      {description}
+    </p>
+    <slot />
+  </main>
+</Page>

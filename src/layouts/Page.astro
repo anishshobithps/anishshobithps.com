@@ -1,0 +1,20 @@
+---
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/700.css";
+import Footer from "components/Footer.astro";
+import Header from "components/Header.astro";
+import "styles/global.css";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <slot name="head" />
+  <body
+    class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200"
+  >
+    <Header />
+    <slot />
+    <Footer />
+  </body>
+</html>

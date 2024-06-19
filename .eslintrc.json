@@ -1,0 +1,57 @@
+{
+  "extends": ["eslint:recommended", "plugin:import/recommended", "prettier"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2022": true
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.astro"],
+      "extends": [
+        "plugin:astro/recommended",
+        "plugin:astro/jsx-a11y-recommended"
+      ],
+      "parser": "astro-eslint-parser"
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/typescript",
+        "plugin:react-hooks/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": ["*.tsx"],
+      "extends": [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:jsx-a11y/recommended"
+      ],
+      "rules": {
+        "react/no-unknown-property": "off"
+      }
+    }
+  ],
+  "rules": {
+    "no-undef": "off"
+  }
+}

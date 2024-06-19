@@ -1,0 +1,18 @@
+---
+import BaseHead from "./BaseHead.astro";
+
+export interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseHead title={title} description={description}>
+  <meta property="og:type" content="profile" />
+  <meta property="profile:first_name" content="Anish" />
+  <meta property="profile:last_name" content="Shobith P S" />
+  <meta property="profile:username" content="anish_shobith_ps" />
+  <meta property="profile:gender" content="male" />
+</BaseHead>

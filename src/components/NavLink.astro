@@ -1,0 +1,21 @@
+---
+export interface Props {
+  href: string;
+  name: string;
+}
+
+const { href, name } = Astro.props;
+const isCurrent = Astro.url.pathname.startsWith(href);
+---
+
+<a
+  href={href}
+  aria-current={isCurrent ? "page" : "false"}
+  class:list={[
+    "px-2 py-1 font-medium text-lg hover:text-sky-800 dark:hover:text-sky-200 text-center",
+    isCurrent
+      ? "text-sky-800 dark:text-sky-200"
+      : "text-slate-600 dark:text-slate-400",
+  ]}
+  >{name}
+</a>

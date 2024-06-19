@@ -1,0 +1,33 @@
+---
+export interface ContentWithHref {
+  href?: string;
+  msg: string;
+}
+export interface Props {
+  title: string;
+  content: ContentWithHref | ContentWithHref[];
+}
+
+const { title, content } = Astro.props;
+---
+
+<div class="py-6">
+  <h2 class="mb-3 font-bold text-xl">
+    {title}
+  </h2>
+  {
+    Array.isArray(content) ? (
+      <ul class="pl-6 space-y-2 list-disc marker:text-sky-800 dark:marker:text-sky-200">
+        {
+          content.map(({ href, msg}) => (
+          <a href={href} >
+            <li class="leading-relaxed">{msg}</li>
+          </a>
+        ))
+      }
+      </ul>
+    ) : (
+      <p class="pl-1 leading-relaxed">{content}</p>
+    )
+  }
+</div>

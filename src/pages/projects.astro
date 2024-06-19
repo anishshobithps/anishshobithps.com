@@ -1,0 +1,46 @@
+---
+import website from "assets/website.webp";
+import gdsc from "assets/gdsc.webp";
+import erela from "assets/erela.webp";
+import ProjectCard from "components/ProjectCard.astro";
+import FeaturePage from "layouts/FeaturePage.astro";
+
+const projects = [
+  {
+    title: "Old website",
+    description: "My old website",
+    coverImage: website,
+    url: "/",
+    lazyLoading: false,
+  },
+  {
+    title: "GDSC SJEC website",
+    description: "Official GDSC SJEC website",
+    coverImage: gdsc,
+    url: "https://gdscsjec.in/",
+  },
+  {
+    title: "erela.js",
+    description: "An easy-to-use Lavalink client for NodeJS.",
+    coverImage: erela,
+    url: "https://github.com/MenuDocs/erela.js",
+  },
+];
+---
+
+<FeaturePage
+  title="Projects"
+  description="I've built many open source projects, and actively contribute to the community."
+>
+  <ul
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch gap-8 pt-12"
+  >
+    {
+      projects.map((project, index) => (
+        <li class="animate-pop" style={`animation-delay: ${index * 0.2}s;`}>
+          <ProjectCard {...project} />
+        </li>
+      ))
+    }
+  </ul>
+</FeaturePage>

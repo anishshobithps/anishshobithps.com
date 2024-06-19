@@ -1,0 +1,73 @@
+---
+import AboutCard from "components/AboutCard.astro";
+import FeaturePage from "layouts/FeaturePage.astro";
+
+const infos = [
+  {
+    title: "📚 Education",
+    content: [
+      {
+      msg: "Computer Science and Engineering (2020 - present)",
+      }
+    ],
+  },
+  {
+    title: "👔 Work Experience",
+    content: [
+      {
+      msg: "Freelance Developer (2018 - present)"
+    }
+  ]
+  },
+  {
+    title: "🏅 Certificates",
+    content: [
+      {
+        href: "https://coursera.org/share/13bd38af98d908a64da1a17546c6ef26",
+        msg: "Crash Course on Python (Google)",
+      },
+      {
+        href: "https://www.coursera.org/account/accomplishments/certificate/GMPWQPB7A4PH",
+        msg: "Java Programming: Solving Problems with Software(Coursera)"
+      },
+      {
+        href: "https://www.coursera.org/account/accomplishments/certificate/YGBENLXQYQEQ",
+        msg: "Data Structures (Coursera)"
+      },
+      {
+        href: "https://certificate.givemycertificate.com/c/03343c6f-5b7e-4a6e-9a64-f28c9951c63e",
+        msg: "DevHost:22 (Sahyadri Open Source Community)"
+      }
+    ],
+  },
+  {
+    title: "💕 Hobbies",
+    content: [
+      {
+        msg: "Coding - JavaScript, TypeScript, Python, Java, C/C++, Ruby ...",
+      },
+      {
+        msg: "Music - EDM's"
+      },
+      {
+        msg: "Games - GTA V, Just Cause - 4, Fall Guys ...",
+      }
+    ],
+  },
+];
+---
+
+<FeaturePage title="About" description="A brief introduction about myself.">
+  <ul class="pt-4 divide-y divide-slate-300 dark:divide-slate-700">
+    {
+      infos.map((info, index) => (
+        <li
+          class="animate-leftslide"
+          style={`animation-delay: ${index * 0.2}s;`}
+        >
+          <AboutCard {...info} />
+        </li>
+      ))
+    }
+  </ul>
+</FeaturePage>

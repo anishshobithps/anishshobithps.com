@@ -1,0 +1,41 @@
+---
+import { ArrowRight } from "preact-feather";
+
+export interface Props {
+  title: string;
+  description: string;
+  coverImage: string;
+  url: string;
+  lazyLoading?: boolean;
+}
+
+const { title, description, coverImage, url, lazyLoading = true } = Astro.props;
+---
+
+<section
+  class="flex flex-col relative h-full rounded-xl shadow-md hover:shadow-xl bg-slate-200 dark:bg-slate-800 overflow-hidden hover:-translate-y-2 transition-[box-shadow,transform]"
+>
+  <img
+    src={coverImage}
+    alt={`Cover of project ${title}`}
+    width="667"
+    height="500"
+    decoding="async"
+    loading={lazyLoading ? "lazy" : "eager"}
+    class="w-full h-auto"
+  />
+  <div class="grow flex flex-col px-5 py-4 space-y-2">
+    <h1 class="font-bold text-xl">{title}</h1>
+    <p>{description}</p>
+    <div class="grow"></div>
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      class="self-end px-2 py-1 font-medium hover:text-sky-800 dark:hover:text-sky-200"
+      >Visit
+      <ArrowRight size={16} class="inline -translate-y-[2px]" />
+      <span class="absolute top-0 left-0 right-0 bottom-0"></span>
+    </a>
+  </div>
+</section>

@@ -1,14 +1,29 @@
 ---
-import Base from "@src/layouts/BaseLayout.astro";
-import About from "@src/sections/About.astro";
-import Tech from "@src/sections/Tech.astro";
-import MainPosts from "@src/sections/MainPosts.astro";
-import Contact from "@src/sections/Contact.astro";
+import Avatar from "components/Avatar.astro";
+import ProfileHead from "components/Head/ProfileHead.astro";
+import Page from "layouts/Page.astro";
 ---
 
-<Base>
-  <About />
-  <Tech />
-  <MainPosts />
-  <Contact />
-</Base>
+<Page>
+  <ProfileHead
+    slot="head"
+    title="Home"
+    description="Anish Shobith P S's portfolio."
+  />
+  <main
+    class="flex flex-col justify-center items-center gap-6 max-w-5xl min-h-screen px-8 py-20 mx-auto"
+  >
+    <Avatar />
+    <h1 class="font-bold text-4xl sm:text-6xl text-center leading-normal">
+      Anish Shobith PS
+    </h1>
+    <p class="sm:text-lg text-slate-600 dark:text-slate-400 text-center">
+      Computer Science Engineering Student. Software Developer. He / Him.
+    </p>
+    <a
+      href="/about"
+      class="px-4 py-2 rounded-lg bg-sky-800 dark:bg-sky-200 font-medium text-slate-200 dark:text-slate-800 shadow hover:brightness-90 transition-[filter]"
+      >About me</a
+    >
+  </main>
+</Page>
