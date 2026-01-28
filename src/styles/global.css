@@ -57,6 +57,30 @@ html {
   body {
     @apply bg-background text-foreground bg-topo;
   }
+
+  a,
+  button,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  label[for],
+  select,
+  summary,
+  [tabindex]:not([tabindex="-1"]),
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="file"] {
+    @apply cursor-pointer;
+  }
+
+  /* Ensure SVGs and all children inside interactive elements inherit cursor */
+  a *,
+  button *,
+  [role="button"] *,
+  .cursor-pointer * {
+    cursor: inherit;
+  }
 }
 
 p {
