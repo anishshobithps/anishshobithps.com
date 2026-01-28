@@ -1,5 +1,4 @@
 import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet";
-
 import { Menu as MenuIcon } from "lucide-react";
 
 export function Menu({ children }: { children: React.ReactNode }) {
