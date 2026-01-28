@@ -7,8 +7,7 @@ import robotsTxt from "astro-robots-txt";
 import react from "@astrojs/react";
 import icon from "astro-icon";
 import path from "node:path";
-import vercel from "@astrojs/vercel/serverless";
-import spotlightjs from "@spotlightjs/astro";
+import vercel from "@astrojs/vercel";
 import fontPicker from "astro-font-picker";
 
 const isDev = import.meta.env.DEV;
@@ -80,7 +79,6 @@ export default defineConfig({
         gzip: true,
         brotli: true,
       }),
-    isDev && spotlightjs(),
     isDev && fontPicker(),
   ].filter(Boolean),
 
