@@ -1,6 +1,6 @@
 ---
 import config from "@config/config.json";
-import { SEO as Seo, type Meta } from "astro-seo";
+import { SEO as Seo } from "astro-seo";
 
 export interface Props {
   title?: string;
@@ -9,32 +9,42 @@ export interface Props {
   noindex?: boolean;
 }
 
-const { title, meta_title, description } = Astro.props;
+const { title, meta_title, description, noindex } = Astro.props;
+const pageTitle = meta_title ?? title ?? config.site.title;
+const pageDescription = description ?? config.metadata.meta_description;
+
+const canonicalUrl = new URL(
+  Astro.url.pathname,
+  config.site.base_url,
+).toString();
+
+const ogImage = new URL("/og.jpg", config.site.base_url).toString();
+const twitterImage = new URL("/og.png", config.site.base_url).toString();
 ---
 
 <Seo
-  title={meta_title ? meta_title : title ? title : config.site.title}
-  description={description ? description : config.metadata.meta_description}
-  canonical={config.site.base_url}
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonicalUrl}
   openGraph={{
     basic: {
-      title: meta_title ? meta_title : title ? title : config.site.title,
-      type: "image",
-      image: "/og.jpg",
-      url: `${config.site.base_url}/${Astro.url.pathname.replace("/", "")}`,
+      title: pageTitle,
+      type: "website",
+      image: ogImage,
+      url: canonicalUrl,
     },
     optional: {
-      description: description ? description : config.metadata.meta_description,
+      description: pageDescription,
     },
   }}
   twitter={{
-    title: meta_title ? meta_title : title ? title : config.site.title,
-    description: description ? description : config.metadata.meta_description,
-    image: "/og.png",
+    title: pageTitle,
+    description: pageDescription,
+    image: twitterImage,
     card: "summary_large_image",
-    creator: "@anishshobithps",
-    site: "@anishshobithps",
-    imageAlt: meta_title ? meta_title : title ? title : config.site.title,
+    creator: "@n10nce",
+    site: "@n10nce",
+    imageAlt: pageTitle,
   }}
   charset="utf-8"
   extend={{
@@ -51,11 +61,7 @@ const { title, meta_title, description } = Astro.props;
         media: "(prefers-color-scheme: dark)",
         content: "#000000",
       },
-      { name: "theme-name", content: "dark" },
-      { name: "msapplication-TileColor", content: "#000000" },
-      { httpEquiv: "Content-Type", content: "text/html; charset=UTF-8" },
+      ...(noindex ? [{ name: "robots", content: "noindex, nofollow" }] : []),
     ],
   }}
->
-  <Seo />
-</Seo>
+/>
