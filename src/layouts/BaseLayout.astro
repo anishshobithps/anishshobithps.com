@@ -4,11 +4,10 @@ import Hero from "@src/components/widgets/Hero.astro";
 import Footer from "@src/components/widgets/AppFooter.astro";
 import config from "@config/config.json";
 import { createOgImage } from "@src/lib/createOgImage";
-import MouseGlow from "@src/components/shared/Mouseglow";
+import { MouseGlow } from "@src/components/shared/Mouseglow";
 import SEO from "@components/shared/SEO.astro";
 import { Head } from "astro-capo";
 import { Toaster } from "@components/ui/toaster";
-// @ts-expect-error
 import SpeedInsights from "@vercel/speed-insights/astro";
 import { AstroFont } from "astro-font";
 
