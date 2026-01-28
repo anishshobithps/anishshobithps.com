@@ -1,14 +1,13 @@
 ---
+import SEO from "@components/shared/SEO.astro";
+import { Toaster } from "@components/ui/toaster";
+import config from "@config/config.json";
+import { MouseGlow } from "@src/components/shared/Mouseglow";
+import Footer from "@src/components/widgets/AppFooter.astro";
 import Header from "@src/components/widgets/AppHeader.astro";
 import Hero from "@src/components/widgets/Hero.astro";
-import Footer from "@src/components/widgets/AppFooter.astro";
-import config from "@config/config.json";
-import { createOgImage } from "@src/lib/createOgImage";
-import { MouseGlow } from "@src/components/shared/Mouseglow";
-import SEO from "@components/shared/SEO.astro";
-import { Head } from "astro-capo";
-import { Toaster } from "@components/ui/toaster";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import { Head } from "astro-capo";
 import { AstroFont } from "astro-font";
 
 import "@styles/global.css";
@@ -26,11 +25,6 @@ export interface Props {
 }
 
 const { title, meta_title, description, blogpost } = Astro.props;
-
-const ogImage = createOgImage({
-  title: meta_title ? meta_title : title ? title : config.site.title,
-  meta: [config.site.title, config.site.base_url].join(" · "),
-});
 ---
 
 <!doctype html>
