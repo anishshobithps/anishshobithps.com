@@ -7,53 +7,81 @@ import robotsTxt from "astro-robots-txt";
 import react from "@astrojs/react";
 import icon from "astro-icon";
 import path from "node:path";
-import vercel from '@astrojs/vercel/serverless';
-import sentry from "@sentry/astro";
-import spotlightjs from "@spotlightjs/astro";
-
+import vercel from "@astrojs/vercel";
 import fontPicker from "astro-font-picker";
 
-// https://astro.build/config
+const isDev = import.meta.env.DEV;
+
 export default defineConfig({
   output: "server",
-  site: "http://localhost:4321/",
+  site: isDev ? "http://localhost:4321" : "https://anishshobithps.com",
   adapter: vercel({
     webAnalytics: {
-      enabled: true
+      enabled: !isDev,
     },
     imagesConfig: {
-      domains: ['anishshobithps.com'],
-      sizes: [320, 640, 1280]
+      domains: ["anishshobithps.com"],
+      sizes: [320, 640, 1280],
     },
-    devImageService: passthroughImageService(),
-    imageService: true
+    ...(isDev && {
+      devImageService: passthroughImageService(),
+    }),
+    imageService: true,
   }),
+
   markdown: {
-    drafts: true,
+    drafts: isDev,
     shikiConfig: {
       theme: "github-dark",
-      wrap: true
-    }
-  },
-  integrations: [mdx({
-    syntaxHighlight: "shiki",
-    shikiConfig: {
-      theme: "material-theme-palenight",
-      wrap: true
+      wrap: true,
     },
-    drafts: true
-  }), sitemap(), tailwind({
-    applyBaseStyles: false
-  }),, robotsTxt(), react(), icon({
-    iconDir: "src/assets/icons",
-    include: {
-      mdi: ["github", "arrow-right", "instagram", "twitter", "linkedin"],
-      devicon: ["git", "vscode", "docker", "linux", "javascript", "python", "java", "typescript", "c", "cplusplus", "css3", "html5", "react", "mongodb", "prisma", "tailwindcss"]
-    }
-  }), compressor({
-    gzip: true,
-    brotli: true
-  }), sentry(), spotlightjs(), fontPicker()],
+  },
+
+  integrations: [
+    mdx({
+      syntaxHighlight: "shiki",
+      shikiConfig: {
+        theme: "material-theme-palenight",
+        wrap: true,
+      },
+      drafts: isDev,
+    }),
+    sitemap(),
+    tailwind({ applyBaseStyles: false }),
+    robotsTxt(),
+    react(),
+    icon({
+      iconDir: "src/assets/icons",
+      include: {
+        mdi: ["github", "arrow-right", "instagram", "twitter", "linkedin"],
+        devicon: [
+          "git",
+          "vscode",
+          "docker",
+          "linux",
+          "javascript",
+          "python",
+          "java",
+          "typescript",
+          "c",
+          "cplusplus",
+          "css3",
+          "html5",
+          "react",
+          "mongodb",
+          "prisma",
+          "tailwindcss",
+        ],
+      },
+    }),
+    !isDev &&
+      compressor({
+        gzip: true,
+        brotli: true,
+      }),
+    isDev && fontPicker(),
+  ].filter(Boolean),
+
   vite: {
     resolve: {
       alias: {
@@ -64,8 +92,8 @@ export default defineConfig({
         "@content": path.resolve("./src/content"),
         "@styles": path.resolve("./src/styles"),
         "@utils": path.resolve("./src/utils"),
-        "@icons": path.resolve("./src/components/icons")
-      }
-    }
-  }
+        "@icons": path.resolve("./src/components/icons"),
+      },
+    },
+  },
 });

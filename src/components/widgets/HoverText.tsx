@@ -7,7 +7,7 @@ import {
 } from "@src/components/ui/tooltip";
 
 interface HoverProps {
-  trigger: any;
+  trigger: React.ReactNode;
   text: string;
 }
 

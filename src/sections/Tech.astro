@@ -143,15 +143,16 @@ const technologyCategories: Category[] = [
 
 <Section title="Technology">
   <p>
-    In the dynamic world of technology, I actively contribute to the open-source
-    community and relish the opportunity to connect with like-minded
-    individuals. I also love to explore tech and learn them. Below are the few
-    technologies I have worked with so far.
+    I work with a range of modern technologies to build reliable, scalable, and
+    user-focused applications. I actively contribute to open-source projects and
+    enjoy collaborating with developers who value clean code and thoughtful
+    engineering. Below are some of the technologies I’ve worked with so far.
   </p>
+
   {
     technologyCategories
       .sort((techA, techB) =>
-        techA.categoryName.localeCompare(techB.categoryName)
+        techA.categoryName.localeCompare(techB.categoryName),
       )
       .map((category) => (
         <Section title={category.categoryName} sub={true}>
