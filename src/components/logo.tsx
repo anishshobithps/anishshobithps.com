@@ -6,7 +6,6 @@ export interface LogoProps extends SVGProps<SVGSVGElement> {
   container?: boolean;
   outline?: boolean;
   accentBackground?: boolean;
-  gapDot?: boolean;
 }
 
 export const Logo = forwardRef<SVGSVGElement, LogoProps>(
@@ -17,7 +16,6 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
       container = true,
       outline = false,
       accentBackground = false,
-      gapDot = false,
       ...props
     },
     ref,
@@ -94,14 +92,6 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
                 : "fill-current"
           }
         />
-        {gapDot && (
-          <circle
-            cx="32"
-            cy={container ? 36.25 : 38}
-            r="2.5"
-            className="fill-accent"
-          />
-        )}
       </svg>
     );
   },

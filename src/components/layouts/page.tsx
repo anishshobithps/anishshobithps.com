@@ -30,3 +30,27 @@ export const Content = forwardRef<HTMLElement, ComponentPropsWithRef<"main">>(
 );
 
 Content.displayName = "Content";
+
+interface SectionProps extends ComponentPropsWithRef<"section"> {
+  variant?: "default" | "hero";
+}
+
+export const Section = forwardRef<HTMLElement, SectionProps>(
+  ({ variant = "default", children, ...props }, ref) => {
+    return (
+      <section
+        ref={ref}
+        className={cn(
+          "relative flex flex-col gap-10",
+          variant === "default" && "py-20",
+          variant === "hero" && "pt-6 pb-12 border-b",
+        )}
+        {...props}
+      >
+        {children}
+      </section>
+    );
+  },
+);
+
+Section.displayName = "Section";
