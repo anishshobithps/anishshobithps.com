@@ -1,13 +1,16 @@
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
-import { z } from "zod";
+import lastModified from 'fumadocs-mdx/plugins/last-modified';
 
-// You can customise Zod schemas for frontmatter and `meta.json` here
-// see https://fumadocs.dev/docs/mdx/collections
+import { z } from "zod/v4";
+
 export const docs = defineDocs({
     dir: "content/blog",
     docs: {
-        schema: pageSchema,
+        schema: pageSchema.extend({
+            tags: z.array(z.string()).optional(),
+            date: z.coerce.date().optional(),
+        }),
         postprocess: {
             includeProcessedMarkdown: true,
         },
@@ -18,7 +21,5 @@ export const docs = defineDocs({
 });
 
 export default defineConfig({
-    mdxOptions: {
-        // MDX options
-    },
+    plugins: [lastModified()],
 });
