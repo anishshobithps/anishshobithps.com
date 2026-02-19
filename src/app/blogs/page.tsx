@@ -48,7 +48,7 @@ export default function BlogPage() {
               <Link
                 key={page.url}
                 href={page.url}
-                className="group relative flex flex-col gap-2 py-6 first:pt-0 last:pb-0 pl-0 hover:pl-4 transition-[padding-left] duration-200"
+                className="group relative flex flex-col gap-2 py-6 pl-0 hover:pl-4 transition-[padding-left] duration-200"
               >
                 <span
                   aria-hidden="true"
