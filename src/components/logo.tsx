@@ -1,5 +1,5 @@
-import { forwardRef, SVGProps } from "react";
 import { cn } from "@/lib/cn";
+import { forwardRef, SVGProps } from "react";
 
 export interface LogoProps extends SVGProps<SVGSVGElement> {
   size?: number;

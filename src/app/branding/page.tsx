@@ -1,7 +1,7 @@
-"use client";
-
-import React from "react";
+import type { Metadata } from "next";
+import { buildMeta } from "@/lib/og";
 import { Logo } from "@/components/logo";
+import { ScaledOG } from "./scaled-og";
 import { OGImage } from "@/components/OG";
 import {
   TypographyH1,
@@ -18,6 +18,13 @@ import {
   TypographyH4,
 } from "@/components/ui/typography";
 import { Section } from "@/components/layouts/page";
+
+export const metadata: Metadata = buildMeta({
+  title: "Brand System",
+  pageTitle: "Brand System",
+  path: "home / branding",
+  description: "Official logos, Open Graph templates, and typography scale.",
+});
 
 const LOGO_VARIANTS = [
   { key: "default", label: "Default", darkBg: false, props: {} },
@@ -64,41 +71,6 @@ const OG_PREVIEWS = [
     availableForHire: false,
   },
 ] as const;
-
-/* Scales a fixed 1200×630 OGImage to fill its container width */
-function ScaledOG({ children }: { children: React.ReactNode }) {
-  const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const [scale, setScale] = React.useState(1);
-
-  React.useEffect(() => {
-    const el = wrapperRef.current;
-    if (!el) return;
-    const update = () => setScale(el.clientWidth / 1200);
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={wrapperRef}
-      className="w-full overflow-hidden"
-      style={{ height: 630 * scale }}
-    >
-      <div
-        style={{
-          width: 1200,
-          height: 630,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
 
 export default function BrandingPage() {
   return (

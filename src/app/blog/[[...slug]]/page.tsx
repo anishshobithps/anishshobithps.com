@@ -1,8 +1,13 @@
-import { TypographyH1, TypographyLead } from "@/components/ui/typography";
-import { getPageImage, source } from "@/lib/source";
+import {
+  TypographyH1,
+  TypographyLead,
+  TypographyMuted,
+} from "@/components/ui/typography";
+import { Section } from "@/components/layouts/page";
+import { BlogBody } from "@/components/layouts/blog";
+import { source } from "@/lib/source";
+import { buildMeta } from "@/lib/og";
 import { getMDXComponents } from "@/mdx-components";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
-import { DocsBody, DocsPage } from "fumadocs-ui/layouts/docs/page";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -16,44 +21,47 @@ export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
 
   return (
     <>
-      <header className="border-b pb-8 mb-0">
+      <Section variant="hero">
         <TypographyH1 className="mt-2 mb-3">{page.data.title}</TypographyH1>
+        {page.data.tags && page.data.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 -mt-1">
+            {page.data.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        {page.data.date && (
+          <TypographyMuted className="font-mono text-xs">
+            {new Date(page.data.date).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </TypographyMuted>
+        )}
         {page.data.description && (
           <TypographyLead className="mb-4">
             {page.data.description}
           </TypographyLead>
         )}
-      </header>
+      </Section>
 
-      <DocsLayout
-        nav={{ enabled: false }}
-        tree={{ name: "Blog", children: [] }}
-        sidebar={{ enabled: false, tabs: false }}
-        containerProps={{
-          className: "-mx-6 sm:-mx-8 lg:-mx-10 pb-16 -mb-16",
-          style: {
-            "--fd-nav-height": "3.5rem",
-            "--fd-docs-row-1": "3.5rem",
-            "--fd-docs-row-2": "3.5rem",
-            "--fd-toc-width": "160px",
-          } as React.CSSProperties,
-        }}
+      <BlogBody
+        toc={page.data.toc}
+        createdAt={page.data.date}
+        lastModified={page.data.lastModified}
       >
-        <DocsPage
-          toc={page.data.toc}
-          tableOfContent={{ style: "clerk" }}
-          breadcrumb={{ enabled: false }}
-          footer={{ enabled: false }}
-        >
-          <DocsBody>
-            <MDX
-              components={getMDXComponents({
-                a: createRelativeLink(source, page),
-              })}
-            />
-          </DocsBody>
-        </DocsPage>
-      </DocsLayout>
+        <MDX
+          components={getMDXComponents({
+            a: createRelativeLink(source, page),
+          })}
+        />
+      </BlogBody>
     </>
   );
 }
@@ -69,11 +77,11 @@ export async function generateMetadata(
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  return {
+  return buildMeta({
     title: page.data.title,
-    description: page.data.description,
-    openGraph: {
-      images: getPageImage(page).url,
-    },
-  };
+    pageTitle: page.data.title,
+    description: page.data.description ?? "",
+    path: `home / blog / ${params.slug?.join(" / ") ?? ""}`,
+    tags: (page.data.tags as string[] | undefined) ?? [],
+  });
 }

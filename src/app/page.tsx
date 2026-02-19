@@ -1,90 +1,119 @@
-"use client";
+import { Section } from "@/components/layouts/page";
+import { siteConfig } from "@/lib/config";
+import { buildMeta } from "@/lib/og";
+import type { Metadata } from "next";
+import {
+  TypographyH1,
+  TypographyH2,
+  TypographyH3,
+  TypographyLead,
+  TypographyP,
+} from "@/components/ui/typography";
+
+export const metadata: Metadata = buildMeta({
+  title: siteConfig.name,
+  description: siteConfig.description,
+  path: "home",
+});
 
 export default function Page() {
   return (
-    <div className="max-w-4xl">
+    <>
       {/* HERO */}
-      <section className="mb-40">
-        <h2 className="text-5xl font-bold mb-6">Introduction</h2>
-        <p className="text-lg text-white/70 leading-relaxed">
+      <Section variant="hero">
+        <TypographyH1>Introduction</TypographyH1>
+        <TypographyLead>
           I design and build high-performance web experiences with a focus on
           clarity, motion, and precision. My work blends engineering and design
           to create interfaces that feel effortless.
-        </p>
-      </section>
+        </TypographyLead>
+      </Section>
 
       {/* ABOUT */}
-      <section className="mb-40">
-        <h2 className="text-4xl font-semibold mb-8">About</h2>
-
-        <h3 className="text-2xl font-medium mb-4">Background</h3>
-        <p className="text-white/70 mb-8 leading-relaxed">
-          With a strong foundation in frontend engineering, I specialize in
-          React, animation systems, and modern web architecture. I enjoy
-          crafting systems that are scalable, maintainable, and elegant.
-        </p>
-
-        <h3 className="text-2xl font-medium mb-4">Philosophy</h3>
-        <p className="text-white/70 leading-relaxed">
-          Simplicity scales. Every interface should communicate hierarchy,
-          motion, and structure clearly. I focus on building experiences that
-          feel intuitive and natural.
-        </p>
-      </section>
+      <Section>
+        <TypographyH2>About</TypographyH2>
+        <div className="space-y-8">
+          <div>
+            <TypographyH3>Background</TypographyH3>
+            <TypographyP>
+              With a strong foundation in frontend engineering, I specialize in
+              React, animation systems, and modern web architecture. I enjoy
+              crafting systems that are scalable, maintainable, and elegant.
+            </TypographyP>
+          </div>
+          <div>
+            <TypographyH3>Philosophy</TypographyH3>
+            <TypographyP>
+              Simplicity scales. Every interface should communicate hierarchy,
+              motion, and structure clearly. I focus on building experiences
+              that feel intuitive and natural.
+            </TypographyP>
+          </div>
+        </div>
+      </Section>
 
       {/* EXPERIENCE */}
-      <section className="mb-40">
-        <h2 className="text-4xl font-semibold mb-8">Experience</h2>
-
-        <h3 className="text-2xl font-medium mb-4">Senior Frontend Engineer</h3>
-        <p className="text-white/70 mb-8 leading-relaxed">
-          Led development of high-traffic web applications, optimized rendering
-          performance, and built reusable design systems used across multiple
-          products.
-        </p>
-
-        <h3 className="text-2xl font-medium mb-4">UI Systems Architect</h3>
-        <p className="text-white/70 leading-relaxed">
-          Designed motion systems, scroll interactions, and component libraries
-          that improved consistency and reduced engineering overhead.
-        </p>
-      </section>
+      <Section>
+        <TypographyH2>Experience</TypographyH2>
+        <div className="space-y-8">
+          <div>
+            <TypographyH3>Senior Frontend Engineer</TypographyH3>
+            <TypographyP>
+              Led development of high-traffic web applications, optimized
+              rendering performance, and built reusable design systems used
+              across multiple products.
+            </TypographyP>
+          </div>
+          <div>
+            <TypographyH3>UI Systems Architect</TypographyH3>
+            <TypographyP>
+              Designed motion systems, scroll interactions, and component
+              libraries that improved consistency and reduced engineering
+              overhead.
+            </TypographyP>
+          </div>
+        </div>
+      </Section>
 
       {/* PROJECTS */}
-      <section className="mb-40">
-        <h2 className="text-4xl font-semibold mb-8">Projects</h2>
-
-        <h3 className="text-2xl font-medium mb-4">
-          Interactive Documentation Platform
-        </h3>
-        <p className="text-white/70 mb-8 leading-relaxed">
-          Built a dynamic documentation system with auto-generated navigation,
-          smooth scroll tracking, and contextual highlighting.
-        </p>
-
-        <h3 className="text-2xl font-medium mb-4">Motion Design Portfolio</h3>
-        <p className="text-white/70 mb-8 leading-relaxed">
-          Developed a highly animated portfolio using SVG path tracking and
-          scroll-based progress interactions.
-        </p>
-
-        <h3 className="text-2xl font-medium mb-4">SaaS Dashboard UI</h3>
-        <p className="text-white/70 leading-relaxed">
-          Created modular dashboard components with complex data visualization
-          and interaction patterns.
-        </p>
-      </section>
+      <Section>
+        <TypographyH2>Projects</TypographyH2>
+        <div className="space-y-8">
+          <div>
+            <TypographyH3>Interactive Documentation Platform</TypographyH3>
+            <TypographyP>
+              Built a dynamic documentation system with auto-generated
+              navigation, smooth scroll tracking, and contextual highlighting.
+            </TypographyP>
+          </div>
+          <div>
+            <TypographyH3>Motion Design Portfolio</TypographyH3>
+            <TypographyP>
+              Developed a highly animated portfolio using SVG path tracking and
+              scroll-based progress interactions.
+            </TypographyP>
+          </div>
+          <div>
+            <TypographyH3>SaaS Dashboard UI</TypographyH3>
+            <TypographyP>
+              Created modular dashboard components with complex data
+              visualization and interaction patterns.
+            </TypographyP>
+          </div>
+        </div>
+      </Section>
 
       {/* CONTACT */}
-      <section className="mb-40">
-        <h2 className="text-4xl font-semibold mb-8">Contact</h2>
-
-        <h3 className="text-2xl font-medium mb-4">Let’s Work Together</h3>
-        <p className="text-white/70 leading-relaxed">
-          If you're building something ambitious and need a frontend engineer
-          who cares about detail, motion, and performance — let’s talk.
-        </p>
-      </section>
-    </div>
+      <Section>
+        <TypographyH2>Contact</TypographyH2>
+        <div>
+          <TypographyH3>Let's Work Together</TypographyH3>
+          <TypographyP>
+            If you're building something ambitious and need a frontend engineer
+            who cares about detail, motion, and performance — let's talk.
+          </TypographyP>
+        </div>
+      </Section>
+    </>
   );
 }
