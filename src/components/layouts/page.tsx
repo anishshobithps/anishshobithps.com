@@ -24,8 +24,8 @@ export const Content = forwardRef<HTMLElement, ComponentPropsWithRef<"main">>(
       ref={ref}
       className={cn(
         "relative mx-auto w-full max-w-5xl",
-        "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border",
-        "after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border",
+        "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border before:z-20",
+        "after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border after:z-20",
         className,
       )}
       {...props}
@@ -36,18 +36,20 @@ export const Content = forwardRef<HTMLElement, ComponentPropsWithRef<"main">>(
 Content.displayName = "Content";
 
 interface SectionProps extends ComponentPropsWithRef<"section"> {
-  variant?: "default" | "hero";
+  variant?: "default" | "hero" | "nav";
+  noTopDivider?: boolean;
 }
 
 export const Section = forwardRef<HTMLElement, SectionProps>(
-  ({ variant = "default", children, ...props }, ref) => {
+  ({ variant = "default", noTopDivider = false, children, ...props }, ref) => {
     return (
       <section
         ref={ref}
         className={cn(
-          "relative flex flex-col px-6 sm:px-8 lg:px-10",
-          variant === "default" && "gap-10 pb-20",
-          variant === "hero" && "gap-5 sm:gap-6 pb-14",
+          "relative flex px-6 sm:px-8 lg:px-10",
+          variant === "default" && "flex-col pb-20",
+          variant === "hero" && "flex-col pb-14",
+          variant === "nav" && "flex-col",
         )}
         {...props}
       >
@@ -55,9 +57,30 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
         <DecorIcon position="top-right" />
         <DecorIcon position="bottom-left" />
         <DecorIcon position="bottom-right" />
-        <FullWidthDivider position="bottom" />
-        <Divider short borderTop={false} />
-        {children}
+        {variant === "nav" && <FullWidthDivider position="top" />}
+        {variant === "nav" ? (
+          <>
+            <Divider short borderTop={false} />
+            <div className="flex flex-row items-center justify-between py-4 w-full">
+              {children}
+            </div>
+            <FullWidthDivider position="bottom" />
+          </>
+        ) : (
+          <>
+            <FullWidthDivider position="bottom" />
+            {!noTopDivider && <Divider short borderTop={false} />}
+            <div
+              className={cn(
+                noTopDivider ? "pt-8 xl:pt-12" : "pt-6",
+                variant === "hero" && "flex flex-col gap-5 sm:gap-6",
+                variant === "default" && "flex flex-col gap-10",
+              )}
+            >
+              {children}
+            </div>
+          </>
+        )}
       </section>
     );
   },

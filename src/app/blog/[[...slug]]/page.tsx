@@ -5,19 +5,15 @@ import {
 } from "@/components/ui/typography";
 import { Section } from "@/components/layouts/page";
 import { BlogBody } from "@/components/layouts/blog";
+import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { source } from "@/lib/source";
 import { buildMeta } from "@/lib/og";
+import { siteConfig } from "@/lib/config";
 import { getMDXComponents } from "@/mdx-components";
 import { createRelativeLink } from "fumadocs-ui/mdx";
-import {
-  CalendarDays,
-  Clock,
-  GitCommitHorizontal,
-  ArrowLeft,
-} from "lucide-react";
+import { CalendarDays, Clock, GitCommitHorizontal } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 
 export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
   const params = await props.params;
@@ -27,19 +23,41 @@ export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
   const MDX = page.data.body;
   const readingTime = (page.data as any)._exports?.readingTime;
 
+  const allPages = source.getPages().sort((a, b) => {
+    const aDate = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const bDate = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return bDate - aDate;
+  });
+  const currentIndex = allPages.findIndex((p) => p.url === page.url);
+  const prevPost =
+    currentIndex < allPages.length - 1
+      ? {
+          url: allPages[currentIndex + 1].url,
+          title: allPages[currentIndex + 1].data.title,
+        }
+      : null;
+  const nextPost =
+    currentIndex > 0
+      ? {
+          url: allPages[currentIndex - 1].url,
+          title: allPages[currentIndex - 1].data.title,
+        }
+      : null;
+  const postUrl = `${siteConfig.baseUrl}${page.url}`;
+
   return (
     <>
+      <Section variant="nav">
+        <BlogPostNav
+          pageUrl={postUrl}
+          title={page.data.title}
+          prevPost={prevPost}
+          nextPost={nextPost}
+        />
+      </Section>
+
       <Section variant="hero">
-        <div className="flex flex-col gap-3">
-          <Link
-            href="/blogs"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors w-fit"
-          >
-            <ArrowLeft className="size-3" />
-            Blog
-          </Link>
-          <TypographyH1>{page.data.title}</TypographyH1>
-        </div>
+        <TypographyH1>{page.data.title}</TypographyH1>
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2">
           {page.data.date && (
@@ -89,15 +107,22 @@ export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
         )}
       </Section>
 
-      <BlogBody
-        toc={page.data.toc}
-      >
+      <BlogBody toc={page.data.toc}>
         <MDX
           components={getMDXComponents({
             a: createRelativeLink(source, page),
           })}
         />
       </BlogBody>
+
+      <Section variant="nav">
+        <BlogPostNav
+          pageUrl={postUrl}
+          title={page.data.title}
+          prevPost={prevPost}
+          nextPost={nextPost}
+        />
+      </Section>
     </>
   );
 }

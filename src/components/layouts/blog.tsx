@@ -1,6 +1,7 @@
 "use client";
 
 import { Section } from "@/components/layouts/page";
+import { FullWidthDivider, DecorIcon } from "@/components/ui/border";
 import {
   Collapsible,
   CollapsibleContent,
@@ -113,11 +114,16 @@ function MobileTOC() {
   if (items.length === 0) return null;
 
   return (
-    <div className="sticky top-14 z-10 xl:hidden">
+    <div className="sticky top-14 z-10 xl:hidden before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border">
+      <FullWidthDivider position="top" />
+      <DecorIcon position="top-left" />
+      <DecorIcon position="top-right" />
+      <DecorIcon position="bottom-left" />
+      <DecorIcon position="bottom-right" />
       <Collapsible open={open} onOpenChange={setOpen}>
         <header
           className={cn(
-            "border-b backdrop-blur-sm transition-colors bg-background/80",
+            "backdrop-blur-sm transition-colors bg-background/80",
             open && "shadow-lg",
           )}
         >
@@ -161,6 +167,7 @@ function MobileTOC() {
           </CollapsibleContent>
         </header>
       </Collapsible>
+      <FullWidthDivider position="bottom" />
     </div>
   );
 }
@@ -170,33 +177,28 @@ interface BlogBodyProps {
   children: ReactNode;
 }
 
-export function BlogBody({
-  toc,
-  children,
-}: BlogBodyProps) {
+export function BlogBody({ toc, children }: BlogBodyProps) {
   return (
     <TOCProvider toc={toc}>
       <MobileTOC />
 
-      <Section>
+      <Section noTopDivider>
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
           {/* Article */}
           <article className="prose min-w-0">{children}</article>
 
           {/* Desktop TOC */}
-          <aside className="hidden xl:block">
-            <div className="border-l h-full pl-8">
-              <div className="sticky top-20 flex flex-col gap-6">
-                <div>
-                  <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
-                    <TextAlignStart className="size-3.5 shrink-0" />
-                    On this page
-                  </TypographySmall>
+          <aside className="hidden xl:block border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-20 pb-20">
+            <div className="pl-8 sticky top-20 flex flex-col gap-6">
+              <div>
+                <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <TextAlignStart className="size-3.5 shrink-0" />
+                  On this page
+                </TypographySmall>
 
-                  <TOCScrollArea>
-                    <TOCItems />
-                  </TOCScrollArea>
-                </div>
+                <TOCScrollArea>
+                  <TOCItems />
+                </TOCScrollArea>
               </div>
             </div>
           </aside>
