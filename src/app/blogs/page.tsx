@@ -48,10 +48,14 @@ export default function BlogPage() {
               <Link
                 key={page.url}
                 href={page.url}
-                className="group flex flex-col gap-1 py-6 first:pt-0 last:pb-0 hover:opacity-80 transition-opacity"
+                className="group relative flex flex-col gap-2 py-6 first:pt-0 last:pb-0 pl-0 hover:pl-4 transition-[padding-left] duration-200"
               >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-y-0 left-0 w-0.5 rounded-full bg-foreground/30 scale-y-0 origin-center transition-transform duration-200 group-hover:scale-y-100"
+                />
                 <div className="flex items-baseline justify-between gap-4">
-                  <TypographySmall className="text-base font-semibold text-foreground group-hover:underline underline-offset-4">
+                  <TypographySmall className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
                     {page.data.title}
                   </TypographySmall>
                   {date && (
@@ -61,7 +65,9 @@ export default function BlogPage() {
                   )}
                 </div>
                 {page.data.description && (
-                  <TypographyMuted>{page.data.description}</TypographyMuted>
+                  <TypographyMuted className="leading-relaxed">
+                    {page.data.description}
+                  </TypographyMuted>
                 )}
                 {page.data.tags && page.data.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-1">

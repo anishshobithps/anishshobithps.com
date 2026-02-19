@@ -80,6 +80,8 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  --scrollbar-thumb: oklch(0.65 0 0 / 0.35);
+  --scrollbar-border: oklch(1 0 0);
 }
 
 .dark {
@@ -114,6 +116,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+  --scrollbar-thumb: oklch(0.35 0.005 285.823);
+  --scrollbar-border: oklch(0.141 0.005 285.823);
 }
 
 @layer base {
@@ -127,17 +131,36 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::selection {
   background: color-mix(in oklch, var(--primary) 65%, transparent);
   color: var(--primary-foreground);
 }
 
+@keyframes fd-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+main {
+  animation: fd-fade-in 0.25s ease-out both;
+}
+
 body::-webkit-scrollbar {
-  width: 14px;
+  width: 12px;
 }
 body::-webkit-scrollbar-thumb {
-  @apply bg-neutral-800;
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  border: 3px solid var(--scrollbar-border);
 }
 body::-webkit-scrollbar-track {
-  @apply bg-neutral-900;
+  background: transparent;
 }

@@ -45,9 +45,9 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
       <section
         ref={ref}
         className={cn(
-          "relative flex flex-col gap-10 px-6 sm:px-8 lg:px-10",
-          variant === "default" && "pb-20",
-          variant === "hero" && "pb-12",
+          "relative flex flex-col px-6 sm:px-8 lg:px-10",
+          variant === "default" && "gap-10 pb-20",
+          variant === "hero" && "gap-5 sm:gap-6 pb-14",
         )}
         {...props}
       >

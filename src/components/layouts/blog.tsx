@@ -16,7 +16,7 @@ import {
   TOCScrollArea,
   useTOCItems,
 } from "fumadocs-ui/components/toc/index";
-import { CalendarDays, ChevronDown, Clock, TextAlignStart } from "lucide-react";
+import { ChevronDown, TextAlignStart } from "lucide-react";
 import {
   type ComponentProps,
   type ReactNode,
@@ -48,6 +48,10 @@ function ProgressCircle({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (normalized / max) * circumference;
+  const angle = -Math.PI / 2 + (normalized / max) * 2 * Math.PI;
+  const tipX = size / 2 + radius * Math.cos(angle);
+  const tipY = size / 2 + radius * Math.sin(angle);
+
   const cp = {
     cx: size / 2,
     cy: size / 2,
@@ -55,6 +59,7 @@ function ProgressCircle({
     fill: "none",
     strokeWidth,
   };
+
   return (
     <svg
       role="progressbar"
@@ -67,7 +72,7 @@ function ProgressCircle({
       className={className}
       {...props}
     >
-      <circle {...cp} className="stroke-current/25" />
+      <circle {...cp} className="stroke-current/20" />
       <circle
         {...cp}
         stroke="currentColor"
@@ -75,8 +80,17 @@ function ProgressCircle({
         strokeDashoffset={circumference - progress}
         strokeLinecap="round"
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        className="transition-all"
+        className="transition-all duration-300 ease-out"
       />
+      {normalized > 0 && normalized < max && (
+        <circle
+          cx={tipX}
+          cy={tipY}
+          r={strokeWidth * 0.85}
+          fill="currentColor"
+          className="transition-all duration-300 ease-out"
+        />
+      )}
     </svg>
   );
 }
@@ -86,6 +100,7 @@ function MobileTOC() {
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+
   const selected = useMemo(
     () => items.findIndex((item) => active === item.url.slice(1)),
     [items, active],
@@ -98,7 +113,7 @@ function MobileTOC() {
   if (items.length === 0) return null;
 
   return (
-    <div className="sticky top-18 z-10 xl:hidden">
+    <div className="sticky top-14 z-10 xl:hidden">
       <Collapsible open={open} onOpenChange={setOpen}>
         <header
           className={cn(
@@ -106,7 +121,7 @@ function MobileTOC() {
             open && "shadow-lg",
           )}
         >
-          <CollapsibleTrigger className="flex w-full h-10 items-center text-sm gap-2.5 px-6 sm:px-8 lg:px-10 focus-visible:outline-none cursor-pointer">
+          <CollapsibleTrigger className="flex w-full h-10 items-center text-sm gap-2.5 px-6 sm:px-8 lg:px-10 cursor-pointer">
             <ProgressCircle
               value={(selected + 1) / Math.max(1, items.length)}
               max={1}
@@ -118,6 +133,11 @@ function MobileTOC() {
             <span className="flex-1 truncate text-start text-muted-foreground">
               {selected !== -1 ? items[selected]?.title : ""}
             </span>
+            <span className="shrink-0 font-mono text-xs text-muted-foreground/60 tabular-nums">
+              {selected !== -1 ? selected + 1 : 0}
+              <span className="mx-0.5">/</span>
+              {items.length}
+            </span>
             <ChevronDown
               className={cn(
                 "size-4 shrink-0 text-muted-foreground transition-transform",
@@ -125,6 +145,7 @@ function MobileTOC() {
               )}
             />
           </CollapsibleTrigger>
+
           <CollapsibleContent
             className={cn(
               "overflow-hidden",
@@ -147,67 +168,36 @@ function MobileTOC() {
 interface BlogBodyProps {
   toc: TOCItemType[];
   children: ReactNode;
-  createdAt?: Date;
-  lastModified?: Date;
-  tags?: string[];
-}
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
 }
 
 export function BlogBody({
   toc,
   children,
-  createdAt,
-  lastModified,
 }: BlogBodyProps) {
   return (
     <TOCProvider toc={toc}>
       <MobileTOC />
+
       <Section>
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_220px] gap-10">
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
+          {/* Article */}
           <article className="prose min-w-0">{children}</article>
-          <aside className="hidden xl:flex flex-col bg-muted/40 px-4 -mr-6 sm:-mr-8 lg:-mr-10 pr-6 sm:pr-8 lg:pr-10 -mb-20 pb-20 -mt-14 pt-14">
-            <div className="sticky top-18 pt-4 flex flex-col gap-4">
-              <div>
-                <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <TextAlignStart className="size-3.5 shrink-0" /> On this page
-                </TypographySmall>
-                <TOCScrollArea>
-                  <TOCItems />
-                </TOCScrollArea>
+
+          {/* Desktop TOC */}
+          <aside className="hidden xl:block">
+            <div className="border-l h-full pl-8">
+              <div className="sticky top-20 flex flex-col gap-6">
+                <div>
+                  <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
+                    <TextAlignStart className="size-3.5 shrink-0" />
+                    On this page
+                  </TypographySmall>
+
+                  <TOCScrollArea>
+                    <TOCItems />
+                  </TOCScrollArea>
+                </div>
               </div>
-              {createdAt && (
-                <div className="border-t pt-4">
-                  <TypographySmall className="text-muted-foreground flex items-center gap-1.5">
-                    <CalendarDays className="size-3.5 shrink-0" /> Created
-                  </TypographySmall>
-                  <TypographySmall className="mt-1 font-mono text-xs text-foreground">
-                    {formatDate(createdAt)}
-                  </TypographySmall>
-                </div>
-              )}
-              {lastModified && (
-                <div
-                  className={cn(
-                    !createdAt && "border-t",
-                    "pt-4",
-                    createdAt && "pt-2",
-                  )}
-                >
-                  <TypographySmall className="text-muted-foreground flex items-center gap-1.5">
-                    <Clock className="size-3.5 shrink-0" /> Last modified
-                  </TypographySmall>
-                  <TypographySmall className="mt-1 font-mono text-xs text-foreground">
-                    {formatDate(lastModified)}
-                  </TypographySmall>
-                </div>
-              )}
             </div>
           </aside>
         </div>
