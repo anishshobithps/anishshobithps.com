@@ -29,7 +29,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
         <RootProvider>
           <PageLayout>
             <Header />
-            <Content className="scroll-smooth pt-18 pb-0">{children}</Content>
+            <Content className="scroll-smooth">{children}</Content>
             <Footer />
           </PageLayout>
         </RootProvider>

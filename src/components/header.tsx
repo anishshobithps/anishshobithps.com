@@ -21,6 +21,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "./logo";
+import { ThemeToggle } from "./shared/theme-toggle";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -29,6 +30,15 @@ export function Header() {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const handler = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full backdrop-blur">
@@ -63,6 +73,7 @@ export function Header() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
+          <ThemeToggle mode="light-dark-system" className="max-md:hidden" />
 
           <div className="md:hidden">
             <Popover open={open} onOpenChange={setOpen}>
@@ -80,7 +91,7 @@ export function Header() {
               <PopoverContent
                 align="end"
                 sideOffset={8}
-                className="bg-background/70 w-screen rounded-lg border-x-0 p-0 shadow-md backdrop-blur-md"
+                className="bg-background/95 w-screen rounded-lg border-x-0 p-0 shadow-md backdrop-blur-md"
               >
                 <nav
                   className="flex flex-col divide-y"
@@ -90,19 +101,25 @@ export function Header() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="text-muted-foreground hover:text-foreground hover:bg-accent px-6 py-3.5 transition-colors"
+                      className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
                       aria-current={pathname === link.href ? "page" : undefined}
                     >
                       <TypographySmall>{link.label}</TypographySmall>
                     </Link>
                   ))}
+                  <div className="flex items-center justify-between px-6 py-3.5">
+                    <TypographySmall className="text-foreground">
+                      Theme
+                    </TypographySmall>
+                    <ThemeToggle mode="light-dark-system" />
+                  </div>
                 </nav>
               </PopoverContent>
             </Popover>
           </div>
         </div>
       </div>
-      <Divider short borderTop={false} />
+      <Divider plain />
     </header>
   );
 }

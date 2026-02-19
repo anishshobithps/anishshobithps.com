@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { TypographyMuted, TypographySmall } from "./ui/typography";
 import { Logo } from "./logo";
+import { ThemeToggle } from "./shared/theme-toggle";
 
 const platformIcons: Record<
   (typeof siteConfig.social)[number]["platform"],
@@ -75,10 +76,13 @@ export function Footer() {
 
         <FullWidthDivider position="bottom" />
 
-        <TypographyMuted className="font-mono">
-          &copy; 2022 - {new Date().getFullYear()} {siteConfig.name}. All rights
-          reserved.
-        </TypographyMuted>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <TypographyMuted className="font-mono">
+            &copy; 2022 - {new Date().getFullYear()} {siteConfig.name}. All
+            rights reserved.
+          </TypographyMuted>
+          <ThemeToggle mode="light-dark-system" className="self-start" />
+        </div>
       </div>
     </footer>
   );

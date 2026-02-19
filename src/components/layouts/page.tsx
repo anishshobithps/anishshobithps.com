@@ -56,7 +56,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
         <DecorIcon position="bottom-left" />
         <DecorIcon position="bottom-right" />
         <FullWidthDivider position="bottom" />
-        <Divider short={variant === "default"} borderBottom={false} />
+        <Divider short borderTop={false} />
         {children}
       </section>
     );
