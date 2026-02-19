@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { Logo, type LogoProps } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Logo, type LogoProps } from "@/components/logo";
-import { TypographySmall, TypographyMuted } from "@/components/ui/typography";
-import { ImageIcon, CodeXmlIcon } from "lucide-react";
+import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
+import { CodeXmlIcon, ImageIcon } from "lucide-react";
+import { useRef, useState } from "react";
 
 const DOWNLOAD_SIZES = [16, 32, 64, 128, 256, 512] as const;
 type DownloadSize = (typeof DOWNLOAD_SIZES)[number];

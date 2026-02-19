@@ -1,23 +1,23 @@
-import type { Metadata } from "next";
-import { buildMeta } from "@/lib/og";
-import { LogoDownloadCard } from "./logo-download-card";
-import { ScaledOG } from "./scaled-og";
+import { Section } from "@/components/layouts/page";
 import { OGImage } from "@/components/OG";
 import {
+  TypographyBlockquote,
   TypographyH1,
   TypographyH2,
-  TypographyP,
-  TypographyLead,
-  TypographyBlockquote,
-  TypographyList,
-  TypographyInlineCode,
-  TypographyLarge,
-  TypographySmall,
-  TypographyMuted,
   TypographyH3,
   TypographyH4,
+  TypographyInlineCode,
+  TypographyLarge,
+  TypographyLead,
+  TypographyList,
+  TypographyMuted,
+  TypographyP,
+  TypographySmall,
 } from "@/components/ui/typography";
-import { Section } from "@/components/layouts/page";
+import { buildMeta } from "@/lib/og";
+import type { Metadata } from "next";
+import { LogoDownloadCard } from "./logo-download-card";
+import { ScaledOG } from "./scaled-og";
 
 export const metadata: Metadata = buildMeta({
   title: "Brand System",
