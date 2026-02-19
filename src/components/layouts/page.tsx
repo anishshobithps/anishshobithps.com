@@ -47,7 +47,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
         ref={ref}
         className={cn(
           "relative flex px-6 sm:px-8 lg:px-10",
-          variant === "default" && !noTopDivider && "flex-col pb-20",
+          variant === "default" && !noTopDivider && "flex-col pb-12",
           variant === "default" && noTopDivider && "flex-col pb-8 xl:pb-12",
           variant === "hero" && "flex-col pb-14",
           variant === "nav" && "flex-col",
@@ -77,7 +77,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
                   ? "pt-8 xl:pt-12"
                   : variant === "hero"
                     ? "pt-14"
-                    : "pt-20",
+                    : "pt-12",
                 variant === "hero" && "flex flex-col gap-5 sm:gap-6",
                 variant === "default" && "flex flex-col gap-10",
               )}
