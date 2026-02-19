@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { buildMeta } from "@/lib/og";
-import { Logo } from "@/components/logo";
+import { LogoDownloadCard } from "./logo-download-card";
 import { ScaledOG } from "./scaled-og";
 import { OGImage } from "@/components/OG";
 import {
@@ -27,11 +27,22 @@ export const metadata: Metadata = buildMeta({
 });
 
 const LOGO_VARIANTS = [
-  { key: "icon", label: "Icon", props: {} },
-  { key: "wordmark", label: "Wordmark", props: { showWordmark: true } },
+  {
+    key: "icon",
+    label: "Icon",
+    description: "Mark only — use at small sizes",
+    props: {},
+  },
+  {
+    key: "wordmark",
+    label: "Wordmark",
+    description: "Mark + short name",
+    props: { showWordmark: true },
+  },
   {
     key: "wordmark-full",
     label: "Full Name",
+    description: "Mark + full name",
     props: { showWordmark: true, full: true },
   },
 ] as const;
@@ -221,44 +232,15 @@ export default function BrandingPage() {
           </TypographyMuted>
           <TypographyH2>Logo Variants</TypographyH2>
         </div>
-        <div className="rounded-xl border divide-y overflow-hidden">
-          {LOGO_VARIANTS.map((variant) => (
-            <div
-              key={variant.key}
-              className="grid grid-cols-[1fr_80px] items-stretch"
-            >
-              {/* Preview */}
-              <div className="flex items-center px-10 h-32 bg-muted/30">
-                <Logo size={56} {...(variant.props as object)} copyOnClick />
-              </div>
-              {/* Label */}
-              <div className="flex items-center justify-center border-l bg-muted/10 px-4">
-                <TypographySmall className="font-medium text-center leading-tight">
-                  {variant.label}
-                </TypographySmall>
-              </div>
-            </div>
-          ))}
-        </div>
 
-        <div className="rounded-xl border p-5 grid grid-cols-2 sm:grid-cols-4 divide-x bg-muted/10">
-          {[
-            { label: "Minimum size", value: "32 × 32 px" },
-            { label: "Clear space", value: "0.5× height" },
-            { label: "Formats", value: "SVG · PNG" },
-            { label: "Variants", value: "3 total" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="px-5 first:pl-0 last:pr-0 space-y-1"
-            >
-              <TypographyMuted className="text-xs uppercase tracking-widest">
-                {item.label}
-              </TypographyMuted>
-              <TypographySmall className="font-semibold">
-                {item.value}
-              </TypographySmall>
-            </div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {LOGO_VARIANTS.map((variant) => (
+            <LogoDownloadCard
+              key={variant.key}
+              label={variant.label}
+              description={variant.description}
+              logoProps={variant.props}
+            />
           ))}
         </div>
       </Section>

@@ -56,8 +56,8 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
         xmlns="http://www.w3.org/2000/svg"
         className={cn("transition-colors select-none", className)}
         style={{ cursor: "pointer" }}
-        onClick={(e) => {
-          if (copyOnClick && (e.target as HTMLElement).tagName !== "text") {
+        onClick={() => {
+          if (copyOnClick) {
             navigator.clipboard.writeText(label);
           }
         }}
