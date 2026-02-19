@@ -1,4 +1,5 @@
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { Content, PageLayout } from "@/components/layouts/page";
 import { siteConfig } from "@/lib/config";
 import { buildOGMeta } from "@/lib/og";
@@ -29,6 +30,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
           <PageLayout>
             <Header />
             <Content className="scroll-smooth pt-18 pb-0">{children}</Content>
+            <Footer />
           </PageLayout>
         </RootProvider>
       </body>

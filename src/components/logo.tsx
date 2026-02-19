@@ -1,97 +1,104 @@
+"use client";
+
 import { cn } from "@/lib/cn";
 import { forwardRef, SVGProps } from "react";
 
 export interface LogoProps extends SVGProps<SVGSVGElement> {
   size?: number;
-  container?: boolean;
-  outline?: boolean;
-  accentBackground?: boolean;
+  showWordmark?: boolean;
+  full?: boolean;
+  copyOnClick?: boolean;
 }
+
+const FONT_SIZE = 46;
+const TEXT_X = 50;
+const TEXT_Y = 57;
+const CHAR_W = 0.52;
+const VB_HEIGHT = 64;
+const CROP_LEFT = 14;
+
+function textWidth(str: string) {
+  return Math.ceil(str.length * CHAR_W * FONT_SIZE);
+}
+
+const VB = {
+  icon: { x: CROP_LEFT, w: 64 - CROP_LEFT },
+  wordmark: { x: CROP_LEFT, w: TEXT_X + textWidth("nish") - CROP_LEFT },
+  full: { x: CROP_LEFT, w: TEXT_X + textWidth("nish Shobith P S") - CROP_LEFT },
+} as const;
 
 export const Logo = forwardRef<SVGSVGElement, LogoProps>(
   (
     {
       className,
       size = 64,
-      container = true,
-      outline = false,
-      accentBackground = false,
+      showWordmark = false,
+      full = false,
+      copyOnClick = false,
       ...props
     },
     ref,
   ) => {
-    const letterPointsContainer = "32,9 46,55 39.5,55 32,20 24.5,55 18,55";
-    const letterPointsNoContainer = "32,4 48,60 40.5,60 32,14 23.5,60 16,60";
+    const vb = showWordmark ? (full ? VB.full : VB.wordmark) : VB.icon;
+    const wordmark = showWordmark ? (full ? "nish Shobith P S" : "nish") : null;
+    const label = "Anish Shobith P S";
+    const scaledWidth = Math.round((vb.w / VB_HEIGHT) * size);
 
     return (
       <svg
         ref={ref}
-        viewBox="0 0 64 64"
-        width={size}
+        role="img"
+        aria-label={label}
+        viewBox={`${vb.x} 0 ${vb.w} ${VB_HEIGHT}`}
+        width={scaledWidth}
         height={size}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={cn("transition-colors", className)}
+        className={cn("transition-colors select-none", className)}
+        style={{ cursor: "pointer" }}
+        onClick={(e) => {
+          if (copyOnClick && (e.target as HTMLElement).tagName !== "text") {
+            navigator.clipboard.writeText(label);
+          }
+        }}
         {...props}
       >
-        {container && !outline && (
-          <rect
-            width="64"
-            height="64"
-            rx="14"
-            className={accentBackground ? "fill-accent" : "fill-foreground"}
-          />
-        )}
-        {outline && (
-          <rect
-            x="1"
-            y="1"
-            width="62"
-            height="62"
-            rx="13"
-            fill="none"
-            className="stroke-foreground"
-            strokeWidth="1.5"
-          />
-        )}
+        {/* Glyph */}
         <polygon
-          points={container ? letterPointsContainer : letterPointsNoContainer}
-          className={
-            accentBackground
-              ? "fill-accent-foreground"
-              : container
-                ? "fill-background"
-                : "fill-current"
-          }
+          points="32,4 48,60 40.5,60 32,14 23.5,60 16,60"
+          className="fill-current"
         />
         <rect
-          x={container ? 18.5 : 18}
-          y={container ? 34 : 36}
-          width={container ? 10 : 11}
-          height={container ? 4.5 : 5}
-          rx={container ? 2.25 : 2.5}
-          className={
-            accentBackground
-              ? "fill-accent-foreground"
-              : container
-                ? "fill-background"
-                : "fill-current"
-          }
+          x="18"
+          y="36"
+          width="11"
+          height="5"
+          rx="2.5"
+          className="fill-current"
         />
         <rect
-          x={container ? 35.5 : 35}
-          y={container ? 34 : 36}
-          width={container ? 10 : 11}
-          height={container ? 4.5 : 5}
-          rx={container ? 2.25 : 2.5}
-          className={
-            accentBackground
-              ? "fill-accent-foreground"
-              : container
-                ? "fill-background"
-                : "fill-current"
-          }
+          x="35"
+          y="36"
+          width="11"
+          height="5"
+          rx="2.5"
+          className="fill-current"
         />
+
+        {/* Wordmark */}
+        {wordmark && (
+          <text
+            x={TEXT_X}
+            y={TEXT_Y}
+            fontFamily="'Geist', 'Geist Fallback', ui-sans-serif, system-ui, sans-serif"
+            fontSize={FONT_SIZE}
+            fontWeight={600}
+            letterSpacing="-0.03em"
+            className="fill-current"
+          >
+            {wordmark}
+          </text>
+        )}
       </svg>
     );
   },

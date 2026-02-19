@@ -27,18 +27,12 @@ export const metadata: Metadata = buildMeta({
 });
 
 const LOGO_VARIANTS = [
-  { key: "default", label: "Default", darkBg: false, props: {} },
+  { key: "icon", label: "Icon", props: {} },
+  { key: "wordmark", label: "Wordmark", props: { showWordmark: true } },
   {
-    key: "nocontainer",
-    label: "No Container",
-    darkBg: false,
-    props: { container: false },
-  },
-  {
-    key: "accent",
-    label: "Accent BG",
-    darkBg: false,
-    props: { accentBackground: true },
+    key: "wordmark-full",
+    label: "Full Name",
+    props: { showWordmark: true, full: true },
   },
 ] as const;
 
@@ -84,6 +78,8 @@ export default function BrandingPage() {
           Official logos, Open Graph templates, and typography scale.
         </TypographyLead>
       </Section>
+
+      {/* 01 — Typography */}
       <Section>
         <div className="space-y-1">
           <TypographyMuted className="uppercase tracking-widest text-xs font-mono">
@@ -93,97 +89,97 @@ export default function BrandingPage() {
         </div>
 
         <div className="rounded-xl border divide-y overflow-hidden">
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">H1</TypographyMuted>
-            <TypographyH1>The quick brown fox</TypographyH1>
-            <TypographyMuted className="text-right text-xs">
-              Display
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">H2</TypographyMuted>
-            <TypographyH2 className="border-none pb-0">
-              Section Heading
-            </TypographyH2>
-            <TypographyMuted className="text-right text-xs">
-              Section
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">H3</TypographyMuted>
-            <TypographyH3>Sub Heading</TypographyH3>
-            <TypographyMuted className="text-right text-xs">
-              Sub
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">H4</TypographyMuted>
-            <TypographyH4>Card Heading</TypographyH4>
-            <TypographyMuted className="text-right text-xs">
-              Card
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">
-              Lead
-            </TypographyMuted>
-            <TypographyLead>
-              Lead text — used for hero sections and page intros.
-            </TypographyLead>
-            <TypographyMuted className="text-right text-xs">
-              Intro
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">P</TypographyMuted>
-            <TypographyP className="mt-0">
-              Paragraph text used across documentation and content pages.
-            </TypographyP>
-            <TypographyMuted className="text-right text-xs">
-              Body
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">BQ</TypographyMuted>
-            <TypographyBlockquote className="mt-0">
-              Blockquote — emphasis and highlights.
-            </TypographyBlockquote>
-            <TypographyMuted className="text-right text-xs">
-              Quote
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">LG</TypographyMuted>
-            <TypographyLarge>
-              Large text — useful for statistics.
-            </TypographyLarge>
-            <TypographyMuted className="text-right text-xs">
-              Callout
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">SM</TypographyMuted>
-            <TypographySmall>Small text — metadata and labels.</TypographySmall>
-            <TypographyMuted className="text-right text-xs">
-              Meta
-            </TypographyMuted>
-          </div>
-
-          <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
-            <TypographyMuted className="font-mono text-xs">MU</TypographyMuted>
-            <TypographyMuted>Muted text — secondary info.</TypographyMuted>
-            <TypographyMuted className="text-right text-xs">
-              Secondary
-            </TypographyMuted>
-          </div>
+          {[
+            {
+              tag: "H1",
+              node: <TypographyH1>The quick brown fox</TypographyH1>,
+              role: "Display",
+            },
+            {
+              tag: "H2",
+              node: (
+                <TypographyH2 className="border-none pb-0">
+                  Section Heading
+                </TypographyH2>
+              ),
+              role: "Section",
+            },
+            {
+              tag: "H3",
+              node: <TypographyH3>Sub Heading</TypographyH3>,
+              role: "Sub",
+            },
+            {
+              tag: "H4",
+              node: <TypographyH4>Card Heading</TypographyH4>,
+              role: "Card",
+            },
+            {
+              tag: "Lead",
+              node: (
+                <TypographyLead>
+                  Lead text — used for hero sections and page intros.
+                </TypographyLead>
+              ),
+              role: "Intro",
+            },
+            {
+              tag: "P",
+              node: (
+                <TypographyP className="mt-0">
+                  Paragraph text used across documentation and content pages.
+                </TypographyP>
+              ),
+              role: "Body",
+            },
+            {
+              tag: "BQ",
+              node: (
+                <TypographyBlockquote className="mt-0">
+                  Blockquote — emphasis and highlights.
+                </TypographyBlockquote>
+              ),
+              role: "Quote",
+            },
+            {
+              tag: "LG",
+              node: (
+                <TypographyLarge>
+                  Large text — useful for statistics.
+                </TypographyLarge>
+              ),
+              role: "Callout",
+            },
+            {
+              tag: "SM",
+              node: (
+                <TypographySmall>
+                  Small text — metadata and labels.
+                </TypographySmall>
+              ),
+              role: "Meta",
+            },
+            {
+              tag: "MU",
+              node: (
+                <TypographyMuted>Muted text — secondary info.</TypographyMuted>
+              ),
+              role: "Secondary",
+            },
+          ].map(({ tag, node, role }) => (
+            <div
+              key={tag}
+              className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5"
+            >
+              <TypographyMuted className="font-mono text-xs">
+                {tag}
+              </TypographyMuted>
+              {node}
+              <TypographyMuted className="text-right text-xs">
+                {role}
+              </TypographyMuted>
+            </div>
+          ))}
 
           <div className="grid grid-cols-[72px_1fr_100px] items-baseline gap-6 px-6 py-5">
             <TypographyMuted className="font-mono text-xs">
@@ -217,6 +213,7 @@ export default function BrandingPage() {
         </div>
       </Section>
 
+      {/* 02 — Logo Variants */}
       <Section>
         <div className="space-y-1">
           <TypographyMuted className="uppercase tracking-widest text-xs font-mono">
@@ -224,27 +221,19 @@ export default function BrandingPage() {
           </TypographyMuted>
           <TypographyH2>Logo Variants</TypographyH2>
         </div>
-
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="rounded-xl border divide-y overflow-hidden">
           {LOGO_VARIANTS.map((variant) => (
             <div
               key={variant.key}
-              className="border rounded-xl overflow-hidden"
+              className="grid grid-cols-[1fr_80px] items-stretch"
             >
-              <div
-                className={[
-                  "flex items-center justify-center p-10 min-h-50",
-                  variant.darkBg ? "bg-neutral-950" : "bg-muted/30",
-                ].join(" ")}
-              >
-                <Logo
-                  id={variant.key}
-                  size={128}
-                  {...(variant.props as object)}
-                />
+              {/* Preview */}
+              <div className="flex items-center px-10 h-32 bg-muted/30">
+                <Logo size={56} {...(variant.props as object)} copyOnClick />
               </div>
-              <div className="px-4 py-3 border-t bg-muted/10">
-                <TypographySmall className="font-medium">
+              {/* Label */}
+              <div className="flex items-center justify-center border-l bg-muted/10 px-4">
+                <TypographySmall className="font-medium text-center leading-tight">
                   {variant.label}
                 </TypographySmall>
               </div>
@@ -254,7 +243,7 @@ export default function BrandingPage() {
 
         <div className="rounded-xl border p-5 grid grid-cols-2 sm:grid-cols-4 divide-x bg-muted/10">
           {[
-            { label: "Minimum size", value: "64 × 64 px" },
+            { label: "Minimum size", value: "32 × 32 px" },
             { label: "Clear space", value: "0.5× height" },
             { label: "Formats", value: "SVG · PNG" },
             { label: "Variants", value: "3 total" },
@@ -274,6 +263,7 @@ export default function BrandingPage() {
         </div>
       </Section>
 
+      {/* 03 — Open Graph */}
       <Section>
         <div className="space-y-1">
           <TypographyMuted className="uppercase tracking-widest text-xs font-mono">
@@ -285,7 +275,6 @@ export default function BrandingPage() {
         <div className="flex flex-col gap-6">
           {OG_PREVIEWS.map((og, i) => (
             <div key={i} className="border rounded-xl overflow-hidden">
-              {/* Mock browser chrome */}
               <div className="flex items-center gap-2 px-4 py-3 border-b bg-muted/20">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
                 <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
@@ -296,7 +285,6 @@ export default function BrandingPage() {
                   </TypographyMuted>
                 </div>
               </div>
-
               <ScaledOG>
                 <OGImage
                   title={og.title}

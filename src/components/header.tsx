@@ -39,8 +39,12 @@ export function Header() {
       >
         <DecorIcon position="bottom-left" />
         <DecorIcon position="bottom-right" />
-        <Link href="/" aria-label="Home">
-          <Logo size={32} />
+
+        <Link href="/" aria-label="Home" className="cursor-pointer">
+          {/* Mobile — icon only */}
+          <Logo size={32} className="sm:hidden cursor-pointer" />
+          {/* sm and up — icon + "Anish" wordmark */}
+          <Logo size={32} showWordmark className="hidden sm:inline-flex" />
         </Link>
 
         <div className="flex items-center gap-1">

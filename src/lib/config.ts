@@ -13,4 +13,10 @@ export const siteConfig = {
         { href: "/blogs", label: "Blogs" },
         { href: "/contact", label: "Contact" },
     ] as const,
+
+    social: [
+        { platform: "github", href: "https://github.com/anishshobithps", label: "GitHub" },
+        { platform: "linkedin", href: "https://www.linkedin.com/in/anishshobithps/", label: "LinkedIn" },
+        { platform: "x", href: "https://x.com/n10nce", label: "X" }
+    ] as const,
 } as const;
