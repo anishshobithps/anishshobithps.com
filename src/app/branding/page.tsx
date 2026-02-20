@@ -1,6 +1,7 @@
 import { LogoDownloadCard } from "@/app/branding/logo-download-card";
 import { ScaledOG } from "@/app/branding/scaled-og";
 import { Section } from "@/components/layouts/page";
+import { BrandingOGPreview } from "./branding-og-preview";
 import { OGImage } from "@/components/shared/OG";
 import {
   TypographyBlockquote,
@@ -18,6 +19,9 @@ import {
 } from "@/components/ui/typography";
 import { buildMeta } from "@/lib/og";
 import type { Metadata } from "next";
+import { Input } from "@/components/ui/input";
+import { InputGroup } from "@/components/ui/input-group";
+import { Switch } from "@/components/ui/switch";
 
 export const metadata: Metadata = buildMeta({
   title: "Brand System",
@@ -26,7 +30,12 @@ export const metadata: Metadata = buildMeta({
   description: "Official logos, Open Graph templates, and typography scale.",
 });
 
-const LOGO_VARIANTS = [
+const LOGO_VARIANTS: Array<{
+  key: string;
+  label: string;
+  description: string;
+  props: Record<string, any>;
+}> = [
   {
     key: "icon",
     label: "Icon",
@@ -45,37 +54,7 @@ const LOGO_VARIANTS = [
     description: "Mark + full name",
     props: { showWordmark: true, full: true },
   },
-] as const;
-
-const OG_PREVIEWS = [
-  {
-    title: "Modern Web Architecture",
-    description: "Scalable systems and beautiful UI foundations.",
-    name: "Anish Shobith P S",
-    role: "Software Developer",
-    path: "/blog/architecture",
-    tags: ["nextjs", "design", "typescript"],
-    availableForHire: true,
-  },
-  {
-    title: "Design Systems & Branding",
-    description: "Building scalable UI foundations.",
-    name: "Anish Shobith P S",
-    role: "Software Developer",
-    path: "/case-studies/design",
-    tags: ["ui", "systems"],
-    availableForHire: false,
-  },
-  {
-    title: "Design Systems & Branding",
-    description: "Building scalable UI foundations.",
-    name: "Anish Shobith P S",
-    role: "Software Developer",
-    path: "/case-studies/design",
-    tags: [],
-    availableForHire: false,
-  },
-] as const;
+];
 
 export default function BrandingPage() {
   return (
@@ -254,34 +233,7 @@ export default function BrandingPage() {
           <TypographyH2>Open Graph</TypographyH2>
         </div>
 
-        <div className="flex flex-col gap-6">
-          {OG_PREVIEWS.map((og, i) => (
-            <div key={i} className="border rounded-xl overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-3 border-b bg-muted/20">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-400/50" />
-                <div className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden">
-                  <TypographyMuted className="font-mono text-[10px] truncate leading-none">
-                    anishshobithps.com{og.path}
-                  </TypographyMuted>
-                </div>
-              </div>
-              <ScaledOG>
-                <OGImage
-                  title={og.title}
-                  description={og.description}
-                  name={og.name}
-                  role={og.role}
-                  domain="anishshobithps.com"
-                  path={og.path}
-                  tags={[...og.tags]}
-                  availableForHire={og.availableForHire}
-                />
-              </ScaledOG>
-            </div>
-          ))}
-        </div>
+        <BrandingOGPreview />
       </Section>
     </>
   );
