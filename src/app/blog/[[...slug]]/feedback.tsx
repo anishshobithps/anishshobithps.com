@@ -124,12 +124,11 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
 
   return (
     <div className={cn("w-full ", className)}>
-      {/* Header */}
       <TypographyP className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground text-center">
         How was this read?
       </TypographyP>
 
-      {/* Reaction buttons */}
+      {/* Hide emoji reactions on mobile, show on md and up */}
       <div className="flex flex-wrap gap-2 justify-center">
         {MOODS.map(
           ({
@@ -155,7 +154,7 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
                 )}
               >
                 <Icon size={14} strokeWidth={isActive ? 2.5 : 2} />
-                <span>{label}</span>
+                <span className="hidden md:inline">{label}</span>
                 {count !== null && count > 0 && (
                   <Badge
                     variant="secondary"
