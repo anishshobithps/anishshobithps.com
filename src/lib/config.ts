@@ -4,7 +4,10 @@ export const siteConfig = {
     role: "Software Developer",
     description:
         "I design and build high-performance web experiences with a focus on clarity, motion, and precision.",
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL
+        ?? (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+            ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
+            : "http://localhost:3000"),
     availableForHire: true,
 
     nav: [
