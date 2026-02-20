@@ -146,11 +146,6 @@ html {
   scroll-behavior: smooth;
 }
 
-::selection {
-  background: color-mix(in oklch, var(--primary) 65%, transparent);
-  color: var(--primary-foreground);
-}
-
 @keyframes fd-fade-in {
   from {
     opacity: 0;
