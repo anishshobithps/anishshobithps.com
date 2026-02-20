@@ -1,9 +1,10 @@
+import { BlogsClient, type BlogPost } from "@/app/blogs/blogs-client";
 import { Section } from "@/components/layouts/page";
 import { TypographyH1, TypographyLead } from "@/components/ui/typography";
 import { buildMeta } from "@/lib/og";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";
-import { BlogsClient, type BlogPost } from "./blogs-client";
+import { Suspense } from "react";
 
 export const metadata: Metadata = buildMeta({
   title: "Blog",
@@ -44,7 +45,9 @@ export default function BlogPage() {
       </Section>
 
       <Section className="pb-6">
-        <BlogsClient posts={posts} allTags={allTags} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <BlogsClient posts={posts} allTags={allTags} />
+        </Suspense>
       </Section>
     </>
   );
