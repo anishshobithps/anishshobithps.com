@@ -4,17 +4,20 @@ import { Button } from "@/components/ui/button";
 import {
   Empty,
   EmptyContent,
-  EmptyDescription,
   EmptyHeader,
 } from "@/components/ui/empty";
-import { HomeIcon } from "lucide-react";
+import { HomeIcon, RotateCcwIcon } from "lucide-react";
 import { TypographyP, TypographyMuted } from "@/components/ui/typography";
 import Link from "next/link";
 import { useRef } from "react";
 import { BouncingLogos } from "@/components/shared/bouncing-logo";
 import { FlickerText } from "@/components/shared/flicker-text";
 
-export default function NotFound() {
+interface ErrorProps {
+  reset: () => void;
+}
+
+export default function ErrorPage({ reset }: ErrorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -27,29 +30,40 @@ export default function NotFound() {
       <Empty className="z-10 backdrop-blur-sm">
         <EmptyHeader>
           <FlickerText
-            chars={["4", "logo", "4"]}
-            charWidth={96}
+            chars={["5", "0", "0"]}
+            charWidth={76}
             className="text-foreground"
           />
 
           <div className="space-y-2 text-center">
             <TypographyP className="text-lg font-semibold tracking-tight">
-              Even my 404 has motion
+              The code tripped
             </TypographyP>
             <TypographyMuted>
-              I spent weeks on this site and you landed on the one page that
-              doesn't exist, <br /> Respect the effort.
+              Something internally panicked, <br />
+              We can act like this never happened.
             </TypographyMuted>
           </div>
         </EmptyHeader>
 
         <EmptyContent>
-          <Button asChild size="lg">
-            <Link href="/" className="flex items-center gap-2">
-              <HomeIcon data-icon="inline-start" />
-              Go Home
-            </Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={reset}
+              className="flex items-center gap-2"
+            >
+              <RotateCcwIcon data-icon="inline-start" />
+              Try Again
+            </Button>
+            <Button asChild size="lg">
+              <Link href="/" className="flex items-center gap-2">
+                <HomeIcon data-icon="inline-start" />
+                Go Home
+              </Link>
+            </Button>
+          </div>
         </EmptyContent>
       </Empty>
     </div>
