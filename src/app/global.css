@@ -130,6 +130,15 @@
   }
   body {
     @apply bg-background text-foreground;
+    cursor:
+      url("/cursors/default.cur") 4 4,
+      auto;
+  }
+
+  *:where(a, button, [role="button"], .cursor-pointer) {
+    cursor:
+      url("/cursors/pointer.cur") 6 6,
+      pointer !important;
   }
 }
 
