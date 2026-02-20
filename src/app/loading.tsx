@@ -4,7 +4,7 @@ export default function Loading() {
   const uid = "logoLoader";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background">
       <svg
         role="img"
         aria-label="Loading"
@@ -13,7 +13,7 @@ export default function Loading() {
         height="64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-foreground"
+        className="text-foreground transition-colors select-none"
       >
         <defs>
           <clipPath id={`${uid}-fillClip`}>
@@ -30,6 +30,10 @@ export default function Loading() {
             </rect>
           </clipPath>
           <style>{`
+            @media (prefers-reduced-motion: reduce) {
+              .${uid}-ghost  { animation: none !important; opacity: 0.5; }
+              .${uid}-filled { animation: none !important; clip-path: none; opacity: 0; }
+            }
             @keyframes ${uid}-ghostBreath {
               0%, 100% { opacity: 0.12; transform: scale(1);    }
               50%       { opacity: 0.07; transform: scale(0.99); }
@@ -37,10 +41,6 @@ export default function Loading() {
             @keyframes ${uid}-breath {
               0%, 100% { transform: scale(1);    }
               50%       { transform: scale(0.99); }
-            }
-            @media (prefers-reduced-motion: reduce) {
-              .${uid}-ghost  { animation: none !important; opacity: 0.5; }
-              .${uid}-filled { animation: none !important; clip-path: none; opacity: 0; }
             }
             .${uid}-ghost {
               fill: currentColor;
