@@ -4,6 +4,7 @@ import { Airplay, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { ComponentProps, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui/button";
 
 const itemVariants = cva(
   "size-6.5 p-1.5 text-foreground/40 transition-colors",
@@ -23,14 +24,8 @@ const full = [
   ["system", Airplay] as const,
 ];
 
-export function ThemeToggle({
-  className,
-  mode = "light-dark",
-  ...props
-}: ComponentProps<"div"> & {
-  mode?: "light-dark" | "light-dark-system";
-}) {
-  const { setTheme, theme, resolvedTheme } = useTheme();
+export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
+  const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -42,44 +37,24 @@ export function ThemeToggle({
     className,
   );
 
-  if (mode === "light-dark") {
-    const value = mounted ? resolvedTheme : null;
-
-    return (
-      <button
-        className={container}
-        aria-label={`Toggle Theme`}
-        onClick={() => setTheme(value === "light" ? "dark" : "light")}
-        data-theme-toggle=""
-      >
-        {full.map(([key, Icon]) => {
-          if (key === "system") return;
-
-          return (
-            <Icon
-              key={key}
-              fill="currentColor"
-              className={cn(itemVariants({ active: value === key }))}
-            />
-          );
-        })}
-      </button>
-    );
-  }
-
   const value = mounted ? theme : null;
 
   return (
     <div className={container} data-theme-toggle="" {...props}>
       {full.map(([key, Icon]) => (
-        <button
+        <Button
           key={key}
+          variant="ghost"
+          size="icon-sm"
           aria-label={key}
-          className={cn(itemVariants({ active: value === key }))}
+          className={cn(
+            itemVariants({ active: value === key }),
+            "cursor-pointer",
+          )}
           onClick={() => setTheme(key)}
         >
           <Icon className="size-full" fill="currentColor" />
-        </button>
+        </Button>
       ))}
     </div>
   );

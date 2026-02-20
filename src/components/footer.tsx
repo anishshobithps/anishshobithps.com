@@ -81,7 +81,7 @@ export function Footer() {
             &copy; 2022 - {new Date().getFullYear()} {siteConfig.name}. All
             rights reserved.
           </TypographyMuted>
-          <ThemeToggle mode="light-dark-system" className="self-start" />
+          <ThemeToggle className="self-start" />
         </div>
       </div>
     </footer>

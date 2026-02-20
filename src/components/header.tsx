@@ -73,7 +73,7 @@ export function Header() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <ThemeToggle mode="light-dark-system" className="max-md:hidden" />
+          <ThemeToggle className="max-md:hidden" />
 
           <div className="md:hidden">
             <Popover open={open} onOpenChange={setOpen}>
@@ -111,7 +111,7 @@ export function Header() {
                     <TypographySmall className="text-foreground">
                       Theme
                     </TypographySmall>
-                    <ThemeToggle mode="light-dark-system" />
+                    <ThemeToggle />
                   </div>
                 </nav>
               </PopoverContent>
