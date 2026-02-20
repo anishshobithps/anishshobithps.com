@@ -6,17 +6,31 @@ import { ComponentPropsWithRef, forwardRef } from "react";
 export const PageLayout = forwardRef<
   HTMLDivElement,
   ComponentPropsWithRef<"div">
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "relative min-h-screen w-full overflow-x-clip bg-background text-foreground",
-      className,
-    )}
+    className={cn("relative min-h-screen w-full overflow-x-clip", className)}
     {...props}
-  />
+  >
+    <div
+      className={cn(
+        "pointer-events-none absolute inset-0",
+
+        // Grid
+        "bg-[linear-gradient(to_right,var(--grid-line)_0.5px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_0.5px,transparent_1px)]",
+        "bg-size-[80px_80px]",
+
+        // Multiple masks
+        "mask-[radial-gradient(circle_at_center,black_65%,transparent_100%),linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]",
+
+        // Intersect behavior
+        "mask-intersect",
+        "[-webkit-mask-composite:source-in]",
+      )}
+    />
+    {children}
+  </div>
 ));
-PageLayout.displayName = "PageLayout";
 
 export const Content = forwardRef<HTMLElement, ComponentPropsWithRef<"main">>(
   ({ className, ...props }, ref) => (

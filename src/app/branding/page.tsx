@@ -60,9 +60,6 @@ export default function BrandingPage() {
   return (
     <>
       <Section variant="hero">
-        <TypographyMuted className="tracking-widest uppercase text-xs font-mono">
-          anishshobithps.com / brand
-        </TypographyMuted>
         <TypographyH1>Brand System</TypographyH1>
         <TypographyLead>
           Official logos, Open Graph templates, and typography scale.
