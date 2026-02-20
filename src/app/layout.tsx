@@ -1,11 +1,12 @@
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 import { Content, PageLayout } from "@/components/layouts/page";
 import { siteConfig } from "@/lib/config";
 import { buildOGMeta } from "@/lib/og";
 import { RootProvider } from "fumadocs-ui/provider/next";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./global.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -32,11 +33,13 @@ export default function Layout({ children }: LayoutProps<"/">) {
     >
       <body className="flex flex-col min-h-screen">
         <RootProvider>
-          <PageLayout>
-            <Header />
-            <Content className="scroll-smooth">{children}</Content>
-            <Footer />
-          </PageLayout>
+          <NuqsAdapter>
+            <PageLayout>
+              <Header />
+              <Content className="scroll-smooth">{children}</Content>
+              <Footer />
+            </PageLayout>
+          </NuqsAdapter>
         </RootProvider>
       </body>
     </html>

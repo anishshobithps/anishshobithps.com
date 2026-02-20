@@ -188,7 +188,9 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
           <article className="prose min-w-0">{children}</article>
 
           {/* Desktop TOC */}
-          <aside className="hidden xl:block border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-20 pb-20">
+          <aside className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
+            <DecorIcon position="top-left" />
+            <DecorIcon position="bottom-left" />
             <div className="pl-8 sticky top-20 flex flex-col gap-6">
               <div>
                 <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">

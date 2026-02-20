@@ -41,7 +41,16 @@ interface SectionProps extends ComponentPropsWithRef<"section"> {
 }
 
 export const Section = forwardRef<HTMLElement, SectionProps>(
-  ({ variant = "default", noTopDivider = false, children, ...props }, ref) => {
+  (
+    {
+      variant = "default",
+      noTopDivider = false,
+      children,
+      className,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <section
         ref={ref}
@@ -51,6 +60,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
           variant === "default" && noTopDivider && "flex-col pb-8 xl:pb-12",
           variant === "hero" && "flex-col pb-14",
           variant === "nav" && "flex-col",
+          className,
         )}
         {...props}
       >
