@@ -83,6 +83,7 @@
   --scrollbar-thumb: oklch(0.65 0 0 / 0.35);
   --scrollbar-border: oklch(1 0 0);
   --grid-line: oklch(0.2 0 0 / 0.04);
+  --glow: oklch(0.6 0.04 40 / 0.12);
 }
 
 .dark {
@@ -120,6 +121,7 @@
   --scrollbar-thumb: oklch(0.35 0.005 285.823);
   --scrollbar-border: oklch(0.141 0.005 285.823);
   --grid-line: oklch(1 0 0 / 0.025);
+  --glow: oklch(0.8 0.03 40 / 0.08);
 }
 
 @layer base {

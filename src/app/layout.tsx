@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./global.css";
+import { MouseGlow } from "@/components/shared/mouse-glow";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.className} antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen">
+      <body className="relative flex flex-col min-h-screen">
         <RootProvider>
           <NuqsAdapter>
             <PageLayout>
@@ -41,6 +42,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
             </PageLayout>
           </NuqsAdapter>
         </RootProvider>
+        <MouseGlow />
       </body>
     </html>
   );

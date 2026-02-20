@@ -9,12 +9,15 @@ export const PageLayout = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("relative min-h-screen w-full overflow-x-clip", className)}
+    className={cn(
+      "relative z-10 min-h-screen w-full overflow-x-clip",
+      className,
+    )}
     {...props}
   >
     <div
       className={cn(
-        "pointer-events-none absolute inset-0",
+        "absolute inset-0 pointer-events-none isolate",
 
         // Grid
         "bg-[linear-gradient(to_right,var(--grid-line)_0.5px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_0.5px,transparent_1px)]",
