@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1771587441798,
+      "tag": "0000_eminent_invaders",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771591396221,
+      "tag": "0001_talented_vermin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771602266154,
+      "tag": "0002_kind_warbound",
+      "breakpoints": true
+    }
+  ]
+}

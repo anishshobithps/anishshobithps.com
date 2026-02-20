@@ -1,21 +1,23 @@
+import { BlogBody } from "@/components/layouts/blog";
+import { BlogPostNav } from "@/components/layouts/blog-nav";
+import { Section } from "@/components/layouts/page";
 import {
   TypographyH1,
   TypographyLead,
   TypographyMuted,
 } from "@/components/ui/typography";
-import { Section } from "@/components/layouts/page";
-import { BlogBody } from "@/components/layouts/blog";
-import { BlogPostNav } from "@/components/layouts/blog-nav";
-import { source } from "@/lib/source";
-import { buildMeta } from "@/lib/og";
 import { siteConfig } from "@/lib/config";
+import { buildMeta } from "@/lib/og";
+import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { CalendarDays, Clock, GitCommitHorizontal } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BlogReadsInfo } from "./blog-reads-info";
+import { BlogReactions } from "./feedback";
 
-export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
+export default async function Page(props: { params: { slug: string[] } }) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
@@ -87,6 +89,7 @@ export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
               {readingTime.text}
             </TypographyMuted>
           )}
+          <BlogReadsInfo slug={page.url} />
         </div>
 
         {page.data.description && (
@@ -115,6 +118,10 @@ export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
         />
       </BlogBody>
 
+      <Section innerPadding="pt-6" className="pb-6">
+        <BlogReactions slug={page.url} />
+      </Section>
+
       <Section variant="nav">
         <BlogPostNav
           pageUrl={postUrl}
@@ -131,9 +138,9 @@ export async function generateStaticParams() {
   return source.generateParams();
 }
 
-export async function generateMetadata(
-  props: PageProps<"/blog/[[...slug]]">,
-): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: { slug: string[] };
+}): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();

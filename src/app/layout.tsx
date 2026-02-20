@@ -34,11 +34,11 @@ export default function Layout({ children }: LayoutProps<"/">) {
       <body className="flex flex-col min-h-screen">
         <RootProvider>
           <NuqsAdapter>
-            <PageLayout>
-              <Header />
-              <Content className="scroll-smooth">{children}</Content>
-              <Footer />
-            </PageLayout>
+              <PageLayout>
+                <Header />
+                <Content className="scroll-smooth">{children}</Content>
+                <Footer />
+              </PageLayout>
           </NuqsAdapter>
         </RootProvider>
       </body>

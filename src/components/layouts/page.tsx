@@ -38,6 +38,7 @@ Content.displayName = "Content";
 interface SectionProps extends ComponentPropsWithRef<"section"> {
   variant?: "default" | "hero" | "nav";
   noTopDivider?: boolean;
+  innerPadding?: string;
 }
 
 export const Section = forwardRef<HTMLElement, SectionProps>(
@@ -47,6 +48,7 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
       noTopDivider = false,
       children,
       className,
+      innerPadding,
       ...props
     },
     ref,
@@ -83,11 +85,12 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
             {!noTopDivider && <Divider short borderTop={false} />}
             <div
               className={cn(
-                noTopDivider
-                  ? "pt-8 xl:pt-12"
-                  : variant === "hero"
-                    ? "pt-14"
-                    : "pt-12",
+                innerPadding ||
+                  (noTopDivider
+                    ? "pt-8 xl:pt-12"
+                    : variant === "hero"
+                      ? "pt-14"
+                      : "pt-12"),
                 variant === "hero" && "flex flex-col gap-5 sm:gap-6",
                 variant === "default" && "flex flex-col gap-10",
               )}

@@ -11,6 +11,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.38.0",
+    "@neondatabase/serverless": "^1.0.2",
     "@takumi-rs/image-response": "^0.68.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -35,6 +37,7 @@
     "@types/node": "^25.2.1",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
+    "drizzle-kit": "^0.31.9",
     "eslint": "^10.0.0",
     "eslint-config-next": "16.1.6",
     "postcss": "^8.5.6",
