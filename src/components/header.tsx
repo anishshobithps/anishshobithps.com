@@ -91,7 +91,7 @@ export function Header() {
               <PopoverContent
                 align="end"
                 sideOffset={8}
-                className="bg-background/95 w-screen rounded-lg border-x-0 p-0 shadow-md backdrop-blur-md"
+                className="bg-background/95 w-screen rounded-none border-x-0 p-0 shadow-md backdrop-blur-md"
               >
                 <nav
                   className="flex flex-col divide-y"
