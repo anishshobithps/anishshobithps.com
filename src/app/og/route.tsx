@@ -1,4 +1,4 @@
-import { OGImage } from "@/components/OG";
+import { OGImage } from "@/components/shared/OG";
 import { ImageResponse } from "@takumi-rs/image-response";
 import { NextRequest } from "next/server";
 

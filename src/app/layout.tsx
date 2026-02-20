@@ -1,5 +1,5 @@
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
+import { Footer } from "@/components/shared/footer";
+import { Header } from "@/components/shared/header";
 import { Content, PageLayout } from "@/components/layouts/page";
 import { siteConfig } from "@/lib/config";
 import { buildOGMeta } from "@/lib/og";
@@ -34,11 +34,11 @@ export default function Layout({ children }: LayoutProps<"/">) {
       <body className="flex flex-col min-h-screen">
         <RootProvider>
           <NuqsAdapter>
-              <PageLayout>
-                <Header />
-                <Content className="scroll-smooth">{children}</Content>
-                <Footer />
-              </PageLayout>
+            <PageLayout>
+              <Header />
+              <Content className="scroll-smooth">{children}</Content>
+              <Footer />
+            </PageLayout>
           </NuqsAdapter>
         </RootProvider>
       </body>

@@ -1,5 +1,7 @@
 "use client";
 
+import { Logo } from "@/components/shared/logo";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
@@ -20,8 +22,6 @@ import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Logo } from "./logo";
-import { ThemeToggle } from "./shared/theme-toggle";
 
 export function Header() {
   const [open, setOpen] = useState(false);

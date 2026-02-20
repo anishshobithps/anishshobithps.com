@@ -1,5 +1,7 @@
+import { LogoDownloadCard } from "@/app/branding/logo-download-card";
+import { ScaledOG } from "@/app/branding/scaled-og";
 import { Section } from "@/components/layouts/page";
-import { OGImage } from "@/components/OG";
+import { OGImage } from "@/components/shared/OG";
 import {
   TypographyBlockquote,
   TypographyH1,
@@ -16,8 +18,6 @@ import {
 } from "@/components/ui/typography";
 import { buildMeta } from "@/lib/og";
 import type { Metadata } from "next";
-import { LogoDownloadCard } from "./logo-download-card";
-import { ScaledOG } from "./scaled-og";
 
 export const metadata: Metadata = buildMeta({
   title: "Brand System",

@@ -1,17 +1,17 @@
 "use client";
 
-import { cn } from "@/lib/cn";
-import { ThumbsDown, Meh, ThumbsUp, Heart } from "lucide-react";
-import { useState, useOptimistic, startTransition, useEffect } from "react";
 import {
   getReactions,
   submitReaction,
   type MoodId,
   type ReactionCounts,
-} from "./actions";
-import { Button } from "@/components/ui/button";
+} from "@/app/blog/[[...slug]]/actions";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { TypographyP } from "@/components/ui/typography";
+import { cn } from "@/lib/cn";
+import { Heart, Meh, ThumbsDown, ThumbsUp } from "lucide-react";
+import { startTransition, useEffect, useOptimistic, useState } from "react";
 
 interface OptimisticAction {
   newMood: MoodId | "";

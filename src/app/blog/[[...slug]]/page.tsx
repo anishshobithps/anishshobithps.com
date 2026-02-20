@@ -1,3 +1,5 @@
+import { BlogReadsInfo } from "@/app/blog/[[...slug]]/blog-reads-info";
+import { BlogReactions } from "@/app/blog/[[...slug]]/feedback";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
@@ -14,8 +16,6 @@ import { createRelativeLink } from "fumadocs-ui/mdx";
 import { CalendarDays, Clock, GitCommitHorizontal } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BlogReadsInfo } from "./blog-reads-info";
-import { BlogReactions } from "./feedback";
 
 export default async function Page(props: { params: { slug: string[] } }) {
   const params = await props.params;

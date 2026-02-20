@@ -1,6 +1,6 @@
-import { Eye } from "lucide-react";
+import { getBlogReadsCount, trackRead } from "@/app/blog/[[...slug]]/actions";
 import { TypographyMuted } from "@/components/ui/typography";
-import { trackRead, getBlogReadsCount } from "./actions";
+import { Eye } from "lucide-react";
 
 export async function BlogReadsInfo({ slug }: { slug: string }) {
   await trackRead(slug);

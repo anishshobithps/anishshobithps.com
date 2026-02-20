@@ -1,12 +1,12 @@
+import { Logo } from "@/components/shared/logo";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { DecorIcon, FullWidthDivider } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
+import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import { GithubIcon, LinkedinIcon, TwitterIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { TypographyMuted, TypographySmall } from "./ui/typography";
-import { Logo } from "./logo";
-import { ThemeToggle } from "./shared/theme-toggle";
 
 const platformIcons: Record<
   (typeof siteConfig.social)[number]["platform"],
