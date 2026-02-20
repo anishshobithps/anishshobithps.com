@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/config";
 import { buildOGMeta } from "@/lib/og";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./global.css";
 import { MouseGlow } from "@/components/shared/mouse-glow";
@@ -13,6 +13,13 @@ import { MouseGlow } from "@/components/shared/mouse-glow";
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-plus-jakarta-sans"
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist-mono",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +36,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${plusJakartaSans.className} antialiased`}
+      className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
       suppressHydrationWarning
     >
       <body className="relative flex flex-col min-h-screen">
