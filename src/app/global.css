@@ -84,6 +84,8 @@
   --scrollbar-border: oklch(1 0 0);
   --grid-line: oklch(0.2 0 0 / 0.04);
   --glow: oklch(0.6 0.04 40 / 0.12);
+  --selection-bg: oklch(0.82 0.155 155);
+  --selection-fg: oklch(0.112 0.008 155);
 }
 
 .dark {
@@ -122,6 +124,8 @@
   --scrollbar-border: oklch(0.141 0.005 285.823);
   --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
+  --selection-bg: oklch(0.82 0.155 155);
+  --selection-fg: oklch(0.112 0.008 155);
 }
 
 @layer base {
@@ -169,4 +173,9 @@ body::-webkit-scrollbar-thumb {
 }
 body::-webkit-scrollbar-track {
   background: transparent;
+}
+
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
 }
