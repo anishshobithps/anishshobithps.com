@@ -1,34 +1,19 @@
 "use client";
 
+import { DecorIcon } from "@/components/ui/border";
+import { Button } from "@/components/ui/button";
 import {
-  parseAsArrayOf,
-  parseAsInteger,
-  parseAsString,
-  useQueryStates,
-} from "nuqs";
-import { useMemo } from "react";
-import Link from "next/link";
-import { SearchIcon, TagIcon, XIcon } from "lucide-react";
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@/components/ui/button-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Divider } from "@/components/ui/divider";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
@@ -38,10 +23,29 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Divider } from "@/components/ui/divider";
-import { DecorIcon } from "@/components/ui/border";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
+import { SearchIcon, TagIcon, X } from "lucide-react";
+import Link from "next/link";
+import {
+  parseAsArrayOf,
+  parseAsInteger,
+  parseAsString,
+  useQueryStates,
+} from "nuqs";
+import { useMemo } from "react";
 
 export type BlogPost = {
   url: string;
@@ -92,10 +96,8 @@ export function BlogsClient({
 
   return (
     <div className="flex flex-col -mt-6">
-      {/* Controls row */}
-      <div className="flex flex-col sm:flex-row gap-3 pb-6">
-        {/* Search */}
-        <div className="flex-1">
+      <div className="flex flex-wrap sm:flex-nowrap sm:justify-end gap-3 pb-6">
+        <div className="w-full sm:w-auto sm:flex-1 min-w-0">
           <InputGroup>
             <InputGroupAddon align="inline-start">
               <SearchIcon />
@@ -104,6 +106,7 @@ export function BlogsClient({
               placeholder="Search posts…"
               value={q}
               onChange={(e) => setParams({ q: e.target.value, page: 1 })}
+              className="w-full"
             />
             {q && (
               <InputGroupAddon align="inline-end">
@@ -111,97 +114,100 @@ export function BlogsClient({
                   onClick={() => setParams({ q: "", page: 1 })}
                   aria-label="Clear search"
                 >
-                  <XIcon />
+                  <X className="size-4" />
                 </InputGroupButton>
               </InputGroupAddon>
             )}
           </InputGroup>
         </div>
 
-        {/* Tag filter popover */}
-        {allTags.length > 0 && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="cursor-pointer gap-1.5 shrink-0"
-              >
-                <TagIcon className="size-4" />
-                Tags
-                {tags.length > 0 && (
-                  <span className="flex items-center justify-center rounded-full bg-primary text-primary-foreground size-5 text-xs">
-                    {tags.length}
-                  </span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-52 p-3">
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <TypographySmall>Filter by tag</TypographySmall>
-                  {tags.length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => setParams({ tags: [], page: 1 })}
-                      className="cursor-pointer h-auto px-1 py-0"
-                    >
-                      <TypographyMuted className="text-xs">
-                        Clear all
-                      </TypographyMuted>
-                    </Button>
-                  )}
-                </div>
-                <div className="flex flex-col gap-0.5 max-h-56 overflow-y-auto">
-                  {allTags.map((tag) => (
-                    <label
-                      key={tag}
-                      className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors"
-                    >
-                      <Checkbox
-                        checked={tags.includes(tag)}
-                        onCheckedChange={(checked) =>
-                          setParams({
-                            tags:
-                              checked === true
-                                ? [...tags, tag]
-                                : tags.filter((t) => t !== tag),
-                            page: 1,
-                          })
-                        }
-                      />
-                      <TypographySmall className="font-mono">
-                        {tag}
-                      </TypographySmall>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        )}
+        <ButtonGroup className="w-full sm:w-auto [&>button]:flex-1 *:data-[slot=select-trigger]:flex-1">
+          {allTags.length > 0 && (
+            <>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="cursor-pointer gap-1.5 shrink-0 justify-start font-semibold"
+                  >
+                    <TagIcon className="size-4" />
+                    <span className="text-left">Tags</span>
+                    {tags.length > 0 && (
+                      <span className="flex items-center justify-center rounded-full bg-primary text-primary-foreground size-5 text-xs">
+                        {tags.length}
+                      </span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-52 p-3">
+                  <div className="flex items-center justify-between w-full mb-2">
+                    <TypographySmall>Filter by tag</TypographySmall>
+                    {tags.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="xs"
+                        onClick={() => setParams({ tags: [], page: 1 })}
+                        className="cursor-pointer h-auto px-1 py-0"
+                        aria-label="Clear all tags"
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-0.5 max-h-56 overflow-y-auto">
+                    {allTags.map((tag) => (
+                      <label
+                        key={tag}
+                        className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors"
+                      >
+                        <Checkbox
+                          checked={tags.includes(tag)}
+                          onCheckedChange={(checked) =>
+                            setParams({
+                              tags:
+                                checked === true
+                                  ? [...tags, tag]
+                                  : tags.filter((t) => t !== tag),
+                              page: 1,
+                            })
+                          }
+                        />
+                        <TypographySmall className="font-semibold uppercase">
+                          {tag}
+                        </TypographySmall>
+                      </label>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <ButtonGroupSeparator />
+            </>
+          )}
 
-        {/* Per-page select */}
-        <Select
-          value={String(per)}
-          onValueChange={(val) =>
-            setParams({ per: parseInt(val, 10), page: 1 })
-          }
-        >
-          <SelectTrigger className="w-auto cursor-pointer shrink-0">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {PER_PAGE_OPTIONS.map((n) => (
-              <SelectItem key={n} value={String(n)} className="cursor-pointer">
-                {n} per page
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          <Select
+            value={String(per)}
+            onValueChange={(val) =>
+              setParams({ per: parseInt(val, 10), page: 1 })
+            }
+          >
+            <SelectTrigger className="cursor-pointer font-semibold w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {PER_PAGE_OPTIONS.map((n) => (
+                <SelectItem
+                  key={n}
+                  value={String(n)}
+                  className="cursor-pointer font-semibold"
+                >
+                  {n} per page
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </ButtonGroup>
       </div>
 
-      {/* Active tag chips */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pb-3">
           {tags.map((tag) => (
@@ -215,7 +221,7 @@ export function BlogsClient({
               className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary hover:bg-primary/20 cursor-pointer h-auto"
             >
               {tag}
-              <XIcon className="size-3" />
+              <X className="size-3" />
             </Button>
           ))}
         </div>
@@ -227,7 +233,6 @@ export function BlogsClient({
         <Divider short />
       </div>
 
-      {/* Posts list */}
       <div>
         {paginated.length === 0 ? (
           <div className="py-12 text-center">
@@ -288,7 +293,6 @@ export function BlogsClient({
         )}
       </div>
 
-      {/* Results summary + pagination */}
       {filtered.length > 0 && (
         <>
           <div className="relative -mx-6 sm:-mx-8 lg:-mx-10">

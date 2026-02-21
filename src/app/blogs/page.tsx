@@ -7,10 +7,11 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = buildMeta({
-  title: "Blog",
-  pageTitle: "Blog",
-  description: "Thoughts on design, engineering, and the web.",
-  path: "home / blog",
+  title: "Blogs",
+  pageTitle: "Blogs",
+  description:
+    "Structured thoughts, semi-structured experiments, and occasional overengineering.",
+  path: "home / blogs",
 });
 
 export default function BlogPage() {
@@ -38,14 +39,15 @@ export default function BlogPage() {
   return (
     <>
       <Section variant="hero">
-        <TypographyH1>Blog</TypographyH1>
+        <TypographyH1>Blogs</TypographyH1>
         <TypographyLead>
-          Thoughts on design, engineering, and the web.
+          Engineering thoughts, design experiments, and things I overthought at
+          2AM.
         </TypographyLead>
       </Section>
 
       <Section className="pb-6">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading... probably compiling thoughts.</div>}>
           <BlogsClient posts={posts} allTags={allTags} />
         </Suspense>
       </Section>
