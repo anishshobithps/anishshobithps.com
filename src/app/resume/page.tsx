@@ -4,7 +4,6 @@ import {
   TypographyLead,
   TypographyMuted,
 } from "@/components/ui/typography";
-import { Separator } from "@/components/ui/separator";
 import {
   PdfViewer,
   PdfViewerControls,
@@ -36,7 +35,7 @@ export default function ResumePage() {
         </TypographyLead>
       </Section>
 
-      <Section noTopDivider innerPadding="pt-6 pb-10 xl:pb-14">
+      <Section noTopDivider innerPadding="pt-12">
         <PdfViewer
           file="/api/resume"
           downloadHref="/api/resume/download"
