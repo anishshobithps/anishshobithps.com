@@ -9,7 +9,7 @@ export const siteConfig = {
             ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
             : "http://localhost:3000"),
     availableForHire: true,
-
+    resumeURL: "https://github.com/anishshobithps/resume/releases/latest/download/Anish_Shobith_P_S_Resume.pdf",
     nav: [
         { href: "/about", label: "About" },
         { href: "/projects", label: "Projects" },
