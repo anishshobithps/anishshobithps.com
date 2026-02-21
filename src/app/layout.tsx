@@ -9,11 +9,12 @@ import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./global.css";
 import { MouseGlow } from "@/components/shared/mouse-glow";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-plus-jakarta-sans"
+  variable: "--font-plus-jakarta-sans",
 });
 
 const geistMono = Geist_Mono({
@@ -44,7 +45,9 @@ export default function Layout({ children }: LayoutProps<"/">) {
           <NuqsAdapter>
             <PageLayout>
               <Header />
-              <Content className="scroll-smooth">{children}</Content>
+              <Content className="scroll-smooth">
+                <TooltipProvider>{children}</TooltipProvider>
+              </Content>
               <Footer />
             </PageLayout>
           </NuqsAdapter>
