@@ -35,8 +35,7 @@ export function MouseGlow() {
         if (glowRef.current && positionRef.current) {
           const { x, y } = positionRef.current;
 
-          glowRef.current.style.transform =
-            `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+          glowRef.current.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
         }
 
         rafRef.current = null;

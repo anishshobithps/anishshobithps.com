@@ -1,18 +1,33 @@
 const theme = {
   background: "#141417",
   backgroundAlt: "#1a1a20",
-  foreground: "#f0f0f5",
+  foreground: "#f5f5f7",
   primary: "#e8e8ec",
   muted: "#6b6b80",
   mutedBright: "#9999aa",
   border: "rgba(255, 255, 255, 0.08)",
   borderBright: "rgba(255, 255, 255, 0.15)",
   accent: "#2a2a35",
-  accentGlow: "rgba(120, 100, 255, 0.12)",
   green: "#10b981",
   purpleAccent: "#8b7cf8",
 };
 
+function LogoGlyph({ size = 32, color }: { size?: number; color: string }) {
+  const scaledWidth = Math.round((50 / 64) * size);
+  return (
+    <svg
+      viewBox="14 0 50 64"
+      width={scaledWidth}
+      height={size}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polygon points="32,4 48,60 40.5,60 32,14 23.5,60 16,60" fill={color} />
+      <rect x="18" y="36" width="11" height="5" rx="2.5" fill={color} />
+      <rect x="35" y="36" width="11" height="5" rx="2.5" fill={color} />
+    </svg>
+  );
+}
 export interface OGImageProps {
   title: string;
   description: string;
@@ -46,7 +61,6 @@ export function OGImage({
         display: "flex",
       }}
     >
-      {/* Top accent bar */}
       <div
         style={{
           position: "absolute",
@@ -58,20 +72,18 @@ export function OGImage({
         }}
       />
 
-      {/* Grid texture */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)
+            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
           `,
           backgroundSize: "60px 60px",
         }}
       />
 
-      {/* Radial glow */}
       <div
         style={{
           position: "absolute",
@@ -85,7 +97,6 @@ export function OGImage({
         }}
       />
 
-      {/* Noise texture */}
       <svg
         style={{
           position: "absolute",
@@ -108,7 +119,6 @@ export function OGImage({
         <rect width="100%" height="100%" filter="url(#noise)" />
       </svg>
 
-      {/* Vignette overlay */}
       <div
         style={{
           position: "absolute",
@@ -119,41 +129,18 @@ export function OGImage({
         }}
       />
 
-      {/* Large watermark SVG */}
       <div
         style={{
           position: "absolute",
-          bottom: -80,
-          right: -20,
+          bottom: -100,
+          right: -30,
           transform: "rotate(10deg)",
-          opacity: 0.035,
+          opacity: 0.03,
         }}
       >
-        <svg viewBox="0 0 64 64" width={480} height={480} fill="none">
-          <polygon
-            points="32,4 48,60 40.5,60 32,14 23.5,60 16,60"
-            fill={theme.foreground}
-          />
-          <rect
-            x={18}
-            y={36}
-            width={11}
-            height={5}
-            rx={2.5}
-            fill={theme.foreground}
-          />
-          <rect
-            x={35}
-            y={36}
-            width={11}
-            height={5}
-            rx={2.5}
-            fill={theme.foreground}
-          />
-        </svg>
+        <LogoGlyph size={500} color={theme.foreground} />
       </div>
 
-      {/* Inner padded wrapper */}
       <div
         style={{
           padding: "0 80px 56px 80px",
@@ -163,56 +150,23 @@ export function OGImage({
           width: "100%",
         }}
       >
-        {/* HEADER */}
+
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            paddingTop: 40,
+            paddingTop: 44,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-            {/* Top-left logo */}
-            <div
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: 12,
-                backgroundColor: theme.foreground,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg viewBox="0 0 64 64" width={30} height={30} fill="none">
-                <polygon
-                  points="32,9 46,55 39.5,55 32,20 24.5,55 18,55"
-                  fill={theme.background}
-                />
-                <rect
-                  x={18.5}
-                  y={34}
-                  width={10}
-                  height={4.5}
-                  rx={2.25}
-                  fill={theme.background}
-                />
-                <rect
-                  x={35.5}
-                  y={34}
-                  width={10}
-                  height={4.5}
-                  rx={2.25}
-                  fill={theme.background}
-                />
-              </svg>
-            </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+
+            <LogoGlyph size={32} color={theme.foreground} />
 
             <div
               style={{
                 width: 1,
-                height: 28,
+                height: 20,
                 background: `linear-gradient(to bottom, transparent, ${theme.borderBright}, transparent)`,
               }}
             />
@@ -221,7 +175,7 @@ export function OGImage({
               style={{
                 fontFamily: "'Geist Mono', monospace",
                 fontWeight: 700,
-                fontSize: 13,
+                fontSize: 12,
                 letterSpacing: "0.18em",
                 color: theme.muted,
                 textTransform: "uppercase",
@@ -234,7 +188,7 @@ export function OGImage({
           <span
             style={{
               fontFamily: "'Geist Mono', monospace",
-              fontSize: 22,
+              fontSize: 20,
               fontStyle: "italic",
               color: theme.muted,
             }}
@@ -243,12 +197,11 @@ export function OGImage({
           </span>
         </div>
 
-        {/* BODY */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 20,
+            gap: 22,
             justifyContent: "center",
             flex: 1,
           }}
@@ -281,20 +234,24 @@ export function OGImage({
             style={{
               fontSize: 64,
               fontWeight: 700,
-              lineHeight: 1.05,
+              lineHeight: 1.08,
               letterSpacing: "-0.03em",
               color: theme.foreground,
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "baseline",
+              columnGap: 16,
             }}
           >
-            {title}
+            {title && <span>{title}</span>}
           </div>
 
           <div
             style={{
-              fontSize: 26,
+              fontSize: 24,
               color: theme.mutedBright,
-              maxWidth: "65%",
-              lineHeight: 1.5,
+              maxWidth: "62%",
+              lineHeight: 1.55,
               fontStyle: "italic",
             }}
           >
@@ -302,7 +259,6 @@ export function OGImage({
           </div>
         </div>
 
-        {/* FOOTER */}
         <div
           style={{
             display: "flex",
@@ -312,11 +268,11 @@ export function OGImage({
             paddingTop: 28,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
               <span
                 style={{
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.35em",
@@ -329,9 +285,10 @@ export function OGImage({
 
               <div
                 style={{
-                  fontSize: 38,
+                  fontSize: 36,
                   fontWeight: 700,
                   color: theme.foreground,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 {name}
@@ -362,7 +319,6 @@ export function OGImage({
                     backgroundColor: theme.green,
                   }}
                 />
-
                 <span
                   style={{
                     fontSize: 11,
@@ -395,7 +351,7 @@ export function OGImage({
             <span
               style={{
                 fontFamily: "'Geist Mono', monospace",
-                fontSize: 18,
+                fontSize: 17,
                 color: theme.muted,
                 letterSpacing: "0.12em",
                 fontWeight: 600,

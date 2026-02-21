@@ -26,13 +26,34 @@ function FlickerChar({
   return (
     <g>
       {asLogo ? (
-        <g transform={`translate(${logoX}, ${logoY}) scale(${logoScale}) translate(-14, 0)`}>
-          <polygon points="32,4 48,60 40.5,60 32,14 23.5,60 16,60" fill="currentColor" />
-          <rect x="18" y="36" width="11" height="5" rx="2.5" fill="currentColor" />
-          <rect x="35" y="36" width="11" height="5" rx="2.5" fill="currentColor" />
+        <g
+          transform={`translate(${logoX}, ${logoY}) scale(${logoScale}) translate(-14, 0)`}
+        >
+          <polygon
+            points="32,4 48,60 40.5,60 32,14 23.5,60 16,60"
+            fill="currentColor"
+          />
+          <rect
+            x="18"
+            y="36"
+            width="11"
+            height="5"
+            rx="2.5"
+            fill="currentColor"
+          />
+          <rect
+            x="35"
+            y="36"
+            width="11"
+            height="5"
+            rx="2.5"
+            fill="currentColor"
+          />
         </g>
       ) : (
-        <text className="flicker-n" x={x} y="88">{char}</text>
+        <text className="flicker-n" x={x} y="88">
+          {char}
+        </text>
       )}
       <animate
         attributeName="opacity"
@@ -55,17 +76,20 @@ interface FlickerTextProps {
 const FLICKER_PRESETS = [
   {
     values: "1;1;1;1;0.15;1;1;0.9;1;1;1;0.1;1;1;1;1;0.8;0.1;1;1",
-    keyTimes: "0;0.05;0.1;0.15;0.17;0.19;0.3;0.31;0.33;0.4;0.5;0.52;0.54;0.6;0.7;0.75;0.76;0.77;0.79;1",
+    keyTimes:
+      "0;0.05;0.1;0.15;0.17;0.19;0.3;0.31;0.33;0.4;0.5;0.52;0.54;0.6;0.7;0.75;0.76;0.77;0.79;1",
     dur: "4s",
   },
   {
     values: "1;0.05;1;1;0.1;0.9;0.05;1;0.8;0.05;1;1;0.1;1;0.05;0.9;1;0.05;1;1",
-    keyTimes: "0;0.08;0.1;0.2;0.22;0.24;0.26;0.28;0.4;0.42;0.44;0.5;0.55;0.57;0.6;0.62;0.7;0.85;0.87;1",
+    keyTimes:
+      "0;0.08;0.1;0.2;0.22;0.24;0.26;0.28;0.4;0.42;0.44;0.5;0.55;0.57;0.6;0.62;0.7;0.85;0.87;1",
     dur: "3.2s",
   },
   {
     values: "1;1;1;0.2;1;1;1;1;0.1;0.8;0.1;1;1;1;0.15;1;1;1;0.05;1",
-    keyTimes: "0;0.1;0.2;0.22;0.24;0.3;0.4;0.45;0.47;0.49;0.51;0.53;0.6;0.65;0.67;0.69;0.8;0.9;0.92;1",
+    keyTimes:
+      "0;0.1;0.2;0.22;0.24;0.3;0.4;0.45;0.47;0.49;0.51;0.53;0.6;0.65;0.67;0.69;0.8;0.9;0.92;1",
     dur: "3.7s",
   },
 ] as const;

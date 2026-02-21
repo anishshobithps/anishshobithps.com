@@ -65,10 +65,22 @@ export function BouncingLogos({
         inst.y += inst.vy;
         inst.rotation += inst.vr;
 
-        if (inst.x <= 0)    { inst.x = 0;    inst.vx =  Math.abs(inst.vx); }
-        if (inst.x >= maxX) { inst.x = maxX; inst.vx = -Math.abs(inst.vx); }
-        if (inst.y <= 0)    { inst.y = 0;    inst.vy =  Math.abs(inst.vy); }
-        if (inst.y >= maxY) { inst.y = maxY; inst.vy = -Math.abs(inst.vy); }
+        if (inst.x <= 0) {
+          inst.x = 0;
+          inst.vx = Math.abs(inst.vx);
+        }
+        if (inst.x >= maxX) {
+          inst.x = maxX;
+          inst.vx = -Math.abs(inst.vx);
+        }
+        if (inst.y <= 0) {
+          inst.y = 0;
+          inst.vy = Math.abs(inst.vy);
+        }
+        if (inst.y >= maxY) {
+          inst.y = maxY;
+          inst.vy = -Math.abs(inst.vy);
+        }
 
         if (inst.el) {
           inst.el.style.transform = `translate3d(${inst.x}px, ${inst.y}px, 0) rotate(${inst.rotation}deg)`;
