@@ -16,6 +16,7 @@ import { getMDXComponents } from "@/mdx-components";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { CalendarDays, Clock, GitCommitHorizontal } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function Page(props: { params: { slug: string[] } }) {
@@ -89,6 +90,18 @@ export default async function Page(props: { params: { slug: string[] } }) {
           className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
           aria-label="Post metadata"
         >
+          <TypographyMuted
+            className="font-mono text-xs flex items-center gap-1.5"
+            aria-label={`Written by ${siteConfig.name}`}
+          >
+            <Link
+              href={siteConfig.baseUrl}
+              className="hover:text-foreground transition-colors"
+              rel="author"
+            >
+              {siteConfig.name}
+            </Link>
+          </TypographyMuted>
           {page.data.date && (
             <TypographyMuted
               className="font-mono text-xs flex items-center gap-1.5"
@@ -187,10 +200,22 @@ export async function generateMetadata(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
+  // Keep display title full-length; cap meta title so "X — Anish Shobith P S" ≤ 60 chars
+  const rawTitle = page.data.title;
+  const metaTitle =
+    rawTitle.length > 40
+      ? rawTitle.slice(0, 37).trimEnd() + "..."
+      : rawTitle;
+
+  // Cap description at 155 chars to stay within 160-char limit
+  const rawDesc = page.data.description ?? "";
+  const metaDesc =
+    rawDesc.length > 155 ? rawDesc.slice(0, 152).trimEnd() + "..." : rawDesc;
+
   return buildMeta({
-    title: page.data.title,
-    pageTitle: page.data.title,
-    description: page.data.description ?? "",
+    title: rawTitle,
+    pageTitle: metaTitle,
+    description: metaDesc,
     path: `home / blog / ${params.slug?.join(" / ") ?? ""}`,
     canonicalPath: page.url,
     type: "article",
