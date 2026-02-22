@@ -1,10 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
-import {
-  type ElementType,
-  type HTMLAttributes,
-  forwardRef,
-} from "react";
+import { type ElementType, type HTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/cn";
 
 type AsChildProps = { asChild?: boolean };
@@ -37,7 +33,9 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
       <Tag
         ref={ref}
         role="heading"
-        aria-level={Number(as?.replace("h", "") ?? level?.replace("h", "") ?? 1)}
+        aria-level={Number(
+          as?.replace("h", "") ?? level?.replace("h", "") ?? 1,
+        )}
         className={cn(headingVariants({ level }), className)}
         {...props}
       />
@@ -46,24 +44,28 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
 );
 Heading.displayName = "Heading";
 
-export const TypographyH1 = forwardRef<HTMLHeadingElement, Omit<HeadingProps, "level">>(
-  (props, ref) => <Heading ref={ref} level="h1" as="h1" {...props} />,
-);
+export const TypographyH1 = forwardRef<
+  HTMLHeadingElement,
+  Omit<HeadingProps, "level">
+>((props, ref) => <Heading ref={ref} level="h1" as="h1" {...props} />);
 TypographyH1.displayName = "TypographyH1";
 
-export const TypographyH2 = forwardRef<HTMLHeadingElement, Omit<HeadingProps, "level">>(
-  (props, ref) => <Heading ref={ref} level="h2" as="h2" {...props} />,
-);
+export const TypographyH2 = forwardRef<
+  HTMLHeadingElement,
+  Omit<HeadingProps, "level">
+>((props, ref) => <Heading ref={ref} level="h2" as="h2" {...props} />);
 TypographyH2.displayName = "TypographyH2";
 
-export const TypographyH3 = forwardRef<HTMLHeadingElement, Omit<HeadingProps, "level">>(
-  (props, ref) => <Heading ref={ref} level="h3" as="h3" {...props} />,
-);
+export const TypographyH3 = forwardRef<
+  HTMLHeadingElement,
+  Omit<HeadingProps, "level">
+>((props, ref) => <Heading ref={ref} level="h3" as="h3" {...props} />);
 TypographyH3.displayName = "TypographyH3";
 
-export const TypographyH4 = forwardRef<HTMLHeadingElement, Omit<HeadingProps, "level">>(
-  (props, ref) => <Heading ref={ref} level="h4" as="h4" {...props} />,
-);
+export const TypographyH4 = forwardRef<
+  HTMLHeadingElement,
+  Omit<HeadingProps, "level">
+>((props, ref) => <Heading ref={ref} level="h4" as="h4" {...props} />);
 TypographyH4.displayName = "TypographyH4";
 
 const textVariants = cva("text-pretty", {
@@ -92,7 +94,9 @@ const TEXT_DEFAULT_TAGS: Record<string, ElementType> = {
 
 export const Text = forwardRef<HTMLElement, TextProps>(
   ({ className, variant, as, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : (as ?? TEXT_DEFAULT_TAGS[variant ?? ""] ?? "p");
+    const Tag = asChild
+      ? Slot
+      : (as ?? TEXT_DEFAULT_TAGS[variant ?? ""] ?? "p");
     return (
       <Tag
         ref={ref}
@@ -104,46 +108,55 @@ export const Text = forwardRef<HTMLElement, TextProps>(
 );
 Text.displayName = "Text";
 
-export const TypographyP = forwardRef<HTMLParagraphElement, Omit<TextProps, "variant">>(
-  (props, ref) => <Text ref={ref} variant="default" {...props} />,
-);
+export const TypographyP = forwardRef<
+  HTMLParagraphElement,
+  Omit<TextProps, "variant">
+>((props, ref) => <Text ref={ref} variant="default" {...props} />);
 TypographyP.displayName = "TypographyP";
 
-export const TypographyLead = forwardRef<HTMLParagraphElement, Omit<TextProps, "variant">>(
-  (props, ref) => <Text ref={ref} variant="lead" {...props} />,
-);
+export const TypographyLead = forwardRef<
+  HTMLParagraphElement,
+  Omit<TextProps, "variant">
+>((props, ref) => <Text ref={ref} variant="lead" {...props} />);
 TypographyLead.displayName = "TypographyLead";
 
-export const TypographyMuted = forwardRef<HTMLParagraphElement, Omit<TextProps, "variant">>(
-  (props, ref) => <Text ref={ref} variant="muted" {...props} />,
-);
+export const TypographyMuted = forwardRef<
+  HTMLParagraphElement,
+  Omit<TextProps, "variant">
+>((props, ref) => <Text ref={ref} variant="muted" {...props} />);
 TypographyMuted.displayName = "TypographyMuted";
 
-export const TypographyLarge = forwardRef<HTMLDivElement, Omit<TextProps, "variant">>(
-  (props, ref) => <Text ref={ref} variant="large" {...props} />,
-);
+export const TypographyLarge = forwardRef<
+  HTMLDivElement,
+  Omit<TextProps, "variant">
+>((props, ref) => <Text ref={ref} variant="large" {...props} />);
 TypographyLarge.displayName = "TypographyLarge";
 
-export const TypographySmall = forwardRef<HTMLElement, Omit<TextProps, "variant">>(
-  (props, ref) => <Text ref={ref} variant="small" {...props} />,
-);
+export const TypographySmall = forwardRef<
+  HTMLElement,
+  Omit<TextProps, "variant">
+>((props, ref) => <Text ref={ref} variant="small" {...props} />);
 TypographySmall.displayName = "TypographySmall";
 
 type BlockquoteProps = HTMLAttributes<HTMLQuoteElement> & AsChildProps;
 
-export const TypographyBlockquote = forwardRef<HTMLQuoteElement, BlockquoteProps>(
-  ({ className, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : "blockquote";
-    return (
-      <Tag
-        ref={ref}
-        role="blockquote"
-        className={cn("mt-6 border-l-2 border-border pl-6 italic text-muted-foreground", className)}
-        {...props}
-      />
-    );
-  },
-);
+export const TypographyBlockquote = forwardRef<
+  HTMLQuoteElement,
+  BlockquoteProps
+>(({ className, asChild = false, ...props }, ref) => {
+  const Tag = asChild ? Slot : "blockquote";
+  return (
+    <Tag
+      ref={ref}
+      role="blockquote"
+      className={cn(
+        "mt-6 border-l-2 border-border pl-6 italic text-muted-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 TypographyBlockquote.displayName = "TypographyBlockquote";
 
 type ListProps = HTMLAttributes<HTMLUListElement> & AsChildProps;
@@ -155,7 +168,10 @@ export const TypographyList = forwardRef<HTMLUListElement, ListProps>(
       <Tag
         ref={ref}
         role="list"
-        className={cn("my-6 ml-6 list-disc marker:text-muted-foreground [&>li]:mt-2 [&>li]:leading-7", className)}
+        className={cn(
+          "my-6 ml-6 list-disc marker:text-muted-foreground [&>li]:mt-2 [&>li]:leading-7",
+          className,
+        )}
         {...props}
       />
     );
@@ -172,7 +188,9 @@ export const TypographyInlineCode = forwardRef<HTMLElement, InlineCodeProps>(
       <Tag
         ref={ref}
         role="code"
-        aria-label={typeof props.children === "string" ? props.children : undefined}
+        aria-label={
+          typeof props.children === "string" ? props.children : undefined
+        }
         className={cn(
           "relative rounded bg-muted px-[0.3em] py-[0.15em] font-mono text-[0.875em] font-semibold text-foreground",
           className,
@@ -192,7 +210,11 @@ export const TypographyMark = forwardRef<HTMLElement, MarkProps>(
     return (
       <Tag
         ref={ref}
-        aria-label={typeof props.children === "string" ? `highlighted: ${props.children}` : undefined}
+        aria-label={
+          typeof props.children === "string"
+            ? `highlighted: ${props.children}`
+            : undefined
+        }
         className={cn(
           "bg-(--selection-bg) text-(--selection-fg) rounded-sm px-[0.25em] not-italic",
           className,
@@ -225,12 +247,5 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
 SectionLabel.displayName = "SectionLabel";
 
 export function TypographyAnchor({ id }: { id: string }) {
-  return (
-    <h2
-      id={id}
-      aria-hidden="true"
-      tabIndex={-1}
-      className="sr-only"
-    />
-  );
+  return <span id={id} aria-hidden="true" tabIndex={-1} className="sr-only" />;
 }
