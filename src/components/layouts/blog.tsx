@@ -63,8 +63,6 @@ function ProgressCircle({
 
   return (
     <svg
-      role="progressbar"
-      aria-label="Loading progress"
       viewBox={`0 0 ${size} ${size}`}
       width={size}
       height={size}
@@ -73,7 +71,10 @@ function ProgressCircle({
       aria-valuemax={max}
       className={className}
       {...props}
+      role="progressbar"
+      aria-label={`Reading progress: ${Math.round(normalized)}%`}
     >
+      <title>Reading progress: {Math.round(normalized)}%</title>
       <circle {...cp} className="stroke-current/20" />
       <circle
         {...cp}

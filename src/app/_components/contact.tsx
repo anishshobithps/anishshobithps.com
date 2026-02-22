@@ -80,7 +80,7 @@ export function Contact() {
                 <Button asChild size="lg" className="font-semibold">
                   <Link
                     href={`mailto:${siteConfig.email}`}
-                    aria-label="Send an email"
+                    aria-label="Say Hello — send an email"
                   >
                     <IconMail
                       className="size-4 shrink-0"

@@ -26,8 +26,8 @@ import { JsonLd } from "@/components/shared/json-ld";
 
 export const metadata: Metadata = buildMeta({
   title: "Resume",
-  pageTitle: "Resume",
-  description: `${siteConfig.name}'s resume — professional experience, projects, and technical expertise.`,
+  pageTitle: "Professional Resume",
+  description: `${siteConfig.name}'s resume — professional experience, projects, and technical expertise. Full-stack engineer building modern web applications.`,
   path: "home / resume",
   canonicalPath: "/resume",
   type: "profile",

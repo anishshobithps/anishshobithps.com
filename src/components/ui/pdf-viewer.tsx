@@ -251,28 +251,36 @@ export const PdfViewerPagination = () => {
   if (!numPages || numPages <= 1) return null;
 
   return (
-    <div className="flex items-center gap-1">
+    <div
+      className="flex items-center gap-1"
+      role="group"
+      aria-label="Page navigation"
+    >
       <Button
         variant="ghost"
         size="icon"
+        aria-label="Previous page"
         onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
       >
-        <ChevronLeft className="h-4 w-4" />
+        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
       </Button>
 
-      <span className="font-mono text-xs">
+      <span
+        className="font-mono text-xs"
+        aria-live="polite"
+        aria-label={`Page ${currentPage} of ${numPages}`}
+      >
         {currentPage}/{numPages}
       </span>
 
       <Button
         variant="ghost"
         size="icon"
+        aria-label="Next page"
         onClick={() => setCurrentPage((p) => Math.min(p + 1, numPages!))}
       >
-        <ChevronRight className="h-4 w-4" />
+        <ChevronRight className="h-4 w-4" aria-hidden="true" />
       </Button>
-
-      {/* Separator removed for cleaner layout */}
     </div>
   );
 };
@@ -281,28 +289,36 @@ export const PdfViewerZoom = () => {
   const { zoom, setZoom } = usePdf();
 
   return (
-    <div className="flex items-center gap-1">
+    <div
+      className="flex items-center gap-1"
+      role="group"
+      aria-label="Zoom controls"
+    >
       <Button
         variant="ghost"
         size="icon"
+        aria-label="Zoom out"
         onClick={() => setZoom((z) => Math.max(+(z - 0.1).toFixed(1), 0.5))}
       >
-        <ZoomOut className="h-4 w-4" />
+        <ZoomOut className="h-4 w-4" aria-hidden="true" />
       </Button>
 
-      <span className="w-10 text-center font-mono text-xs">
+      <span
+        className="w-10 text-center font-mono text-xs"
+        aria-live="polite"
+        aria-label={`Zoom: ${Math.round(zoom * 100)}%`}
+      >
         {Math.round(zoom * 100)}%
       </span>
 
       <Button
         variant="ghost"
         size="icon"
+        aria-label="Zoom in"
         onClick={() => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3))}
       >
-        <ZoomIn className="h-4 w-4" />
+        <ZoomIn className="h-4 w-4" aria-hidden="true" />
       </Button>
-
-      {/* Separator removed for cleaner layout */}
     </div>
   );
 };
@@ -324,19 +340,14 @@ export const PdfViewerReload = () => {
 export const PdfViewerOpen = () => {
   const { file } = usePdf();
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      asChild
-      aria-label="Open PDF externally"
-    >
+    <Button variant="ghost" size="icon" asChild>
       <a
         href={file}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Open PDF externally"
+        aria-label="Open PDF in new tab"
       >
-        <ExternalLink className="h-4 w-4" />
+        <ExternalLink className="h-4 w-4" aria-hidden="true" />
       </a>
     </Button>
   );
@@ -346,9 +357,14 @@ export const PdfViewerDownload = ({ label }: { label?: string }) => {
   const { downloadHref } = usePdf();
   return (
     <Button size="sm" asChild className="sm:px-3 px-2">
-      <a href={downloadHref}>
-        <Download className="h-4 w-4" />
-        <span className="hidden sm:inline">{label}</span>
+      <a
+        href={downloadHref}
+        aria-label={label ? `${label} — download as PDF` : "Download as PDF"}
+      >
+        <Download className="h-4 w-4" aria-hidden="true" />
+        <span className="hidden sm:inline" aria-hidden="true">
+          {label}
+        </span>
       </a>
     </Button>
   );

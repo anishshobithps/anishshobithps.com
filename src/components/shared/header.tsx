@@ -83,7 +83,6 @@ export function Header() {
                   size="icon"
                   aria-label={open ? "Close menu" : "Open menu"}
                   aria-expanded={open}
-                  aria-controls="mobile-nav"
                 >
                   <MenuIcon aria-hidden="true" />
                 </Button>

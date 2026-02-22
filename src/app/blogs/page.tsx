@@ -14,9 +14,9 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = buildMeta({
   title: "Blogs",
-  pageTitle: "Blogs",
+  pageTitle: "Blog Posts & Writing",
   description:
-    "Structured thoughts, semi-structured experiments, and occasional overengineering.",
+    "Structured thoughts, semi-structured experiments, and occasional overengineering. Deep dives into engineering, design, and the things I build at 2am.",
   path: "home / blogs",
   canonicalPath: "/blogs",
   type: "website",
