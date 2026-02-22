@@ -21,7 +21,11 @@ const platformIcons: Record<
   x: <IconBrandTwitterFilled aria-hidden="true" />,
 };
 
-const footerNav = [...siteConfig.nav, { href: "/branding", label: "Branding" }];
+const footerNav = [
+  ...siteConfig.nav,
+  { href: "/branding", label: "Branding" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
+];
 
 export function Footer() {
   return (
