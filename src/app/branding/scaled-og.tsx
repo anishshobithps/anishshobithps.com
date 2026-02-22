@@ -20,9 +20,12 @@ export function ScaledOG({ children }: { children: React.ReactNode }) {
     <div
       ref={wrapperRef}
       className="w-full overflow-hidden"
+      aria-label="Open Graph image preview"
+      role="img"
       style={{ height: 630 * scale }}
     >
       <div
+        aria-hidden="true"
         style={{
           width: 1200,
           height: 630,

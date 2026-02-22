@@ -6,8 +6,11 @@ export async function BlogReadsInfo({ slug }: { slug: string }) {
   await trackRead(slug);
   const reads = await getBlogReadsCount(slug);
   return (
-    <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
-      <Eye className="size-3.5 shrink-0" />
+    <TypographyMuted
+      className="font-mono text-xs flex items-center gap-1.5"
+      aria-label={`${reads} reads`}
+    >
+      <Eye className="size-3.5 shrink-0" aria-hidden="true" />
       {reads} reads
     </TypographyMuted>
   );

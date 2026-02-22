@@ -47,18 +47,16 @@ export function Header() {
         before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border
         after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border"
       >
-        <DecorIcon position="bottom-left" />
-        <DecorIcon position="bottom-right" />
+        <DecorIcon position="bottom-left" aria-hidden="true" />
+        <DecorIcon position="bottom-right" aria-hidden="true" />
 
-        <Link href="/" aria-label="Home" className="cursor-pointer">
-          {/* Mobile — icon only */}
-          <Logo size={32} className="sm:hidden cursor-pointer" />
-          {/* sm and up — icon + "Anish" wordmark */}
-          <Logo size={32} showWordmark className="hidden sm:inline-flex" />
+        <Link href="/" aria-label={`${siteConfig.name} — home`} className="cursor-pointer">
+          <Logo size={32} className="sm:hidden cursor-pointer" aria-hidden="true" />
+          <Logo size={32} showWordmark className="hidden sm:inline-flex" aria-hidden="true" />
         </Link>
 
         <div className="flex items-center gap-1">
-          <NavigationMenu className="max-md:hidden">
+          <NavigationMenu className="max-md:hidden" aria-label="Main navigation">
             <NavigationMenuList className="gap-0.5">
               {siteConfig.nav.map((link) => (
                 <NavigationMenuItem key={link.href}>
@@ -73,6 +71,7 @@ export function Header() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
+
           <ThemeToggle className="max-md:hidden" />
 
           <div className="md:hidden">
@@ -82,10 +81,11 @@ export function Header() {
                   className="size-8"
                   variant="ghost"
                   size="icon"
-                  aria-label="Toggle menu"
+                  aria-label={open ? "Close menu" : "Open menu"}
                   aria-expanded={open}
+                  aria-controls="mobile-nav"
                 >
-                  <MenuIcon />
+                  <MenuIcon aria-hidden="true" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent
@@ -94,6 +94,7 @@ export function Header() {
                 className="bg-background/95 w-screen rounded-none border-x-0 p-0 shadow-md backdrop-blur-md"
               >
                 <nav
+                  id="mobile-nav"
                   className="flex flex-col divide-y"
                   aria-label="Mobile navigation"
                 >
@@ -108,10 +109,10 @@ export function Header() {
                     </Link>
                   ))}
                   <div className="flex items-center justify-between px-6 py-3.5">
-                    <TypographySmall className="text-foreground">
+                    <TypographySmall className="text-foreground" id="theme-label">
                       Theme
                     </TypographySmall>
-                    <ThemeToggle />
+                    <ThemeToggle aria-labelledby="theme-label" />
                   </div>
                 </nav>
               </PopoverContent>

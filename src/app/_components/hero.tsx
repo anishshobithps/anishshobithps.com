@@ -1,9 +1,13 @@
 "use client";
 
-import Image from "next/image";
+import { Image } from "@/components/ui/image";
 import Link from "next/link";
-import { FileText, Mail, Circle } from "lucide-react";
+import { FileText, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@/components/ui/button-group";
 import { Badge } from "@/components/ui/badge";
 import { Section } from "@/components/layouts/page";
 import { siteConfig } from "@/lib/config";
@@ -11,33 +15,34 @@ import {
   TypographyH1,
   TypographyLead,
   TypographyMuted,
+  TypographyMark,
+  TypographyAnchor,
+  SectionLabel,
 } from "@/components/ui/typography";
 import { DecorIcon } from "@/components/ui/border";
+import { LocationTag } from "@/components/ui/location";
+import { Circle } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 export function Hero() {
   return (
-    <Section variant="hero">
-      <div className="flex items-center gap-3 mb-6">
-        <span className="text-lg font-mono font-medium tracking-widest text-muted-foreground/80 uppercase">
-          Who am I ?
-        </span>
+    <Section variant="hero" aria-label="Introduction">
+      <TypographyAnchor id="hero" />
+      <div className="flex items-center gap-3 mb-6" aria-hidden="true">
+        <SectionLabel>Who am I?</SectionLabel>
         <div className="flex-1 h-px bg-border/40" />
       </div>
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-[1fr_260px] gap-8 lg:gap-12 items-stretch">
+      <div className="w-full max-w-5xl grid lg:grid-cols-[1fr_300px] gap-8 lg:gap-12 items-stretch">
         <div
-          className="
-            relative flex flex-col justify-between
-            bg-background/80 backdrop-blur-md
-
-            /* MOBILE + TABLET */
-            p-0 border-0
-
-            /* DESKTOP ONLY */
-            lg:p-8 lg:border
-          "
+          className={cn(
+            "relative flex flex-col justify-between",
+            "bg-background/80 backdrop-blur-md",
+            "p-0 border-0",
+            "lg:p-8 lg:border",
+          )}
         >
-          <div className="hidden lg:block">
+          <div className="hidden lg:block" aria-hidden="true">
             <DecorIcon position="top-left" />
             <DecorIcon position="top-right" />
             <DecorIcon position="bottom-left" />
@@ -49,58 +54,67 @@ export function Hero() {
               <Badge
                 variant="outline"
                 className="inline-flex items-center gap-1.5 px-3 py-1 text-xs"
+                aria-label="Currently available for hire"
               >
-                <Circle className="size-2 fill-green-500 text-green-500 animate-pulse" />
+                <Circle
+                  className="size-2 fill-green-500 text-green-500 animate-pulse"
+                  aria-hidden="true"
+                />
                 Available for hire
               </Badge>
             )}
 
-            <div>
-              <TypographyH1 className="text-4xl sm:text-5xl tracking-tight">
-                {siteConfig.name}
-              </TypographyH1>
-
-              <TypographyMuted className="mt-2">
+            <div className="space-y-4">
+              <TypographyH1>{siteConfig.name}</TypographyH1>
+              <TypographyMuted
+                className="mt-2"
+                aria-label={`Role: ${siteConfig.role}`}
+              >
                 {siteConfig.role}
               </TypographyMuted>
+              <div className="pt-2">
+                <LocationTag />
+              </div>
             </div>
 
-            <TypographyLead className="text-muted-foreground leading-relaxed max-w-lg">
-              I craft sleek{" "}
-              <mark className="bg-(--selection-bg) text-(--selection-fg) rounded-sm px-1 not-italic">
-                high-performance web experiences
-              </mark>{" "}
-              that users love and developers enjoy expanding.
+            <TypographyLead>
+              I build{" "}
+              <TypographyMark>
+                interfaces, bots, and questionable automation scripts
+              </TypographyMark>{" "}
+              — mostly so I don't have to repeat myself.
             </TypographyLead>
           </div>
 
-          <div className="mt-8 flex gap-3 sm:gap-4">
-            <Button
-              asChild
-              size="lg"
-              className="rounded-lg sm:gap-2 px-3 sm:px-6 font-semibold"
-            >
-              <Link href="/resume" prefetch={false}>
-                <FileText className="size-5" />
-                <span className="hidden sm:inline">Resume</span>
-              </Link>
-            </Button>
+          <nav aria-label="Primary actions" className="mt-8">
+            <ButtonGroup>
+              <Button asChild size="lg" className="font-semibold">
+                <Link href="/resume" prefetch={false} aria-label="View resume">
+                  <FileText className="size-5 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">Resume</span>
+                </Link>
+              </Button>
 
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="rounded-lg sm:gap-2 px-3 sm:px-6 font-semibold"
-            >
-              <Link href="#contact" prefetch={false}>
-                <Mail className="size-5" />
+              <ButtonGroupSeparator />
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="font-semibold"
+                aria-label="Jump to contact section"
+                onClick={() => {
+                  const el = document.getElementById("contact");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                <Mail className="size-5 shrink-0" aria-hidden="true" />
                 <span className="hidden sm:inline">Contact</span>
-              </Link>
-            </Button>
-          </div>
+              </Button>
+            </ButtonGroup>
+          </nav>
         </div>
 
-        <div className="hidden lg:block relative border bg-background/80 backdrop-blur-md">
+        <div className="hidden lg:block relative border" aria-hidden="true">
           <DecorIcon position="top-left" />
           <DecorIcon position="top-right" />
           <DecorIcon position="bottom-left" />
@@ -109,13 +123,17 @@ export function Hero() {
           <div className="relative w-full h-full">
             <Image
               src="/profile.jpg"
-              alt="Profile"
+              alt={`Profile photo of ${siteConfig.name}`}
+              aspect="auto"
+              unoptimized
+              sizes="300px"
               fill
-              className="object-cover"
-              priority
-              sizes="260px"
+              containerClassName="w-full h-full"
             />
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.6))]" />
+            <div
+              className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.6))]"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </div>

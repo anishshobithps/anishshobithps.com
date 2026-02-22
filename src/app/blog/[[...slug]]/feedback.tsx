@@ -123,13 +123,15 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
   };
 
   return (
-    <div className={cn("w-full ", className)}>
-      <TypographyP className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground text-center">
+    <div className={cn("w-full", className)} aria-label="Post reactions">
+      <TypographyP
+        className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground text-center"
+        aria-hidden="true"
+      >
         How was this read?
       </TypographyP>
 
-      {/* Hide emoji reactions on mobile, show on md and up */}
-      <div className="flex flex-wrap gap-2 justify-center">
+      <fieldset aria-label="How was this read?" className="flex flex-wrap gap-2 justify-center border-0 p-0 m-0">
         {MOODS.map(
           ({
             id,
@@ -148,16 +150,19 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => handleSelect(id)}
+                aria-pressed={isActive}
+                aria-label={`${label}${count !== null && count > 0 ? `, ${count} ${count === 1 ? "reaction" : "reactions"}` : ""}`}
                 className={cn(
                   "gap-2 transition-all duration-150 cursor-pointer",
                   isActive ? activeClassName : inactiveClassName,
                 )}
               >
-                <Icon size={14} strokeWidth={isActive ? 2.5 : 2} />
+                <Icon size={14} strokeWidth={isActive ? 2.5 : 2} aria-hidden="true" />
                 <span className="hidden md:inline">{label}</span>
                 {count !== null && count > 0 && (
                   <Badge
                     variant="secondary"
+                    aria-hidden="true"
                     className={cn(
                       "px-1.5 py-0 text-[11px] font-semibold",
                       badgeClassName,
@@ -170,7 +175,7 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
             );
           },
         )}
-      </div>
+      </fieldset>
     </div>
   );
 }

@@ -23,11 +23,10 @@ export const PageLayout = forwardRef<
         "bg-[linear-gradient(to_right,var(--grid-line)_0.5px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_0.5px,transparent_1px)]",
         "bg-size-[80px_80px]",
 
-        // Multiple masks
-        "mask-[radial-gradient(circle_at_center,black_65%,transparent_100%),linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]",
+        // Mask OUT center (match max-w-5xl ≈ 64rem)
+        "mask-[linear-gradient(to_right,black_0%,black_calc(50%-32rem),transparent_calc(50%-32rem),transparent_calc(50%+32rem),black_calc(50%+32rem),black_100%)]",
 
-        // Intersect behavior
-        "mask-intersect",
+        "mask-composite:intersect",
         "[-webkit-mask-composite:source-in]",
       )}
     />

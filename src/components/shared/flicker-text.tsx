@@ -24,7 +24,7 @@ function FlickerChar({
   logoY = 0,
 }: FlickerCharProps) {
   return (
-    <g>
+    <g aria-hidden="true">
       {asLogo ? (
         <g
           transform={`translate(${logoX}, ${logoY}) scale(${logoScale}) translate(-14, 0)`}
@@ -71,6 +71,7 @@ interface FlickerTextProps {
   chars: ("0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "logo")[];
   charWidth?: number;
   className?: string;
+  label?: string;
 }
 
 const FLICKER_PRESETS = [
@@ -98,8 +99,11 @@ export function FlickerText({
   chars,
   charWidth = 76,
   className,
+  label,
 }: FlickerTextProps) {
   const totalWidth = chars.length * charWidth;
+  const resolvedLabel =
+    label ?? chars.map((c) => (c === "logo" ? "A" : c)).join("");
 
   return (
     <svg
@@ -108,8 +112,11 @@ export function FlickerText({
       width={totalWidth}
       height={96}
       fill="none"
+      role="img"
+      aria-label={resolvedLabel}
       className={className}
     >
+      <title>{resolvedLabel}</title>
       <defs>
         <style>{`
           .flicker-n {
@@ -130,7 +137,6 @@ export function FlickerText({
           const scale = 1.571;
           const logoX = x + (charWidth - 50 * scale) / 2;
           const logoY = 5;
-
           return (
             <FlickerChar
               key={i}

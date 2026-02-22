@@ -95,7 +95,7 @@ export function BouncingLogos({
   }, [containerRef]);
 
   return (
-    <>
+    <div role="presentation" aria-hidden="true">
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
@@ -110,9 +110,13 @@ export function BouncingLogos({
           className={`pointer-events-none absolute ${opacity}`}
           style={{ willChange: "transform", top: 0, left: 0 }}
         >
-          <Logo size={LOGO_SIZE} className="text-foreground" />
+          <Logo
+            size={LOGO_SIZE}
+            className="text-foreground"
+            aria-hidden="true"
+          />
         </div>
       ))}
-    </>
+    </div>
   );
 }

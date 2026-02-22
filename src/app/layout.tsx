@@ -10,6 +10,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./global.css";
 import { MouseGlow } from "@/components/shared/mouse-glow";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { JsonLd } from "@/components/shared/json-ld";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -30,7 +31,13 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.baseUrl),
-  ...buildOGMeta({ path: "home", title: siteConfig.name }),
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon", type: "image/png", sizes: "32x32" },
+    ],
+    apple: "/apple-icon",
+  },
 };
 
 export default function Layout({ children }: LayoutProps<"/">) {
@@ -41,6 +48,8 @@ export default function Layout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="relative flex flex-col min-h-screen">
+        <JsonLd type="person" />
+        <JsonLd type="website" />
         <RootProvider>
           <NuqsAdapter>
             <PageLayout>

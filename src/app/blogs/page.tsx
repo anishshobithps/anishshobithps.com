@@ -1,6 +1,12 @@
 import { BlogsClient, type BlogPost } from "@/app/blogs/blogs-client";
 import { Section } from "@/components/layouts/page";
-import { TypographyH1, TypographyLead } from "@/components/ui/typography";
+import { JsonLd } from "@/components/shared/json-ld";
+import {
+  TypographyH1,
+  TypographyLead,
+  TypographyMark,
+} from "@/components/ui/typography";
+import { siteConfig } from "@/lib/config";
 import { buildMeta } from "@/lib/og";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";
@@ -12,6 +18,8 @@ export const metadata: Metadata = buildMeta({
   description:
     "Structured thoughts, semi-structured experiments, and occasional overengineering.",
   path: "home / blogs",
+  canonicalPath: "/blogs",
+  type: "website",
 });
 
 export default function BlogPage() {
@@ -38,16 +46,27 @@ export default function BlogPage() {
 
   return (
     <>
-      <Section variant="hero">
+      <JsonLd
+        type="webpage"
+        title="Blogs"
+        description="Structured thoughts, semi-structured experiments, and occasional overengineering."
+        canonicalUrl={`${siteConfig.baseUrl}/blogs`}
+      />
+      <Section variant="hero" aria-label="Blog header">
         <TypographyH1>Blogs</TypographyH1>
         <TypographyLead>
-          Engineering thoughts, design experiments, and things I overthought at
-          2AM.
+          Engineering thoughts,{" "}
+          <TypographyMark>design experiments</TypographyMark>, and things I
+          overthought at 2AM.
         </TypographyLead>
       </Section>
 
-      <Section className="pb-6">
-        <Suspense fallback={<div>Loading... probably compiling thoughts.</div>}>
+      <Section className="pb-6" aria-label="Blog posts">
+        <Suspense
+          fallback={
+            <p aria-live="polite">Loading... probably compiling thoughts.</p>
+          }
+        >
           <BlogsClient posts={posts} allTags={allTags} />
         </Suspense>
       </Section>

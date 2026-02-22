@@ -39,59 +39,80 @@ export function BlogPostNav({
   return (
     <>
       <Button variant="ghost" size="sm" asChild>
-        <Link href="/blogs">
-          <ArrowLeft className="size-3.5 shrink-0" />
+        <Link href="/blogs" aria-label="Back to all blog posts">
+          <ArrowLeft className="size-3.5 shrink-0" aria-hidden="true" />
           <TypographySmall>Blog</TypographySmall>
         </Link>
       </Button>
 
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-0.5" role="toolbar" aria-label="Post actions">
         <Button
           variant="ghost"
           size="icon-sm"
           onClick={handleCopy}
-          title="Copy link"
+          aria-label={copied ? "Link copied" : "Copy link to this post"}
+          aria-live="polite"
           className="text-muted-foreground hover:text-foreground"
         >
-          {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
+          {copied
+            ? <Check className="size-4" aria-hidden="true" />
+            : <Link2 className="size-4" aria-hidden="true" />}
         </Button>
 
-        <Button variant="ghost" size="icon-sm" asChild className="text-muted-foreground hover:text-foreground">
-          <a href={xUrl} target="_blank" rel="noopener noreferrer" title="Share on X">
-            <TwitterIcon className="size-4" />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          asChild
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <a
+            href={xUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Share "${title}" on X (opens in new tab)`}
+          >
+            <TwitterIcon className="size-4" aria-hidden="true" />
           </a>
         </Button>
 
-        <Button variant="ghost" size="icon-sm" asChild className="text-muted-foreground hover:text-foreground">
-          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" title="Share on LinkedIn">
-            <LinkedinIcon className="size-4" />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          asChild
+          className="text-muted-foreground hover:text-foreground"
+        >
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Share "${title}" on LinkedIn (opens in new tab)`}
+          >
+            <LinkedinIcon className="size-4" aria-hidden="true" />
           </a>
         </Button>
 
-        <div className="mx-1 h-4 w-px bg-border shrink-0" />
+        <div className="mx-1 h-4 w-px bg-border shrink-0" aria-hidden="true" />
 
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              href={prevPost?.url ?? "#"}
-              title={prevPost ? `Previous: ${prevPost.title}` : undefined}
-              aria-disabled={!prevPost}
-              className={
-                !prevPost ? "pointer-events-none opacity-30" : undefined
-              }
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              href={nextPost?.url ?? "#"}
-              title={nextPost ? `Next: ${nextPost.title}` : undefined}
-              aria-disabled={!nextPost}
-              className={
-                !nextPost ? "pointer-events-none opacity-30" : undefined
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
+        <nav aria-label="Post navigation">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={prevPost?.url ?? "#"}
+                aria-label={prevPost ? `Previous post: ${prevPost.title}` : "No previous post"}
+                aria-disabled={!prevPost}
+                className={!prevPost ? "pointer-events-none opacity-30" : undefined}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                href={nextPost?.url ?? "#"}
+                aria-label={nextPost ? `Next post: ${nextPost.title}` : "No next post"}
+                aria-disabled={!nextPost}
+                className={!nextPost ? "pointer-events-none opacity-30" : undefined}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </nav>
       </div>
     </>
   );

@@ -21,8 +21,7 @@ export function LogoLoader({
 
   return (
     <svg
-      role="img"
-      aria-label="Loading"
+      aria-hidden="true"
       viewBox={`${CROP_LEFT} 0 ${VB_WIDTH} ${VB_HEIGHT}`}
       width={scaledWidth}
       height={size}
@@ -45,29 +44,24 @@ export function LogoLoader({
             />
           </rect>
         </clipPath>
-
         <style>{`
           @media (prefers-reduced-motion: reduce) {
             .${uid}-ghost  { animation: none !important; opacity: 0.5; }
             .${uid}-filled { animation: none !important; clip-path: none; opacity: 0; }
           }
-
           @keyframes ${uid}-ghostBreath {
             0%, 100% { opacity: 0.12; transform: scale(1);    }
             50%       { opacity: 0.07; transform: scale(0.99); }
           }
-
           @keyframes ${uid}-breath {
             0%, 100% { transform: scale(1);    }
             50%       { transform: scale(0.99); }
           }
-
           .${uid}-ghost {
             fill: currentColor;
             transform-origin: 32px 32px;
             animation: ${uid}-ghostBreath 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
           }
-
           .${uid}-filled {
             fill: currentColor;
             transform-origin: 32px 32px;

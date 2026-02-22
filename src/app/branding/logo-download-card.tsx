@@ -20,7 +20,7 @@ type DownloadSize = (typeof DOWNLOAD_SIZES)[number];
 interface LogoDownloadCardProps {
   label: string;
   description: string;
-  logoProps: Omit<LogoProps, "size">;
+  logoProps: Omit<LogoProps, "ref">;
 }
 
 function getSVGString(svg: SVGSVGElement, targetHeight: number): string {
@@ -84,63 +84,64 @@ export function LogoDownloadCard({
   const filename = `${nameSlug}-${variantSlug}-${size}px`;
 
   return (
-    <div className="rounded-xl border overflow-hidden">
-      <div className="flex items-center justify-center h-36 bg-muted/20 px-10">
-        <Logo ref={svgRef} size={56} {...logoProps} copyOnClick />
+    <div className="flex flex-col gap-3 w-full" aria-label={`${label} logo variant`}>
+      <div>
+        <TypographyMuted className="text-xs uppercase tracking-wider" aria-hidden="true">
+          {label}
+        </TypographyMuted>
+        <TypographySmall className="text-muted-foreground">
+          {description}
+        </TypographySmall>
       </div>
-      <div className="flex flex-col gap-2.5 px-4 py-3 border-t bg-muted/10">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <TypographySmall className="font-semibold">{label}</TypographySmall>
-            <TypographyMuted className="text-xs truncate">
-              {description}
-            </TypographyMuted>
-          </div>
-          <Select
-            value={String(size)}
-            onValueChange={(v) => setSize(Number(v) as DownloadSize)}
-          >
-            <SelectTrigger size="sm" className="w-24 shrink-0 cursor-pointer">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {DOWNLOAD_SIZES.map((s) => (
-                <SelectItem
-                  key={s}
-                  value={String(s)}
-                  className="cursor-pointer"
-                >
-                  {s} px
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
-        <div className="flex gap-1.5">
-          <Button
-            size="xs"
-            variant="outline"
-            className="flex-1 cursor-pointer"
-            onClick={() =>
-              svgRef.current && downloadSVG(svgRef.current, filename, size)
-            }
+      <div
+        className="flex items-center justify-center w-full min-h-28 rounded-sm border border-border/60 bg-muted/20 px-6 py-8"
+        role="img"
+        aria-label={`${label} logo preview`}
+      >
+        <Logo ref={svgRef} size={48} aria-hidden="true" {...logoProps} />
+      </div>
+
+      <div className="flex items-center gap-2" aria-label={`Download ${label} logo`}>
+        <Select
+          value={String(size)}
+          onValueChange={(v) => setSize(Number(v) as DownloadSize)}
+        >
+          <SelectTrigger
+            className="h-8 w-24 shrink-0 text-xs"
+            aria-label={`Select download size, currently ${size}px`}
           >
-            <CodeXmlIcon />
-            SVG
-          </Button>
-          <Button
-            size="xs"
-            variant="outline"
-            className="flex-1 cursor-pointer"
-            onClick={() =>
-              svgRef.current && downloadPNG(svgRef.current, filename, size)
-            }
-          >
-            <ImageIcon />
-            PNG
-          </Button>
-        </div>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {DOWNLOAD_SIZES.map((s) => (
+              <SelectItem key={s} value={String(s)} className="text-xs">
+                {s} px
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1 h-8 gap-1.5 text-xs"
+          aria-label={`Download ${label} logo as SVG at ${size}px`}
+          onClick={() => svgRef.current && downloadSVG(svgRef.current, filename, size)}
+        >
+          <CodeXmlIcon className="size-3 shrink-0" aria-hidden="true" />
+          SVG
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1 h-8 gap-1.5 text-xs"
+          aria-label={`Download ${label} logo as PNG at ${size}px`}
+          onClick={() => svgRef.current && downloadPNG(svgRef.current, filename, size)}
+        >
+          <ImageIcon className="size-3 shrink-0" aria-hidden="true" />
+          PNG
+        </Button>
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ const GLOW_COLOR = "var(--glow)";
 function getTouchPoint(event: TouchEvent): Point | null {
   const touch = event.touches[0];
   if (!touch) return null;
-
   return { x: touch.clientX, y: touch.clientY };
 }
 
@@ -21,7 +20,6 @@ export function MouseGlow() {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const positionRef = useRef<Point | null>(null);
   const rafRef = useRef<number | null>(null);
-
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -30,14 +28,11 @@ export function MouseGlow() {
 
     function scheduleFrame() {
       if (rafRef.current !== null) return;
-
       rafRef.current = requestAnimationFrame(() => {
         if (glowRef.current && positionRef.current) {
           const { x, y } = positionRef.current;
-
           glowRef.current.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
         }
-
         rafRef.current = null;
       });
     }
@@ -52,18 +47,12 @@ export function MouseGlow() {
       setIsVisible(true);
     }
 
-    function handlePointerEnter() {
-      setIsVisible(true);
-    }
-
-    function handlePointerLeave() {
-      setIsVisible(false);
-    }
+    function handlePointerLeave() { setIsVisible(false); }
+    function handlePointerEnter() { setIsVisible(true); }
 
     function handleTouchStart(event: TouchEvent) {
       const point = getTouchPoint(event);
       if (!point) return;
-
       updatePointer(point.x, point.y);
       setIsVisible(true);
     }
@@ -71,18 +60,14 @@ export function MouseGlow() {
     function handleTouchMove(event: TouchEvent) {
       const point = getTouchPoint(event);
       if (!point) return;
-
       updatePointer(point.x, point.y);
     }
 
-    function handleTouchEnd() {
-      setIsVisible(false);
-    }
+    function handleTouchEnd() { setIsVisible(false); }
 
     document.addEventListener("pointermove", handlePointerMove, { signal });
     document.addEventListener("pointerenter", handlePointerEnter, { signal });
     document.addEventListener("pointerleave", handlePointerLeave, { signal });
-
     document.addEventListener("touchstart", handleTouchStart, { signal });
     document.addEventListener("touchmove", handleTouchMove, { signal });
     document.addEventListener("touchend", handleTouchEnd, { signal });
@@ -90,16 +75,14 @@ export function MouseGlow() {
 
     return () => {
       controller.abort();
-
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-      }
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
     <div
       ref={glowRef}
+      aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 blur-3xl will-change-transform"
       style={{
         width: GLOW_SIZE,

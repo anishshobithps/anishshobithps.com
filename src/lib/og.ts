@@ -47,23 +47,90 @@ export function buildOGMeta(params: OGParams) {
     };
 }
 
-export function buildMeta(params: OGParams & { pageTitle?: string }): Metadata {
+export function buildMeta(
+    params: OGParams & {
+        pageTitle?: string;
+        canonicalPath?: string;
+        noIndex?: boolean;
+        publishedAt?: string;
+        updatedAt?: string;
+        type?: "website" | "article" | "profile";
+    },
+): Metadata {
     const imageUrl = buildOGUrl(params);
     const title = params.pageTitle ?? params.title ?? siteConfig.name;
     const description = params.description ?? siteConfig.description;
+    const canonical = params.canonicalPath
+        ? `${siteConfig.baseUrl}${params.canonicalPath}`
+        : siteConfig.baseUrl;
+    const type = params.type ?? "website";
+    const keywords = [
+        ...(params.tags ?? []),
+        params.role ?? siteConfig.role,
+        siteConfig.name,
+    ].filter(Boolean);
+
     return {
         title,
         description,
+        keywords,
+        authors: [{ name: siteConfig.name, url: siteConfig.baseUrl }],
+        creator: siteConfig.name,
+        publisher: siteConfig.name,
+
+        metadataBase: new URL(siteConfig.baseUrl),
+        alternates: {
+            canonical,
+        },
+
+        ...(params.noIndex && {
+            robots: {
+                index: false,
+                follow: false,
+                googleBot: {
+                    index: false,
+                    follow: false,
+                },
+            },
+        }),
+
         openGraph: {
             title,
             description,
-            images: [{ url: imageUrl, width: 1200, height: 630 }],
+            url: canonical,
+            siteName: siteConfig.name,
+            locale: "en_US",
+            type,
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: title,
+                },
+            ],
+            ...(type === "article" && {
+                publishedTime: params.publishedAt,
+                modifiedTime: params.updatedAt,
+                authors: [siteConfig.baseUrl],
+                tags: params.tags,
+            }),
         },
+
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: [imageUrl],
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: title,
+                },
+            ],
+            creator: siteConfig.twitterHandle,
+            site: siteConfig.twitterHandle,
         },
     };
 }

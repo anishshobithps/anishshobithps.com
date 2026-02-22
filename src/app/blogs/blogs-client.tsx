@@ -96,15 +96,20 @@ export function BlogsClient({
 
   return (
     <div className="flex flex-col -mt-6">
-      <div className="flex flex-wrap sm:flex-nowrap sm:justify-end gap-3 pb-6">
+      <div
+        role="search"
+        aria-label="Filter blog posts"
+        className="flex flex-wrap sm:flex-nowrap sm:justify-end gap-3 pb-6"
+      >
         <div className="w-full sm:w-auto sm:flex-1 min-w-0">
           <InputGroup>
             <InputGroupAddon align="inline-start">
-              <SearchIcon />
+              <SearchIcon aria-hidden="true" />
             </InputGroupAddon>
             <InputGroupInput
               placeholder="Search posts…"
               value={q}
+              aria-label="Search blog posts"
               onChange={(e) => setParams({ q: e.target.value, page: 1 })}
               className="w-full"
             />
@@ -114,7 +119,7 @@ export function BlogsClient({
                   onClick={() => setParams({ q: "", page: 1 })}
                   aria-label="Clear search"
                 >
-                  <X className="size-4" />
+                  <X className="size-4" aria-hidden="true" />
                 </InputGroupButton>
               </InputGroupAddon>
             )}
@@ -128,12 +133,16 @@ export function BlogsClient({
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
+                    aria-label={tags.length > 0 ? `Filter by tags, ${tags.length} selected` : "Filter by tags"}
                     className="cursor-pointer gap-1.5 shrink-0 justify-start font-semibold"
                   >
-                    <TagIcon className="size-4" />
+                    <TagIcon className="size-4" aria-hidden="true" />
                     <span className="text-left">Tags</span>
                     {tags.length > 0 && (
-                      <span className="flex items-center justify-center rounded-full bg-primary text-primary-foreground size-5 text-xs">
+                      <span
+                        aria-hidden="true"
+                        className="flex items-center justify-center rounded-full bg-primary text-primary-foreground size-5 text-xs"
+                      >
                         {tags.length}
                       </span>
                     )}
@@ -148,36 +157,38 @@ export function BlogsClient({
                         size="xs"
                         onClick={() => setParams({ tags: [], page: 1 })}
                         className="cursor-pointer h-auto px-1 py-0"
-                        aria-label="Clear all tags"
+                        aria-label="Clear all tag filters"
                       >
-                        <X className="size-4" />
+                        <X className="size-4" aria-hidden="true" />
                       </Button>
                     )}
                   </div>
-                  <div className="flex flex-col gap-0.5 max-h-56 overflow-y-auto">
+                  <ul role="list" aria-label="Available tags" className="flex flex-col gap-0.5 max-h-56 overflow-y-auto">
                     {allTags.map((tag) => (
-                      <label
-                        key={tag}
-                        className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors"
-                      >
-                        <Checkbox
-                          checked={tags.includes(tag)}
-                          onCheckedChange={(checked) =>
-                            setParams({
-                              tags:
-                                checked === true
-                                  ? [...tags, tag]
-                                  : tags.filter((t) => t !== tag),
-                              page: 1,
-                            })
-                          }
-                        />
-                        <TypographySmall className="font-semibold uppercase">
-                          {tag}
-                        </TypographySmall>
-                      </label>
+                      <li key={tag}>
+                        <label
+                          className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors"
+                        >
+                          <Checkbox
+                            checked={tags.includes(tag)}
+                            aria-label={`Filter by ${tag}`}
+                            onCheckedChange={(checked) =>
+                              setParams({
+                                tags:
+                                  checked === true
+                                    ? [...tags, tag]
+                                    : tags.filter((t) => t !== tag),
+                                page: 1,
+                              })
+                            }
+                          />
+                          <TypographySmall className="font-semibold uppercase">
+                            {tag}
+                          </TypographySmall>
+                        </label>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </PopoverContent>
               </Popover>
               <ButtonGroupSeparator />
@@ -190,7 +201,7 @@ export function BlogsClient({
               setParams({ per: parseInt(val, 10), page: 1 })
             }
           >
-            <SelectTrigger className="cursor-pointer font-semibold w-full">
+            <SelectTrigger className="cursor-pointer font-semibold w-full" aria-label={`Showing ${per} posts per page`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -209,25 +220,27 @@ export function BlogsClient({
       </div>
 
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 pb-3">
+        <ul role="list" aria-label="Active tag filters" className="flex flex-wrap gap-1.5 pb-3">
           {tags.map((tag) => (
-            <Button
-              key={tag}
-              variant="ghost"
-              size="xs"
-              onClick={() =>
-                setParams({ tags: tags.filter((t) => t !== tag), page: 1 })
-              }
-              className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary hover:bg-primary/20 cursor-pointer h-auto"
-            >
-              {tag}
-              <X className="size-3" />
-            </Button>
+            <li key={tag}>
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={() =>
+                  setParams({ tags: tags.filter((t) => t !== tag), page: 1 })
+                }
+                aria-label={`Remove ${tag} filter`}
+                className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary hover:bg-primary/20 cursor-pointer h-auto"
+              >
+                {tag}
+                <X className="size-3" aria-hidden="true" />
+              </Button>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
-      <div className="relative -mx-6 sm:-mx-8 lg:-mx-10">
+      <div className="relative -mx-6 sm:-mx-8 lg:-mx-10" aria-hidden="true">
         <DecorIcon position="top-left" />
         <DecorIcon position="top-right" />
         <Divider short />
@@ -235,134 +248,138 @@ export function BlogsClient({
 
       <div>
         {paginated.length === 0 ? (
-          <div className="py-12 text-center">
+          <div role="status" aria-live="polite" className="py-12 text-center">
             <TypographyMuted>No posts found.</TypographyMuted>
           </div>
         ) : (
-          paginated.map((post, index) => {
-            const date = post.date
-              ? new Date(post.date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : null;
+          <ul role="list" aria-label="Blog posts" aria-live="polite">
+            {paginated.map((post, index) => {
+              const date = post.date
+                ? new Date(post.date).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })
+                : null;
 
-            return (
-              <div key={post.url}>
-                {index > 0 && <Divider plain />}
-                <Link
-                  href={post.url}
-                  className="group relative flex flex-col gap-2 py-6 pl-0 hover:pl-4 transition-[padding-left] duration-200 cursor-pointer"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-y-0 left-0 w-0.5 rounded-full bg-foreground/30 scale-y-0 origin-center transition-transform duration-200 group-hover:scale-y-100"
-                  />
-                  <div className="flex items-baseline justify-between gap-4">
-                    <TypographySmall className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">
-                      {post.title}
-                    </TypographySmall>
-                    {date && (
-                      <TypographyMuted className="shrink-0 font-mono text-xs">
-                        {date}
+              return (
+                <li key={post.url}>
+                  {index > 0 && <Divider plain />}
+                  <Link
+                    href={post.url}
+                    aria-label={`${post.title}${date ? `, published ${date}` : ""}`}
+                    className="relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
+                  >
+                    <div className="flex items-baseline justify-between gap-4">
+                      <TypographySmall className="text-base font-semibold text-foreground">
+                        {post.title}
+                      </TypographySmall>
+                      {date && (
+                        <TypographyMuted aria-hidden="true" className="shrink-0 font-mono text-xs">
+                          {date}
+                        </TypographyMuted>
+                      )}
+                    </div>
+                    {post.description && (
+                      <TypographyMuted className="leading-relaxed">
+                        {post.description}
                       </TypographyMuted>
                     )}
-                  </div>
-                  {post.description && (
-                    <TypographyMuted className="leading-relaxed">
-                      {post.description}
-                    </TypographyMuted>
-                  )}
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-1">
-                      {post.tags.map((tag) => (
-                        <TypographyMuted
-                          key={tag}
-                          className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs"
-                        >
-                          {tag}
-                        </TypographyMuted>
-                      ))}
-                    </div>
-                  )}
-                </Link>
-              </div>
-            );
-          })
+                    {post.tags && post.tags.length > 0 && (
+                      <ul role="list" aria-label="Tags" className="flex flex-wrap gap-1.5 mt-1">
+                        {post.tags.map((tag) => (
+                          <li key={tag}>
+                            <TypographyMuted className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs">
+                              {tag}
+                            </TypographyMuted>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </div>
 
       {filtered.length > 0 && (
         <>
-          <div className="relative -mx-6 sm:-mx-8 lg:-mx-10">
+          <div className="relative -mx-6 sm:-mx-8 lg:-mx-10" aria-hidden="true">
             <DecorIcon position="top-left" />
             <DecorIcon position="top-right" />
             <Divider short />
           </div>
           <div className="flex flex-col items-center gap-3 pt-6">
-            <TypographyMuted className="text-xs">
+            <TypographyMuted aria-live="polite" aria-atomic="true" className="text-xs">
               Showing {(currentPage - 1) * per + 1}–
               {Math.min(currentPage * per, filtered.length)} of{" "}
               {filtered.length} post{filtered.length !== 1 ? "s" : ""}
             </TypographyMuted>
             {totalPages > 1 && (
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (currentPage > 1)
-                          setParams({ page: currentPage - 1 });
-                      }}
-                      className={cn(
-                        "cursor-pointer",
-                        currentPage <= 1 && "pointer-events-none opacity-50",
-                      )}
-                      aria-disabled={currentPage <= 1}
-                    />
-                  </PaginationItem>
-                  {buildPageNumbers(currentPage, totalPages).map((p, i) =>
-                    p === "..." ? (
-                      <PaginationItem key={`ellipsis-${i}`}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    ) : (
-                      <PaginationItem key={p}>
-                        <PaginationLink
-                          href="#"
-                          isActive={p === currentPage}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setParams({ page: p as number });
-                          }}
-                          className="cursor-pointer"
-                        >
-                          {p}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ),
-                  )}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (currentPage < totalPages)
-                          setParams({ page: currentPage + 1 });
-                      }}
-                      className={cn(
-                        "cursor-pointer",
-                        currentPage >= totalPages &&
-                          "pointer-events-none opacity-50",
-                      )}
-                      aria-disabled={currentPage >= totalPages}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+              <nav aria-label="Pagination">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1)
+                            setParams({ page: currentPage - 1 });
+                        }}
+                        aria-label="Go to previous page"
+                        aria-disabled={currentPage <= 1}
+                        className={cn(
+                          "cursor-pointer",
+                          currentPage <= 1 && "pointer-events-none opacity-50",
+                        )}
+                      />
+                    </PaginationItem>
+                    {buildPageNumbers(currentPage, totalPages).map((p, i) =>
+                      p === "..." ? (
+                        <PaginationItem key={`ellipsis-${i}`}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      ) : (
+                        <PaginationItem key={p}>
+                          <PaginationLink
+                            href="#"
+                            isActive={p === currentPage}
+                            aria-label={`Go to page ${p}`}
+                            aria-current={p === currentPage ? "page" : undefined}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setParams({ page: p as number });
+                            }}
+                            className="cursor-pointer"
+                          >
+                            {p}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ),
+                    )}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages)
+                            setParams({ page: currentPage + 1 });
+                        }}
+                        aria-label="Go to next page"
+                        aria-disabled={currentPage >= totalPages}
+                        className={cn(
+                          "cursor-pointer",
+                          currentPage >= totalPages &&
+                            "pointer-events-none opacity-50",
+                        )}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </nav>
             )}
           </div>
         </>

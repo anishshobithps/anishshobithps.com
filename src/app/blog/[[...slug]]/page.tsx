@@ -3,6 +3,7 @@ import { BlogReactions } from "@/app/blog/[[...slug]]/feedback";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
   TypographyH1,
   TypographyLead,
@@ -49,7 +50,30 @@ export default async function Page(props: { params: { slug: string[] } }) {
 
   return (
     <>
-      <Section variant="nav">
+      <JsonLd
+        type="article"
+        title={page.data.title}
+        description={page.data.description ?? ""}
+        canonicalUrl={postUrl}
+        publishedAt={
+          page.data.date ? new Date(page.data.date).toISOString() : undefined
+        }
+        updatedAt={
+          page.data.lastModified
+            ? new Date(page.data.lastModified).toISOString()
+            : undefined
+        }
+        tags={page.data.tags}
+      />
+      <JsonLd
+        type="breadcrumb"
+        items={[
+          { name: "Home", url: siteConfig.baseUrl },
+          { name: "Blogs", url: `${siteConfig.baseUrl}/blogs` },
+          { name: page.data.title, url: postUrl },
+        ]}
+      />
+      <Section variant="nav" aria-label="Post navigation">
         <BlogPostNav
           pageUrl={postUrl}
           title={page.data.title}
@@ -58,13 +82,19 @@ export default async function Page(props: { params: { slug: string[] } }) {
         />
       </Section>
 
-      <Section variant="hero">
+      <Section variant="hero" aria-label="Post header">
         <TypographyH1>{page.data.title}</TypographyH1>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2">
+        <div
+          className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
+          aria-label="Post metadata"
+        >
           {page.data.date && (
-            <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
-              <CalendarDays className="size-3.5 shrink-0" />
+            <TypographyMuted
+              className="font-mono text-xs flex items-center gap-1.5"
+              aria-label={`Published on ${new Date(page.data.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
+            >
+              <CalendarDays className="size-3.5 shrink-0" aria-hidden="true" />
               {new Date(page.data.date).toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
@@ -73,8 +103,14 @@ export default async function Page(props: { params: { slug: string[] } }) {
             </TypographyMuted>
           )}
           {page.data.lastModified && (
-            <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
-              <GitCommitHorizontal className="size-3.5 shrink-0" />
+            <TypographyMuted
+              className="font-mono text-xs flex items-center gap-1.5"
+              aria-label={`Last updated ${new Date(page.data.lastModified).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
+            >
+              <GitCommitHorizontal
+                className="size-3.5 shrink-0"
+                aria-hidden="true"
+              />
               Updated{" "}
               {new Date(page.data.lastModified).toLocaleDateString("en-US", {
                 month: "short",
@@ -84,8 +120,11 @@ export default async function Page(props: { params: { slug: string[] } }) {
             </TypographyMuted>
           )}
           {readingTime && (
-            <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
-              <Clock className="size-3.5 shrink-0" />
+            <TypographyMuted
+              className="font-mono text-xs flex items-center gap-1.5"
+              aria-label={`Reading time: ${readingTime.text}`}
+            >
+              <Clock className="size-3.5 shrink-0" aria-hidden="true" />
               {readingTime.text}
             </TypographyMuted>
           )}
@@ -97,16 +136,19 @@ export default async function Page(props: { params: { slug: string[] } }) {
         )}
 
         {page.data.tags && page.data.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
+          <ul
+            role="list"
+            aria-label="Post tags"
+            className="flex flex-wrap gap-1.5"
+          >
             {page.data.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground"
-              >
-                {tag}
-              </span>
+              <li key={tag}>
+                <span className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground">
+                  {tag}
+                </span>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </Section>
 
@@ -118,11 +160,11 @@ export default async function Page(props: { params: { slug: string[] } }) {
         />
       </BlogBody>
 
-      <Section innerPadding="pt-6" className="pb-6">
+      <Section innerPadding="pt-6" className="pb-6" aria-label="Post feedback">
         <BlogReactions slug={page.url} />
       </Section>
 
-      <Section variant="nav">
+      <Section variant="nav" aria-label="Post navigation">
         <BlogPostNav
           pageUrl={postUrl}
           title={page.data.title}
@@ -150,6 +192,14 @@ export async function generateMetadata(props: {
     pageTitle: page.data.title,
     description: page.data.description ?? "",
     path: `home / blog / ${params.slug?.join(" / ") ?? ""}`,
+    canonicalPath: page.url,
+    type: "article",
     tags: (page.data.tags as string[] | undefined) ?? [],
+    publishedAt: page.data.date
+      ? new Date(page.data.date).toISOString()
+      : undefined,
+    updatedAt: page.data.lastModified
+      ? new Date(page.data.lastModified).toISOString()
+      : undefined,
   });
 }

@@ -96,7 +96,7 @@ function ProgressCircle({
   );
 }
 
-function MobileTOC() {
+export function MobileTOC() {
   const items = useTOCItems();
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
@@ -114,7 +114,7 @@ function MobileTOC() {
   if (items.length === 0) return null;
 
   return (
-    <div className="sticky top-14 z-10 xl:hidden before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border">
+    <div className="sticky top-14 z-50 xl:hidden bg-background shadow-sm before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border backdrop-blur-md supports-backdrop-filter:bg-background/80">
       <FullWidthDivider position="top" />
       <DecorIcon position="top-left" />
       <DecorIcon position="top-right" />
@@ -156,7 +156,7 @@ function MobileTOC() {
             className={cn(
               "overflow-hidden",
               mounted &&
-                "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up",
+                "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up bg-background/80",
             )}
           >
             <div className="px-6 sm:px-8 lg:px-10 pb-3">
@@ -184,10 +184,7 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
 
       <Section noTopDivider>
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
-          {/* Article */}
           <article className="prose min-w-0">{children}</article>
-
-          {/* Desktop TOC */}
           <aside className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
             <DecorIcon position="top-left" />
             <DecorIcon position="bottom-left" />
@@ -198,7 +195,9 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
                   On this page
                 </TypographySmall>
 
-                <TOCScrollArea>
+                <TOCScrollArea
+                  className="max-h-[calc(100vh-8rem)] **:data-[slot=scroll-area-viewport]:scroll-fade-effect-y"
+                >
                   <TOCItems />
                 </TOCScrollArea>
               </div>

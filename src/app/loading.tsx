@@ -4,10 +4,14 @@ export default function Loading() {
   const uid = "logoLoader";
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background">
+    <div
+      className="flex min-h-screen w-full items-center justify-center bg-background"
+      role="status"
+      aria-label="Loading"
+      aria-live="polite"
+    >
       <svg
-        role="img"
-        aria-label="Loading"
+        aria-hidden="true"
         viewBox="14 0 50 64"
         width="50"
         height="64"

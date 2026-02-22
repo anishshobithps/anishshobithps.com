@@ -38,18 +38,14 @@ export function BrandingOGPreview() {
   );
 
   const title = titleInput.trim() ? titleInput : defaultTitle;
-  const description = descriptionInput.trim()
-    ? descriptionInput
-    : defaultDescription;
+  const description = descriptionInput.trim() ? descriptionInput : defaultDescription;
   const name = nameInput.trim() ? nameInput : defaultName;
   const role = roleInput.trim() ? roleInput : defaultRole;
   const domain = domainInput.trim() ? domainInput : defaultDomain;
   const tags = tagsInput.trim()
-    ? tagsInput
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean)
+    ? tagsInput.split(",").map((t) => t.trim()).filter(Boolean)
     : defaultTags;
+
   const ogProps = {
     title,
     description,
@@ -61,99 +57,113 @@ export function BrandingOGPreview() {
     availableForHire,
   };
 
-  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTagsInput(e.target.value);
-  };
-
   return (
     <div className="border rounded-xl overflow-hidden">
-      <div className="flex flex-col gap-4 px-4 py-3 border-b bg-muted/20">
+      <div
+        className="flex flex-col gap-4 px-4 py-3 border-b bg-muted/20"
+        role="toolbar"
+        aria-label="OG image preview controls"
+      >
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
-          <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
-          <span className="w-2.5 h-2.5 rounded-full bg-green-400/50" />
-          <div className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden">
-            <TypographyMuted className="font-mono text-[10px] truncate leading-none">
+          <div aria-hidden="true" className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-green-400/50" />
+          </div>
+          <div
+            className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden"
+            aria-label={`Preview URL: ${domain}/home / branding`}
+          >
+            <TypographyMuted className="font-mono text-[10px] truncate leading-none" aria-hidden="true">
               {domain}/home / branding
             </TypographyMuted>
           </div>
           <div className="flex items-center gap-2">
-            <TypographyMuted className="text-xs">
+            <TypographyMuted className="text-xs" id="hire-label">
               Available for hire
             </TypographyMuted>
             <Switch
               checked={availableForHire}
-              onCheckedChange={(checked: boolean) =>
-                setAvailableForHire(checked)
-              }
+              onCheckedChange={(checked: boolean) => setAvailableForHire(checked)}
+              aria-labelledby="hire-label"
               className="cursor-pointer"
               size="default"
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <InputGroup>
-            <InputGroupInput
-              value={titleInput}
-              onChange={(e) => setTitleInput(e.target.value)}
-              placeholder="Title"
-            />
-            <InputGroupAddon>
-              <TypeIcon size={16} />
-            </InputGroupAddon>
-          </InputGroup>
-          <InputGroup>
-            <InputGroupInput
-              value={descriptionInput}
-              onChange={(e) => setDescriptionInput(e.target.value)}
-              placeholder="Description"
-            />
-            <InputGroupAddon>
-              <TextIcon size={16} />
-            </InputGroupAddon>
-          </InputGroup>
-          <InputGroup>
-            <InputGroupInput
-              value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
-              placeholder="Name"
-            />
-            <InputGroupAddon>
-              <UserIcon size={16} />
-            </InputGroupAddon>
-          </InputGroup>
-          <InputGroup>
-            <InputGroupInput
-              value={roleInput}
-              onChange={(e) => setRoleInput(e.target.value)}
-              placeholder="Role"
-            />
-            <InputGroupAddon>
-              <BriefcaseIcon size={16} />
-            </InputGroupAddon>
-          </InputGroup>
-          <InputGroup>
-            <InputGroupInput
-              value={domainInput}
-              onChange={(e) => setDomainInput(e.target.value)}
-              placeholder="Domain"
-            />
-            <InputGroupAddon>
-              <GlobeIcon size={16} />
-            </InputGroupAddon>
-          </InputGroup>
-          <InputGroup>
-            <InputGroupInput
-              value={tagsInput}
-              onChange={handleTagsChange}
-              placeholder="tag1, tag2, ..."
-            />
-            <InputGroupAddon>
-              <TagsIcon size={16} />
-            </InputGroupAddon>
-          </InputGroup>
-        </div>
+
+        <fieldset className="border-0 p-0 m-0" aria-label="OG image fields">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <InputGroup>
+              <InputGroupInput
+                value={titleInput}
+                onChange={(e) => setTitleInput(e.target.value)}
+                placeholder="Title"
+                aria-label={`Title (default: ${defaultTitle})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <TypeIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                value={descriptionInput}
+                onChange={(e) => setDescriptionInput(e.target.value)}
+                placeholder="Description"
+                aria-label={`Description (default: ${defaultDescription})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <TextIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder="Name"
+                aria-label={`Name (default: ${defaultName})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <UserIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                value={roleInput}
+                onChange={(e) => setRoleInput(e.target.value)}
+                placeholder="Role"
+                aria-label={`Role (default: ${defaultRole})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <BriefcaseIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                value={domainInput}
+                onChange={(e) => setDomainInput(e.target.value)}
+                placeholder="Domain"
+                aria-label={`Domain (default: ${defaultDomain})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <GlobeIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                value={tagsInput}
+                onChange={(e) => setTagsInput(e.target.value)}
+                placeholder="tag1, tag2, ..."
+                aria-label="Tags, comma separated"
+              />
+              <InputGroupAddon aria-hidden="true">
+                <TagsIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+        </fieldset>
       </div>
+
       <ScaledOG>
         <OGImage {...ogProps} />
       </ScaledOG>

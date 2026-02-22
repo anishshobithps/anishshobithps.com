@@ -6,14 +6,15 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   serverExternalPackages: ["@takumi-rs/image-response"],
-  async rewrites() {
-    return [
-      {
-        source: "/docs/:path*.mdx",
-        destination: "/llms.mdx/docs/:path*",
-      },
-    ];
-  },
+  images: {
+    remotePatterns: [
+        {
+            protocol: "https",
+            hostname: "discord.com",
+            pathname: "/**"
+        }
+    ]
+  }
 };
 
 export default withMDX(config);

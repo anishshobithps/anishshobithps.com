@@ -4,39 +4,44 @@ import { DecorIcon, FullWidthDivider } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { GithubIcon, LinkedinIcon, TwitterIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import {
+  IconBrandGithubFilled,
+  IconBrandLinkedinFilled,
+  IconBrandTwitterFilled,
+} from "@tabler/icons-react";
 
 const platformIcons: Record<
   (typeof siteConfig.social)[number]["platform"],
   ReactNode
 > = {
-  github: <GithubIcon />,
-  linkedin: <LinkedinIcon />,
-  x: <TwitterIcon />,
+  github: <IconBrandGithubFilled aria-hidden="true" />,
+  linkedin: <IconBrandLinkedinFilled aria-hidden="true" />,
+  x: <IconBrandTwitterFilled aria-hidden="true" />,
 };
 
 const footerNav = [...siteConfig.nav, { href: "/branding", label: "Branding" }];
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto">
+    <footer className="relative mt-auto" aria-label="Site footer">
       <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-6 py-12 sm:px-8 lg:px-10 before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border">
-        <DecorIcon position="top-left" />
-        <DecorIcon position="top-right" />
-        <FullWidthDivider position="top" />
+        <div aria-hidden="true">
+          <DecorIcon position="top-left" />
+          <DecorIcon position="top-right" />
+          <FullWidthDivider position="top" />
+        </div>
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[1fr_auto]">
-          {/* Brand */}
           <div className="flex flex-col gap-4">
-            <Link href="/" aria-label="Home">
-              <Logo size={32} showWordmark />
+            <Link href="/" aria-label={`${siteConfig.name} — home`}>
+              <Logo size={32} showWordmark aria-hidden="true" />
             </Link>
             <TypographyMuted className="max-w-xs text-balance">
               {siteConfig.description}
             </TypographyMuted>
-            <div className="flex gap-2">
+            <nav aria-label="Social links" className="flex gap-2">
               {siteConfig.social.map((item) => (
                 <Button
                   key={item.label}
@@ -48,18 +53,20 @@ export function Footer() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={item.label}
+                    aria-label={`${item.label} (opens in new tab)`}
                   >
                     {platformIcons[item.platform]}
                   </a>
                 </Button>
               ))}
-            </div>
+            </nav>
           </div>
 
-          {/* Nav links */}
-          <div className="flex flex-col gap-2">
-            <TypographyMuted className="uppercase tracking-widest font-mono mb-1">
+          <nav aria-label="Footer navigation" className="flex flex-col gap-2">
+            <TypographyMuted
+              className="uppercase tracking-widest font-mono mb-1"
+              aria-hidden="true"
+            >
               Pages
             </TypographyMuted>
             {footerNav.map(({ href, label }) => (
@@ -71,17 +78,22 @@ export function Footer() {
                 <TypographySmall>{label}</TypographySmall>
               </Link>
             ))}
-          </div>
+          </nav>
         </div>
 
-        <FullWidthDivider position="bottom" />
+        <div aria-hidden="true">
+          <FullWidthDivider position="bottom" />
+        </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <TypographyMuted className="font-mono">
+          <TypographyMuted
+            className="font-mono"
+            aria-label={`© 2022 to ${new Date().getFullYear()} ${siteConfig.name}. All rights reserved.`}
+          >
             &copy; 2022 - {new Date().getFullYear()} {siteConfig.name}. All
             rights reserved.
           </TypographyMuted>
-          <ThemeToggle className="self-start" />
+          <ThemeToggle className="self-start" aria-label="Toggle theme" />
         </div>
       </div>
     </footer>
