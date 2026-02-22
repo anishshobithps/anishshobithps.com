@@ -126,6 +126,7 @@ export function Hero() {
               alt={`Profile photo of ${siteConfig.name}`}
               aspect="auto"
               unoptimized
+              preload
               sizes="300px"
               fill
               containerClassName="w-full h-full"
