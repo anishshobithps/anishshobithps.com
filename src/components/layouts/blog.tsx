@@ -64,6 +64,7 @@ function ProgressCircle({
   return (
     <svg
       role="progressbar"
+      aria-label="Loading progress"
       viewBox={`0 0 ${size} ${size}`}
       width={size}
       height={size}
@@ -195,9 +196,7 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
                   On this page
                 </TypographySmall>
 
-                <TOCScrollArea
-                  className="max-h-[calc(100vh-8rem)] **:data-[slot=scroll-area-viewport]:scroll-fade-effect-y"
-                >
+                <TOCScrollArea className="max-h-[calc(100vh-8rem)] **:data-[slot=scroll-area-viewport]:scroll-fade-effect-y">
                   <TOCItems />
                 </TOCScrollArea>
               </div>

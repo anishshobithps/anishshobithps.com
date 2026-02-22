@@ -22,7 +22,7 @@ export function LogoIcon({
   return (
     <svg
       role="img"
-      aria-label="Anish Shobith P S"
+      aria-label="Anish Shobith P S logo"
       viewBox={`${CROP_LEFT} 0 ${VB_W} ${VB_HEIGHT}`}
       width={scaledWidth}
       height={size}

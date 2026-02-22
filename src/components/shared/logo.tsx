@@ -23,9 +23,9 @@ function textWidth(str: string) {
 }
 
 const VB = {
-  icon:     { x: CROP_LEFT, w: 64 - CROP_LEFT },
+  icon: { x: CROP_LEFT, w: 64 - CROP_LEFT },
   wordmark: { x: CROP_LEFT, w: TEXT_X + textWidth("nish") - CROP_LEFT },
-  full:     { x: CROP_LEFT, w: TEXT_X + textWidth("nish Shobith P S") - CROP_LEFT },
+  full: { x: CROP_LEFT, w: TEXT_X + textWidth("nish Shobith P S") - CROP_LEFT },
 } as const;
 
 export const Logo = forwardRef<SVGSVGElement, LogoProps>(
@@ -48,8 +48,16 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
       return (
         <LogoIcon
           size={size}
-          className={cn("transition-colors select-none", copyOnClick && "cursor-pointer", className)}
-          aria-label={isHidden ? undefined : (ariaLabel as string ?? "Anish Shobith P S")}
+          className={cn(
+            "transition-colors select-none",
+            copyOnClick && "cursor-pointer",
+            className,
+          )}
+          aria-label={
+            isHidden
+              ? undefined
+              : ((ariaLabel as string) ?? "Anish Shobith P S")
+          }
           aria-hidden={isHidden ? true : undefined}
           onClick={() => {
             if (copyOnClick) navigator.clipboard.writeText("Anish Shobith P S");
@@ -84,9 +92,26 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
         {...props}
       >
         {!isHidden && <title>{ariaLabel ?? defaultLabel}</title>}
-        <polygon points="32,4 48,60 40.5,60 32,14 23.5,60 16,60" className="fill-current" />
-        <rect x="18" y="36" width="11" height="5" rx="2.5" className="fill-current" />
-        <rect x="35" y="36" width="11" height="5" rx="2.5" className="fill-current" />
+        <polygon
+          points="32,4 48,60 40.5,60 32,14 23.5,60 16,60"
+          className="fill-current"
+        />
+        <rect
+          x="18"
+          y="36"
+          width="11"
+          height="5"
+          rx="2.5"
+          className="fill-current"
+        />
+        <rect
+          x="35"
+          y="36"
+          width="11"
+          height="5"
+          rx="2.5"
+          className="fill-current"
+        />
         <text
           x={TEXT_X}
           y={TEXT_Y}

@@ -310,7 +310,12 @@ export const PdfViewerZoom = () => {
 export const PdfViewerReload = () => {
   const { reload } = usePdf();
   return (
-    <Button variant="ghost" size="icon" onClick={reload}>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={reload}
+      aria-label="Reload PDF"
+    >
       <RotateCw className="h-4 w-4" />
     </Button>
   );
@@ -319,8 +324,18 @@ export const PdfViewerReload = () => {
 export const PdfViewerOpen = () => {
   const { file } = usePdf();
   return (
-    <Button variant="ghost" size="icon" asChild>
-      <a href={file} target="_blank" rel="noopener noreferrer">
+    <Button
+      variant="ghost"
+      size="icon"
+      asChild
+      aria-label="Open PDF externally"
+    >
+      <a
+        href={file}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open PDF externally"
+      >
         <ExternalLink className="h-4 w-4" />
       </a>
     </Button>
