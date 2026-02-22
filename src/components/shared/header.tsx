@@ -50,13 +50,29 @@ export function Header() {
         <DecorIcon position="bottom-left" aria-hidden="true" />
         <DecorIcon position="bottom-right" aria-hidden="true" />
 
-        <Link href="/" aria-label={`${siteConfig.name} — home`} className="cursor-pointer">
-          <Logo size={32} className="sm:hidden cursor-pointer" aria-hidden="true" />
-          <Logo size={32} showWordmark className="hidden sm:inline-flex" aria-hidden="true" />
+        <Link
+          href="/"
+          aria-label={`${siteConfig.name} — home`}
+          className="cursor-pointer"
+        >
+          <Logo
+            size={32}
+            className="sm:hidden cursor-pointer"
+            aria-hidden="true"
+          />
+          <Logo
+            size={32}
+            showWordmark
+            className="hidden sm:inline-flex"
+            aria-hidden="true"
+          />
         </Link>
 
         <div className="flex items-center gap-1">
-          <NavigationMenu className="max-md:hidden" aria-label="Main navigation">
+          <NavigationMenu
+            className="max-md:hidden"
+            aria-label="Main navigation"
+          >
             <NavigationMenuList className="gap-0.5">
               {siteConfig.nav.map((link) => (
                 <NavigationMenuItem key={link.href}>
@@ -108,7 +124,10 @@ export function Header() {
                     </Link>
                   ))}
                   <div className="flex items-center justify-between px-6 py-3.5">
-                    <TypographySmall className="text-foreground" id="theme-label">
+                    <TypographySmall
+                      className="text-foreground"
+                      id="theme-label"
+                    >
                       Theme
                     </TypographySmall>
                     <ThemeToggle aria-labelledby="theme-label" />
