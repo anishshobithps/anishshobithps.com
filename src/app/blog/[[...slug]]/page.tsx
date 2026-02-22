@@ -200,14 +200,10 @@ export async function generateMetadata(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  // Keep display title full-length; cap meta title so "X — Anish Shobith P S" ≤ 60 chars
   const rawTitle = page.data.title;
   const metaTitle =
-    rawTitle.length > 40
-      ? rawTitle.slice(0, 37).trimEnd() + "..."
-      : rawTitle;
+    rawTitle.length > 40 ? rawTitle.slice(0, 37).trimEnd() + "..." : rawTitle;
 
-  // Cap description at 155 chars to stay within 160-char limit
   const rawDesc = page.data.description ?? "";
   const metaDesc =
     rawDesc.length > 155 ? rawDesc.slice(0, 152).trimEnd() + "..." : rawDesc;
