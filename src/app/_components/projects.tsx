@@ -1,23 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowUpRight, Github } from "lucide-react";
 import { Section } from "@/components/layouts/page";
-import {
-  TypographyH3,
-  TypographyMuted,
-  TypographyLead,
-  TypographyMark,
-  TypographyAnchor,
-  SectionLabel,
-} from "@/components/ui/typography";
-import { DecorIcon } from "@/components/ui/border";
 import { Badge } from "@/components/ui/badge";
+import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
+import {
+  SectionLabel,
+  TypographyAnchor,
+  TypographyH3,
+  TypographyLead,
+  TypographyMark,
+  TypographyMuted,
+} from "@/components/ui/typography";
+import { IconBrandGithubFilled } from "@tabler/icons-react";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
 export function BuiltThings() {
   return (
@@ -31,16 +32,21 @@ export function BuiltThings() {
       <div className="mb-12 max-w-3xl">
         <TypographyLead>
           A mix of{" "}
-          <TypographyMark>real systems, useful tools, and controlled chaos</TypographyMark>
+          <TypographyMark>
+            real systems, useful tools, and controlled chaos
+          </TypographyMark>
           .
         </TypographyLead>
       </div>
 
-      <ul role="list" className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8">
+      <ul
+        role="list"
+        className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
+      >
         {projects.map((project) => (
           <li
             key={project.title}
-            className="group relative p-0 border-0 lg:p-6 lg:border transition-all duration-300 hover:-translate-y-[2px]"
+            className="group relative p-0 border-0 lg:p-6 lg:border transition-all duration-300 hover:-translate-y-0.5"
           >
             <div className="hidden lg:block" aria-hidden="true">
               <DecorIcon position="top-left" />
@@ -49,14 +55,21 @@ export function BuiltThings() {
               <DecorIcon position="bottom-right" />
             </div>
 
-            <article className="relative z-10 space-y-4" aria-label={project.title}>
+            <article
+              className="relative z-10 space-y-4"
+              aria-label={project.title}
+            >
               <TypographyH3 className="text-xl">{project.title}</TypographyH3>
 
               <TypographyMuted className="leading-relaxed">
                 {project.description}
               </TypographyMuted>
 
-              <ul role="list" aria-label="Technologies used" className="flex flex-wrap gap-2 pt-2">
+              <ul
+                role="list"
+                aria-label="Technologies used"
+                className="flex flex-wrap gap-2 pt-2"
+              >
                 {project.highlights.map((tag) => (
                   <li key={tag}>
                     <Badge variant="outline" className="text-xs px-2 py-0.5">
@@ -92,7 +105,10 @@ export function BuiltThings() {
                       rel="noopener noreferrer"
                       aria-label={`View ${project.title} on GitHub`}
                     >
-                      <Github className="size-4" aria-hidden="true" />
+                      <IconBrandGithubFilled
+                        className="size-4"
+                        aria-hidden="true"
+                      />
                       <span className="hidden sm:inline ml-2">GitHub</span>
                     </Link>
                   </Button>
@@ -106,7 +122,9 @@ export function BuiltThings() {
       <div className="mt-16 flex flex-col items-center gap-6 text-center">
         <TypographyLead className="max-w-2xl">
           There's more{" "}
-          <TypographyMark>experiments, half-built tools, and questionable decisions</TypographyMark>{" "}
+          <TypographyMark>
+            experiments, half-built tools, and questionable decisions
+          </TypographyMark>{" "}
           living on my GitHub.
         </TypographyLead>
 
@@ -115,11 +133,14 @@ export function BuiltThings() {
             href="https://github.com/anishshobithps"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Explore all projects on GitHub"
+            aria-label="Explore the Chaos — view all projects on GitHub"
           >
-            <Github className="size-5 mr-2" aria-hidden="true" />
+            <IconBrandGithubFilled className="size-5 mr-2" aria-hidden="true" />
             <span>Explore the Chaos</span>
-            <ArrowUpRight className="size-4 ml-2 opacity-70" aria-hidden="true" />
+            <ArrowUpRight
+              className="size-4 ml-2 opacity-70"
+              aria-hidden="true"
+            />
           </Link>
         </Button>
       </div>
@@ -158,7 +179,7 @@ const projects = [
       "Automates certificate creation so I never have to manually edit names into templates again. Laziness, but productive.",
     highlights: ["Python", "Pillow", "PDF Automation"],
     live: null,
-    github: "https://github.com/anishshobithps/gdsccert",
+    github: "https://github.com/gdgsjec/certificate-generator",
   },
   {
     title: "Sorting Algorithm Visualizer",
@@ -166,7 +187,8 @@ const projects = [
       "A C++ + OpenGL visualizer for sorting algorithms. Built to understand algorithms better and to make them look cooler than they actually are.",
     highlights: ["C++", "OpenGL", "Algorithms"],
     live: null,
-    github: "https://github.com/anishshobithpscollege/sortingalgorithmvisualizer",
+    github:
+      "https://github.com/anishshobithpscollege/sortingalgorithmvisualizer",
   },
   {
     title: "TL;DR News",
