@@ -170,7 +170,6 @@ export function OGImage({
           width: "100%",
         }}
       >
-
         <div
           style={{
             display: "flex",
@@ -180,7 +179,6 @@ export function OGImage({
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-
             <LogoGlyph size={32} color={theme.foreground} />
 
             <div
