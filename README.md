@@ -11,17 +11,19 @@ Source code for [anishshobithps.com](https://anishshobithps.com) — a personal 
 
 ## Tech Stack
 
-| Layer      | Technology                                     |
-| ---------- | ---------------------------------------------- |
-| Framework  | Next.js 16 (App Router, Turbopack)             |
-| Language   | TypeScript 5                                   |
-| UI         | React 19, Tailwind CSS v4, shadcn/ui, Radix UI |
-| Icons      | Lucide React, Tabler Icons                     |
-| Blog / MDX | Fumadocs Core + UI 16, fumadocs-mdx            |
-| Database   | Drizzle ORM + Neon (PostgreSQL, serverless)    |
-| Resume     | react-pdf, GitHub Releases                     |
-| OG Images  | @takumi-rs/image-response                      |
-| Linting    | ESLint 10, eslint-config-next                  |
+| Layer       | Technology                                     |
+| ----------- | ---------------------------------------------- |
+| Framework   | Next.js 16 (App Router, Turbopack)             |
+| Language    | TypeScript 5                                   |
+| UI          | React 19, Tailwind CSS v4, shadcn/ui, Radix UI |
+| Icons       | Lucide React, Tabler Icons                     |
+| Blog / MDX  | Fumadocs Core + UI 16, fumadocs-mdx            |
+| Database    | Drizzle ORM + Neon (PostgreSQL, serverless)    |
+| Resume      | react-pdf, GitHub Releases                     |
+| Analytics   | Umami Analytics (production only)              |
+| Now Playing | Spotify Web API                                |
+| OG Images   | @takumi-rs/image-response                      |
+| Linting     | ESLint 10, eslint-config-next                  |
 
 ---
 
@@ -43,6 +45,12 @@ DATABASE_URL=postgresql://user:password@host/dbname
 # Optional — salt for SHA-256 IP hashing (blog reads/reactions).
 # Defaults to "blog-salt" if omitted. Set a strong random value in production.
 IP_HASH_SALT=some-random-secret
+
+# Required for Spotify now-playing widget in the footer.
+# See scripts/get-spotify-refresh-token.ts for the one-time setup flow.
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_REFRESH_TOKEN=
 
 # Optional — base URL override. Auto-detected from Vercel env otherwise.
 NEXT_PUBLIC_BASE_URL=https://anishshobithps.com
@@ -107,6 +115,7 @@ src/
     og.ts                 # Metadata / OG helpers
     source.ts             # Fumadocs content source adapter
     resume.ts             # Resume fetch + cache
+    spotify.ts            # Spotify Web API client (now-playing)
 content/
   blog/                   # MDX blog posts
 drizzle/                  # Migration files
@@ -119,6 +128,7 @@ source.config.ts          # Fumadocs MDX config + frontmatter schema
 ## Key Features
 
 - **Blog** with read counts and mood reactions (stored as hashed IPs — no raw PII)
+- **Spotify now-playing** widget in the footer — shows current or last played track via the Spotify Web API (server-side, 60s cache, no visitor data sent)
 - **PDF resume viewer** via react-pdf, proxied from GitHub Releases
 - **OG image generation** per page and per blog post
 - **Full-text search** via Fumadocs built-in search

@@ -173,20 +173,44 @@ export default function PrivacyPolicyPage() {
           <SectionLabel>Third-party services</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
         </div>
-        <div className="max-w-2xl">
-          <TypographyP>
-            This site uses Google Fonts (loaded via CSS, subject to{" "}
-            <a
-              href="https://policies.google.com/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
-            >
-              Google&apos;s Privacy Policy
-            </a>
-            ). The resume is fetched from a GitHub Releases URL. None of these
-            integrations pass any data about you back to this site.
-          </TypographyP>
+        <div className="max-w-2xl space-y-6">
+          <div className="space-y-2">
+            <TypographyH2>Spotify</TypographyH2>
+            <TypographyP>
+              The footer displays what I&apos;m currently listening to (or last
+              listened to) via the{" "}
+              <a
+                href="https://developer.spotify.com/documentation/web-api"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                Spotify Web API
+              </a>
+              . This is a{" "}
+              <TypographyMark>read-only, server-side</TypographyMark> call using
+              my own account credentials — no data about you is sent to Spotify.
+              The currently playing track is cached for{" "}
+              <TypographyMark>60 seconds</TypographyMark> on the server; no
+              Spotify data is stored in the database.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <TypographyH2>Google Fonts &amp; GitHub</TypographyH2>
+            <TypographyP>
+              This site uses Google Fonts (loaded via CSS, subject to{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                Google&apos;s Privacy Policy
+              </a>
+              ). The resume is fetched from a GitHub Releases URL. Neither
+              integration passes any data about you back to this site.
+            </TypographyP>
+          </div>
         </div>
       </Section>
 
