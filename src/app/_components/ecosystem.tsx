@@ -16,7 +16,6 @@ import {
   TypographyH3,
   TypographyLead,
   TypographyMark,
-  TypographyAnchor,
   SectionLabel,
 } from "@/components/ui/typography";
 import { DecorIcon } from "@/components/ui/border";
@@ -24,7 +23,7 @@ import { DecorIcon } from "@/components/ui/border";
 export function Ecosystem() {
   return (
     <Section aria-label="Ecosystem">
-      <TypographyAnchor id="ecosystem" />
+      <h2 className="sr-only">Ecosystem</h2>
       <div className="flex items-center gap-3 mb-10" aria-hidden="true">
         <SectionLabel>Ecosystem</SectionLabel>
         <div className="flex-1 h-px bg-border/40" />
@@ -33,12 +32,19 @@ export function Ecosystem() {
       <div className="mb-12 max-w-3xl">
         <TypographyLead>
           I mostly operate inside the{" "}
-          <TypographyMark>TypeScript + modern frontend ecosystem</TypographyMark>{" "}
-          — but I experiment freely and pick tools based on the problem (and occasionally regret it halfway through).
+          <TypographyMark>
+            TypeScript + modern frontend ecosystem
+          </TypographyMark>{" "}
+          — but I experiment freely and pick tools based on the problem (and
+          occasionally regret it halfway through).
         </TypographyLead>
       </div>
 
-      <ul role="list" aria-label="Tools and technologies" className="w-full max-w-5xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <ul
+        role="list"
+        aria-label="Tools and technologies"
+        className="w-full max-w-5xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
         {tools.map((item) => (
           <li
             key={item.label}
@@ -57,7 +63,9 @@ export function Ecosystem() {
                 stroke={1.5}
                 aria-hidden="true"
               />
-              <TypographyH3 className="text-sm font-medium">{item.label}</TypographyH3>
+              <TypographyH3 className="text-sm font-medium">
+                {item.label}
+              </TypographyH3>
             </div>
           </li>
         ))}
@@ -65,8 +73,8 @@ export function Ecosystem() {
 
       <div className="mt-12 max-w-2xl">
         <TypographyLead className="text-sm">
-          I'm not loyal to tools — only to good outcomes.
-          If something feels repetitive or inefficient, I'll experiment until it doesn't.
+          I'm not loyal to tools — only to good outcomes. If something feels
+          repetitive or inefficient, I'll experiment until it doesn't.
         </TypographyLead>
       </div>
     </Section>

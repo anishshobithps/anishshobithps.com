@@ -6,7 +6,6 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  TypographyAnchor,
   SectionLabel,
 } from "@/components/ui/typography";
 import { DecorIcon } from "@/components/ui/border";
@@ -14,13 +13,16 @@ import { DecorIcon } from "@/components/ui/border";
 export function RulesIFollow() {
   return (
     <Section aria-label="Rules I Follow">
-      <TypographyAnchor id="rules" />
+      <h2 className="sr-only">Rules I Follow</h2>
       <div className="flex items-center gap-3 mb-10" aria-hidden="true">
         <SectionLabel>Rules I Follow</SectionLabel>
         <div className="flex-1 h-px bg-border/40" />
       </div>
 
-      <ul role="list" className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8">
+      <ul
+        role="list"
+        className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
+      >
         {rules.map((item) => (
           <li
             key={item.title}
@@ -35,7 +37,9 @@ export function RulesIFollow() {
 
             <div className="relative z-10 space-y-3">
               <TypographyH3 className="text-xl">{item.title}</TypographyH3>
-              <TypographyMuted className="leading-relaxed">{item.description}</TypographyMuted>
+              <TypographyMuted className="leading-relaxed">
+                {item.description}
+              </TypographyMuted>
             </div>
           </li>
         ))}
@@ -44,8 +48,11 @@ export function RulesIFollow() {
       <div className="mt-14 max-w-3xl">
         <TypographyLead>
           I build with{" "}
-          <TypographyMark>clarity, structure, and a bias toward automation</TypographyMark>{" "}
-          — because software should feel simple, even when the logic behind it isn't.
+          <TypographyMark>
+            clarity, structure, and a bias toward automation
+          </TypographyMark>{" "}
+          — because software should feel simple, even when the logic behind it
+          isn't.
         </TypographyLead>
       </div>
     </Section>

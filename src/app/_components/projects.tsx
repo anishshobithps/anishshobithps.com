@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/button-group";
 import {
   SectionLabel,
-  TypographyAnchor,
   TypographyH3,
   TypographyLead,
   TypographyMark,
@@ -23,7 +22,7 @@ import Link from "next/link";
 export function BuiltThings() {
   return (
     <Section aria-label="Things I've Built">
-      <TypographyAnchor id="built" />
+      <h2 className="sr-only">Things I&apos;ve Built</h2>
       <div className="flex items-center gap-3 mb-10" aria-hidden="true">
         <SectionLabel>Things I've Built</SectionLabel>
         <div className="flex-1 h-px bg-border/40" />
@@ -103,13 +102,20 @@ export function BuiltThings() {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`View ${project.title} on GitHub`}
                     >
                       <IconBrandGithubFilled
                         className="size-4"
                         aria-hidden="true"
                       />
-                      <span className="hidden sm:inline ml-2">GitHub</span>
+                      <span
+                        className="hidden sm:inline ml-2"
+                        aria-hidden="true"
+                      >
+                        GitHub
+                      </span>
+                      <span className="sr-only">
+                        View {project.title} on GitHub
+                      </span>
                     </Link>
                   </Button>
                 </ButtonGroup>

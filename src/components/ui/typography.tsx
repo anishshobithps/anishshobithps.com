@@ -245,7 +245,3 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
   },
 );
 SectionLabel.displayName = "SectionLabel";
-
-export function TypographyAnchor({ id }: { id: string }) {
-  return <span id={id} aria-hidden="true" tabIndex={-1} className="sr-only" />;
-}

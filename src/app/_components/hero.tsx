@@ -16,7 +16,6 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  TypographyAnchor,
   SectionLabel,
 } from "@/components/ui/typography";
 import { DecorIcon } from "@/components/ui/border";
@@ -27,7 +26,6 @@ import { cn } from "@/lib/cn";
 export function Hero() {
   return (
     <Section variant="hero" aria-label="Introduction">
-      <TypographyAnchor id="hero" />
       <div className="flex items-center gap-3 mb-6" aria-hidden="true">
         <SectionLabel>Who am I?</SectionLabel>
         <div className="flex-1 h-px bg-border/40" />
@@ -122,10 +120,9 @@ export function Hero() {
 
           <div className="relative w-full h-full">
             <Image
-              src="/profile.jpg"
+              src="/profile.avif"
               alt={`Profile photo of ${siteConfig.name}`}
               aspect="auto"
-              unoptimized
               preload
               sizes="300px"
               fill

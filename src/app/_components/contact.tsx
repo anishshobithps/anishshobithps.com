@@ -8,7 +8,6 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  TypographyAnchor,
   SectionLabel,
 } from "@/components/ui/typography";
 import { DecorIcon } from "@/components/ui/border";
@@ -38,7 +37,6 @@ const platformIcons: Record<string, { icon: React.ReactNode }> = {
 export function Contact() {
   return (
     <Section aria-label="Contact">
-      <TypographyAnchor id="contact" />
       <div className="flex items-center gap-3 mb-10" aria-hidden="true">
         <SectionLabel>Contact</SectionLabel>
         <div className="flex-1 h-px bg-border/40" />

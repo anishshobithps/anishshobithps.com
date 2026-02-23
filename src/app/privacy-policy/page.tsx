@@ -8,7 +8,6 @@ import {
   TypographyMuted,
   TypographyMark,
   TypographyP,
-  TypographyAnchor,
   SectionLabel,
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
@@ -51,7 +50,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="What this site is">
-        <TypographyAnchor id="what-this-site-is" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>What this site is</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
@@ -67,7 +65,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="What data is collected">
-        <TypographyAnchor id="data-collected" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>What data is collected</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
@@ -114,7 +111,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Where data is stored">
-        <TypographyAnchor id="data-storage" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>Where data is stored</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
@@ -138,7 +134,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Analytics">
-        <TypographyAnchor id="analytics" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>Analytics (planned)</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
@@ -165,7 +160,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Third-party services">
-        <TypographyAnchor id="third-party" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>Third-party services</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
@@ -188,7 +182,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Your rights">
-        <TypographyAnchor id="your-rights" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>Your rights</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
@@ -211,7 +204,6 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Changes to this policy">
-        <TypographyAnchor id="changes" />
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
           <SectionLabel>Changes to this policy</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
