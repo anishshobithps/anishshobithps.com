@@ -1,9 +1,11 @@
 # LICENSE
 
-Version 1
+Version 1.1
+
 Effective Date: 23 February 2026
 
 Copyright (c) 2026 Anish Shobith P S
+
 All rights reserved except where explicitly stated below.
 
 ---
