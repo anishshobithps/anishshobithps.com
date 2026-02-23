@@ -89,7 +89,7 @@ export function Hero() {
               <Button asChild size="lg" className="font-semibold">
                 <Link href="/resume" prefetch={false} aria-label="View resume">
                   <FileText className="size-5 shrink-0" aria-hidden="true" />
-                  <span className="hidden sm:inline">Resume</span>
+                  <span>Resume</span>
                 </Link>
               </Button>
 
@@ -106,7 +106,7 @@ export function Hero() {
                 }}
               >
                 <Mail className="size-5 shrink-0" aria-hidden="true" />
-                <span className="hidden sm:inline">Contact</span>
+                <span>Contact</span>
               </Button>
             </ButtonGroup>
           </nav>
