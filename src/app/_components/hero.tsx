@@ -1,5 +1,3 @@
-"use client";
-
 import { Image } from "@/components/ui/image";
 import Link from "next/link";
 import { FileText, Mail } from "lucide-react";
@@ -96,17 +94,15 @@ export function Hero() {
               <ButtonGroupSeparator />
 
               <Button
+                asChild
                 size="lg"
                 variant="outline"
                 className="font-semibold"
-                aria-label="Jump to contact section"
-                onClick={() => {
-                  const el = document.getElementById("contact");
-                  el?.scrollIntoView({ behavior: "smooth" });
-                }}
               >
-                <Mail className="size-5 shrink-0" aria-hidden="true" />
-                <span>Contact</span>
+                <a href="#contact" aria-label="Jump to contact section">
+                  <Mail className="size-5 shrink-0" aria-hidden="true" />
+                  <span>Contact</span>
+                </a>
               </Button>
             </ButtonGroup>
           </nav>
