@@ -55,14 +55,13 @@ export default function Layout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <link rel="preconnect" href="https://cloud.umami.is" />
-      </head>
+      <head></head>
       <body className="relative flex flex-col min-h-screen">
         {process.env.NODE_ENV === "production" && (
           <Script
-            src="https://cloud.umami.is/script.js"
+            src="/stats/script.js"
             data-website-id="bd850c68-5e13-4ae7-bfb6-58d4a8134f4e"
+            data-host-url="/stats"
             strategy="afterInteractive"
           />
         )}
