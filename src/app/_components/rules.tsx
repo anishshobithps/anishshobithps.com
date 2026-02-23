@@ -24,10 +24,7 @@ export function RulesIFollow() {
         className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
       >
         {rules.map((item) => (
-          <li
-            key={item.title}
-            className="p-0 border-0 lg:p-6 lg:border transition-all duration-300"
-          >
+          <li key={item.title} className="p-0 border-0 lg:p-6 lg:border">
             <div className="hidden lg:block" aria-hidden="true">
               <DecorIcon position="top-left" />
               <DecorIcon position="top-right" />

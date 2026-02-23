@@ -131,7 +131,10 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
         How was this read?
       </TypographyP>
 
-      <fieldset aria-label="How was this read?" className="flex flex-wrap gap-2 justify-center border-0 p-0 m-0">
+      <fieldset
+        aria-label="How was this read?"
+        className="flex flex-wrap gap-2 justify-center border-0 p-0 m-0"
+      >
         {MOODS.map(
           ({
             id,
@@ -153,11 +156,15 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
                 aria-pressed={isActive}
                 aria-label={`${label}${count !== null && count > 0 ? `, ${count} ${count === 1 ? "reaction" : "reactions"}` : ""}`}
                 className={cn(
-                  "gap-2 transition-all duration-150 cursor-pointer",
+                  "gap-2 transition-[color,background-color,border-color,box-shadow] duration-150 cursor-pointer",
                   isActive ? activeClassName : inactiveClassName,
                 )}
               >
-                <Icon size={14} strokeWidth={isActive ? 2.5 : 2} aria-hidden="true" />
+                <Icon
+                  size={14}
+                  strokeWidth={isActive ? 2.5 : 2}
+                  aria-hidden="true"
+                />
                 <span className="hidden md:inline">{label}</span>
                 {count !== null && count > 0 && (
                   <Badge

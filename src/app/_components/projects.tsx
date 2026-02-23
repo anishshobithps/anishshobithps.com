@@ -46,7 +46,7 @@ export function BuiltThings() {
         {projects.map((project) => (
           <li
             key={project.title}
-            className="group relative p-0 border-0 lg:p-6 lg:border transition-all duration-300 hover:-translate-y-0.5"
+            className="group relative p-0 border-0 lg:p-6 lg:border transition-transform duration-300 hover:-translate-y-0.5"
           >
             <div className="hidden lg:block" aria-hidden="true">
               <DecorIcon position="top-left" />
@@ -108,10 +108,7 @@ export function BuiltThings() {
                         className="size-4"
                         aria-hidden="true"
                       />
-                      <span
-                        className="ml-2"
-                        aria-hidden="true"
-                      >
+                      <span className="ml-2" aria-hidden="true">
                         GitHub
                       </span>
                       <span className="sr-only">

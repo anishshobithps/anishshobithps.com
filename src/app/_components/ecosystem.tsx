@@ -48,7 +48,7 @@ export function Ecosystem() {
         {tools.map((item) => (
           <li
             key={item.label}
-            className="group relative p-0 border-0 lg:p-6 lg:border flex flex-col items-center justify-center text-center transition-all duration-300 hover:-translate-y-[2px]"
+            className="group relative p-0 border-0 lg:p-6 lg:border flex flex-col items-center justify-center text-center transition-transform duration-300 hover:-translate-y-0.5"
           >
             <div className="hidden lg:block" aria-hidden="true">
               <DecorIcon position="top-left" />
@@ -59,7 +59,7 @@ export function Ecosystem() {
 
             <div className="relative z-10 flex flex-col items-center gap-3">
               <item.icon
-                className="size-8 text-muted-foreground transition-all duration-300 group-hover:text-foreground"
+                className="size-8 text-muted-foreground transition-colors duration-300 group-hover:text-foreground"
                 stroke={1.5}
                 aria-hidden="true"
               />

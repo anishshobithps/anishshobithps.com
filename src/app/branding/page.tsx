@@ -156,7 +156,7 @@ export default function BrandingPage() {
           ].map((item) => (
             <li
               key={item.title}
-              className="p-0 border-0 lg:p-6 lg:border transition-all duration-300"
+              className="p-0 border-0 lg:p-6 lg:border"
               aria-label={`${item.title} example`}
             >
               <div className="hidden lg:block" aria-hidden="true">
