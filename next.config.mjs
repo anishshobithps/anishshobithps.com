@@ -5,12 +5,18 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["@takumi-rs/image-response"],
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "discord.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
         pathname: "/**",
       },
     ],

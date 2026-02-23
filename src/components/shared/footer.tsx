@@ -1,11 +1,12 @@
 import { Logo } from "@/components/shared/logo";
+import { NowPlaying } from "@/components/shared/now-playing";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { DecorIcon, FullWidthDivider } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import {
   IconBrandGithubFilled,
   IconBrandLinkedinFilled,
@@ -64,6 +65,16 @@ export function Footer() {
                 </Button>
               ))}
             </nav>
+            <Suspense
+              fallback={
+                <div className="flex items-center gap-1.5">
+                  <div className="size-3.5 rounded-full bg-muted animate-pulse shrink-0" />
+                  <div className="h-2.5 w-32 rounded bg-muted animate-pulse" />
+                </div>
+              }
+            >
+              <NowPlaying />
+            </Suspense>
           </div>
 
           <nav aria-label="Footer navigation" className="flex flex-col gap-2">
@@ -97,7 +108,10 @@ export function Footer() {
             &copy; 2022 - {new Date().getFullYear()} {siteConfig.name}. All
             rights reserved.
           </TypographyMuted>
-          <ThemeToggle className="self-start" aria-label="Toggle theme" />
+          <ThemeToggle
+            aria-label="Toggle theme"
+            className="self-start sm:self-auto"
+          />
         </div>
       </div>
     </footer>
