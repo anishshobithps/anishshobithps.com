@@ -18,6 +18,7 @@ import {
 import { IconBrandGithubFilled } from "@tabler/icons-react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { projects } from "@/lib/config";
 
 export function BuiltThings() {
   return (
@@ -90,14 +91,14 @@ export function BuiltThings() {
                           aria-label={`View ${project.title} live site`}
                         >
                           <ArrowUpRight className="size-4" aria-hidden="true" />
-                          <span className="hidden sm:inline ml-2">View</span>
+                          <span className="ml-2">View</span>
                         </Link>
                       </Button>
                       <ButtonGroupSeparator />
                     </>
                   )}
 
-                  <Button asChild size="sm" variant="ghost">
+                  <Button asChild size="sm" variant="secondary">
                     <Link
                       href={project.github}
                       target="_blank"
@@ -108,7 +109,7 @@ export function BuiltThings() {
                         aria-hidden="true"
                       />
                       <span
-                        className="hidden sm:inline ml-2"
+                        className="ml-2"
                         aria-hidden="true"
                       >
                         GitHub
@@ -153,55 +154,3 @@ export function BuiltThings() {
     </Section>
   );
 }
-
-const projects = [
-  {
-    title: "Tiara 2024 Tech Fest",
-    description:
-      "A full-scale event website for a national techno-cultural fest. Built with structured architecture, dynamic content, and zero room for things breaking mid-event (mostly).",
-    highlights: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
-    live: "https://tiara.anishshobithps.com/",
-    github: "https://github.com/tiarasjec/website",
-  },
-  {
-    title: "Reddit → Discord Meme Curator",
-    description:
-      "A bot that scrapes memes from Reddit and pipes them into Discord. Because manually sending memes is inefficient and I have priorities.",
-    highlights: ["Node.js", "Reddit API", "Discord.js", "Automation"],
-    live: null,
-    github: "https://github.com/anishshobithps/reddit-discord-meme-curator",
-  },
-  {
-    title: "Codelyra",
-    description:
-      "A Discord bot supporting 600+ programming languages. Slightly over-engineered. Definitely useful. Probably unnecessary.",
-    highlights: ["TypeScript", "Discord.js", "Docker"],
-    live: null,
-    github: "https://github.com/anishshobithps/codelyra",
-  },
-  {
-    title: "Certificate Generator",
-    description:
-      "Automates certificate creation so I never have to manually edit names into templates again. Laziness, but productive.",
-    highlights: ["Python", "Pillow", "PDF Automation"],
-    live: null,
-    github: "https://github.com/gdgsjec/certificate-generator",
-  },
-  {
-    title: "Sorting Algorithm Visualizer",
-    description:
-      "A C++ + OpenGL visualizer for sorting algorithms. Built to understand algorithms better and to make them look cooler than they actually are.",
-    highlights: ["C++", "OpenGL", "Algorithms"],
-    live: null,
-    github:
-      "https://github.com/anishshobithpscollege/sortingalgorithmvisualizer",
-  },
-  {
-    title: "TL;DR News",
-    description:
-      "A cross-platform news app summarizing tech content. Because reading full articles is admirable but unrealistic.",
-    highlights: ["Flutter", "TypeScript", "Dart"],
-    live: null,
-    github: "https://github.com/anishshobithpscollege/tldrnewsapp",
-  },
-];
