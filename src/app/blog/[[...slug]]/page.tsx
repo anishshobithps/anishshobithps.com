@@ -90,29 +90,30 @@ export default async function Page(props: { params: { slug: string[] } }) {
           className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
           aria-label="Post metadata"
         >
-          <TypographyMuted
-            className="font-mono text-xs flex items-center gap-1.5"
-            aria-label={`Written by ${siteConfig.name}`}
-          >
-            <Link
-              href={siteConfig.baseUrl}
-              className="hover:text-foreground transition-colors"
-              rel="author"
-            >
-              {siteConfig.name}
-            </Link>
-          </TypographyMuted>
+          <address className="not-italic contents">
+            <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
+              <Link
+                href={siteConfig.baseUrl}
+                className="hover:text-foreground transition-colors"
+                rel="author"
+              >
+                {siteConfig.name}
+              </Link>
+            </TypographyMuted>
+          </address>
           {page.data.date && (
             <TypographyMuted
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Published on ${new Date(page.data.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
             >
               <CalendarDays className="size-3.5 shrink-0" aria-hidden="true" />
-              {new Date(page.data.date).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
+              <time dateTime={new Date(page.data.date).toISOString()}>
+                {new Date(page.data.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </time>
             </TypographyMuted>
           )}
           {page.data.lastModified && (
@@ -125,11 +126,13 @@ export default async function Page(props: { params: { slug: string[] } }) {
                 aria-hidden="true"
               />
               Updated{" "}
-              {new Date(page.data.lastModified).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
+              <time dateTime={new Date(page.data.lastModified).toISOString()}>
+                {new Date(page.data.lastModified).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </time>
             </TypographyMuted>
           )}
           {readingTime && (

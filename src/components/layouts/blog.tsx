@@ -107,7 +107,9 @@ export function MobileTOC() {
 
   useEffect(() => {
     if (!scrollContainerRef.current) return;
-    const activeEl = scrollContainerRef.current.querySelector('[data-active="true"]');
+    const activeEl = scrollContainerRef.current.querySelector(
+      '[data-active="true"]',
+    );
     activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [active]);
 
@@ -168,7 +170,10 @@ export function MobileTOC() {
                 "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up bg-background/80",
             )}
           >
-            <div className="px-6 sm:px-8 lg:px-10 pb-3" ref={scrollContainerRef}>
+            <div
+              className="px-6 sm:px-8 lg:px-10 pb-3"
+              ref={scrollContainerRef}
+            >
               <TOCScrollArea className="max-h-[50vh]">
                 <TOCItems />
               </TOCScrollArea>
