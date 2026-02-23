@@ -39,6 +39,26 @@ export interface OGImageProps {
   availableForHire: boolean;
 }
 
+function truncate(str: string, max: number): string {
+  return str.length > max ? str.slice(0, max).trimEnd() + "…" : str;
+}
+
+function getTitleFontSize(title: string): number {
+  const len = title.length;
+  if (len < 20) return 64;
+  if (len < 40) return 52;
+  if (len < 60) return 42;
+  if (len < 80) return 34;
+  return 28;
+}
+
+function getDescFontSize(desc: string): number {
+  const len = desc.length;
+  if (len < 80) return 24;
+  if (len < 140) return 20;
+  return 17;
+}
+
 export function OGImage({
   title,
   description,
@@ -232,9 +252,9 @@ export function OGImage({
 
           <div
             style={{
-              fontSize: 64,
+              fontSize: getTitleFontSize(title),
               fontWeight: 700,
-              lineHeight: 1.08,
+              lineHeight: 1.1,
               letterSpacing: "-0.03em",
               color: theme.foreground,
               display: "flex",
@@ -243,19 +263,19 @@ export function OGImage({
               columnGap: 16,
             }}
           >
-            {title && <span>{title}</span>}
+            {title && <span>{truncate(title, 80)}</span>}
           </div>
 
           <div
             style={{
-              fontSize: 24,
+              fontSize: getDescFontSize(description),
               color: theme.mutedBright,
-              maxWidth: "62%",
+              maxWidth: "72%",
               lineHeight: 1.55,
               fontStyle: "italic",
             }}
           >
-            {description}
+            {truncate(description, 160)}
           </div>
         </div>
 
