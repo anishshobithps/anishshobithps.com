@@ -29,19 +29,16 @@ type SchemaProps =
   | { type: "breadcrumb"; items: { name: string; url: string }[] };
 
 function buildPerson(): WithContext<Person> {
-  const x = siteConfig.social.find((s) => s.platform === "x");
-  const github = siteConfig.social.find((s) => s.platform === "github");
-  const linkedin = siteConfig.social.find((s) => s.platform === "linkedin");
-
   return {
     "@context": "https://schema.org",
     "@type": "Person",
     name: siteConfig.name,
+    alternateName: siteConfig.handle,
     url: siteConfig.baseUrl,
     image: `${siteConfig.baseUrl}/profile.avif`,
     jobTitle: siteConfig.role,
     description: siteConfig.description,
-    sameAs: [x, github, linkedin].filter(Boolean).map((s) => s!.href),
+    sameAs: [...siteConfig.sameAs],
   };
 }
 
