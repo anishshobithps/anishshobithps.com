@@ -7,6 +7,7 @@ const config = {
   reactStrictMode: true,
   allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["@takumi-rs/image-response"],
+  optimizePackageImports: ["@tabler/icons-react", "lucide-react"],
   images: {
     remotePatterns: [
       {
