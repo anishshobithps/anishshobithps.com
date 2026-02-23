@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowLeft, Check, Link2, TwitterIcon, LinkedinIcon } from "lucide-react";
+import { ArrowLeft, Link2 } from "lucide-react";
 import Link from "next/link";
 import {
   PaginationContent,
@@ -11,6 +10,11 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { TypographySmall } from "@/components/ui/typography";
+import {
+  IconBrandLinkedinFilled,
+  IconBrandTwitterFilled,
+} from "@tabler/icons-react";
+import { toast } from "sonner";
 
 interface BlogPostNavProps {
   pageUrl: string;
@@ -25,16 +29,16 @@ export function BlogPostNav({
   prevPost,
   nextPost,
 }: BlogPostNavProps) {
-  const [copied, setCopied] = useState(false);
-
   const handleCopy = async () => {
     await navigator.clipboard.writeText(pageUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    toast.success("Link copied to clipboard");
   };
 
-  const xUrl = `https://x.com/intent/post?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(title)}`;
-  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
+  const utmPageUrl = `${pageUrl}?utm_source=x&utm_medium=social&utm_campaign=blog`;
+  const utmLinkedinUrl = `${pageUrl}?utm_source=linkedin&utm_medium=social&utm_campaign=blog`;
+
+  const xUrl = `https://x.com/intent/post?url=${encodeURIComponent(utmPageUrl)}&text=${encodeURIComponent(title)}`;
+  const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(utmLinkedinUrl)}`;
 
   return (
     <>
@@ -45,18 +49,19 @@ export function BlogPostNav({
         </Link>
       </Button>
 
-      <div className="flex items-center gap-0.5" role="toolbar" aria-label="Post actions">
+      <div
+        className="flex items-center gap-0.5"
+        role="toolbar"
+        aria-label="Post actions"
+      >
         <Button
           variant="ghost"
           size="icon-sm"
           onClick={handleCopy}
-          aria-label={copied ? "Link copied" : "Copy link to this post"}
-          aria-live="polite"
+          aria-label="Copy link to this post"
           className="text-muted-foreground hover:text-foreground"
         >
-          {copied
-            ? <Check className="size-4" aria-hidden="true" />
-            : <Link2 className="size-4" aria-hidden="true" />}
+          <Link2 className="size-4" aria-hidden="true" />
         </Button>
 
         <Button
@@ -71,7 +76,7 @@ export function BlogPostNav({
             rel="noopener noreferrer"
             aria-label={`Share "${title}" on X (opens in new tab)`}
           >
-            <TwitterIcon className="size-4" aria-hidden="true" />
+            <IconBrandTwitterFilled className="size-4" aria-hidden="true" />
           </a>
         </Button>
 
@@ -87,7 +92,7 @@ export function BlogPostNav({
             rel="noopener noreferrer"
             aria-label={`Share "${title}" on LinkedIn (opens in new tab)`}
           >
-            <LinkedinIcon className="size-4" aria-hidden="true" />
+            <IconBrandLinkedinFilled className="size-4" aria-hidden="true" />
           </a>
         </Button>
 
@@ -98,17 +103,27 @@ export function BlogPostNav({
             <PaginationItem>
               <PaginationPrevious
                 href={prevPost?.url ?? "#"}
-                aria-label={prevPost ? `Previous post: ${prevPost.title}` : "No previous post"}
+                aria-label={
+                  prevPost
+                    ? `Previous post: ${prevPost.title}`
+                    : "No previous post"
+                }
                 aria-disabled={!prevPost}
-                className={!prevPost ? "pointer-events-none opacity-30" : undefined}
+                className={
+                  !prevPost ? "pointer-events-none opacity-30" : undefined
+                }
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
                 href={nextPost?.url ?? "#"}
-                aria-label={nextPost ? `Next post: ${nextPost.title}` : "No next post"}
+                aria-label={
+                  nextPost ? `Next post: ${nextPost.title}` : "No next post"
+                }
                 aria-disabled={!nextPost}
-                className={!nextPost ? "pointer-events-none opacity-30" : undefined}
+                className={
+                  !nextPost ? "pointer-events-none opacity-30" : undefined
+                }
               />
             </PaginationItem>
           </PaginationContent>
