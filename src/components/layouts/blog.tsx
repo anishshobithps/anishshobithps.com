@@ -75,7 +75,6 @@ function ProgressCircle({
       role="progressbar"
       aria-label={`Reading progress: ${Math.round(normalized)}%`}
     >
-      <title>Reading progress: {Math.round(normalized)}%</title>
       <circle {...cp} className="stroke-current/20" />
       <circle
         {...cp}
