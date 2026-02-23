@@ -205,11 +205,11 @@ export async function generateMetadata(props: {
 
   const rawTitle = page.data.title;
   const metaTitle =
-    rawTitle.length > 40 ? rawTitle.slice(0, 37).trimEnd() + "..." : rawTitle;
+    rawTitle.length > 60 ? rawTitle.slice(0, 57).trimEnd() + "…" : rawTitle;
 
   const rawDesc = page.data.description ?? "";
   const metaDesc =
-    rawDesc.length > 155 ? rawDesc.slice(0, 152).trimEnd() + "..." : rawDesc;
+    rawDesc.length > 155 ? rawDesc.slice(0, 152).trimEnd() + "…" : rawDesc;
 
   return buildMeta({
     title: rawTitle,

@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
 import { RootProvider } from "fumadocs-ui/provider/next";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -41,6 +41,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
+};
+
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -48,6 +55,9 @@ export default function Layout({ children }: LayoutProps<"/">) {
       className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://cloud.umami.is" />
+      </head>
       <body className="relative flex flex-col min-h-screen">
         {process.env.NODE_ENV === "production" && (
           <Script

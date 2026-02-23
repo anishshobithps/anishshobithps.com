@@ -38,7 +38,7 @@ function buildPerson(): WithContext<Person> {
     "@type": "Person",
     name: siteConfig.name,
     url: siteConfig.baseUrl,
-    image: `${siteConfig.baseUrl}/profile.jpg`,
+    image: `${siteConfig.baseUrl}/profile.avif`,
     jobTitle: siteConfig.role,
     description: siteConfig.description,
     sameAs: [x, github, linkedin].filter(Boolean).map((s) => s!.href),
@@ -102,7 +102,7 @@ function buildBlogPosting(params: {
       "@type": "Person",
       name: siteConfig.name,
       url: siteConfig.baseUrl,
-      image: `${siteConfig.baseUrl}/profile.jpg`,
+      image: `${siteConfig.baseUrl}/profile.avif`,
     },
     publisher: {
       "@type": "Organization",
@@ -110,7 +110,7 @@ function buildBlogPosting(params: {
       url: siteConfig.baseUrl,
       logo: {
         "@type": "ImageObject",
-        url: `${siteConfig.baseUrl}/profile.jpg`,
+        url: `${siteConfig.baseUrl}/profile.avif`,
         width: "460",
         height: "460",
       },
