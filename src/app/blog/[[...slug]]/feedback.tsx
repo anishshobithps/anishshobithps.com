@@ -75,18 +75,18 @@ const MOODS = [
   },
 ] as const;
 
-export function BlogReactions({ slug, className }: BlogReactionsProps) {
-  function optimisticReducer(
-    state: OptimisticState,
-    { newMood, prevMood }: OptimisticAction,
-  ): OptimisticState {
-    const nextCounts = { ...state.counts };
-    if (prevMood)
-      nextCounts[prevMood] = Math.max(0, (nextCounts[prevMood] ?? 0) - 1);
-    if (newMood) nextCounts[newMood] = (nextCounts[newMood] ?? 0) + 1;
-    return { value: newMood, counts: nextCounts };
-  }
+function optimisticReducer(
+  state: OptimisticState,
+  { newMood, prevMood }: OptimisticAction,
+): OptimisticState {
+  const nextCounts = { ...state.counts };
+  if (prevMood)
+    nextCounts[prevMood] = Math.max(0, (nextCounts[prevMood] ?? 0) - 1);
+  if (newMood) nextCounts[newMood] = (nextCounts[newMood] ?? 0) + 1;
+  return { value: newMood, counts: nextCounts };
+}
 
+export function BlogReactions({ slug, className }: BlogReactionsProps) {
   const [value, setValue] = useState<MoodId | "">("");
   const [counts, setCounts] = useState<ReactionCounts>({});
   const [loading, setLoading] = useState(true);
