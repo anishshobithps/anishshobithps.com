@@ -126,6 +126,7 @@ export function Hero() {
               preload
               sizes="300px"
               fill
+              unoptimized
               containerClassName="w-full h-full"
             />
             <div
