@@ -94,7 +94,7 @@ function buildBlogPosting(params: {
     headline: params.title,
     description: params.description,
     url: params.canonicalUrl,
-    image: `${siteConfig.baseUrl}/profile.jpg`,
+    image: `${siteConfig.baseUrl}/profile.avif`,
     ...(params.publishedAt && { datePublished: params.publishedAt }),
     ...(params.updatedAt && { dateModified: params.updatedAt }),
     ...(params.tags && { keywords: params.tags.join(", ") }),
