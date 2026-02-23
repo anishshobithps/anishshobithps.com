@@ -135,12 +135,12 @@ export default function PrivacyPolicyPage() {
 
       <Section aria-label="Analytics">
         <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Analytics (planned)</SectionLabel>
+          <SectionLabel>Analytics</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
         </div>
         <div className="max-w-2xl">
           <TypographyP>
-            In the future, this site may use{" "}
+            This site uses{" "}
             <a
               href="https://umami.is"
               target="_blank"
@@ -150,11 +150,20 @@ export default function PrivacyPolicyPage() {
               Umami Analytics
             </a>{" "}
             — a <TypographyMark>privacy-focused, open-source</TypographyMark>{" "}
-            analytics tool. Umami does not use cookies, does not collect
-            personal data, and complies with{" "}
-            <TypographyMark>GDPR, CCPA, and PECR</TypographyMark>. Page view
-            data would be anonymized and aggregated. This policy will be updated
-            when analytics is added.
+            analytics tool hosted on{" "}
+            <a
+              href="https://umami.is/docs/cloud"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              Umami Cloud
+            </a>
+            . Umami does <TypographyMark>not use cookies</TypographyMark>, does
+            not collect personal data, and complies with{" "}
+            <TypographyMark>GDPR, CCPA, and PECR</TypographyMark>. Only
+            anonymized, aggregated page view data is recorded — no IP addresses,
+            no fingerprinting, no cross-site tracking.
           </TypographyP>
         </div>
       </Section>

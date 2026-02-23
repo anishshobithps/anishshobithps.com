@@ -1,16 +1,17 @@
+import { Content, PageLayout } from "@/components/layouts/page";
 import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
-import { Content, PageLayout } from "@/components/layouts/page";
+import { JsonLd } from "@/components/shared/json-ld";
+import { MouseGlow } from "@/components/shared/mouse-glow";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
-import { buildOGMeta } from "@/lib/og";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./global.css";
-import { MouseGlow } from "@/components/shared/mouse-glow";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { JsonLd } from "@/components/shared/json-ld";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -48,6 +49,13 @@ export default function Layout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="relative flex flex-col min-h-screen">
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            src="https://cloud.umami.is/script.js"
+            data-website-id="bd850c68-5e13-4ae7-bfb6-58d4a8134f4e"
+            strategy="afterInteractive"
+          />
+        )}
         <JsonLd type="person" />
         <JsonLd type="website" />
         <RootProvider>
@@ -55,7 +63,10 @@ export default function Layout({ children }: LayoutProps<"/">) {
             <PageLayout>
               <Header />
               <Content className="scroll-smooth">
-                <TooltipProvider>{children}</TooltipProvider>
+                <TooltipProvider>
+                  {children}
+                  <Toaster />
+                </TooltipProvider>
               </Content>
               <Footer />
             </PageLayout>
