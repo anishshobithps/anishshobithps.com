@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMeta({
   title: siteConfig.name,
-  pageTitle: siteConfig.role,
+  pageTitle: `${siteConfig.name} - ${siteConfig.role}`,
   description: siteConfig.description,
   path: "home",
   canonicalPath: "/",
