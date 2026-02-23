@@ -23,6 +23,7 @@ import {
   type ReactNode,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -103,6 +104,13 @@ export function MobileTOC() {
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!scrollContainerRef.current) return;
+    const activeEl = scrollContainerRef.current.querySelector('[data-active="true"]');
+    activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [active]);
 
   const selected = useMemo(
     () => items.findIndex((item) => active === item.url.slice(1)),
@@ -161,7 +169,7 @@ export function MobileTOC() {
                 "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up bg-background/80",
             )}
           >
-            <div className="px-6 sm:px-8 lg:px-10 pb-3">
+            <div className="px-6 sm:px-8 lg:px-10 pb-3" ref={scrollContainerRef}>
               <TOCScrollArea className="max-h-[50vh]">
                 <TOCItems />
               </TOCScrollArea>
