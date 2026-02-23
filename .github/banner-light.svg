@@ -1,0 +1,111 @@
+<svg width="1200" height="260" viewBox="0 0 1200 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="anishshobithps.com — source code">
+  <title>anishshobithps.com source code</title>
+  <defs>
+
+    <!-- 80x80 grid – full coverage, light theme -->
+    <pattern id="grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(25,25,25,0.07)" stroke-width="0.5"/>
+    </pattern>
+
+    <!-- Diagonal hatch – matches Divider component (315deg, 10×10) -->
+    <pattern id="hatch" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45 5 5)">
+      <line x1="0" y1="5" x2="10" y2="5" stroke="rgba(0,0,0,0.065)" stroke-width="1"/>
+    </pattern>
+
+  </defs>
+
+  <!-- ── Background ─────────────────────────────────────────────────────── -->
+  <rect width="1200" height="260" fill="#ffffff"/>
+
+  <!-- ── Full-coverage grid ─────────────────────────────────────────────── -->
+  <rect width="1200" height="260" fill="url(#grid)"/>
+
+  <!-- ── Content column vertical borders ───────────────────────────────── -->
+  <line x1="88.5"    y1="0" x2="88.5"    y2="260" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <line x1="1111.5"  y1="0" x2="1111.5"  y2="260" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+
+  <!-- ── Full-width top divider ─────────────────────────────────────────── -->
+  <line x1="0" y1="0.5"   x2="1200" y2="0.5"   stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+
+  <!-- ── Short hatch divider (Divider short, borderTop=false) ──────────── -->
+  <rect x="0" y="1" width="1200" height="15" fill="url(#hatch)"/>
+  <line x1="0" y1="16.5"  x2="1200" y2="16.5"  stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+
+  <!-- ── Full-width bottom divider ─────────────────────────────────────── -->
+  <line x1="0" y1="259.5" x2="1200" y2="259.5" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+
+  <!-- ── DecorIcons — + cross at each content-column corner ────────────── -->
+  <!-- top-left  (88, 0) -->
+  <g stroke="#c4c4d4" stroke-width="1.5" stroke-linecap="round">
+    <line x1="81"    y1="0.5"    x2="95"    y2="0.5"/>
+    <line x1="88.5"  y1="-6.5"   x2="88.5"  y2="7.5"/>
+  </g>
+  <!-- top-right (1112, 0) -->
+  <g stroke="#c4c4d4" stroke-width="1.5" stroke-linecap="round">
+    <line x1="1105"   y1="0.5"    x2="1119"   y2="0.5"/>
+    <line x1="1111.5" y1="-6.5"   x2="1111.5" y2="7.5"/>
+  </g>
+  <!-- bottom-left (88, 260) -->
+  <g stroke="#c4c4d4" stroke-width="1.5" stroke-linecap="round">
+    <line x1="81"    y1="259.5"  x2="95"    y2="259.5"/>
+    <line x1="88.5"  y1="252.5"  x2="88.5"  y2="266.5"/>
+  </g>
+  <!-- bottom-right (1112, 260) -->
+  <g stroke="#c4c4d4" stroke-width="1.5" stroke-linecap="round">
+    <line x1="1105"   y1="259.5"  x2="1119"   y2="259.5"/>
+    <line x1="1111.5" y1="252.5"  x2="1111.5" y2="266.5"/>
+  </g>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       CONTENT  (x=128 mirrors px-10 inside max-w-5xl column)
+       ══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Section label -->
+  <text x="128" y="60"
+    font-family="'Geist Mono','JetBrains Mono',Consolas,monospace"
+    font-size="10.5" fill="#c0c0d0" letter-spacing="0.18em">PORTFOLIO  ×  BLOG</text>
+
+  <!-- H1 -->
+  <text x="128" y="98"
+    font-family="'Geist','Inter',system-ui,-apple-system,sans-serif"
+    font-size="34" font-weight="700" fill="#191926" letter-spacing="-0.025em">Anish Shobith P S</text>
+
+  <!-- Lead / role -->
+  <text x="128" y="124"
+    font-family="'Geist Mono','JetBrains Mono',Consolas,monospace"
+    font-size="13" fill="#9898b0" letter-spacing="0.04em">Software Developer  ·  anishshobithps.com</text>
+
+  <!-- Description -->
+  <text x="128" y="148"
+    font-family="'Geist','Inter',system-ui,-apple-system,sans-serif"
+    font-size="13" fill="#8080a0">High-performance portfolio and blog built for clarity, structured data, and zero</text>
+  <text x="128" y="166"
+    font-family="'Geist','Inter',system-ui,-apple-system,sans-serif"
+    font-size="13" fill="#8080a0">compromises on accessibility — including a slightly over-engineered PDF viewer.</text>
+
+  <!-- Tech badges -->
+  <rect x="128" y="198" width="84" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="170" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">Next.js 16</text>
+
+  <rect x="218" y="198" width="84" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="260" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">TypeScript</text>
+
+  <rect x="308" y="198" width="72" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="344" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">React 19</text>
+
+  <rect x="386" y="198" width="90" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="431" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">Tailwind v4</text>
+
+  <rect x="482" y="198" width="92" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="528" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">Drizzle ORM</text>
+
+  <rect x="580" y="198" width="78" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="619" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">Fumadocs</text>
+
+  <rect x="664" y="198" width="78" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="703" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">shadcn/ui</text>
+
+  <rect x="748" y="198" width="50" height="22" rx="5" fill="rgba(0,0,0,0.03)" stroke="rgba(0,0,0,0.10)" stroke-width="1"/>
+  <text x="773" y="213" text-anchor="middle" font-family="'Geist Mono',monospace" font-size="11" fill="#7070a0">Neon</text>
+
+</svg>
