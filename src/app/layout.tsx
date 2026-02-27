@@ -71,7 +71,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
           <NuqsAdapter>
             <PageLayout>
               <Header />
-              <Content className="scroll-smooth">
+              <Content className="scroll-smooth pt-14">
                 <TooltipProvider>
                   {children}
                   <Toaster />
