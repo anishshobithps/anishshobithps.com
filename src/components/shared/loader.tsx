@@ -60,12 +60,14 @@ export function LogoLoader({
           .${uid}-ghost {
             fill: currentColor;
             transform-origin: 32px 32px;
+            will-change: transform, opacity;
             animation: ${uid}-ghostBreath 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
           }
           .${uid}-filled {
             fill: currentColor;
             transform-origin: 32px 32px;
             clip-path: url(#${uid}-fillClip);
+            will-change: transform;
             animation: ${uid}-breath 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
           }
         `}</style>

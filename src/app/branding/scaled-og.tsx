@@ -31,6 +31,7 @@ export function ScaledOG({ children }: { children: React.ReactNode }) {
           height: 630,
           transform: `scale(${scale})`,
           transformOrigin: "top left",
+          willChange: "transform",
         }}
       >
         {children}

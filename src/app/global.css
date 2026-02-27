@@ -267,6 +267,7 @@ html {
 }
 
 main {
+  will-change: opacity;
   animation: fd-fade-in 0.25s ease-out both;
 }
 
