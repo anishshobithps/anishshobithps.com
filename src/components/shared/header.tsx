@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { MenuIcon } from "lucide-react";
+import { IconMenu2 } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -89,7 +89,7 @@ export function Header() {
                   aria-label={open ? "Close menu" : "Open menu"}
                   aria-expanded={open}
                 >
-                  <MenuIcon aria-hidden="true" />
+                  <IconMenu2 aria-hidden="true" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent

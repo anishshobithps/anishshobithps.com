@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Link2 } from "lucide-react";
+import { IconArrowLeft, IconLink } from "@tabler/icons-react";
 import Link from "next/link";
 import {
   PaginationContent,
@@ -44,7 +44,7 @@ export function BlogPostNav({
     <>
       <Button variant="ghost" size="sm" asChild>
         <Link href="/blogs" aria-label="Back to all blog posts">
-          <ArrowLeft className="size-3.5 shrink-0" aria-hidden="true" />
+          <IconArrowLeft className="size-3.5 shrink-0" aria-hidden="true" />
           <TypographySmall>Blog</TypographySmall>
         </Link>
       </Button>
@@ -61,7 +61,7 @@ export function BlogPostNav({
           aria-label="Copy link to this post"
           className="text-muted-foreground hover:text-foreground"
         >
-          <Link2 className="size-4" aria-hidden="true" />
+          <IconLink className="size-4" aria-hidden="true" />
         </Button>
 
         <Button

@@ -17,7 +17,7 @@ import {
   TOCScrollArea,
   useTOCItems,
 } from "fumadocs-ui/components/toc/index";
-import { ChevronDown, TextAlignStart } from "lucide-react";
+import { IconChevronDown, IconAlignLeft } from "@tabler/icons-react";
 import {
   type ComponentProps,
   type ReactNode,
@@ -155,7 +155,7 @@ export function MobileTOC() {
               <span className="mx-0.5">/</span>
               {items.length}
             </span>
-            <ChevronDown
+            <IconChevronDown
               className={cn(
                 "size-4 shrink-0 text-muted-foreground transition-transform",
                 open && "rotate-180",
@@ -205,7 +205,7 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
             <div className="pl-8 sticky top-20 flex flex-col gap-6">
               <div>
                 <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <TextAlignStart className="size-3.5 shrink-0" />
+                  <IconAlignLeft className="size-3.5 shrink-0" />
                   On this page
                 </TypographySmall>
 

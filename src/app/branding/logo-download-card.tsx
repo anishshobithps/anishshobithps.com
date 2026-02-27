@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { CodeXmlIcon, ImageIcon } from "lucide-react";
+import { IconCode, IconPhoto } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
 const DOWNLOAD_SIZES = [16, 32, 64, 128, 256, 512] as const;
@@ -84,9 +84,15 @@ export function LogoDownloadCard({
   const filename = `${nameSlug}-${variantSlug}-${size}px`;
 
   return (
-    <div className="flex flex-col gap-3 w-full" aria-label={`${label} logo variant`}>
+    <div
+      className="flex flex-col gap-3 w-full"
+      aria-label={`${label} logo variant`}
+    >
       <div>
-        <TypographyMuted className="text-xs uppercase tracking-wider" aria-hidden="true">
+        <TypographyMuted
+          className="text-xs uppercase tracking-wider"
+          aria-hidden="true"
+        >
           {label}
         </TypographyMuted>
         <TypographySmall className="text-muted-foreground">
@@ -102,7 +108,10 @@ export function LogoDownloadCard({
         <Logo ref={svgRef} size={48} aria-hidden="true" {...logoProps} />
       </div>
 
-      <div className="flex items-center gap-2" aria-label={`Download ${label} logo`}>
+      <div
+        className="flex items-center gap-2"
+        aria-label={`Download ${label} logo`}
+      >
         <Select
           value={String(size)}
           onValueChange={(v) => setSize(Number(v) as DownloadSize)}
@@ -127,9 +136,11 @@ export function LogoDownloadCard({
           size="sm"
           className="flex-1 h-8 gap-1.5 text-xs"
           aria-label={`Download ${label} logo as SVG at ${size}px`}
-          onClick={() => svgRef.current && downloadSVG(svgRef.current, filename, size)}
+          onClick={() =>
+            svgRef.current && downloadSVG(svgRef.current, filename, size)
+          }
         >
-          <CodeXmlIcon className="size-3 shrink-0" aria-hidden="true" />
+          <IconCode className="size-3 shrink-0" aria-hidden="true" />
           SVG
         </Button>
         <Button
@@ -137,9 +148,11 @@ export function LogoDownloadCard({
           size="sm"
           className="flex-1 h-8 gap-1.5 text-xs"
           aria-label={`Download ${label} logo as PNG at ${size}px`}
-          onClick={() => svgRef.current && downloadPNG(svgRef.current, filename, size)}
+          onClick={() =>
+            svgRef.current && downloadPNG(svgRef.current, filename, size)
+          }
         >
-          <ImageIcon className="size-3 shrink-0" aria-hidden="true" />
+          <IconPhoto className="size-3 shrink-0" aria-hidden="true" />
           PNG
         </Button>
       </div>

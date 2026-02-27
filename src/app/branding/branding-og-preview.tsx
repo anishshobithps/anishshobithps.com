@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/input-group";
 import { siteConfig } from "@/lib/config";
 import {
-  UserIcon,
-  TypeIcon,
-  BriefcaseIcon,
-  GlobeIcon,
-  TagsIcon,
-  TextIcon,
-} from "lucide-react";
+  IconUser,
+  IconLetterT,
+  IconBriefcase,
+  IconWorld,
+  IconTags,
+  IconAlignLeft,
+} from "@tabler/icons-react";
 
 export function BrandingOGPreview() {
   const defaultTitle = siteConfig.name;
@@ -38,12 +38,17 @@ export function BrandingOGPreview() {
   );
 
   const title = titleInput.trim() ? titleInput : defaultTitle;
-  const description = descriptionInput.trim() ? descriptionInput : defaultDescription;
+  const description = descriptionInput.trim()
+    ? descriptionInput
+    : defaultDescription;
   const name = nameInput.trim() ? nameInput : defaultName;
   const role = roleInput.trim() ? roleInput : defaultRole;
   const domain = domainInput.trim() ? domainInput : defaultDomain;
   const tags = tagsInput.trim()
-    ? tagsInput.split(",").map((t) => t.trim()).filter(Boolean)
+    ? tagsInput
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
     : defaultTags;
 
   const ogProps = {
@@ -74,7 +79,10 @@ export function BrandingOGPreview() {
             className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden"
             aria-label={`Preview URL: ${domain}/home / branding`}
           >
-            <TypographyMuted className="font-mono text-[10px] truncate leading-none" aria-hidden="true">
+            <TypographyMuted
+              className="font-mono text-[10px] truncate leading-none"
+              aria-hidden="true"
+            >
               {domain}/home / branding
             </TypographyMuted>
           </div>
@@ -84,7 +92,9 @@ export function BrandingOGPreview() {
             </TypographyMuted>
             <Switch
               checked={availableForHire}
-              onCheckedChange={(checked: boolean) => setAvailableForHire(checked)}
+              onCheckedChange={(checked: boolean) =>
+                setAvailableForHire(checked)
+              }
               aria-labelledby="hire-label"
               className="cursor-pointer"
               size="default"
@@ -102,7 +112,7 @@ export function BrandingOGPreview() {
                 aria-label={`Title (default: ${defaultTitle})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <TypeIcon size={16} />
+                <IconLetterT size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -113,7 +123,7 @@ export function BrandingOGPreview() {
                 aria-label={`Description (default: ${defaultDescription})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <TextIcon size={16} />
+                <IconAlignLeft size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -124,7 +134,7 @@ export function BrandingOGPreview() {
                 aria-label={`Name (default: ${defaultName})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <UserIcon size={16} />
+                <IconUser size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -135,7 +145,7 @@ export function BrandingOGPreview() {
                 aria-label={`Role (default: ${defaultRole})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <BriefcaseIcon size={16} />
+                <IconBriefcase size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -146,7 +156,7 @@ export function BrandingOGPreview() {
                 aria-label={`Domain (default: ${defaultDomain})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <GlobeIcon size={16} />
+                <IconWorld size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -157,7 +167,7 @@ export function BrandingOGPreview() {
                 aria-label="Tags, comma separated"
               />
               <InputGroupAddon aria-hidden="true">
-                <TagsIcon size={16} />
+                <IconTags size={16} />
               </InputGroupAddon>
             </InputGroup>
           </div>

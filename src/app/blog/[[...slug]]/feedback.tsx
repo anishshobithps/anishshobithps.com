@@ -10,7 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TypographyP } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { Heart, Meh, ThumbsDown, ThumbsUp } from "lucide-react";
+import {
+  IconHeart,
+  IconMoodNeutral,
+  IconThumbDown,
+  IconThumbUp,
+} from "@tabler/icons-react";
 import { startTransition, useEffect, useOptimistic, useState } from "react";
 
 interface OptimisticAction {
@@ -32,7 +37,7 @@ const MOODS = [
   {
     id: "terrible" as MoodId,
     label: "Not for me",
-    icon: ThumbsDown,
+    icon: IconThumbDown,
     activeClassName:
       "border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/15 hover:text-red-400",
     inactiveClassName:
@@ -43,7 +48,7 @@ const MOODS = [
   {
     id: "bad" as MoodId,
     label: "Meh",
-    icon: Meh,
+    icon: IconMoodNeutral,
     activeClassName:
       "border-orange-500/40 bg-orange-500/10 text-orange-400 hover:bg-orange-500/15 hover:text-orange-400",
     inactiveClassName:
@@ -54,7 +59,7 @@ const MOODS = [
   {
     id: "good" as MoodId,
     label: "Liked it",
-    icon: ThumbsUp,
+    icon: IconThumbUp,
     activeClassName:
       "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/15 hover:text-blue-400",
     inactiveClassName:
@@ -65,7 +70,7 @@ const MOODS = [
   {
     id: "amazing" as MoodId,
     label: "Loved it",
-    icon: Heart,
+    icon: IconHeart,
     activeClassName:
       "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15 hover:text-emerald-400",
     inactiveClassName:

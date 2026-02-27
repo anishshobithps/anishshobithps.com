@@ -14,7 +14,7 @@ import { buildMeta } from "@/lib/og";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 import { createRelativeLink } from "fumadocs-ui/mdx";
-import { CalendarDays, Clock, GitCommitHorizontal } from "lucide-react";
+import { IconCalendar, IconClock, IconGitCommit } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -106,7 +106,7 @@ export default async function Page(props: { params: { slug: string[] } }) {
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Published on ${new Date(page.data.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
             >
-              <CalendarDays className="size-3.5 shrink-0" aria-hidden="true" />
+              <IconCalendar className="size-3.5 shrink-0" aria-hidden="true" />
               <time dateTime={new Date(page.data.date).toISOString()}>
                 {new Date(page.data.date).toLocaleDateString("en-US", {
                   month: "long",
@@ -121,10 +121,7 @@ export default async function Page(props: { params: { slug: string[] } }) {
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Last updated ${new Date(page.data.lastModified).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
             >
-              <GitCommitHorizontal
-                className="size-3.5 shrink-0"
-                aria-hidden="true"
-              />
+              <IconGitCommit className="size-3.5 shrink-0" aria-hidden="true" />
               Updated{" "}
               <time dateTime={new Date(page.data.lastModified).toISOString()}>
                 {new Date(page.data.lastModified).toLocaleDateString("en-US", {
@@ -140,7 +137,7 @@ export default async function Page(props: { params: { slug: string[] } }) {
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Reading time: ${readingTime.text}`}
             >
-              <Clock className="size-3.5 shrink-0" aria-hidden="true" />
+              <IconClock className="size-3.5 shrink-0" aria-hidden="true" />
               {readingTime.text}
             </TypographyMuted>
           )}

@@ -19,14 +19,14 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/cn";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  ExternalLink,
-  RotateCw,
-  ZoomIn,
-  ZoomOut,
-} from "lucide-react";
+  IconChevronLeft,
+  IconChevronRight,
+  IconDownload,
+  IconExternalLink,
+  IconRotateClockwise,
+  IconZoomIn,
+  IconZoomOut,
+} from "@tabler/icons-react";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -262,7 +262,7 @@ export const PdfViewerPagination = () => {
         aria-label="Previous page"
         onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
       >
-        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        <IconChevronLeft className="h-4 w-4" aria-hidden="true" />
       </Button>
 
       <span
@@ -279,7 +279,7 @@ export const PdfViewerPagination = () => {
         aria-label="Next page"
         onClick={() => setCurrentPage((p) => Math.min(p + 1, numPages!))}
       >
-        <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        <IconChevronRight className="h-4 w-4" aria-hidden="true" />
       </Button>
     </div>
   );
@@ -300,7 +300,7 @@ export const PdfViewerZoom = () => {
         aria-label="Zoom out"
         onClick={() => setZoom((z) => Math.max(+(z - 0.1).toFixed(1), 0.5))}
       >
-        <ZoomOut className="h-4 w-4" aria-hidden="true" />
+        <IconZoomOut className="h-4 w-4" aria-hidden="true" />
       </Button>
 
       <span
@@ -317,7 +317,7 @@ export const PdfViewerZoom = () => {
         aria-label="Zoom in"
         onClick={() => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3))}
       >
-        <ZoomIn className="h-4 w-4" aria-hidden="true" />
+        <IconZoomIn className="h-4 w-4" aria-hidden="true" />
       </Button>
     </div>
   );
@@ -332,7 +332,7 @@ export const PdfViewerReload = () => {
       onClick={reload}
       aria-label="Reload PDF"
     >
-      <RotateCw className="h-4 w-4" />
+      <IconRotateClockwise className="h-4 w-4" />
     </Button>
   );
 };
@@ -347,7 +347,7 @@ export const PdfViewerOpen = () => {
         rel="noopener noreferrer"
         aria-label="Open PDF in new tab"
       >
-        <ExternalLink className="h-4 w-4" aria-hidden="true" />
+        <IconExternalLink className="h-4 w-4" aria-hidden="true" />
       </a>
     </Button>
   );
@@ -361,7 +361,7 @@ export const PdfViewerDownload = ({ label }: { label?: string }) => {
         href={downloadHref}
         aria-label={label ? `${label} — download as PDF` : "Download as PDF"}
       >
-        <Download className="h-4 w-4" aria-hidden="true" />
+        <IconDownload className="h-4 w-4" aria-hidden="true" />
         <span className="hidden sm:inline" aria-hidden="true">
           {label}
         </span>

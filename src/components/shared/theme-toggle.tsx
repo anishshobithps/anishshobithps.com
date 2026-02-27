@@ -1,7 +1,7 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { Airplay, Moon, Sun } from "lucide-react";
+import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { ComponentProps, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -20,9 +20,9 @@ const itemVariants = cva(
 );
 
 const full = [
-  ["light", Sun, "Switch to light theme"] as const,
-  ["dark", Moon, "Switch to dark theme"] as const,
-  ["system", Airplay, "Use system theme"] as const,
+  ["light", IconSun, "Switch to light theme"] as const,
+  ["dark", IconMoon, "Switch to dark theme"] as const,
+  ["system", IconDeviceDesktop, "Use system theme"] as const,
 ];
 
 export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {

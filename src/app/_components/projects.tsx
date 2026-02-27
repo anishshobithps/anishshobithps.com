@@ -16,7 +16,7 @@ import {
   TypographyMuted,
 } from "@/components/ui/typography";
 import { IconBrandGithubFilled } from "@tabler/icons-react";
-import { ArrowUpRight } from "lucide-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import Link from "next/link";
 import { projects } from "@/lib/config";
 
@@ -90,7 +90,10 @@ export function BuiltThings() {
                           rel="noopener noreferrer"
                           aria-label={`View ${project.title} live site`}
                         >
-                          <ArrowUpRight className="size-4" aria-hidden="true" />
+                          <IconArrowUpRight
+                            className="size-4"
+                            aria-hidden="true"
+                          />
                           <span className="ml-2">View</span>
                         </Link>
                       </Button>
@@ -141,7 +144,7 @@ export function BuiltThings() {
           >
             <IconBrandGithubFilled className="size-5 mr-2" aria-hidden="true" />
             <span>Explore the Chaos</span>
-            <ArrowUpRight
+            <IconArrowUpRight
               className="size-4 ml-2 opacity-70"
               aria-hidden="true"
             />

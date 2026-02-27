@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
+import { IconHome, IconRefresh } from "@tabler/icons-react";
 import {
-  Empty,
-  EmptyContent,
-  EmptyHeader,
-} from "@/components/ui/empty";
-import { HomeIcon, RotateCcwIcon } from "lucide-react";
-import { TypographyP, TypographyMuted, TypographyMark } from "@/components/ui/typography";
+  TypographyP,
+  TypographyMuted,
+  TypographyMark,
+} from "@/components/ui/typography";
 import Link from "next/link";
 import { useRef } from "react";
 import { BouncingLogos } from "@/components/shared/bouncing-logo";
@@ -31,7 +31,11 @@ export default function ErrorPage({ reset }: ErrorProps) {
         <BouncingLogos containerRef={containerRef} />
       </div>
 
-      <Empty className="z-10 backdrop-blur-sm" role="alert" aria-live="assertive">
+      <Empty
+        className="z-10 backdrop-blur-sm"
+        role="alert"
+        aria-live="assertive"
+      >
         <EmptyHeader>
           <FlickerText
             chars={["5", "0", "0"]}
@@ -45,8 +49,8 @@ export default function ErrorPage({ reset }: ErrorProps) {
               The code tripped
             </TypographyP>
             <TypographyMuted>
-              Something <TypographyMark>internally panicked</TypographyMark>,{" "}
-              we can act like this never happened.
+              Something <TypographyMark>internally panicked</TypographyMark>, we
+              can act like this never happened.
             </TypographyMuted>
           </div>
         </EmptyHeader>
@@ -60,7 +64,7 @@ export default function ErrorPage({ reset }: ErrorProps) {
               aria-label="Try the action again"
               className="flex items-center gap-2"
             >
-              <RotateCcwIcon aria-hidden="true" data-icon="inline-start" />
+              <IconRefresh aria-hidden="true" data-icon="inline-start" />
               Try Again
             </Button>
             <Button asChild size="lg">
@@ -69,7 +73,7 @@ export default function ErrorPage({ reset }: ErrorProps) {
                 aria-label="Go back to the home page"
                 className="flex items-center gap-2"
               >
-                <HomeIcon aria-hidden="true" data-icon="inline-start" />
+                <IconHome aria-hidden="true" data-icon="inline-start" />
                 Go Home
               </Link>
             </Button>

@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { SearchIcon, TagIcon, X } from "lucide-react";
+import { IconSearch, IconTag, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import {
   parseAsArrayOf,
@@ -104,7 +104,7 @@ export function BlogsClient({
         <div className="w-full sm:w-auto sm:flex-1 min-w-0">
           <InputGroup>
             <InputGroupAddon align="inline-start">
-              <SearchIcon aria-hidden="true" />
+              <IconSearch aria-hidden="true" />
             </InputGroupAddon>
             <InputGroupInput
               placeholder="Search posts…"
@@ -119,7 +119,7 @@ export function BlogsClient({
                   onClick={() => setParams({ q: "", page: 1 })}
                   aria-label="Clear search"
                 >
-                  <X className="size-4" aria-hidden="true" />
+                  <IconX className="size-4" aria-hidden="true" />
                 </InputGroupButton>
               </InputGroupAddon>
             )}
@@ -133,10 +133,14 @@ export function BlogsClient({
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    aria-label={tags.length > 0 ? `Filter by tags, ${tags.length} selected` : "Filter by tags"}
+                    aria-label={
+                      tags.length > 0
+                        ? `Filter by tags, ${tags.length} selected`
+                        : "Filter by tags"
+                    }
                     className="cursor-pointer gap-1.5 shrink-0 justify-start font-semibold"
                   >
-                    <TagIcon className="size-4" aria-hidden="true" />
+                    <IconTag className="size-4" aria-hidden="true" />
                     <span className="text-left">Tags</span>
                     {tags.length > 0 && (
                       <span
@@ -159,16 +163,18 @@ export function BlogsClient({
                         className="cursor-pointer h-auto px-1 py-0"
                         aria-label="Clear all tag filters"
                       >
-                        <X className="size-4" aria-hidden="true" />
+                        <IconX className="size-4" aria-hidden="true" />
                       </Button>
                     )}
                   </div>
-                  <ul role="list" aria-label="Available tags" className="flex flex-col gap-0.5 max-h-56 overflow-y-auto">
+                  <ul
+                    role="list"
+                    aria-label="Available tags"
+                    className="flex flex-col gap-0.5 max-h-56 overflow-y-auto"
+                  >
                     {allTags.map((tag) => (
                       <li key={tag}>
-                        <label
-                          className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors"
-                        >
+                        <label className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors">
                           <Checkbox
                             checked={tags.includes(tag)}
                             aria-label={`Filter by ${tag}`}
@@ -201,7 +207,10 @@ export function BlogsClient({
               setParams({ per: parseInt(val, 10), page: 1 })
             }
           >
-            <SelectTrigger className="cursor-pointer font-semibold w-full" aria-label={`Showing ${per} posts per page`}>
+            <SelectTrigger
+              className="cursor-pointer font-semibold w-full"
+              aria-label={`Showing ${per} posts per page`}
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -220,7 +229,11 @@ export function BlogsClient({
       </div>
 
       {tags.length > 0 && (
-        <ul role="list" aria-label="Active tag filters" className="flex flex-wrap gap-1.5 pb-3">
+        <ul
+          role="list"
+          aria-label="Active tag filters"
+          className="flex flex-wrap gap-1.5 pb-3"
+        >
           {tags.map((tag) => (
             <li key={tag}>
               <Button
@@ -233,7 +246,7 @@ export function BlogsClient({
                 className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary hover:bg-primary/20 cursor-pointer h-auto"
               >
                 {tag}
-                <X className="size-3" aria-hidden="true" />
+                <IconX className="size-3" aria-hidden="true" />
               </Button>
             </li>
           ))}
@@ -275,7 +288,10 @@ export function BlogsClient({
                         {post.title}
                       </TypographySmall>
                       {date && (
-                        <TypographyMuted aria-hidden="true" className="shrink-0 font-mono text-xs">
+                        <TypographyMuted
+                          aria-hidden="true"
+                          className="shrink-0 font-mono text-xs"
+                        >
                           {date}
                         </TypographyMuted>
                       )}
@@ -286,7 +302,11 @@ export function BlogsClient({
                       </TypographyMuted>
                     )}
                     {post.tags && post.tags.length > 0 && (
-                      <ul role="list" aria-label="Tags" className="flex flex-wrap gap-1.5 mt-1">
+                      <ul
+                        role="list"
+                        aria-label="Tags"
+                        className="flex flex-wrap gap-1.5 mt-1"
+                      >
                         {post.tags.map((tag) => (
                           <li key={tag}>
                             <TypographyMuted className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs">
@@ -312,7 +332,11 @@ export function BlogsClient({
             <Divider short />
           </div>
           <div className="flex flex-col items-center gap-3 pt-6">
-            <TypographyMuted aria-live="polite" aria-atomic="true" className="text-xs">
+            <TypographyMuted
+              aria-live="polite"
+              aria-atomic="true"
+              className="text-xs"
+            >
               Showing {(currentPage - 1) * per + 1}–
               {Math.min(currentPage * per, filtered.length)} of{" "}
               {filtered.length} post{filtered.length !== 1 ? "s" : ""}
@@ -348,7 +372,9 @@ export function BlogsClient({
                             href="#"
                             isActive={p === currentPage}
                             aria-label={`Go to page ${p}`}
-                            aria-current={p === currentPage ? "page" : undefined}
+                            aria-current={
+                              p === currentPage ? "page" : undefined
+                            }
                             onClick={(e) => {
                               e.preventDefault();
                               setParams({ page: p as number });

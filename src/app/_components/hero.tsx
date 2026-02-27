@@ -1,6 +1,6 @@
 import { Image } from "@/components/ui/image";
 import Link from "next/link";
-import { FileText, Mail } from "lucide-react";
+import { IconFileText, IconMail } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/typography";
 import { DecorIcon } from "@/components/ui/border";
 import { LocationTag } from "@/components/ui/location";
-import { Circle } from "lucide-react";
+import { IconCircleFilled } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 
 export function Hero() {
@@ -52,7 +52,7 @@ export function Hero() {
                 className="inline-flex items-center gap-1.5 px-3 py-1 text-xs"
                 aria-label="Currently available for hire"
               >
-                <Circle
+                <IconCircleFilled
                   className="size-2 fill-green-500 text-green-500 animate-pulse"
                   aria-hidden="true"
                 />
@@ -86,7 +86,10 @@ export function Hero() {
             <ButtonGroup>
               <Button asChild size="lg" className="font-semibold">
                 <Link href="/resume" prefetch={false} aria-label="View resume">
-                  <FileText className="size-5 shrink-0" aria-hidden="true" />
+                  <IconFileText
+                    className="size-5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>Resume</span>
                 </Link>
               </Button>
@@ -100,7 +103,7 @@ export function Hero() {
                 className="font-semibold"
               >
                 <a href="#contact" aria-label="Jump to contact section">
-                  <Mail className="size-5 shrink-0" aria-hidden="true" />
+                  <IconMail className="size-5 shrink-0" aria-hidden="true" />
                   <span>Contact</span>
                 </a>
               </Button>
