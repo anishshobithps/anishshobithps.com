@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Empty,
-  EmptyContent,
-  EmptyHeader,
-} from "@/components/ui/empty";
+import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
 import { HomeIcon } from "lucide-react";
-import { TypographyP, TypographyMuted, TypographyMark } from "@/components/ui/typography";
+import {
+  TypographyP,
+  TypographyMuted,
+  TypographyMark,
+} from "@/components/ui/typography";
 import Link from "next/link";
 import { useRef } from "react";
 import { BouncingLogos } from "@/components/shared/bouncing-logo";
@@ -27,7 +27,11 @@ export default function NotFound() {
         <BouncingLogos containerRef={containerRef} opacity="opacity-[0.12]" />
       </div>
 
-      <Empty className="z-10 flex-none border-0 bg-background/60 backdrop-blur-sm" role="status" aria-live="polite">
+      <Empty
+        className="z-10 flex-none border-0 bg-background/60 backdrop-blur-sm"
+        role="status"
+        aria-live="polite"
+      >
         <EmptyHeader>
           <FlickerText
             chars={["4", "logo", "4"]}
