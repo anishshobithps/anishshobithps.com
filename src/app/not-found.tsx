@@ -21,13 +21,13 @@ export default function NotFound() {
       ref={containerRef}
       role="main"
       aria-label="Page not found"
-      className="relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-14"
     >
       <div aria-hidden="true">
-        <BouncingLogos containerRef={containerRef} />
+        <BouncingLogos containerRef={containerRef} opacity="opacity-[0.12]" />
       </div>
 
-      <Empty className="z-10 backdrop-blur-sm" role="status" aria-live="polite">
+      <Empty className="z-10 flex-none border-0 bg-background/60 backdrop-blur-sm" role="status" aria-live="polite">
         <EmptyHeader>
           <FlickerText
             chars={["4", "logo", "4"]}
