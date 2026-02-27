@@ -4,7 +4,6 @@ import { Logo } from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
-import { Divider } from "@/components/ui/divider";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -41,7 +40,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-background/80 sticky top-0 z-50 w-full backdrop-blur">
+    <header className="bg-background/80 sticky top-0 z-50 w-full backdrop-blur transform-gpu will-change-transform backface-hidden border-b border-border">
       <div
         className="relative mx-auto flex h-14 max-w-5xl items-center justify-between px-6 sm:px-8 lg:px-10
         before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border
@@ -138,7 +137,6 @@ export function Header() {
           </div>
         </div>
       </div>
-      <Divider plain />
     </header>
   );
 }
