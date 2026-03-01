@@ -28,7 +28,7 @@ export default function NotFound() {
       </div>
 
       <Empty
-        className="relative z-10 flex-none border-0 bg-background/60 backdrop-blur-sm"
+        className="relative z-10 flex-none border-0"
         role="status"
         aria-live="polite"
       >
