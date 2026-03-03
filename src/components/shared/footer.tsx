@@ -12,6 +12,7 @@ import {
   IconBrandLinkedinFilled,
   IconBrandTwitterFilled,
 } from "@tabler/icons-react";
+import { currentYear } from "@/lib/date";
 
 const platformIcons: Record<
   (typeof siteConfig.social)[number]["platform"],
@@ -103,10 +104,10 @@ export function Footer() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <TypographyMuted
             className="font-mono"
-            aria-label={`© 2022 to ${new Date().getFullYear()} ${siteConfig.name}. All rights reserved.`}
+            aria-label={`© 2022 to ${currentYear()} ${siteConfig.name}. All rights reserved.`}
           >
-            &copy; 2022 - {new Date().getFullYear()} {siteConfig.name}. All
-            rights reserved.
+            &copy; 2022 - {currentYear()} {siteConfig.name}. All rights
+            reserved.
           </TypographyMuted>
           <ThemeToggle
             aria-label="Toggle theme"

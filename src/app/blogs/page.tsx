@@ -11,6 +11,7 @@ import { buildMeta } from "@/lib/og";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { toISOString, toTimestamp } from "@/lib/date";
 
 export const metadata: Metadata = buildMeta({
   title: "Blogs",
@@ -24,19 +25,14 @@ export const metadata: Metadata = buildMeta({
 
 export default function BlogPage() {
   const pages = source.getPages().sort((a, b) => {
-    const aDate = a.data.date ? new Date(a.data.date).getTime() : 0;
-    const bDate = b.data.date ? new Date(b.data.date).getTime() : 0;
-    return bDate - aDate;
+    return toTimestamp(b.data.date) - toTimestamp(a.data.date);
   });
 
   const posts: BlogPost[] = pages.map((page) => ({
     url: page.url,
     title: page.data.title,
     description: page.data.description,
-    date:
-      page.data.date instanceof Date
-        ? page.data.date.toISOString()
-        : page.data.date,
+    date: page.data.date ? toISOString(page.data.date) : undefined,
     tags: page.data.tags,
   }));
 
