@@ -6,11 +6,13 @@ import { MouseGlow } from "@/components/shared/mouse-glow";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
+import { ClerkProvider } from "@clerk/nextjs";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 import "./global.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -50,39 +52,41 @@ export const viewport: Viewport = {
 
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
-      suppressHydrationWarning
-    >
-      <head></head>
-      <body className="relative flex flex-col min-h-screen">
-        {process.env.NODE_ENV === "production" && (
-          <Script
-            src="/stats/script.js"
-            data-website-id="bd850c68-5e13-4ae7-bfb6-58d4a8134f4e"
-            data-host-url="/stats"
-            strategy="afterInteractive"
-          />
-        )}
-        <JsonLd type="person" />
-        <JsonLd type="website" />
-        <RootProvider>
-          <NuqsAdapter>
-            <PageLayout>
-              <Header />
-              <Content className="scroll-smooth pt-14">
-                <TooltipProvider>
-                  {children}
-                  <Toaster />
-                </TooltipProvider>
-              </Content>
-              <Footer />
-            </PageLayout>
-          </NuqsAdapter>
-        </RootProvider>
-        <MouseGlow />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="en"
+        className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
+        suppressHydrationWarning
+      >
+        <head></head>
+        <body className="relative flex flex-col min-h-screen">
+          {process.env.NODE_ENV === "production" && (
+            <Script
+              src="/stats/script.js"
+              data-website-id="bd850c68-5e13-4ae7-bfb6-58d4a8134f4e"
+              data-host-url="/stats"
+              strategy="afterInteractive"
+            />
+          )}
+          <JsonLd type="person" />
+          <JsonLd type="website" />
+          <RootProvider>
+            <NuqsAdapter>
+              <PageLayout>
+                <Header />
+                <Content className="scroll-smooth pt-14">
+                  <TooltipProvider>
+                    {children}
+                    <Toaster />
+                  </TooltipProvider>
+                </Content>
+                <Footer />
+              </PageLayout>
+            </NuqsAdapter>
+          </RootProvider>
+          <MouseGlow />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
