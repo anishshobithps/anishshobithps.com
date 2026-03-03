@@ -18,6 +18,12 @@ import { IconCalendar, IconClock, IconGitCommit } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  formatLongDate,
+  formatShortDate,
+  toISOString,
+  toTimestamp,
+} from "@/lib/date";
 
 export default async function Page(props: { params: { slug: string[] } }) {
   const params = await props.params;
@@ -28,10 +34,9 @@ export default async function Page(props: { params: { slug: string[] } }) {
   const readingTime = (page.data as any)._exports?.readingTime;
 
   const allPages = source.getPages().sort((a, b) => {
-    const aDate = a.data.date ? new Date(a.data.date).getTime() : 0;
-    const bDate = b.data.date ? new Date(b.data.date).getTime() : 0;
-    return bDate - aDate;
+    return toTimestamp(b.data.date) - toTimestamp(a.data.date);
   });
+
   const currentIndex = allPages.findIndex((p) => p.url === page.url);
   const prevPost =
     currentIndex < allPages.length - 1
@@ -56,12 +61,10 @@ export default async function Page(props: { params: { slug: string[] } }) {
         title={page.data.title}
         description={page.data.description ?? ""}
         canonicalUrl={postUrl}
-        publishedAt={
-          page.data.date ? new Date(page.data.date).toISOString() : undefined
-        }
+        publishedAt={page.data.date ? toISOString(page.data.date) : undefined}
         updatedAt={
           page.data.lastModified
-            ? new Date(page.data.lastModified).toISOString()
+            ? toISOString(page.data.lastModified)
             : undefined
         }
         tags={page.data.tags}
@@ -104,31 +107,23 @@ export default async function Page(props: { params: { slug: string[] } }) {
           {page.data.date && (
             <TypographyMuted
               className="font-mono text-xs flex items-center gap-1.5"
-              aria-label={`Published on ${new Date(page.data.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`}
+              aria-label={`Published on ${formatLongDate(page.data.date)}`}
             >
               <IconCalendar className="size-3.5 shrink-0" aria-hidden="true" />
-              <time dateTime={new Date(page.data.date).toISOString()}>
-                {new Date(page.data.date).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+              <time dateTime={toISOString(page.data.date)}>
+                {formatLongDate(page.data.date)}
               </time>
             </TypographyMuted>
           )}
           {page.data.lastModified && (
             <TypographyMuted
               className="font-mono text-xs flex items-center gap-1.5"
-              aria-label={`Last updated ${new Date(page.data.lastModified).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
+              aria-label={`Last updated ${formatShortDate(page.data.lastModified)}`}
             >
               <IconGitCommit className="size-3.5 shrink-0" aria-hidden="true" />
               Updated{" "}
-              <time dateTime={new Date(page.data.lastModified).toISOString()}>
-                {new Date(page.data.lastModified).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+              <time dateTime={toISOString(page.data.lastModified)}>
+                {formatShortDate(page.data.lastModified)}
               </time>
             </TypographyMuted>
           )}
@@ -216,11 +211,9 @@ export async function generateMetadata(props: {
     canonicalPath: page.url,
     type: "article",
     tags: (page.data.tags as string[] | undefined) ?? [],
-    publishedAt: page.data.date
-      ? new Date(page.data.date).toISOString()
-      : undefined,
+    publishedAt: page.data.date ? toISOString(page.data.date) : undefined,
     updatedAt: page.data.lastModified
-      ? new Date(page.data.lastModified).toISOString()
+      ? toISOString(page.data.lastModified)
       : undefined,
   });
 }

@@ -24,6 +24,7 @@ import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 
+
 export const metadata: Metadata = buildMeta({
   title: "Resume",
   pageTitle: "Professional Resume",

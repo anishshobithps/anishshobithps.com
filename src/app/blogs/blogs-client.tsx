@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
+import { formatShortDate } from "@/lib/date";
 import { IconSearch, IconTag, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import {
@@ -267,14 +268,7 @@ export function BlogsClient({
         ) : (
           <ul role="list" aria-label="Blog posts" aria-live="polite">
             {paginated.map((post, index) => {
-              const date = post.date
-                ? new Date(post.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : null;
-
+              const date = post.date ? formatShortDate(post.date) : undefined;
               return (
                 <li key={post.url}>
                   {index > 0 && <Divider plain />}
