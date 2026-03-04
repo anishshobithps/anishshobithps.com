@@ -5,7 +5,7 @@
   </picture>
 </p>
 
-Source code for [anishshobithps.com](https://anishshobithps.com) — a personal portfolio and blog. Built with Next.js 16, Fumadocs, Drizzle ORM, and a slightly over-engineered PDF viewer.
+Source code for [anishshobithps.com](https://anishshobithps.com) — a personal portfolio and blog. Built with Next.js 16, Fumadocs, Drizzle ORM, Clerk, and a slightly over-engineered PDF viewer.
 
 ---
 
@@ -19,6 +19,7 @@ Source code for [anishshobithps.com](https://anishshobithps.com) — a personal 
 | Icons       | Lucide React, Tabler Icons                     |
 | Blog / MDX  | Fumadocs Core + UI 16, fumadocs-mdx            |
 | Database    | Drizzle ORM + Neon (PostgreSQL, serverless)    |
+| Auth        | Clerk                                          |
 | Resume      | react-pdf, GitHub Releases                     |
 | Analytics   | Umami Analytics (production only)              |
 | Now Playing | Spotify Web API                                |
@@ -31,6 +32,27 @@ Source code for [anishshobithps.com](https://anishshobithps.com) — a personal 
 
 - **Bun** (recommended) or **Node.js** 22 or later
 - A **[Neon](https://neon.tech)** PostgreSQL database (or any PostgreSQL connection string)
+- A **[Clerk](https://clerk.com)** application (for guestbook auth)
+
+---
+
+## Auth Setup (Clerk)
+
+The guestbook requires a [Clerk](https://clerk.com) account.
+
+1. Create a new application at [dashboard.clerk.com](https://dashboard.clerk.com).
+2. Enable the sign-in providers you want (Google, GitHub, etc.) in the **User & Authentication** settings.
+3. Copy your **Publishable Key** and **Secret Key** from the Clerk dashboard → **API Keys** tab.
+4. Get your **user ID** (for the site owner / admin role):
+   - Sign in to your app once with the account you want to be the owner.
+   - Find your user in Clerk dashboard → **Users** and copy the `user_xxx` ID.
+5. Set up a **webhook** so guestbook data is cleaned up when a user deletes their account:
+   - In the Clerk dashboard → **Webhooks**, create a new endpoint pointing to `https://yourdomain.com/api/webhooks/clerk`.
+   - Subscribe to the `user.deleted` event.
+   - Copy the **Signing Secret** (`whsec_...`) and add it as `CLERK_WEBHOOK_SECRET` in `.env.local`.
+6. Add all keys to `.env.local` (see [Environment Variables](#environment-variables) below).
+
+The owner user ID (`OWNER_CLERK_USER_ID`) grants admin capabilities on the guestbook: pinning entries and deleting any message.
 
 ---
 
@@ -51,6 +73,19 @@ IP_HASH_SALT=some-random-secret
 SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
 SPOTIFY_REFRESH_TOKEN=
+
+# Required for the guestbook (Clerk auth).
+# Get these from: https://dashboard.clerk.com → your app → API Keys
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Your own Clerk user ID — grants admin powers on the guestbook (pin, delete any entry).
+# Sign in once, then copy your user_xxx ID from the Clerk dashboard → Users.
+OWNER_CLERK_USER_ID=user_...
+
+# Required for the Clerk webhook (cleans up guestbook data when a user is deleted).
+# Get this from: Clerk dashboard → Webhooks → your endpoint → Signing Secret
+CLERK_WEBHOOK_SECRET=whsec_...
 
 # Optional — base URL override. Auto-detected from Vercel env otherwise.
 NEXT_PUBLIC_BASE_URL=https://anishshobithps.com
@@ -89,45 +124,10 @@ bun run lint        # Run ESLint
 
 ---
 
-## Project Structure
-
-```
-src/
-  app/                    # Next.js App Router
-    _components/          # Home page sections (hero, projects, ecosystem, rules, contact)
-    blog/[[...slug]]/     # Dynamic blog post page
-    blogs/                # Blog listing page
-    branding/             # Branding / logo assets page
-    resume/               # PDF resume viewer
-    og/                   # OG image generation route
-    api/
-      resume/             # Resume download proxy
-      search/             # Fumadocs search route handler
-  components/
-    layouts/              # Page, Blog, BlogNav layout shells
-    shared/               # Header, Footer, JSON-LD, OG, theme toggle
-    ui/                   # Design system components (Badge, Button, Typography, etc.)
-  lib/
-    config.ts             # Site-wide configuration (name, links, nav)
-    db.ts                 # Drizzle + Neon client
-    schema.ts             # Database schema (blog_reads, blog_reactions)
-    ip.ts                 # SHA-256 IP hashing
-    og.ts                 # Metadata / OG helpers
-    source.ts             # Fumadocs content source adapter
-    resume.ts             # Resume fetch + cache
-    spotify.ts            # Spotify Web API client (now-playing)
-content/
-  blog/                   # MDX blog posts
-drizzle/                  # Migration files
-public/                   # Static assets (favicon, cursors, profile image)
-source.config.ts          # Fumadocs MDX config + frontmatter schema
-```
-
----
-
 ## Key Features
 
 - **Blog** with read counts and mood reactions (stored as hashed IPs — no raw PII)
+- **Guestbook** with Clerk auth — visitors can sign in, leave messages, and like entries; site owner can pin and moderate
 - **Spotify now-playing** widget in the footer — shows current or last played track via the Spotify Web API (server-side, 60s cache, no visitor data sent)
 - **PDF resume viewer** via react-pdf, proxied from GitHub Releases
 - **OG image generation** per page and per blog post
@@ -140,14 +140,32 @@ source.config.ts          # Fumadocs MDX config + frontmatter schema
 
 ## Database
 
-Schema is managed with Drizzle ORM. Two tables:
+Schema is managed with Drizzle ORM. Tables:
 
 - `blog_reads` — unique read per (slug, ip_hash)
 - `blog_reactions` — mood vote per (slug, ip_hash): one of `not-for-me | meh | liked-it | loved-it`
-
-Run `bun run drizzle-kit push` to apply schema changes. Migration files live in `drizzle/`.
+- `guestbook_entries` — signed-in user messages (Clerk user ID, name, avatar)
+- `guestbook_likes` — per-entry likes keyed by Clerk user ID
 
 ---
+
+## Guestbook
+
+The `/guestbook` page lets visitors leave a message after signing in with Clerk.
+
+**Features:**
+
+- Sign in via Clerk modal — redirects back to `/guestbook` after sign-in or sign-up
+- Submit, delete your own messages
+- Like any entry
+- Site owner (matched by `OWNER_CLERK_USER_ID`) can pin entries and delete any message
+
+**Setup checklist:**
+
+1. Complete [Auth Setup](#auth-setup-clerk) above
+2. Ensure `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `OWNER_CLERK_USER_ID` are all set in `.env.local`
+
+Run `bun run drizzle-kit push` to apply schema changes. Migration files live in `drizzle/`.
 
 ## Deploy
 
