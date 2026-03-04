@@ -22,6 +22,13 @@
       "when": 1771602266154,
       "tag": "0002_kind_warbound",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772558054653,
+      "tag": "0003_youthful_mockingbird",
+      "breakpoints": true
     }
   ]
 }
