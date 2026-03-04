@@ -23,7 +23,7 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-const LAST_UPDATED = "February 23, 2026";
+const LAST_UPDATED = "March 4, 2026";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -58,8 +58,11 @@ export default function PrivacyPolicyPage() {
           <TypographyP>
             This is a personal portfolio and blog at{" "}
             <TypographyMark>{siteConfig.domain}</TypographyMark>. There&apos;s
-            no login, no account system, no newsletter. Just words, projects,
-            and a probably-over-engineered PDF viewer.
+            no newsletter. The site has a{" "}
+            <TypographyMark>guestbook</TypographyMark> that requires signing in
+            via <TypographyMark>Clerk</TypographyMark> (GitHub, Google, or
+            email) to leave a message or like an entry. Everything else — blog
+            posts, projects, resume — is fully public and requires no account.
           </TypographyP>
         </div>
       </Section>
@@ -96,15 +99,35 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
+            <TypographyH2>Guestbook entries &amp; likes</TypographyH2>
+            <TypographyP>
+              If you sign in and leave a guestbook message, the following is
+              stored in our database:{" "}
+              <TypographyMark>
+                your Clerk user ID, your message text, and a timestamp
+              </TypographyMark>
+              . If you like an entry, your Clerk user ID and the entry ID are
+              stored. Your{" "}
+              <TypographyMark>
+                name, username, and profile picture
+              </TypographyMark>{" "}
+              are fetched live from Clerk when rendering the guestbook — they
+              are not stored in our database. Both actions are{" "}
+              <TypographyMark>fully voluntary</TypographyMark> — if you
+              don&apos;t sign in, nothing is stored.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
             <TypographyH3>What is NOT collected</TypographyH3>
             <TypographyP>
-              <TypographyMark>No cookies.</TypographyMark> No session tokens. No
-              browser fingerprinting. No email addresses, names, or any{" "}
-              <TypographyMark>
-                personally identifiable information
-              </TypographyMark>
-              . No tracking pixels.{" "}
-              <TypographyMark>No third-party ad networks.</TypographyMark>
+              No browser fingerprinting. No tracking pixels.{" "}
+              <TypographyMark>No third-party ad networks.</TypographyMark> No
+              email addresses or passwords are stored in this site&apos;s own
+              database — authentication is fully delegated to{" "}
+              <TypographyMark>Clerk</TypographyMark> (see Third-party services
+              below). If you never sign in to the guestbook, no personally
+              identifiable information about you is stored anywhere by this
+              site.
             </TypographyP>
           </div>
         </div>
@@ -115,7 +138,7 @@ export default function PrivacyPolicyPage() {
           <SectionLabel>Where data is stored</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
         </div>
-        <div className="max-w-2xl">
+        <div className="max-w-2xl space-y-4">
           <TypographyP>
             Read counts and reactions are stored in a PostgreSQL database hosted
             on{" "}
@@ -127,8 +150,26 @@ export default function PrivacyPolicyPage() {
             >
               Neon
             </a>
-            . Data is retained indefinitely but contains no personal information
-            — only post slugs, IP hashes, moods, and timestamps.
+            . These records contain no personal information — only post slugs,
+            IP hashes, moods, and timestamps.
+          </TypographyP>
+          <TypographyP>
+            Guestbook entries and likes are stored in the same Neon PostgreSQL
+            database. These records contain your{" "}
+            <TypographyMark>Clerk user ID</TypographyMark>, message text, and
+            timestamps. Your Clerk user ID is an opaque identifier assigned by
+            Clerk — it is not your email, name, or any human-readable detail.
+            Your profile information (name, username, avatar) is stored and
+            managed by{" "}
+            <a
+              href="https://clerk.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              Clerk
+            </a>
+            , not in our database.
           </TypographyP>
         </div>
       </Section>
@@ -196,6 +237,40 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
+            <TypographyH2>Clerk (Authentication)</TypographyH2>
+            <TypographyP>
+              Sign-in for the guestbook is handled by{" "}
+              <a
+                href="https://clerk.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                Clerk
+              </a>
+              . When you sign in, Clerk collects and stores your{" "}
+              <TypographyMark>
+                name, email address, username, and profile picture
+              </TypographyMark>{" "}
+              depending on the OAuth provider you use (GitHub, Google, etc.).
+              This data is stored on Clerk&apos;s infrastructure and is subject
+              to{" "}
+              <a
+                href="https://clerk.com/legal/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-foreground transition-colors"
+              >
+                Clerk&apos;s Privacy Policy
+              </a>
+              . This site only stores the opaque Clerk user ID in its own
+              database. Clerk uses{" "}
+              <TypographyMark>session cookies</TypographyMark> to maintain your
+              signed-in state — these are set only when you sign in to the
+              guestbook.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
             <TypographyH2>Google Fonts &amp; GitHub</TypographyH2>
             <TypographyP>
               This site uses Google Fonts (loaded via CSS, subject to{" "}
@@ -219,19 +294,28 @@ export default function PrivacyPolicyPage() {
           <SectionLabel>Your rights</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
         </div>
-        <div className="max-w-2xl">
+        <div className="max-w-2xl space-y-4">
           <TypographyP>
-            Since the only data stored is an{" "}
-            <TypographyMark>irreversible IP hash</TypographyMark>, there is no
-            practical way to identify or retrieve records belonging to you. If
-            you have concerns or questions, send me an email at{" "}
+            If you have never signed in to the guestbook, the only data stored
+            is an <TypographyMark>irreversible IP hash</TypographyMark> — there
+            is no practical way to identify or retrieve those records.
+          </TypographyP>
+          <TypographyP>
+            If you have signed in and left a guestbook message or liked an
+            entry, you can request deletion of your guestbook data by emailing{" "}
             <a
               href={`mailto:${siteConfig.email}`}
               className="underline underline-offset-4 hover:text-foreground transition-colors"
             >
               {siteConfig.email}
             </a>
-            .
+            . To delete your Clerk account and the profile data Clerk holds
+            (name, email, avatar), you can do so directly through the{" "}
+            <TypographyMark>guestbook sign-in page</TypographyMark> or by
+            contacting me at the email above. Depending on your jurisdiction,
+            you may have rights to access, correct, or erase your personal data
+            under laws such as <TypographyMark>GDPR (EU)</TypographyMark> or{" "}
+            <TypographyMark>CCPA (California)</TypographyMark>.
           </TypographyP>
         </div>
       </Section>
