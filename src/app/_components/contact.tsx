@@ -1,38 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { IconMail, IconCalendar, IconArrowUpRight } from "@tabler/icons-react";
 import { Section } from "@/components/layouts/page";
-import {
-  TypographyH2,
-  TypographyLead,
-  TypographyMuted,
-  TypographyMark,
-  SectionLabel,
-} from "@/components/ui/typography";
+import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
-import { siteConfig } from "@/lib/config";
 import {
-  IconBrandGithubFilled,
-  IconBrandLinkedinFilled,
-  IconBrandTwitterFilled,
-} from "@tabler/icons-react";
+  SectionLabel,
+  TypographyH2,
+  TypographyLead,
+  TypographyMark,
+  TypographyMuted,
+} from "@/components/ui/typography";
+import { siteConfig } from "@/lib/config";
+import { IconArrowUpRight, IconMail } from "@tabler/icons-react";
+import Link from "next/link";
 import { Fragment } from "react";
-
-const platformIcons: Record<string, { icon: React.ReactNode }> = {
-  github: {
-    icon: <IconBrandGithubFilled className="size-4" aria-hidden="true" />,
-  },
-  linkedin: {
-    icon: <IconBrandLinkedinFilled className="size-4" aria-hidden="true" />,
-  },
-  x: { icon: <IconBrandTwitterFilled className="size-4" aria-hidden="true" /> },
-};
 
 export function Contact() {
   return (
@@ -88,40 +74,34 @@ export function Contact() {
                     <span className="hidden sm:inline">Say Hello</span>
                   </Link>
                 </Button>
-                {siteConfig.social.map((item, index) => {
-                  const { icon } = platformIcons[item.platform] ?? {
-                    icon: null,
-                  };
-                  return (
-                    <Fragment key={item.platform}>
-                      {index > 0 && (
-                        <ButtonGroupSeparator key={`sep-${item.platform}`} />
-                      )}
-                      <Button
-                        key={item.platform}
-                        asChild
-                        size="lg"
-                        variant="outline"
-                        className="font-semibold"
+                {siteConfig.social.map((item, index) => (
+                  <Fragment key={item.platform}>
+                    {index > 0 && (
+                      <ButtonGroupSeparator key={`sep-${item.platform}`} />
+                    )}
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="outline"
+                      className="font-semibold"
+                    >
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${item.label} profile (opens in new tab)`}
                       >
-                        <a
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${item.label} profile (opens in new tab)`}
-                        >
-                          {icon}
-                          <span className="hidden sm:inline">{item.label}</span>
-                          <IconArrowUpRight
-                            className="size-3.5 opacity-50 hidden sm:block"
-                            stroke={1.5}
-                            aria-hidden="true"
-                          />
-                        </a>
-                      </Button>
-                    </Fragment>
-                  );
-                })}
+                        {getPlatformIcon(item.platform)}
+                        <span className="hidden sm:inline">{item.label}</span>
+                        <IconArrowUpRight
+                          className="size-3.5 opacity-50 hidden sm:block"
+                          stroke={1.5}
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </Button>
+                  </Fragment>
+                ))}
               </ButtonGroup>
             </nav>
           </div>
