@@ -1,3 +1,4 @@
+// src/components/shared/footer.tsx
 import { Logo } from "@/components/shared/logo";
 import { NowPlaying } from "@/components/shared/now-playing";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -5,23 +6,10 @@ import { DecorIcon, FullWidthDivider } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import Link from "next/link";
-import { Suspense, type ReactNode } from "react";
-import {
-  IconBrandGithubFilled,
-  IconBrandLinkedinFilled,
-  IconBrandTwitterFilled,
-} from "@tabler/icons-react";
+import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { currentYear } from "@/lib/date";
-
-const platformIcons: Record<
-  (typeof siteConfig.social)[number]["platform"],
-  ReactNode
-> = {
-  github: <IconBrandGithubFilled aria-hidden="true" />,
-  linkedin: <IconBrandLinkedinFilled aria-hidden="true" />,
-  x: <IconBrandTwitterFilled aria-hidden="true" />,
-};
+import Link from "next/link";
+import { Suspense } from "react";
 
 const footerNav = [
   ...siteConfig.nav,
@@ -61,16 +49,20 @@ export function Footer() {
                     rel="noopener noreferrer"
                     aria-label={`${item.label} (opens in new tab)`}
                   >
-                    {platformIcons[item.platform]}
+                    {getPlatformIcon(item.platform)}
                   </a>
                 </Button>
               ))}
             </nav>
+
             <Suspense
               fallback={
-                <div className="flex items-center gap-1.5">
+                <div
+                  className="flex items-center gap-1.5 h-5"
+                  aria-hidden="true"
+                >
                   <div className="size-3.5 rounded-full bg-muted animate-pulse shrink-0" />
-                  <div className="h-2.5 w-32 rounded bg-muted animate-pulse" />
+                  <div className="h-2.5 w-36 rounded bg-muted animate-pulse" />
                 </div>
               }
             >
@@ -103,7 +95,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <TypographyMuted
-            className="font-mono"
+            className="font-mono tabular-nums"
             aria-label={`© 2022 to ${currentYear()} ${siteConfig.name}. All rights reserved.`}
           >
             &copy; 2022 - {currentYear()} {siteConfig.name}. All rights

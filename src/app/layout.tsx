@@ -58,7 +58,6 @@ export default function Layout({ children }: LayoutProps<"/">) {
         className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
         suppressHydrationWarning
       >
-        <head></head>
         <body className="relative flex flex-col min-h-screen">
           {process.env.NODE_ENV === "production" && (
             <Script

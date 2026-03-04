@@ -1,7 +1,5 @@
 import { getNowPlaying } from "@/lib/spotify";
 import { TypographyMuted } from "@/components/ui/typography";
-import { IconBrandSpotify } from "@tabler/icons-react";
-import { Button } from "../ui/button";
 
 export async function NowPlaying() {
   const data = await getNowPlaying();
