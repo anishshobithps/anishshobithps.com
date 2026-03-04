@@ -1,8 +1,7 @@
 "use client";
 
-import { Section } from "@/components/layouts/page";
+import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
 import { Badge } from "@/components/ui/badge";
-import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
@@ -15,8 +14,7 @@ import {
   TypographyMark,
   TypographyMuted,
 } from "@/components/ui/typography";
-import { IconBrandGithubFilled } from "@tabler/icons-react";
-import { IconArrowUpRight } from "@tabler/icons-react";
+import { IconBrandGithubFilled, IconArrowUpRight } from "@tabler/icons-react";
 import Link from "next/link";
 import { projects } from "@/lib/config";
 
@@ -39,32 +37,17 @@ export function BuiltThings() {
         </TypographyLead>
       </div>
 
-      <ul
-        role="list"
-        className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
-      >
+      <CardGrid cols="grid-cols-1 md:grid-cols-2">
         {projects.map((project) => (
-          <li
+          <CardGridItem
             key={project.title}
-            className="group relative p-0 border-0 lg:p-6 lg:border transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
+            className="group transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
           >
-            <div className="hidden lg:block" aria-hidden="true">
-              <DecorIcon position="top-left" />
-              <DecorIcon position="top-right" />
-              <DecorIcon position="bottom-left" />
-              <DecorIcon position="bottom-right" />
-            </div>
-
-            <article
-              className="relative z-10 space-y-4"
-              aria-label={project.title}
-            >
+            <article className="space-y-4" aria-label={project.title}>
               <TypographyH3 className="text-xl">{project.title}</TypographyH3>
-
               <TypographyMuted className="leading-relaxed">
                 {project.description}
               </TypographyMuted>
-
               <ul
                 role="list"
                 aria-label="Technologies used"
@@ -78,7 +61,6 @@ export function BuiltThings() {
                   </li>
                 ))}
               </ul>
-
               <nav aria-label={`Links for ${project.title}`} className="pt-4">
                 <ButtonGroup>
                   {project.live && (
@@ -100,7 +82,6 @@ export function BuiltThings() {
                       <ButtonGroupSeparator />
                     </>
                   )}
-
                   <Button asChild size="sm" variant="secondary">
                     <Link
                       href={project.github}
@@ -122,9 +103,9 @@ export function BuiltThings() {
                 </ButtonGroup>
               </nav>
             </article>
-          </li>
+          </CardGridItem>
         ))}
-      </ul>
+      </CardGrid>
 
       <div className="mt-16 flex flex-col items-center gap-6 text-center">
         <TypographyLead className="max-w-2xl">
@@ -134,7 +115,6 @@ export function BuiltThings() {
           </TypographyMark>{" "}
           living on my GitHub.
         </TypographyLead>
-
         <Button asChild size="lg" className="rounded-lg font-semibold">
           <Link
             href="https://github.com/anishshobithps"

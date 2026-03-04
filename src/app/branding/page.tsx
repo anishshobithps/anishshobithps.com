@@ -1,6 +1,11 @@
 "use client";
 
-import { Section } from "@/components/layouts/page";
+import {
+  Section,
+  Card,
+  CardGrid,
+  CardGridItem,
+} from "@/components/layouts/page";
 import { LogoDownloadCard } from "@/app/branding/logo-download-card";
 import { BrandingOGPreview } from "./branding-og-preview";
 import {
@@ -19,7 +24,6 @@ import {
   TypographyMark,
   SectionLabel,
 } from "@/components/ui/typography";
-import { DecorIcon } from "@/components/ui/border";
 
 export default function BrandingPage() {
   return (
@@ -29,10 +33,8 @@ export default function BrandingPage() {
           <SectionLabel>Brand System</SectionLabel>
           <div className="flex-1 h-px bg-border/40" />
         </div>
-
         <div className="max-w-3xl space-y-6">
           <TypographyH1>Brand Infrastructure</TypographyH1>
-
           <TypographyLead>
             A unified system of identity components built so I never have to
             explain{" "}
@@ -50,11 +52,7 @@ export default function BrandingPage() {
           <div className="flex-1 h-px bg-border/40" />
         </div>
 
-        <ul
-          role="list"
-          aria-label="Typography variants"
-          className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
-        >
+        <CardGrid cols="grid-cols-1 md:grid-cols-2">
           {[
             {
               title: "Heading One",
@@ -154,19 +152,8 @@ export default function BrandingPage() {
               component: <SectionLabel>Section Label</SectionLabel>,
             },
           ].map((item) => (
-            <li
-              key={item.title}
-              className="p-0 border-0 lg:p-6 lg:border"
-              aria-label={`${item.title} example`}
-            >
-              <div className="hidden lg:block" aria-hidden="true">
-                <DecorIcon position="top-left" />
-                <DecorIcon position="top-right" />
-                <DecorIcon position="bottom-left" />
-                <DecorIcon position="bottom-right" />
-              </div>
-
-              <div className="relative z-10 space-y-3">
+            <CardGridItem key={item.title} aria-label={`${item.title} example`}>
+              <div className="space-y-3">
                 <TypographyMuted
                   className="text-xs uppercase tracking-wider"
                   aria-hidden="true"
@@ -175,9 +162,9 @@ export default function BrandingPage() {
                 </TypographyMuted>
                 {item.component}
               </div>
-            </li>
+            </CardGridItem>
           ))}
-        </ul>
+        </CardGrid>
 
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
@@ -194,11 +181,7 @@ export default function BrandingPage() {
           <div className="flex-1 h-px bg-border/40" />
         </div>
 
-        <ul
-          role="list"
-          aria-label="Logo variants"
-          className="w-full max-w-5xl grid md:grid-cols-3 gap-6 lg:gap-8"
-        >
+        <CardGrid cols="grid-cols-1 md:grid-cols-3">
           {[
             { label: "Icon", props: {}, description: "Pocket-sized identity" },
             {
@@ -212,24 +195,15 @@ export default function BrandingPage() {
               description: "The full send",
             },
           ].map((variant) => (
-            <li key={variant.label} className="p-0 border-0 lg:p-6 lg:border">
-              <div className="hidden lg:block" aria-hidden="true">
-                <DecorIcon position="top-left" />
-                <DecorIcon position="top-right" />
-                <DecorIcon position="bottom-left" />
-                <DecorIcon position="bottom-right" />
-              </div>
-
-              <div className="relative z-10">
-                <LogoDownloadCard
-                  label={variant.label}
-                  description={variant.description}
-                  logoProps={variant.props}
-                />
-              </div>
-            </li>
+            <CardGridItem key={variant.label}>
+              <LogoDownloadCard
+                label={variant.label}
+                description={variant.description}
+                logoProps={variant.props}
+              />
+            </CardGridItem>
           ))}
-        </ul>
+        </CardGrid>
 
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
@@ -246,18 +220,9 @@ export default function BrandingPage() {
           <div className="flex-1 h-px bg-border/40" />
         </div>
 
-        <div className="p-0 border-0 lg:p-6 lg:border max-w-5xl">
-          <div className="hidden lg:block" aria-hidden="true">
-            <DecorIcon position="top-left" />
-            <DecorIcon position="top-right" />
-            <DecorIcon position="bottom-left" />
-            <DecorIcon position="bottom-right" />
-          </div>
-
-          <div className="relative z-10">
-            <BrandingOGPreview />
-          </div>
-        </div>
+        <Card className="max-w-5xl p-0 @lg:p-0 overflow-hidden">
+          <BrandingOGPreview />
+        </Card>
 
         <div className="mt-14 max-w-3xl">
           <TypographyLead>

@@ -10,15 +10,13 @@ import {
   IconBrandFramerMotion,
   IconDatabase,
 } from "@tabler/icons-react";
-
-import { Section } from "@/components/layouts/page";
+import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
 import {
   TypographyH3,
   TypographyLead,
   TypographyMark,
   SectionLabel,
 } from "@/components/ui/typography";
-import { DecorIcon } from "@/components/ui/border";
 
 export function Ecosystem() {
   return (
@@ -40,34 +38,23 @@ export function Ecosystem() {
         </TypographyLead>
       </div>
 
-      <ul
-        role="list"
-        aria-label="Tools and technologies"
-        className="w-full max-w-5xl grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6"
-      >
+      <CardGrid cols="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
         {tools.map((item) => (
-          <li
+          <CardGridItem
             key={item.label}
-            className="group relative p-4 border lg:p-6 flex flex-col items-center justify-center text-center transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
+            className="group flex flex-col items-center justify-center text-center transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
           >
-            <DecorIcon position="top-left" aria-hidden="true" />
-            <DecorIcon position="top-right" aria-hidden="true" />
-            <DecorIcon position="bottom-left" aria-hidden="true" />
-            <DecorIcon position="bottom-right" aria-hidden="true" />
-
-            <div className="relative z-10 flex flex-col items-center gap-3">
-              <item.icon
-                className="size-8 text-muted-foreground transition-colors duration-300 group-hover:text-foreground"
-                stroke={1.5}
-                aria-hidden="true"
-              />
-              <TypographyH3 className="text-sm font-medium">
-                {item.label}
-              </TypographyH3>
-            </div>
-          </li>
+            <item.icon
+              className="size-8 text-muted-foreground transition-colors duration-300 group-hover:text-foreground"
+              stroke={1.5}
+              aria-hidden="true"
+            />
+            <TypographyH3 className="text-sm font-medium mt-3">
+              {item.label}
+            </TypographyH3>
+          </CardGridItem>
         ))}
-      </ul>
+      </CardGrid>
 
       <div className="mt-12 max-w-2xl">
         <TypographyLead className="text-sm">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Section } from "@/components/layouts/page";
+import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
 import {
   TypographyH3,
   TypographyLead,
@@ -8,7 +8,6 @@ import {
   TypographyMark,
   SectionLabel,
 } from "@/components/ui/typography";
-import { DecorIcon } from "@/components/ui/border";
 
 export function RulesIFollow() {
   return (
@@ -19,26 +18,18 @@ export function RulesIFollow() {
         <div className="flex-1 h-px bg-border/40" />
       </div>
 
-      <ul
-        role="list"
-        className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
-      >
+      <CardGrid cols="grid-cols-1 md:grid-cols-2">
         {rules.map((item) => (
-          <li key={item.title} className="p-4 border lg:p-6">
-            <DecorIcon position="top-left" />
-            <DecorIcon position="top-right" />
-            <DecorIcon position="bottom-left" />
-            <DecorIcon position="bottom-right" />
-
-            <div className="relative z-10 space-y-3">
+          <CardGridItem key={item.title}>
+            <div className="space-y-3">
               <TypographyH3 className="text-xl">{item.title}</TypographyH3>
               <TypographyMuted className="leading-relaxed">
                 {item.description}
               </TypographyMuted>
             </div>
-          </li>
+          </CardGridItem>
         ))}
-      </ul>
+      </CardGrid>
 
       <div className="mt-14 max-w-3xl">
         <TypographyLead>

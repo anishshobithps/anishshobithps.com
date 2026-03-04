@@ -2,8 +2,8 @@ import { Section } from "@/components/layouts/page";
 import {
   TypographyH1,
   TypographyLead,
-  TypographyMuted,
   TypographyMark,
+  TypographyMuted,
 } from "@/components/ui/typography";
 import {
   PdfViewer,
@@ -23,7 +23,6 @@ import { buildMeta } from "@/lib/og";
 import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
-
 
 export const metadata: Metadata = buildMeta({
   title: "Resume",
@@ -45,6 +44,7 @@ export default function ResumePage() {
         description={`${siteConfig.name}'s resume — professional experience, projects, and technical expertise.`}
         canonicalUrl={`${siteConfig.baseUrl}/resume`}
       />
+
       <Section variant="hero" aria-label="Resume">
         <TypographyH1>Resume</TypographyH1>
         <TypographyLead>
@@ -53,7 +53,7 @@ export default function ResumePage() {
         </TypographyLead>
       </Section>
 
-      <Section noTopDivider innerPadding="pt-12" aria-label="Resume document">
+      <Section noTopDivider variant="compact" aria-label="Resume document">
         <PdfViewer
           file="/api/resume"
           downloadHref="/api/resume/download"

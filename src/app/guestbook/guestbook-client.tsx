@@ -44,6 +44,7 @@ import {
   toggleLike,
   type GuestbookEntryWithMeta,
 } from "@/app/guestbook/actions";
+import { Card } from "@/components/layouts/page";
 
 interface GuestbookClientProps {
   initialEntries: GuestbookEntryWithMeta[];
@@ -420,141 +421,125 @@ export function GuestbookClient({
 
   return (
     <div className="w-full space-y-6">
-      <div className={cn("relative", "p-0 border-0", "p-4 lg:p-6 lg:border")}>
-        <div className="hidden lg:block" aria-hidden="true">
-          <DecorIcon position="top-left" />
-          <DecorIcon position="top-right" />
-          <DecorIcon position="bottom-left" />
-          <DecorIcon position="bottom-right" />
-        </div>
-
-        <div className="relative z-10">
-          {!isLoaded ? (
-            <div
-              className="h-12 animate-pulse bg-muted rounded"
-              aria-busy="true"
-              aria-label="Loading…"
-            />
-          ) : isSignedIn ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <UserAvatar
-                    imageUrl={user?.imageUrl}
-                    name={user?.fullName || user?.username || "You"}
-                    size="size-7"
-                  />
-                  <TypographySmall className="font-semibold truncate">
-                    {user?.fullName || user?.username}
-                  </TypographySmall>
-                </div>
-
-                <ButtonGroup>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => signOut({ redirectUrl: "/guestbook" })}
-                    aria-label="Sign out"
-                    className="gap-1.5"
-                  >
-                    <IconLogout size={14} aria-hidden="true" />
-                    <span className="hidden sm:inline">Sign out</span>
-                  </Button>
-                </ButtonGroup>
-              </div>
-
-              <div>
-                <label htmlFor="guestbook-message" className="sr-only">
-                  Your message
-                </label>
-                <Textarea
-                  id="guestbook-message"
-                  ref={textareaRef}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  rows={3}
-                  maxLength={MAX}
-                  placeholder="Leave a message for the world…"
-                  aria-describedby="guestbook-counter"
-                  className="resize-none min-h-[80px] max-h-[200px]"
-                  autoComplete="off"
+      <Card>
+        {!isLoaded ? (
+          <div
+            className="h-12 animate-pulse bg-muted rounded"
+            aria-busy="true"
+            aria-label="Loading…"
+          />
+        ) : isSignedIn ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <UserAvatar
+                  imageUrl={user?.imageUrl}
+                  name={user?.fullName || user?.username || "You"}
+                  size="size-7"
                 />
-              </div>
-
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-1.5">
-                  <span
-                    id="guestbook-counter"
-                    aria-live="polite"
-                    aria-label={`${remaining} of ${MAX} characters remaining`}
-                    className={cn(
-                      "text-sm font-medium tabular-nums transition-colors duration-150",
-                      isAtLimit
-                        ? "text-destructive"
-                        : isNearLimit
-                          ? "text-amber-500"
-                          : "text-muted-foreground",
-                    )}
-                  >
-                    {remaining}
-                  </span>
-                  <TypographyMuted className="text-xs">/ {MAX}</TypographyMuted>
-                </div>
-
-                <ButtonGroup>
-                  <Button
-                    size="sm"
-                    onClick={handleSubmit}
-                    disabled={submitting || !message.trim()}
-                    aria-busy={submitting}
-                    className="gap-1.5 font-semibold"
-                  >
-                    <IconSend size={14} aria-hidden="true" />
-                    {submitting ? "Sending…" : "Send"}
-                  </Button>
-                </ButtonGroup>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between min-w-0">
-              {" "}
-              <div className="space-y-1 min-w-0 flex-1">
-                {" "}
-                <TypographySmall className="font-semibold">
-                  Drop something in the guestbook.
+                <TypographySmall className="font-semibold truncate">
+                  {user?.fullName || user?.username}
                 </TypographySmall>
-                <TypographyMuted className="text-sm text-pretty break-words">
-                  {" "}
-                  Say hi, share a thought, or just let me know you were here.
-                  You gotta sign in first 🙂
-                </TypographyMuted>
               </div>
-              <SignInButton
-                mode="modal"
-                forceRedirectUrl="/guestbook"
-                signUpForceRedirectUrl="/guestbook"
-              >
-                <ButtonGroup>
-                  <Button size="sm" className="gap-1.5 font-semibold shrink-0">
-                    <IconBook size={14} aria-hidden="true" />
-                    Sign in
-                  </Button>
-                </ButtonGroup>
-              </SignInButton>
+
+              <ButtonGroup>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => signOut({ redirectUrl: "/guestbook" })}
+                  aria-label="Sign out"
+                  className="gap-1.5"
+                >
+                  <IconLogout size={14} aria-hidden="true" />
+                  <span className="hidden sm:inline">Sign out</span>
+                </Button>
+              </ButtonGroup>
             </div>
-          )}
-        </div>
-      </div>
 
-      <div className={cn("relative", "p-0 border-0", "lg:border")}>
-        <div className="hidden lg:block" aria-hidden="true">
-          <DecorIcon position="top-left" />
-          <DecorIcon position="top-right" />
-          <DecorIcon position="bottom-left" />
-          <DecorIcon position="bottom-right" />
-        </div>
+            <div>
+              <label htmlFor="guestbook-message" className="sr-only">
+                Your message
+              </label>
+              <Textarea
+                id="guestbook-message"
+                ref={textareaRef}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                rows={3}
+                maxLength={MAX}
+                placeholder="Leave a message for the world…"
+                aria-describedby="guestbook-counter"
+                className="resize-none min-h-[80px] max-h-[200px]"
+                autoComplete="off"
+              />
+            </div>
 
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5">
+                <span
+                  id="guestbook-counter"
+                  aria-live="polite"
+                  aria-label={`${remaining} of ${MAX} characters remaining`}
+                  className={cn(
+                    "text-sm font-medium tabular-nums transition-colors duration-150",
+                    isAtLimit
+                      ? "text-destructive"
+                      : isNearLimit
+                        ? "text-amber-500"
+                        : "text-muted-foreground",
+                  )}
+                >
+                  {remaining}
+                </span>
+                <TypographyMuted className="text-xs">/ {MAX}</TypographyMuted>
+              </div>
+
+              <ButtonGroup>
+                <Button
+                  size="sm"
+                  onClick={handleSubmit}
+                  disabled={submitting || !message.trim()}
+                  aria-busy={submitting}
+                  className="gap-1.5 font-semibold"
+                >
+                  <IconSend size={14} aria-hidden="true" />
+                  {submitting ? "Sending…" : "Send"}
+                </Button>
+              </ButtonGroup>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 @sm:flex-row @sm:items-center @sm:justify-between min-w-0">
+            {" "}
+            <div className="space-y-1 min-w-0 flex-1">
+              {" "}
+              <TypographySmall className="font-semibold">
+                Drop something in the guestbook.
+              </TypographySmall>
+              <TypographyMuted className="text-sm text-pretty break-words">
+                {" "}
+                Say hi, share a thought, or just let me know you were here. You
+                gotta sign in first 🙂
+              </TypographyMuted>
+            </div>
+            <SignInButton
+              mode="modal"
+              forceRedirectUrl="/guestbook"
+              signUpForceRedirectUrl="/guestbook"
+            >
+              <ButtonGroup>
+                <Button size="sm" className="gap-1.5 font-semibold shrink-0">
+                  <IconBook size={14} aria-hidden="true" />
+                  Sign in
+                </Button>
+              </ButtonGroup>
+            </SignInButton>
+          </div>
+        )}
+      </Card>
+
+      <Card className="p-0 @lg:p-0 overflow-hidden">
         <div className="relative z-10 flex items-center justify-between gap-3 px-3 py-2.5 sm:px-6 border-b">
           <SectionLabel className="text-[11px]">Messages</SectionLabel>
           {total > 0 && (
@@ -609,7 +594,7 @@ export function GuestbookClient({
             </ScrollArea>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

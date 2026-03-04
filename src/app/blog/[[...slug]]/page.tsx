@@ -168,7 +168,7 @@ export default async function Page(props: { params: { slug: string[] } }) {
         />
       </BlogBody>
 
-      <Section innerPadding="pt-6" className="pb-6" aria-label="Post feedback">
+      <Section variant="compact" aria-label="Post feedback">
         <BlogReactions slug={page.url} />
       </Section>
 
