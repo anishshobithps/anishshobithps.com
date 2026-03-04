@@ -216,7 +216,7 @@ export const TypographyMark = forwardRef<HTMLElement, MarkProps>(
             : undefined
         }
         className={cn(
-          "bg-(--selection-bg) text-(--selection-fg) rounded-sm px-[0.25em] not-italic",
+          "bg-(--selection-bg) text-(--selection-fg) **:text-inherit rounded-sm px-[0.25em] not-italic",
           className,
         )}
         {...props}
