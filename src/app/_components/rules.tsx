@@ -24,13 +24,11 @@ export function RulesIFollow() {
         className="w-full max-w-5xl grid md:grid-cols-2 gap-6 lg:gap-8"
       >
         {rules.map((item) => (
-          <li key={item.title} className="p-0 border-0 lg:p-6 lg:border">
-            <div className="hidden lg:block" aria-hidden="true">
-              <DecorIcon position="top-left" />
-              <DecorIcon position="top-right" />
-              <DecorIcon position="bottom-left" />
-              <DecorIcon position="bottom-right" />
-            </div>
+          <li key={item.title} className="p-4 border lg:p-6">
+            <DecorIcon position="top-left" />
+            <DecorIcon position="top-right" />
+            <DecorIcon position="bottom-left" />
+            <DecorIcon position="bottom-right" />
 
             <div className="relative z-10 space-y-3">
               <TypographyH3 className="text-xl">{item.title}</TypographyH3>

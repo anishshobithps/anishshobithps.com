@@ -284,7 +284,7 @@ export function BlogsClient({
                       {date && (
                         <TypographyMuted
                           aria-hidden="true"
-                          className="shrink-0 font-mono text-xs"
+                          className="shrink-0 font-mono text-xs oldstyle-nums"
                         >
                           {date}
                         </TypographyMuted>
@@ -329,7 +329,7 @@ export function BlogsClient({
             <TypographyMuted
               aria-live="polite"
               aria-atomic="true"
-              className="text-xs"
+              className="text-xs tabular-nums"
             >
               Showing {(currentPage - 1) * per + 1}–
               {Math.min(currentPage * per, filtered.length)} of{" "}

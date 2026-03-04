@@ -48,14 +48,12 @@ export function Ecosystem() {
         {tools.map((item) => (
           <li
             key={item.label}
-            className="group relative p-0 border-0 lg:p-6 lg:border flex flex-col items-center justify-center text-center transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
+            className="group relative p-4 border lg:p-6 flex flex-col items-center justify-center text-center transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
           >
-            <div className="hidden lg:block" aria-hidden="true">
-              <DecorIcon position="top-left" />
-              <DecorIcon position="top-right" />
-              <DecorIcon position="bottom-left" />
-              <DecorIcon position="bottom-right" />
-            </div>
+            <DecorIcon position="top-left" aria-hidden="true" />
+            <DecorIcon position="top-right" aria-hidden="true" />
+            <DecorIcon position="bottom-left" aria-hidden="true" />
+            <DecorIcon position="bottom-right" aria-hidden="true" />
 
             <div className="relative z-10 flex flex-col items-center gap-3">
               <item.icon

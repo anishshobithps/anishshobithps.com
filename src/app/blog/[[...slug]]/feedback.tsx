@@ -176,7 +176,7 @@ export function BlogReactions({ slug, className }: BlogReactionsProps) {
                     variant="secondary"
                     aria-hidden="true"
                     className={cn(
-                      "px-1.5 py-0 text-[11px] font-semibold",
+                      "px-1.5 py-0 text-[11px] font-semibold tabular-nums",
                       badgeClassName,
                     )}
                   >
