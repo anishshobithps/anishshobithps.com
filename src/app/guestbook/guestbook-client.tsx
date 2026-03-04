@@ -523,7 +523,11 @@ export function GuestbookClient({
                   You gotta sign in first 🙂
                 </TypographyMuted>
               </div>
-              <SignInButton mode="modal" forceRedirectUrl="/guestbook">
+              <SignInButton
+                mode="modal"
+                forceRedirectUrl="/guestbook"
+                signUpForceRedirectUrl="/guestbook"
+              >
                 <ButtonGroup>
                   <Button size="sm" className="gap-1.5 font-semibold shrink-0">
                     <IconBook size={14} aria-hidden="true" />
