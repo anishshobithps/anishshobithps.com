@@ -32,6 +32,10 @@ export function currentYear(): number {
     return new Date().getFullYear();
 }
 
+export function nowISO(): string {
+    return new Date().toISOString();
+}
+
 export function timeAgo(date: string): string {
     const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
     const units: [Intl.RelativeTimeFormatUnit, number][] = [
