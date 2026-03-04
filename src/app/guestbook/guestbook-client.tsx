@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Image } from "@/components/ui/image";
+import NextImage from "next/image";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
@@ -78,14 +78,21 @@ function UserAvatar({
 
   if (imageUrl) {
     return (
-      <Image
-        src={imageUrl}
-        alt={name}
-        fill
-        sizes="36px"
-        rounded="full"
-        containerClassName={cn(size, "shrink-0 ring-1 ring-border", className)}
-      />
+      <div
+        className={cn(
+          "relative shrink-0 rounded-full overflow-hidden ring-1 ring-border",
+          size,
+          className,
+        )}
+      >
+        <NextImage
+          src={imageUrl}
+          alt={name}
+          fill
+          sizes="36px"
+          className="object-cover"
+        />
+      </div>
     );
   }
 

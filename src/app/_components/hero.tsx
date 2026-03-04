@@ -1,25 +1,23 @@
-import { Image } from "@/components/ui/image";
-import Link from "next/link";
-import { IconFileText, IconMail } from "@tabler/icons-react";
+import { Section } from "@/components/layouts/page";
+import { Badge } from "@/components/ui/badge";
+import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
-import { Badge } from "@/components/ui/badge";
-import { Section } from "@/components/layouts/page";
-import { siteConfig } from "@/lib/config";
+import { LocationTag } from "@/components/ui/location";
 import {
+  SectionLabel,
   TypographyH1,
   TypographyLead,
-  TypographyMuted,
   TypographyMark,
-  SectionLabel,
+  TypographyMuted,
 } from "@/components/ui/typography";
-import { DecorIcon } from "@/components/ui/border";
-import { LocationTag } from "@/components/ui/location";
-import { IconCircleFilled } from "@tabler/icons-react";
-import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/config";
+import { IconCircleFilled, IconFileText, IconMail } from "@tabler/icons-react";
+import NextImage from "next/image";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -29,15 +27,35 @@ export function Hero() {
         <div className="flex-1 h-px bg-border/40" />
       </div>
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-[1fr_300px] gap-8 lg:gap-12 items-stretch">
-        <div
-          className={cn(
-            "relative flex flex-col justify-between",
-            "bg-background/80 backdrop-blur-md",
-            "p-0 border-0",
-            "lg:p-8 lg:border",
-          )}
-        >
+      <div className="w-full max-w-5xl flex flex-col gap-6">
+        {siteConfig.availableForHire && (
+          <Badge
+            variant="outline"
+            className="inline-flex items-center gap-1.5 px-3 py-1 text-xs self-start"
+            aria-label="Currently available for hire"
+          >
+            <IconCircleFilled
+              className="size-2 fill-green-500 text-green-500 animate-pulse"
+              aria-hidden="true"
+            />
+            Available for hire
+          </Badge>
+        )}
+
+        <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95">
+          <NextImage
+            src="/profile.avif"
+            alt={`Profile photo of ${siteConfig.name}`}
+            width={6000}
+            height={4000}
+            unoptimized
+            priority
+            sizes="(max-width: 1024px) 100vw, 1024px"
+            className="w-full h-auto lg:h-95 lg:object-cover lg:object-center"
+          />
+        </div>
+
+        <div className="relative flex flex-col gap-5 p-0 border-0 lg:p-8 lg:border bg-background/80 backdrop-blur-md">
           <div className="hidden lg:block" aria-hidden="true">
             <DecorIcon position="top-left" />
             <DecorIcon position="top-right" />
@@ -45,44 +63,23 @@ export function Hero() {
             <DecorIcon position="bottom-right" />
           </div>
 
-          <div className="space-y-5 relative z-10">
-            {siteConfig.availableForHire && (
-              <Badge
-                variant="outline"
-                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs"
-                aria-label="Currently available for hire"
-              >
-                <IconCircleFilled
-                  className="size-2 fill-green-500 text-green-500 animate-pulse"
-                  aria-hidden="true"
-                />
-                Available for hire
-              </Badge>
-            )}
-
-            <div className="space-y-4">
-              <TypographyH1>{siteConfig.name}</TypographyH1>
-              <TypographyMuted
-                className="mt-2"
-                aria-label={`Role: ${siteConfig.role}`}
-              >
-                {siteConfig.role}
-              </TypographyMuted>
-              <div className="pt-2">
-                <LocationTag />
-              </div>
-            </div>
-
-            <TypographyLead>
-              I build{" "}
-              <TypographyMark>
-                interfaces, bots, and questionable automation scripts
-              </TypographyMark>{" "}
-              — mostly so I don't have to repeat myself.
-            </TypographyLead>
+          <div className="space-y-4 relative z-10">
+            <TypographyH1>{siteConfig.name}</TypographyH1>
+            <TypographyMuted aria-label={`Role: ${siteConfig.role}`}>
+              {siteConfig.role}
+            </TypographyMuted>
+            <LocationTag />
           </div>
 
-          <nav aria-label="Primary actions" className="mt-8">
+          <TypographyLead className="relative z-10">
+            I build{" "}
+            <TypographyMark>
+              interfaces, bots, and questionable automation scripts
+            </TypographyMark>{" "}
+            — mostly so I don't have to repeat myself.
+          </TypographyLead>
+
+          <nav aria-label="Primary actions" className="relative z-10">
             <ButtonGroup>
               <Button asChild size="lg" className="font-semibold">
                 <Link href="/resume" prefetch={false} aria-label="View resume">
@@ -93,9 +90,7 @@ export function Hero() {
                   <span>Resume</span>
                 </Link>
               </Button>
-
               <ButtonGroupSeparator />
-
               <Button
                 asChild
                 size="lg"
@@ -109,30 +104,6 @@ export function Hero() {
               </Button>
             </ButtonGroup>
           </nav>
-        </div>
-
-        <div className="hidden lg:block relative border" aria-hidden="true">
-          <DecorIcon position="top-left" />
-          <DecorIcon position="top-right" />
-          <DecorIcon position="bottom-left" />
-          <DecorIcon position="bottom-right" />
-
-          <div className="relative w-full h-full">
-            <Image
-              src="/profile.avif"
-              alt={`Profile photo of ${siteConfig.name}`}
-              aspect="auto"
-              preload
-              sizes="300px"
-              fill
-              unoptimized
-              containerClassName="w-full h-full"
-            />
-            <div
-              className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.6))]"
-              aria-hidden="true"
-            />
-          </div>
         </div>
       </div>
     </Section>
