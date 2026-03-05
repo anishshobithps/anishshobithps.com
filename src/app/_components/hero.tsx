@@ -90,7 +90,7 @@ export function Hero() {
                     className="size-5 shrink-0"
                     aria-hidden="true"
                   />
-                  <span className="hidden @sm:inline">Resume</span>
+                  <span>Resume</span>
                 </Link>
               </Button>
               <ButtonGroupSeparator />
@@ -106,7 +106,7 @@ export function Hero() {
                   className="flex items-center justify-center gap-2"
                 >
                   <IconMail className="size-5 shrink-0" aria-hidden="true" />
-                  <span className="hidden @sm:inline">Contact</span>
+                  <span>Contact</span>
                 </a>
               </Button>
             </ButtonGroup>
