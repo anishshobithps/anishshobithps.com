@@ -44,10 +44,6 @@ export function Hero() {
         )}
 
         <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95">
-          <DecorIcon position="top-left" />
-          <DecorIcon position="top-right" />
-          <DecorIcon position="bottom-left" />
-          <DecorIcon position="bottom-right" />
           <NextImage
             src="/profile.avif"
             alt={`Profile photo of ${siteConfig.name}`}
