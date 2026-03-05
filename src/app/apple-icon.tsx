@@ -14,11 +14,11 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#000",
+          background: "#000000",
           borderRadius: 40,
         }}
       >
-        <LogoIcon size={120} color="#fff" />
+        <LogoIcon size={120} color="#ffffff" />
       </div>
     ),
     size,

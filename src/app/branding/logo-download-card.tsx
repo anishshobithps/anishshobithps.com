@@ -23,17 +23,38 @@ interface LogoDownloadCardProps {
   logoProps: Omit<LogoProps, "ref">;
 }
 
+function resolveCurrentColor(el: SVGElement, hex = "#000000") {
+  const all = [el, ...Array.from(el.querySelectorAll("*"))] as SVGElement[];
+  for (const node of all) {
+    const fill = node.getAttribute("fill");
+    if (fill === "currentColor") node.setAttribute("fill", hex);
+    const cls = node.getAttribute("class") ?? "";
+    if (cls.includes("fill-current")) {
+      node.removeAttribute("class");
+      node.setAttribute("fill", hex);
+    }
+    const stroke = node.getAttribute("stroke");
+    if (stroke === "currentColor") node.setAttribute("stroke", hex);
+    if (node.style) {
+      if (node.style.fill === "currentColor") node.style.fill = hex;
+      if (node.style.color === "currentColor") node.style.color = hex;
+    }
+  }
+}
+
 function getSVGString(svg: SVGSVGElement, targetHeight: number): string {
   const clone = svg.cloneNode(true) as SVGSVGElement;
-  clone.setAttribute("color", "#000000");
   const vb = svg.viewBox.baseVal;
   const aspectRatio = vb.width / vb.height;
-  clone.setAttribute("width", String(Math.round(targetHeight * aspectRatio)));
+  const w = Math.round(targetHeight * aspectRatio);
+
+  clone.setAttribute("width", String(w));
   clone.setAttribute("height", String(targetHeight));
-  clone.querySelectorAll(".fill-current").forEach((el) => {
-    (el as SVGElement).removeAttribute("class");
-    (el as SVGElement).setAttribute("fill", "currentColor");
-  });
+  clone.removeAttribute("class");
+  clone.setAttribute("style", "background:none;");
+
+  resolveCurrentColor(clone);
+
   return new XMLSerializer().serializeToString(clone);
 }
 
@@ -54,21 +75,24 @@ function downloadPNG(svg: SVGSVGElement, filename: string, size: number) {
   const w = Math.round(size * aspectRatio);
   const h = size;
   const svgStr = getSVGString(svg, size);
-  const blob = new Blob([svgStr], { type: "image/svg+xml" });
-  const url = URL.createObjectURL(blob);
+
+  const svgBase64 = btoa(unescape(encodeURIComponent(svgStr)));
+  const dataUrl = `data:image/svg+xml;base64,${svgBase64}`;
+
   const img = new Image();
   img.onload = () => {
     const canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
-    canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
-    URL.revokeObjectURL(url);
+    const ctx = canvas.getContext("2d", { alpha: true })!;
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(img, 0, 0, w, h);
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/png");
     a.download = `${filename}.png`;
     a.click();
   };
-  img.src = url;
+  img.src = dataUrl;
 }
 
 export function LogoDownloadCard({

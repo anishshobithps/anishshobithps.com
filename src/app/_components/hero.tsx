@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/typography";
 import { LocationTag } from "@/components/ui/location";
 import { IconCircleFilled } from "@tabler/icons-react";
-import { DecorIcon } from "@/components/ui/border";
 
 export function Hero() {
   return (
