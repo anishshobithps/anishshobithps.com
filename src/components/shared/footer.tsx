@@ -22,9 +22,8 @@ export function Footer() {
     <footer className="relative mt-auto" aria-label="Site footer">
       <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-6 py-12 sm:px-8 lg:px-10 before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border">
         <div aria-hidden="true">
-          <DecorIcon position="top-left" />
-          <DecorIcon position="top-right" />
-          <FullWidthDivider position="top" />
+          <DecorIcon position="top-left" pageBorder />
+          <DecorIcon position="top-right" pageBorder />
         </div>
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[1fr_auto]">

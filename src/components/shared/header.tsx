@@ -46,8 +46,8 @@ export function Header() {
         before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border
         after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border"
       >
-        <DecorIcon position="bottom-left" aria-hidden="true" />
-        <DecorIcon position="bottom-right" aria-hidden="true" />
+        <DecorIcon position="bottom-left" aria-hidden="true" pageBorder />
+        <DecorIcon position="bottom-right" aria-hidden="true" pageBorder />
 
         <Link
           href="/"

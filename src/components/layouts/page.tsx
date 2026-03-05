@@ -74,10 +74,10 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
       )}
       {...props}
     >
-      <DecorIcon position="top-left" />
-      <DecorIcon position="top-right" />
-      <DecorIcon position="bottom-left" />
-      <DecorIcon position="bottom-right" />
+      <DecorIcon position="top-left" pageBorder />
+      <DecorIcon position="top-right" pageBorder />
+      <DecorIcon position="bottom-left" pageBorder />
+      <DecorIcon position="bottom-right" pageBorder />
       {variant === "nav" && <FullWidthDivider position="top" />}
       {variant === "nav" ? (
         <>

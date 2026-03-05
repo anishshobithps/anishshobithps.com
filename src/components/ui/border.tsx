@@ -1,46 +1,56 @@
 import { cn } from "@/lib/cn";
-import { cva, type VariantProps } from "class-variance-authority";
 
-const DecorIconVariants = cva(
-  "pointer-events-none absolute z-30 size-5 shrink-0 stroke-1 stroke-muted-foreground",
-  {
-    variants: {
-      position: {
-        "top-left":
-          "top-0 left-0 translate-x-[calc(-50%+0.5px)] translate-y-[calc(-50%+0.5px)]",
-        "top-right":
-          "top-0 right-0 translate-x-[calc(50%-0.5px)] translate-y-[calc(-50%+0.5px)]",
-        "bottom-right":
-          "right-0 bottom-0 translate-x-[calc(50%-0.5px)] translate-y-[calc(50%-0.5px)]",
-        "bottom-left":
-          "bottom-0 left-0 translate-x-[calc(-50%+0.5px)] translate-y-[calc(50%-0.5px)]",
-      },
-    },
-    defaultVariants: {
-      position: "top-left",
-    },
-  },
-);
+const positionClasses = {
+  "top-left":
+    "top-0 left-0 translate-x-[calc(-50%+0.5px)] translate-y-[calc(-50%+0.5px)]",
+  "top-right":
+    "top-0 right-0 translate-x-[calc(50%-0.5px)] translate-y-[calc(-50%+0.5px)]",
+  "bottom-right":
+    "right-0 bottom-0 translate-x-[calc(50%-0.5px)] translate-y-[calc(50%-0.5px)]",
+  "bottom-left":
+    "bottom-0 left-0 translate-x-[calc(-50%+0.5px)] translate-y-[calc(50%-0.5px)]",
+} as const;
 
-type DecorIconProps = React.ComponentProps<"svg"> &
-  VariantProps<typeof DecorIconVariants>;
+type Position = keyof typeof positionClasses;
 
-export function DecorIcon({ position, className, ...props }: DecorIconProps) {
+type DecorIconProps = Omit<React.ComponentProps<"span">, "children"> & {
+  position?: Position;
+  pageBorder?: boolean;
+};
+
+export function DecorIcon({
+  position = "top-left",
+  pageBorder = false,
+  className,
+  ...props
+}: DecorIconProps) {
   return (
-    <svg
+    <span
       aria-hidden="true"
-      className={cn(DecorIconVariants({ position, className }))}
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
+      className={cn(
+        "pointer-events-none absolute z-30 size-5 items-center justify-center",
+        positionClasses[position],
+        className,
+      )}
+      {...props}
     >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
+      <svg
+        className={cn(
+          pageBorder && "hidden lg:block",
+          "size-5 shrink-0 stroke-1 stroke-muted-foreground",
+        )}
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </svg>
+    </span>
   );
 }
 
