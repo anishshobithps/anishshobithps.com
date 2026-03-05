@@ -128,7 +128,7 @@ export function Card({
       <DecorIcon position="top-right" />
       <DecorIcon position="bottom-left" />
       <DecorIcon position="bottom-right" />
-      <div className="relative z-10">{children}</div>
+      {children}
     </div>
   );
 }

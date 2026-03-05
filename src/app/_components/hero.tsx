@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/button-group";
 import { Badge } from "@/components/ui/badge";
 import { Section, Card } from "@/components/layouts/page";
-import { DecorIcon } from "@/components/ui/border";
 import { siteConfig } from "@/lib/config";
 import {
   TypographyH1,
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/typography";
 import { LocationTag } from "@/components/ui/location";
 import { IconCircleFilled } from "@tabler/icons-react";
+import { DecorIcon } from "@/components/ui/border";
 
 export function Hero() {
   return (
@@ -43,7 +43,7 @@ export function Hero() {
           </Badge>
         )}
 
-        <div className="relative w-full border rounded-md overflow-hidden lg:max-h-[380px]">
+        <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95">
           <DecorIcon position="top-left" />
           <DecorIcon position="top-right" />
           <DecorIcon position="bottom-left" />
@@ -56,11 +56,11 @@ export function Hero() {
             unoptimized
             priority
             sizes="(max-width: 1024px) 100vw, 1024px"
-            className="w-full h-auto lg:h-[380px] lg:object-cover lg:object-center"
+            className="w-full h-auto lg:h-95 lg:object-cover lg:object-center"
           />
         </div>
 
-        <Card className="@sm:p-8 flex flex-col justify-between bg-background/80 backdrop-blur-md">
+        <Card className="@sm:p-8 flex flex-col gap-8 bg-background/80 backdrop-blur-md">
           <div className="space-y-4">
             <TypographyH1>{siteConfig.name}</TypographyH1>
             <TypographyMuted aria-label={`Role: ${siteConfig.role}`}>
@@ -79,7 +79,7 @@ export function Hero() {
 
           <nav aria-label="Primary actions">
             <ButtonGroup>
-              <Button asChild size="lg" className="font-semibold px-3 sm:px-5">
+              <Button asChild size="lg" className="font-semibold px-3 @sm:px-5">
                 <Link
                   href="/resume"
                   prefetch={false}
@@ -90,7 +90,7 @@ export function Hero() {
                     className="size-5 shrink-0"
                     aria-hidden="true"
                   />
-                  <span className="hidden sm:inline">Resume</span>
+                  <span className="hidden @sm:inline">Resume</span>
                 </Link>
               </Button>
               <ButtonGroupSeparator />
@@ -98,7 +98,7 @@ export function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="font-semibold px-3 sm:px-5"
+                className="font-semibold px-3 @sm:px-5"
               >
                 <a
                   href="#contact"
@@ -106,7 +106,7 @@ export function Hero() {
                   className="flex items-center justify-center gap-2"
                 >
                   <IconMail className="size-5 shrink-0" aria-hidden="true" />
-                  <span className="hidden sm:inline">Contact</span>
+                  <span className="hidden @sm:inline">Contact</span>
                 </a>
               </Button>
             </ButtonGroup>
