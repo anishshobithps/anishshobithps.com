@@ -43,6 +43,25 @@ const config = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/github",
+        destination: "https://github.com/anishshobithps",
+        permanent: true,
+      },
+      {
+        source: "/linkedin",
+        destination: "https://linkedin.com/in/anishshobithps",
+        permanent: true,
+      },
+      {
+        source: "/mail",
+        destination: "mailto:anish.shobith19@gmail.com",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
