@@ -1,0 +1,819 @@
+---
+title: Making My Resume Machine-Readable
+description: An exploration of how I treated my resume like production software — optimizing content, structure, metadata, and accessibility to make it parseable by ATS systems, AI models, and machines, not just humans.
+date: 2026-03-07
+tags:
+    - LaTeX
+    - ATS Optimization
+    - Machine Readability
+    - PDF Metadata
+    - Accessibility
+    - Structured Data
+    - Personal Branding
+    - Resume Engineering
+---
+
+import { TypographyMark } from "@/components/ui/typography";
+
+> **Disclaimer**: None of what I describe in this post will directly improve your chances of getting a job. ATS systems are notoriously inconsistent, most recruiters never look at PDF metadata, and no amount of embedded JSON is going to compensate for weak experience or a poorly written resume. What this *is* about is something different — treating your resume as a piece of software, building it with the same care you'd give a production system, and understanding the infrastructure that sits beneath a document most people treat as a Word file. I did this because I was curious, because I enjoy over-engineering things, and because if a machine is going to read my resume, I'd rather it read it correctly. That's the spirit of this post.
+
+## The Problem
+
+When I added a <TypographyMark>/resume</TypographyMark> page to my website and embedded the PDF in a viewer, I noticed something small but annoying — the title bar of the PDF viewer showed the word <TypographyMark>resume</TypographyMark> instead of my name or the document title.
+
+![](https://res.cloudinary.com/ds9wj6tjw/image/upload/v1771884475/image_g6mxiu.png)
+
+It's a minor thing. Most people would ignore it. But I'm the kind of person who opens twelve browser tabs to understand why something works the way it does, so I started digging.
+
+It turns out PDFs have metadata — `title`, `author`, `subject`, `keywords`, `creator`, and more — embedded inside the file itself, completely separate from the visible content. This metadata is used by PDF viewers to display the document title, by search engines to index the content, by screen readers for accessibility, and by <TypographyMark>ATS (Applicant Tracking Systems)</TypographyMark> to parse and categorise resumes automatically.
+
+My resume had almost none of it. So I decided to fix that — and then kept going much further than I originally intended.
+
+## What is PDF Metadata, and Why Does It Matter?
+
+Before jumping into the fix, it helps to understand what we're actually talking about.
+
+A PDF file is not just a flat document. It's a structured binary format that contains, among other things, a **document information dictionary** (the legacy metadata format) and an **XMP stream** (the modern standard). Both can carry structured information about the document — who created it, when, what it's about, what language it's in, who owns the rights to it, and much more.
+
+The <TypographyMark>XMP (Extensible Metadata Platform)</TypographyMark> standard was developed by Adobe and is now the format used by archival systems (PDF/A), enterprise document management platforms, and most modern ATS software. It's built on RDF/XML, which means the metadata is machine-readable in a proper semantic sense — not just key-value pairs, but typed, namespaced, linked data.
+
+For a resume specifically, this matters in a few ways:
+
+- **ATS parsing**: Systems like Workday, Greenhouse, and Lever extract text from PDFs and try to identify sections, dates, job titles, and skills. Well-structured metadata helps them get it right.
+- **Search indexing**: Google and other crawlers that index PDFs use XMP metadata to understand what a document is about.
+- **Accessibility**: Screen readers use document metadata to describe a file to visually impaired users.
+- **Provenance**: Metadata like author, date, and license makes it clear who created the document and under what terms.
+
+None of this is magic. It won't get you a job. But it does mean that when a machine reads your resume, it reads it correctly.
+
+## Checking the Current State
+
+The first step was to actually see what metadata my resume had. I used [exiftool](https://exiftool.org/) — a free, open-source command-line tool that can read and write metadata in virtually any file format, including PDFs.
+
+### Installing exiftool
+
+<Tabs groupId="os" items={['macOS', 'Linux', 'Windows']} persist>
+  <Tab value="macOS">
+    ```bash
+    brew install exiftool
+    ```
+  </Tab>
+  <Tab value="Linux">
+    ```bash
+    sudo apt install libimage-exiftool-perl
+    ```
+  </Tab>
+  <Tab value="Windows">
+    Download the executable from [exiftool.org](https://exiftool.org/) and add it to your PATH, or if you use Scoop:
+    ```powershell
+    scoop install exiftool
+    ```
+  </Tab>
+</Tabs>
+
+### Reading the metadata
+
+```bash
+exiftool Anish_Shobith_P_S_Resume.pdf
+```
+
+Output:
+
+```
+ExifTool Version Number         : 13.51
+File Name                       : Anish_Shobith_P_S_Resume.pdf
+Directory                       : .
+File Size                       : 185 kB
+File Modification Date/Time     : 2025:12:31 03:28:46+05:30
+File Access Date/Time           : 2026:02:24 03:14:13+05:30
+File Creation Date/Time         : 2026:02:24 03:13:29+05:30
+File Permissions                : -rw-rw-rw-
+File Type                       : PDF
+File Type Extension             : pdf
+MIME Type                       : application/pdf
+PDF Version                     : 1.7
+Linearized                      : No
+Page Count                      : 1
+Page Mode                       : UseOutlines
+Producer                        : pdfTeX-1.40.28
+Author                          :
+Title                           :
+Subject                         :
+Creator                         : LaTeX with hyperref
+Create Date                     : 2025:11:22 20:51:41Z
+Modify Date                     : 2025:11:22 20:51:41Z
+Trapped                         : False
+PTEX Fullbanner                 : This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) kpathsea version 6.4.1
+```
+
+The problems are obvious. <TypographyMark>Author</TypographyMark>, <TypographyMark>Title</TypographyMark>, and <TypographyMark>Subject</TypographyMark> are all empty. There's no XMP stream at all — just the bare legacy PDF dictionary. The producer identifies the tool (<TypographyMark>pdfTeX</TypographyMark>) but the creator says <TypographyMark>LaTeX with hyperref</TypographyMark>, which is the default when you use `\usepackage{hyperref}` without configuring it. No keywords, no language, no rights information, no contact details. Basically, the minimum a PDF can have while technically being a PDF.
+
+To specifically check whether there's any XMP metadata:
+
+```bash
+exiftool -xmp:all Anish_Shobith_P_S_Resume.pdf
+```
+
+Empty output. No XMP stream at all. We're starting from scratch.
+
+## The Fix — Part 1: Basic PDF Metadata with hyperref and hyperxmp
+
+My resume is written in LaTeX, so the right place to add metadata is in the LaTeX source itself. That way the metadata is generated automatically every time I compile, always reflecting the current state of the document.
+
+The two packages that handle this are:
+
+- <TypographyMark>hyperref</TypographyMark>: The standard LaTeX package for hyperlinks and PDF metadata. It writes to the legacy PDF information dictionary.
+- <TypographyMark>hyperxmp</TypographyMark>: An extension that hooks into hyperref and writes a full XMP stream to the PDF. This is the package that makes the metadata actually useful to modern parsers.
+
+The critical thing about <TypographyMark>hyperxmp</TypographyMark> is load order. It **must** be loaded immediately after <TypographyMark>hyperref</TypographyMark>, before any other package that might interact with hyperref's output routines:
+
+```latex
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{hyperxmp}   % immediately after — order matters
+```
+
+And the `\hypersetup` configuration block must live in <TypographyMark>main.tex</TypographyMark>, **not** in a <TypographyMark>.sty</TypographyMark> file. When it's inside a style file, it runs during package loading, before hyperxmp has registered its `\AtBeginDocument` hooks. The result is that hyperxmp loads fine, writes no errors, but produces an empty XMP stream. This is exactly what happened to me, and it took a lot of log-file grepping to diagnose.
+
+Here's the full `\hypersetup` block in <TypographyMark>main.tex</TypographyMark>:
+
+```latex
+\hypersetup{
+  pdftitle={Anish Shobith P S},
+  pdfauthor={Anish Shobith P S},
+  pdfauthortitle={Software Engineer},
+  pdfsubject={Software Engineer Resume - JavaScript, TypeScript, React, Next.js},
+  pdfkeywords={
+    JavaScript, TypeScript, Python, C, C++,
+    React, Next.js, Astro, Tailwind CSS, Three.js, Framer Motion,
+    Node.js, Bun, Express.js, Hono, REST, GraphQL,
+    PostgreSQL, MySQL, SQLite, MongoDB, Prisma, Drizzle,
+    Git, Docker, Linux, Typst, LaTeX,
+    Software Engineer, SDE, Full Stack, Frontend, Backend,
+    Mangaluru, India, Open to Work,
+    n10nce, anishshobithps
+  },
+  pdfcreator={pdflatex + XCharter},
+  pdfproducer={Anish Shobith P S},
+  pdflang={en-US},
+  pdfmetalang={en-US},
+  pdfcontactaddress={Mangaluru - Karnataka - India},
+  pdfcontactemail={anish.shobith19@gmail.com},
+  pdfcontacturl={https://anishshobithps.com},
+  pdfcopyright={Copyright 2024-\the\year\ Anish Shobith P S. Licensed under Apache-2.0.},
+  pdflicenseurl={https://www.apache.org/licenses/LICENSE-2.0},
+  pdfurl={https://anishshobithps.com},
+  pdfpubtype={other},
+}
+```
+
+A few things worth noting here:
+
+- <TypographyMark>pdfauthortitle</TypographyMark> embeds your job title as a discrete structured field, not just freeform text. This maps to `photoshop:AuthorsPosition` in the XMP stream — a field that Adobe and some HR systems read specifically for the creator's role.
+- <TypographyMark>pdfcontact*</TypographyMark> fields — email, URL, address — map to the IPTC Core `CreatorContactInfo` structure in the XMP output, giving parsers your contact details as typed, discrete fields rather than text buried in keywords.
+- <TypographyMark>pdfcopyright</TypographyMark> uses `\the\year` so the copyright range updates automatically at every compile. The <TypographyMark>2024</TypographyMark> at the start is hardcoded as the original publication year, and `\the\year` expands to the current compilation year.
+- <TypographyMark>pdfdate</TypographyMark> is intentionally omitted. I originally included `pdfdate={\DTMtoday}` to embed the compile date, but `\DTMtoday` from the <TypographyMark>datetime2</TypographyMark> package expands at the wrong time inside `\hypersetup` and silently corrupts the entire options block — causing hyperxmp to write nothing. Removing it entirely is the right call; hyperxmp automatically sets the date from the PDF creation timestamp anyway.
+
+### The Encoding Trap
+
+One more pitfall: using <TypographyMark>--</TypographyMark> or <TypographyMark>\textendash{}</TypographyMark> inside metadata string fields. These are LaTeX typographic commands that work fine in the document body, but inside `\hypersetup` string values they get passed raw to the PDF encoder, which interprets them as Windows CP1252 ligatures. The result is <TypographyMark>ΓÇô</TypographyMark> in the metadata instead of <TypographyMark>–</TypographyMark>.
+
+The fix is simple — use a plain ASCII hyphen in all metadata strings:
+
+```latex
+pdfsubject={Software Engineer Resume - JavaScript, TypeScript, React, Next.js},
+pdfcopyright={Copyright 2024-\the\year\ Anish Shobith P S. Licensed under Apache-2.0.},
+```
+
+Reserve <TypographyMark>--</TypographyMark> and <TypographyMark>\textendash</TypographyMark> for the visible document body only.
+
+### The pdforcid Trap
+
+While adding fields, I also tried to include <TypographyMark>pdforcid={}</TypographyMark> — a field for linking an ORCID identifier, useful for academic profiles. It seemed reasonable to add even as an empty placeholder.
+
+It caused a fatal compile error:
+
+```
+! Package kvsetkeys Error: Undefined key `pdforcid'.
+l.47 }
+! Emergency stop.
+```
+
+The <TypographyMark>pdforcid</TypographyMark> key is only supported in newer versions of <TypographyMark>hyperxmp</TypographyMark>. The version shipped with TeX Live 2025 (v5.13) doesn't recognise it. Simply remove it — if you ever get an ORCID, you can add it back once you've verified your hyperxmp version supports it.
+
+### The \pdfcatalog Trap
+
+I also tried to manually embed a raw XMP stream using <TypographyMark>\pdfcatalog</TypographyMark> with inline XML, attempting to add Dublin Core, FOAF, vCard, PRISM, and Schema.org namespaces directly into the XMP packet. It caused a fatal compile error because pdflatex sees the angle brackets in the XML and tries to interpret them as LaTeX commands.
+
+The correct approach is to let <TypographyMark>hyperxmp</TypographyMark> handle the XMP stream entirely. The <TypographyMark>\pdfcatalog</TypographyMark> block should only contain valid PDF primitive syntax — viewer preferences, language tags, mark info — not XML. The correct block is:
+
+```latex
+\pdfcatalog{
+  /Lang (en-US)
+  /ViewerPreferences <<
+    /DisplayDocTitle true
+    /FitWindow false
+    /CenterWindow false
+    /PrintScaling /None
+  >>
+  /MarkInfo << /Marked true >>
+}
+```
+
+<TypographyMark>/DisplayDocTitle true</TypographyMark> is the important one here — it's what makes PDF viewers show your name in the title bar instead of the filename. That was the original problem that started this whole rabbit hole.
+
+> **Note**: Even this `\pdfcatalog` block needs to stay out of main.tex if you want the XMP stream to be written correctly. During debugging I discovered that placing `\pdfcatalog` between `\hypersetup` and `\begin{document}` also silently breaks the XMP output. Move it into formatting.sty or remove it entirely — hyperxmp handles MarkInfo automatically, and the DisplayDocTitle hint is cosmetic.
+
+## The Docker Setup and Why It Matters
+
+I compile my resume inside a Docker container. This is not just for convenience — it's for reproducibility. LaTeX installations are notoriously environment-dependent. A package installed on one machine might be a different version on another. Fonts render differently. Compilation fails silently because a package is missing. Using Docker means the resume always compiles identically, on any machine, in any environment, including CI.
+
+The base image I originally used was <TypographyMark>pandoc/latex:latest</TypographyMark>, which ships a minimal frozen subset of TeX Live. The problem is that <TypographyMark>tlmgr install</TypographyMark> is effectively broken on this image — the TeX Live installation is frozen and network-restricted, so packages silently fail to install. You can see this by running:
+
+```bash
+docker run --rm --entrypoint tlmgr pandoc/latex:latest info enumitem
+```
+
+Output:
+
+```
+TeX Live 2025 is frozen
+and will no longer be routinely updated.
+...
+installed:   No
+```
+
+The package shows as not installed, and there's nothing you can do about it from within that image. The fix is to switch the base image to <TypographyMark>texlive/texlive:latest</TypographyMark>, which is the official TeX Live Docker image with a fully functional <TypographyMark>tlmgr</TypographyMark>.
+
+But that introduces another problem. <TypographyMark>texlive/texlive:latest</TypographyMark> ships TeX Live 2025, and by the time I was building this, the default <TypographyMark>tlmgr</TypographyMark> remote repository had already moved to 2026. Cross-release updates are not supported:
+
+```
+tlmgr: Local TeX Live (2025) is older than remote repository (2026).
+Cross release updates are only supported with
+  update-tlmgr-latest(.sh/.exe) --update
+```
+
+The fix is to pin the repository to the frozen 2025 archive:
+
+```dockerfile
+RUN tlmgr option repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2025/tlnet-final
+```
+
+With that in place, <TypographyMark>tlmgr install</TypographyMark> works correctly against the frozen archive. The full Dockerfile:
+
+```dockerfile
+FROM texlive/texlive:latest
+
+RUN tlmgr option repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2025/tlnet-final && \
+    tlmgr update --self && \
+    tlmgr install \
+    enumitem \
+    titlesec \
+    xcharter \
+    xcharter-math \
+    fontaxes \
+    etoolbox \
+    xstring \
+    geometry \
+    fancyhdr \
+    xkeyval \
+    microtype \
+    hyperxmp \
+    datetime2 \
+    datetime2-english \
+    embedfile
+
+WORKDIR /data
+ENTRYPOINT ["pdflatex"]
+```
+
+Here's why each package is included:
+
+- <TypographyMark>enumitem</TypographyMark> — fine-grained control over list spacing and indentation
+- <TypographyMark>titlesec</TypographyMark> — custom section heading formatting
+- <TypographyMark>xcharter</TypographyMark> + <TypographyMark>xcharter-math</TypographyMark> + <TypographyMark>fontaxes</TypographyMark> — the XCharter font family, an extension of Charter, which renders cleanly at small sizes and survives PDF text extraction better than many alternatives
+- <TypographyMark>etoolbox</TypographyMark> — LaTeX programming utilities used by several other packages
+- <TypographyMark>xstring</TypographyMark> — string manipulation, used for the <TypographyMark>\shorturl</TypographyMark> command that strips <TypographyMark>https://</TypographyMark> from displayed URLs
+- <TypographyMark>geometry</TypographyMark> — page margin control
+- <TypographyMark>fancyhdr</TypographyMark> — header/footer control (used to suppress headers on a single-page document)
+- <TypographyMark>xkeyval</TypographyMark> — key-value option parsing, dependency of xcharter
+- <TypographyMark>microtype</TypographyMark> — micro-typographic refinements: character protrusion and font expansion, which improve text justification and make the document look less like it was typeset by a machine
+- <TypographyMark>hyperxmp</TypographyMark> — XMP metadata embedding, the core of this whole endeavour
+- <TypographyMark>datetime2</TypographyMark> + <TypographyMark>datetime2-english</TypographyMark> — proper ISO 8601 date formatting, used elsewhere in the document
+- <TypographyMark>embedfile</TypographyMark> — embeds arbitrary files as PDF attachments using the spec-compliant PDF name tree method
+
+One important note on rebuild strategy: always use <TypographyMark>--no-cache</TypographyMark> when rebuilding after Dockerfile changes, and if the image still behaves oddly, remove it explicitly first:
+
+```bash
+docker rmi latex-builder
+docker build --no-cache -t latex-builder .docker
+```
+
+Without <TypographyMark>--no-cache</TypographyMark>, Docker may reuse cached layers that pre-date your changes, and you'll end up running the same broken image you were trying to replace.
+
+## Verifying the XMP Output
+
+After compiling, the first check is whether the XMP stream exists and what it contains:
+
+```bash
+exiftool -xmp:all Anish_Shobith_P_S_Resume.pdf
+```
+
+If the output is empty, something went wrong. The most common causes are:
+
+1. <TypographyMark>\hypersetup</TypographyMark> is in a <TypographyMark>.sty</TypographyMark> file instead of <TypographyMark>main.tex</TypographyMark>
+2. <TypographyMark>pdfdate=&#123;\DTMtoday&#125;</TypographyMark> is corrupting the options block
+3. <TypographyMark>hyperxmp</TypographyMark> is not loaded immediately after <TypographyMark>hyperref</TypographyMark>
+4. A <TypographyMark>\pdfcatalog</TypographyMark> block is sitting between <TypographyMark>\hypersetup</TypographyMark> and <TypographyMark>{String.raw`\begin{document}`}</TypographyMark>
+5. <TypographyMark>pdforcid</TypographyMark> or another unsupported key is causing a fatal error that prevents any output from being written
+
+When it's working correctly, the output looks like this:
+
+```
+Producer                        : Anish Shobith P S
+Keywords                        : JavaScript, TypeScript, Python, C, C++, React,
+                                  Next.js, Astro, Tailwind CSS, Three.js, Framer Motion,
+                                  Node.js, Bun, Express.js, Hono, REST, GraphQL,
+                                  PostgreSQL, MySQL, SQLite, MongoDB, Prisma, Drizzle,
+                                  Git, Docker, Linux, Typst, LaTeX, Software Engineer,
+                                  SDE, Full Stack, Frontend, Backend, Mangaluru, India,
+                                  Open to Work, n10nce, anishshobithps
+PDF Version                     : 1.7
+Marked                          : True
+Web Statement                   : https://www.apache.org/licenses/LICENSE-2.0
+Format                          : application/pdf
+Title (en-US)                   : Anish Shobith P S
+Description (en-US)             : Software Engineer Resume - JavaScript, TypeScript, React, Next.js
+Rights (en-US)                  : Copyright 2024-2026 Anish Shobith P S. Licensed under Apache-2.0.
+Date                            : 2026:03:06 16:23:07Z
+Type                            : Text
+Creator                         : Anish Shobith P S
+Subject                         : JavaScript, TypeScript, Python, C, C++, React ...
+Source                          : Anish_Shobith_P_S_Resume.tex
+Language                        : en-US
+Authors Position                : Software Engineer
+Create Date                     : 2026:03:06 16:23:07Z
+Modify Date                     : 2026:03:06 16:23:07Z
+Metadata Date                   : 2026:03:06 16:23:07Z
+Creator Tool                    : pdflatex + XCharter
+Document ID                     : uuid:8205fd18-26c9-4b6c-86c9-b1d13e4c4182
+Instance ID                     : uuid:46cefdc9-b67a-482b-b62b-6200aeaeae4c
+Creator Address                 : Mangaluru - Karnataka - India
+Creator Work Email              : anish.shobith19@gmail.com
+Creator Work URL                : https://anishshobithps.com
+Compliance Profile              : Three
+URL                             : https://anishshobithps.com
+N Pages                         : 1
+```
+
+### Inspecting the Raw XMP Packet
+
+The exiftool summary is convenient but lossy — it maps XMP fields to its own tag names and drops things it doesn't recognise. To see the actual raw XMP XML that's embedded in the PDF, dump it directly:
+
+<Tabs groupId="os" items={['Unix', 'Windows']} persist>
+  <Tab value="Unix">
+    ```bash
+    exiftool -xmp -b Anish_Shobith_P_S_Resume.pdf | xmllint --format -
+    ```
+  </Tab>
+  <Tab value="Windows">
+    ```powershell
+    exiftool -xmp -b Anish_Shobith_P_S_Resume.pdf | Out-File -Encoding utf8 xmp_raw.xml
+    ```
+  </Tab>
+</Tabs>
+
+The raw packet is proper RDF/XML and shows every namespace that hyperxmp wrote. Here's the actual output from my compiled PDF — this is what's really inside the file:
+
+```xml
+<?xpacket begin="∩╗┐" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about=""
+      xmlns:pdf="http://ns.adobe.com/pdf/1.3/"
+      xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:photoshop="http://ns.adobe.com/photoshop/1.0/"
+      xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+      xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+      xmlns:Iptc4xmpCore="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/"
+      xmlns:prism="http://prismstandard.org/namespaces/basic/3.0/"
+      xmlns:xmpTPg="http://ns.adobe.com/xap/1.0/t/pg/"
+      xmlns:pdfaExtension="http://www.aiim.org/pdfa/ns/extension/"
+      xmlns:pdfaSchema="http://www.aiim.org/pdfa/ns/schema#"
+      xmlns:pdfaProperty="http://www.aiim.org/pdfa/ns/property#">
+
+      <!-- Adobe PDF basic fields -->
+      <pdf:Producer>Anish Shobith P S</pdf:Producer>
+      <pdf:Keywords>JavaScript, TypeScript, Python, C, C++, React ...</pdf:Keywords>
+      <pdf:PDFVersion>1.7</pdf:PDFVersion>
+
+      <!-- XMP Rights Management -->
+      <xmpRights:Marked>True</xmpRights:Marked>
+      <xmpRights:WebStatement>https://www.apache.org/licenses/LICENSE-2.0</xmpRights:WebStatement>
+
+      <!-- Dublin Core -->
+      <dc:format>application/pdf</dc:format>
+      <dc:title>
+        <rdf:Alt>
+          <rdf:li xml:lang="en-US">Anish Shobith P S</rdf:li>
+        </rdf:Alt>
+      </dc:title>
+      <dc:description>
+        <rdf:Alt>
+          <rdf:li xml:lang="en-US">Software Engineer Resume - JavaScript, TypeScript, React, Next.js</rdf:li>
+        </rdf:Alt>
+      </dc:description>
+      <dc:rights>
+        <rdf:Alt>
+          <rdf:li xml:lang="en-US">Copyright 2024-2026 Anish Shobith P S. Licensed under Apache-2.0.</rdf:li>
+        </rdf:Alt>
+      </dc:rights>
+      <dc:date>
+        <rdf:Seq>
+          <rdf:li>2026-03-06T16:30:31Z</rdf:li>
+        </rdf:Seq>
+      </dc:date>
+      <dc:type><rdf:Bag><rdf:li>Text</rdf:li></rdf:Bag></dc:type>
+      <dc:creator>
+        <rdf:Seq>
+          <rdf:li>Anish Shobith P S</rdf:li>
+        </rdf:Seq>
+      </dc:creator>
+      <dc:subject>
+        <rdf:Bag>
+          <rdf:li>JavaScript</rdf:li>
+          <rdf:li>TypeScript</rdf:li>
+          <rdf:li>Python</rdf:li>
+          <!-- ... all skills and keywords as individual typed items ... -->
+          <rdf:li>n10nce</rdf:li>
+          <rdf:li>anishshobithps</rdf:li>
+        </rdf:Bag>
+      </dc:subject>
+      <dc:source>Anish_Shobith_P_S_Resume.tex</dc:source>
+      <dc:language><rdf:Bag><rdf:li>en-US</rdf:li></rdf:Bag></dc:language>
+
+      <!-- Photoshop namespace — used for AuthorsPosition (job title) -->
+      <photoshop:AuthorsPosition>Software Engineer</photoshop:AuthorsPosition>
+
+      <!-- XMP Basic — creation and modification timestamps -->
+      <xmp:CreateDate>2026-03-06T16:30:31Z</xmp:CreateDate>
+      <xmp:ModifyDate>2026-03-06T16:30:31Z</xmp:ModifyDate>
+      <xmp:MetadataDate>2026-03-06T16:30:31Z</xmp:MetadataDate>
+      <xmp:CreatorTool>pdflatex + XCharter</xmp:CreatorTool>
+
+      <!-- XMP Media Management — document identity -->
+      <xmpMM:DocumentID>uuid:8205fd18-26c9-4b6c-86c9-b1d13e4c4182</xmpMM:DocumentID>
+      <xmpMM:InstanceID>uuid:b6754139-0546-4cef-b5fd-c90a8d7a3954</xmpMM:InstanceID>
+      <xmpMM:VersionID>1</xmpMM:VersionID>
+      <xmpMM:RenditionClass>default</xmpMM:RenditionClass>
+
+      <!-- IPTC Core — contact information as structured fields -->
+      <Iptc4xmpCore:CreatorContactInfo rdf:parseType="Resource">
+        <Iptc4xmpCore:CiAdrExtadr>Mangaluru - Karnataka - India</Iptc4xmpCore:CiAdrExtadr>
+        <Iptc4xmpCore:CiEmailWork>anish.shobith19@gmail.com</Iptc4xmpCore:CiEmailWork>
+        <Iptc4xmpCore:CiUrlWork>https://anishshobithps.com</Iptc4xmpCore:CiUrlWork>
+      </Iptc4xmpCore:CreatorContactInfo>
+
+      <!-- PRISM — publishing metadata -->
+      <prism:complianceProfile>three</prism:complianceProfile>
+      <prism:aggregationType>other</prism:aggregationType>
+      <prism:url>https://anishshobithps.com</prism:url>
+      <prism:pageCount>1</prism:pageCount>
+
+      <xmpTPg:NPages>1</xmpTPg:NPages>
+    </rdf:Description>
+  </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>
+```
+
+This is what hyperxmp actually writes — not one flat list of key-value pairs, but a proper RDF graph with multiple named namespaces. A few things worth pointing out:
+
+- **Dublin Core** (`dc:`) writes each keyword as a separate `<rdf:li>` node in a typed `<rdf:Bag>`, not a comma-separated string. This means a parser can enumerate skills without having to split on commas and guess at boundaries.
+- **IPTC Core** (`Iptc4xmpCore:CreatorContactInfo`) is the namespace that maps to the `Creator Address`, `Creator Work Email`, and `Creator Work URL` fields you see in exiftool's output. These are discrete typed fields, not freeform text.
+- **`photoshop:AuthorsPosition`** is how hyperxmp stores the `pdfauthortitle` value. It uses the Photoshop namespace not because this has anything to do with Photoshop, but because that namespace became the de facto standard for this field before a proper XMP extension was defined.
+- **`xmpMM:DocumentID`** stays constant across recompiles of the same document. `xmpMM:InstanceID` changes with each compile. This lets document management systems track versions of the same file over time.
+- **`xmpRights:WebStatement`** and `dc:rights` are where the license information lives. exiftool surfaces `xmpRights:WebStatement` as `Web Statement` and `dc:rights` as `Rights (en-US)` in its output — that's why `exiftool -xmp-rights:all` returns empty (it's looking for a namespace prefix that doesn't map cleanly) while the data is clearly there when you look at the raw XML.
+- The **`pdfaExtension:schemas`** block at the top of the full raw packet is a schema registry that declares all the custom namespaces used in the document — this is required for PDF/A compliance validation.
+
+To check specific metadata standards by namespace:
+
+<Tabs groupId="os" items={['Unix', 'Windows']} persist>
+  <Tab value="Unix">
+    ```bash
+    # Dublin Core fields
+    exiftool -xmp-dc:all Anish_Shobith_P_S_Resume.pdf
+
+    # All fields including unknown/custom tags
+    exiftool -a -u Anish_Shobith_P_S_Resume.pdf
+
+    # Check if XMP exists at all (returns count of matches)
+    docker run --rm -v "$(pwd):/data" -w /data --entrypoint bash \
+      latex-builder -c "grep -c 'xmpmeta' Anish_Shobith_P_S_Resume.pdf"
+    # Should return 2 (opening and closing tag)
+    ```
+  </Tab>
+  <Tab value="Windows">
+    ```powershell
+    # Dublin Core fields
+    exiftool -xmp-dc:all Anish_Shobith_P_S_Resume.pdf
+
+    # All fields including unknown/custom tags
+    exiftool -a -u Anish_Shobith_P_S_Resume.pdf
+
+    # Check if XMP exists at all (returns count of matches)
+    docker run --rm -v "${PWD}:/data" -w /data --entrypoint bash `
+      latex-builder -c "grep -c 'xmpmeta' Anish_Shobith_P_S_Resume.pdf"
+    # Should return 2 (opening and closing tag)
+    ```
+  </Tab>
+</Tabs>
+
+## The Fix — Part 2: Embedded Structured Data
+
+XMP metadata is good, but it's still a flat set of key-value fields. It tells a parser your name, email, and keywords — but it doesn't tell it *which part of the document is your work history*, *which text is a job title*, or *what date range belongs to which role*. For that, you need a different approach.
+
+The solution is to embed structured data files directly inside the PDF as attachments. Two standards are worth using here, because different systems understand different things.
+
+### Why Two Files?
+
+Different parsers speak different languages:
+
+- <TypographyMark>Schema.org</TypographyMark> is the vocabulary used by Google, semantic web crawlers, and increasingly by AI systems processing documents. It's typed, linked, and hierarchical.
+- <TypographyMark>JSON Resume</TypographyMark> is an open standard specifically designed for resumes. It's simpler and more opinionated, and is natively parsed by platforms like Workday, Greenhouse, and Lever — they know the schema and can map fields directly without inference.
+
+Embedding both covers the widest possible surface area.
+
+### The attachfile2 Dead End
+
+My first attempt was to use the <TypographyMark>attachfile2</TypographyMark> LaTeX package. This package embeds files as PDF annotations — essentially clickable paperclip icons attached to a position in the document. You can make them invisible with an empty text argument:
+
+```latex
+\textattachfile[
+  mimetype=application/ld+json,
+  description={Structured metadata}
+]{schema.json}{}
+```
+
+This compiles without errors, but the attachment doesn't actually appear in the PDF in a way that standard parsers can find. When you run:
+
+```bash
+exiftool -b -EmbeddedFile Anish_Shobith_P_S_Resume.pdf > extracted.json
+```
+
+The output is empty. The file wasn't embedded in the PDF's <TypographyMark>EmbeddedFiles</TypographyMark> name tree — it was attached as an annotation object, which is a fundamentally different thing. Some PDF viewers will show it as a paperclip. Most parsers will ignore it entirely.
+
+The correct package for proper spec-compliant embedding is <TypographyMark>embedfile</TypographyMark>.
+
+### schema.json
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://anishshobithps.com",
+      "name": "Anish Shobith P S",
+      "alternateName": "n10nce",
+      "jobTitle": "Software Engineer",
+      "email": "anish.shobith19@gmail.com",
+      "url": "https://anishshobithps.com",
+      "sameAs": [
+        "https://github.com/anishshobithps",
+        "https://x.com/n10nce",
+        "https://www.linkedin.com/in/anishshobithps"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Mangaluru",
+        "addressRegion": "Karnataka",
+        "addressCountry": "IN"
+      },
+      "hasOccupation": [
+        {
+          "@type": "Occupation",
+          "name": "SDE Intern",
+          "alternateName": ["Software Engineer Intern", "Engineering Intern", "Developer Intern"],
+          "hiringOrganization": {
+            "@type": "Organization",
+            "name": "Zenduty",
+            "url": "https://www.zenduty.com",
+            "parentOrganization": {
+              "@type": "Organization",
+              "name": "Xurrent",
+              "url": "https://www.xurrent.com"
+            }
+          },
+          "startDate": "2025-02",
+          "endDate": "2025-11"
+        }
+      ],
+      "copyrightYear": 2024,
+      "dateCreated": "2024",
+      "dateModified": "2026",
+      "copyrightHolder": { "@type": "Person", "name": "Anish Shobith P S" },
+      "license": "https://www.apache.org/licenses/LICENSE-2.0"
+    },
+    {
+      "@type": "CreativeWork",
+      "hasPart": [
+        {
+          "@type": "ItemList",
+          "name": "Work Experience",
+          "alternateName": ["Experience", "Employment History", "Professional Experience", "Career History"]
+        },
+        {
+          "@type": "ItemList",
+          "name": "Technical Skills",
+          "alternateName": ["Skills", "Core Competencies", "Technologies", "Tech Stack", "Expertise"]
+        },
+        {
+          "@type": "ItemList",
+          "name": "Projects",
+          "alternateName": ["Personal Projects", "Portfolio", "Open Source Work", "Side Projects"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+The <TypographyMark>alternateName</TypographyMark> fields on each `ItemList` are the ATS compatibility layer. Different systems use different heading names to identify sections when extracting text from a PDF. A Schema.org-aware parser reading this attachment knows that "Experience", "Employment History", and "Career History" all refer to the same section.
+
+One Schema.org gotcha worth knowing: <TypographyMark>copyrightYear</TypographyMark> must be a 4-digit integer, not a string. Writing <TypographyMark>"2024 - Present"</TypographyMark> will fail structured data validation. The correct approach is to use <TypographyMark>dateCreated</TypographyMark> for the origin year and <TypographyMark>dateModified</TypographyMark> for the current year — and keep <TypographyMark>copyrightYear</TypographyMark> as a plain integer.
+
+### resume.json
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Anish Shobith P S",
+    "label": "Software Engineer",
+    "email": "anish.shobith19@gmail.com",
+    "url": "https://anishshobithps.com",
+    "location": {
+      "city": "Mangaluru",
+      "region": "Karnataka",
+      "countryCode": "IN"
+    },
+    "profiles": [
+      { "network": "GitHub", "username": "anishshobithps", "url": "https://github.com/anishshobithps" },
+      { "network": "LinkedIn", "username": "anishshobithps", "url": "https://www.linkedin.com/in/anishshobithps" },
+      { "network": "X", "username": "n10nce", "url": "https://x.com/n10nce" }
+    ]
+  },
+  "work": [
+    {
+      "name": "Zenduty (acq. by Xurrent)",
+      "position": "SDE Intern",
+      "url": "https://www.zenduty.com",
+      "startDate": "2025-02",
+      "endDate": "2025-11",
+      "location": "Bengaluru, Karnataka, India"
+    }
+  ],
+  "education": [
+    {
+      "institution": "St Joseph Engineering College",
+      "url": "https://sjec.ac.in",
+      "area": "Computer Science Engineering",
+      "studyType": "B.E",
+      "endDate": "2024-05"
+    }
+  ],
+  "skills": [
+    { "name": "Languages", "keywords": ["JavaScript", "TypeScript", "Python", "C", "C++"] },
+    { "name": "Frontend", "keywords": ["React", "Next.js", "Astro", "Tailwind CSS", "Three.js"] },
+    { "name": "Backend", "keywords": ["Node.js", "Bun", "Express.js", "Hono", "REST", "GraphQL"] },
+    { "name": "Databases", "keywords": ["PostgreSQL", "MySQL", "SQLite", "MongoDB", "Prisma", "Drizzle"] },
+    { "name": "Tools", "keywords": ["Git", "Docker", "Linux", "Typst", "LaTeX"] }
+  ],
+  "meta": {
+    "canonical": "https://anishshobithps.com",
+    "version": "v1.0.0",
+    "lastModified": "2026-03-06"
+  }
+}
+```
+
+### Embedding the Files with embedfile
+
+In <TypographyMark>main.tex</TypographyMark>, just before `\end{document}`:
+
+```latex
+\embedfile[
+  mimetype=application/ld+json,
+  desc={Schema.org structured data - Anish Shobith P S},
+  afrelationship={/Supplement}
+]{schema.json}
+
+\embedfile[
+  mimetype=application/json,
+  desc={JSON Resume - Anish Shobith P S},
+  afrelationship={/Supplement}
+]{resume.json}
+```
+
+The <TypographyMark>afrelationship=&#123;/Supplement&#125;</TypographyMark>
+ tag marks these as supplementary files in the PDF spec — metadata companions to the main document rather than replacements or alternatives.
+
+### Verifying the Attachments
+
+<TypographyMark>exiftool -b -EmbeddedFile</TypographyMark> won't find these files because it looks for annotation-based attachments, not name tree attachments. Use <TypographyMark>pypdf</TypographyMark> instead:
+
+```python
+import pypdf
+
+r = pypdf.PdfReader('Anish_Shobith_P_S_Resume.pdf')
+print(list(r.attachments.keys()))
+# ['resume.json', 'schema.json']
+```
+
+To extract and read the full contents:
+
+```python
+import pypdf
+
+r = pypdf.PdfReader('Anish_Shobith_P_S_Resume.pdf')
+for name, data_list in r.attachments.items():
+    for data in data_list:
+        print(f'--- {name} ---')
+        print(data.decode('utf-8'))
+```
+
+Or run it directly in Docker without installing anything locally:
+
+<Tabs groupId="os" items={['Unix', 'Windows']} persist>
+  <Tab value="Unix">
+    ```bash
+    docker run --rm -v "$(pwd):/data" -w /data python:3.11-slim sh -c \
+      "pip install pypdf -q && python3 -c \"
+    import pypdf
+    r = pypdf.PdfReader('Anish_Shobith_P_S_Resume.pdf')
+    print(list(r.attachments.keys()))
+    \""
+    ```
+  </Tab>
+  <Tab value="Windows">
+    ```powershell
+    docker run --rm -v "${PWD}:/data" -w /data python:3.11-slim sh -c "pip install pypdf -q && python3 -c `"import pypdf; r = pypdf.PdfReader('Anish_Shobith_P_S_Resume.pdf'); print(list(r.attachments.keys()))`""
+    ```
+  </Tab>
+</Tabs>
+
+## Automating Everything with GitHub Actions
+
+The last piece is making sure none of this requires manual maintenance. Every time I push a change to <TypographyMark>main</TypographyMark>, a GitHub Actions workflow:
+
+1. Rebuilds and pushes the Docker image if <TypographyMark>.docker/Dockerfile</TypographyMark> changed (with layer caching so it's fast when nothing changed)
+2. Patches the <TypographyMark>lastModified</TypographyMark> date in <TypographyMark>resume.json</TypographyMark> and <TypographyMark>dateModified</TypographyMark> in <TypographyMark>schema.json</TypographyMark> with today's date
+3. Compiles the PDF with <TypographyMark>pdflatex</TypographyMark>
+4. Creates a GitHub Release with the compiled PDF attached and auto-generated release notes
+
+The date patching step is what keeps the embedded JSON files current:
+
+```yaml
+- name: Update metadata dates
+  run: |
+    DATE=$(date +%Y-%m-%d)
+    YEAR=$(date +%Y)
+    sed -i "s/\"lastModified\": \".*\"/\"lastModified\": \"$DATE\"/" resume.json
+    sed -i "s/\"dateModified\": \".*\"/\"dateModified\": \"$YEAR\"/" schema.json
+```
+
+This runs before the <TypographyMark>pdflatex</TypographyMark> compile step, so the patched dates are baked into the embedded files in the final PDF. The <TypographyMark>schema.json</TypographyMark> and <TypographyMark>resume.json</TypographyMark> in the repository itself stay with their placeholder dates — only the compiled PDF gets the real date.
+
+The copyright year in <TypographyMark>formatting.sty</TypographyMark> handles itself:
+
+```latex
+pdfcopyright={Copyright 2024-\the\year\ Anish Shobith P S. Licensed under Apache-2.0.},
+```
+
+<TypographyMark>\the\year</TypographyMark> is a pdflatex primitive that expands to the current year at compile time. No scripts needed.
+
+## What the Final PDF Contains
+
+| Layer | What's embedded |
+|-------|----------------|
+| XMP / Dublin Core | Title, author, keywords as individual typed nodes, rights statement, language, format, create/modify/metadata dates |
+| IPTC Core (`Iptc4xmpCore:CreatorContactInfo`) | Email, URL, and address as discrete structured fields |
+| XMP Rights (`xmpRights:`) | License URL via `WebStatement`, rights ownership via `dc:rights` |
+| XMP Media Management (`xmpMM:`) | Document UUID (stable across versions), Instance UUID (unique per compile), version ID |
+| Photoshop namespace (`photoshop:AuthorsPosition`) | Job title as a discrete typed field |
+| PRISM | Compliance profile, aggregation type, canonical URL, page count |
+| Schema.org JSON-LD (attachment) | Typed person entity with occupation, education, projects, skills, and section name aliases for ATS matching |
+| JSON Resume (attachment) | Open standard structured data natively parsed by major ATS platforms |
+
+The document also compiles with <TypographyMark>{String.raw`\pdfgentounicode=1`}</TypographyMark> and <TypographyMark>{String.raw`\input{glyphtounicode}`}</TypographyMark>, which ensures Unicode character mapping is embedded in the PDF. This means text copied from the PDF — or extracted by a parser — comes out as proper Unicode characters rather than glyph codes. It's a small thing, but it's the difference between an ATS reading "JavaScript" and reading a garbled sequence of glyph references.
+
+## Was Any of This Worth It?
+
+Honestly, probably not in a practical sense. Most ATS systems parse the raw text of a PDF by extracting it with a library like <TypographyMark>pdftotext</TypographyMark> and running regex patterns or ML classifiers over it. They're not reading XMP streams. They're not extracting JSON-LD attachments. The metadata I spent a weekend embedding will go completely unread by most of the systems that will ever process this resume.
+
+But that's not really the point. The point is that I now understand exactly what a PDF is, what information it can carry, and how that information is structured. I understand why my resume wasn't showing a title in the PDF viewer. I understand the difference between annotation-based and name-tree-based PDF attachments, between the legacy PDF dictionary and an XMP stream, between `pandoc/latex` and `texlive/texlive` as base images and why one of them silently fails to install packages. I understand why `\hypersetup` has to live in `main.tex` and not in a `.sty` file, and what happens to your XMP stream when you put `\DTMtoday` in the wrong place.
+
+I treated a document like a software system — with versioning, reproducible builds, structured data, and automated deployment — and the process of doing that taught me considerably more than the outcome produced.
+
+If you want to look at the source, or use it as a starting point for your own resume, it's all on [GitHub](https://github.com/anishshobithps/resume).
