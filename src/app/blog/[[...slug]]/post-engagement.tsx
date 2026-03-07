@@ -862,7 +862,9 @@ export function PostEngagement({
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => signOut()}
+                      onClick={() =>
+                        signOut({ redirectUrl: window.location.pathname })
+                      }
                       className="gap-1.5 text-xs text-muted-foreground hover:text-foreground"
                       aria-label="Sign out"
                     >
