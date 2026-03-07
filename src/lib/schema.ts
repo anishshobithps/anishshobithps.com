@@ -69,3 +69,38 @@ export const guestbookLikes = pgTable(
         index("guestbook_likes_entry_idx").on(table.entryId),
     ],
 );
+
+export const blogComments = pgTable(
+    "blog_comments",
+    {
+        id: serial("id").primaryKey(),
+        slug: varchar("slug", { length: 256 }).notNull(),
+        parentId: integer("parent_id"),
+        clerkUserId: varchar("clerk_user_id", { length: 256 }).notNull(),
+        body: text("body").notNull(),
+        isPinned: boolean("is_pinned").default(false).notNull(),
+        isDeleted: boolean("is_deleted").default(false).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        index("blog_comments_slug_idx").on(table.slug),
+        index("blog_comments_parent_idx").on(table.parentId),
+        index("blog_comments_pinned_idx").on(table.isPinned),
+    ],
+);
+
+export const blogCommentLikes = pgTable(
+    "blog_comment_likes",
+    {
+        commentId: integer("comment_id")
+            .notNull()
+            .references(() => blogComments.id, { onDelete: "cascade" }),
+        clerkUserId: varchar("clerk_user_id", { length: 256 }).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        primaryKey({ columns: [table.commentId, table.clerkUserId] }),
+        index("blog_comment_likes_comment_idx").on(table.commentId),
+    ],
+);
