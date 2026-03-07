@@ -30,7 +30,6 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
-import { DecorIcon } from "@/components/ui/border";
 import {
   TypographySmall,
   TypographyMuted,
@@ -470,7 +469,7 @@ export function GuestbookClient({
                 maxLength={MAX}
                 placeholder="Leave a message for the world…"
                 aria-describedby="guestbook-counter"
-                className="resize-none min-h-[80px] max-h-[200px]"
+                className="resize-none min-h-20 max-h-50"
                 autoComplete="off"
               />
             </div>
@@ -517,7 +516,7 @@ export function GuestbookClient({
               <TypographySmall className="font-semibold">
                 Drop something in the guestbook.
               </TypographySmall>
-              <TypographyMuted className="text-sm text-pretty break-words">
+              <TypographyMuted className="text-sm text-pretty wrap-break-word">
                 {" "}
                 Say hi, share a thought, or just let me know you were here. You
                 gotta sign in first 🙂
