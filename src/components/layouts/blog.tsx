@@ -127,10 +127,10 @@ export function MobileTOC() {
   return (
     <div className="sticky top-14 z-50 xl:hidden bg-background shadow-sm before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border backdrop-blur-md supports-backdrop-filter:bg-background/80">
       <FullWidthDivider position="top" />
-      <DecorIcon position="top-left" />
-      <DecorIcon position="top-right" />
-      <DecorIcon position="bottom-left" />
-      <DecorIcon position="bottom-right" />
+      <DecorIcon position="top-left" pageBorder />
+      <DecorIcon position="top-right" pageBorder />
+      <DecorIcon position="bottom-left" pageBorder />
+      <DecorIcon position="bottom-right" pageBorder />
       <Collapsible open={open} onOpenChange={setOpen}>
         <header
           className={cn(
