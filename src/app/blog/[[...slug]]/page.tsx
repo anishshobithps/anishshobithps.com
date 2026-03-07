@@ -1,34 +1,41 @@
 import { BlogReadsInfo } from "@/app/blog/[[...slug]]/blog-reads-info";
-import { BlogReactions } from "@/app/blog/[[...slug]]/feedback";
+import { getComments } from "@/app/blog/[[...slug]]/actions";
+import { PostEngagement } from "@/app/blog/[[...slug]]/post-engagement";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
+import { Signature } from "@/components/ui/signature";
 import {
   TypographyH1,
   TypographyLead,
   TypographyMuted,
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { buildMeta } from "@/lib/og";
-import { source } from "@/lib/source";
-import { getMDXComponents } from "@/mdx-components";
-import { createRelativeLink } from "fumadocs-ui/mdx";
-import { IconCalendar, IconClock, IconGitCommit } from "@tabler/icons-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 import {
   formatLongDate,
   formatShortDate,
   toISOString,
   toTimestamp,
 } from "@/lib/date";
+import { buildMeta } from "@/lib/og";
+import { source } from "@/lib/source";
+import { getMDXComponents } from "@/mdx-components";
+import { auth } from "@clerk/nextjs/server";
+import { IconCalendar, IconClock, IconGitCommit } from "@tabler/icons-react";
+import { createRelativeLink } from "fumadocs-ui/mdx";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function Page(props: { params: { slug: string[] } }) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
+
+  const { userId } = await auth();
+  const { comments } = await getComments(page.url);
+  const siteOwnerId = process.env.OWNER_CLERK_USER_ID ?? "";
 
   const MDX = page.data.body;
   const readingTime = (page.data as any)._exports?.readingTime;
@@ -166,10 +173,16 @@ export default async function Page(props: { params: { slug: string[] } }) {
             a: createRelativeLink(source, page),
           })}
         />
+        <Signature text={siteConfig.name} />
       </BlogBody>
 
-      <Section variant="compact" aria-label="Post feedback">
-        <BlogReactions slug={page.url} />
+      <Section variant="compact" aria-label="Post engagement">
+        <PostEngagement
+          slug={page.url}
+          initialComments={comments}
+          currentUserId={userId}
+          siteOwnerId={siteOwnerId}
+        />
       </Section>
 
       <Section variant="nav" aria-label="Post navigation">
