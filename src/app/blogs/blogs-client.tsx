@@ -255,8 +255,8 @@ export function BlogsClient({
       )}
 
       <div className="relative -mx-6 sm:-mx-8 lg:-mx-10" aria-hidden="true">
-        <DecorIcon position="top-left" />
-        <DecorIcon position="top-right" />
+        <DecorIcon position="top-left" pageBorder />
+        <DecorIcon position="top-right" pageBorder />
         <Divider short />
       </div>
 
@@ -321,8 +321,8 @@ export function BlogsClient({
       {filtered.length > 0 && (
         <>
           <div className="relative -mx-6 sm:-mx-8 lg:-mx-10" aria-hidden="true">
-            <DecorIcon position="top-left" />
-            <DecorIcon position="top-right" />
+            <DecorIcon position="top-left" pageBorder />
+            <DecorIcon position="top-right" pageBorder />
             <Divider short />
           </div>
           <div className="flex flex-col items-center gap-3 pt-6">
