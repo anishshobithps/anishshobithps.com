@@ -6,18 +6,13 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  SectionLabel,
+  SectionHeader,
 } from "@/components/ui/typography";
 
 export function RulesIFollow() {
   return (
     <Section aria-label="Rules I Follow">
-      <h2 className="sr-only">Rules I Follow</h2>
-      <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-        <SectionLabel>Rules I Follow</SectionLabel>
-        <div className="flex-1 h-px bg-border/40" />
-      </div>
-
+      <SectionHeader>Rules I Follow</SectionHeader>
       <CardGrid cols="grid-cols-1 md:grid-cols-2">
         {rules.map((item) => (
           <CardGridItem key={item.title}>

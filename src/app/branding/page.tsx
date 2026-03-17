@@ -23,16 +23,14 @@ import {
   TypographySmall,
   TypographyMark,
   SectionLabel,
+  SectionHeader,
 } from "@/components/ui/typography";
 
 export default function BrandingPage() {
   return (
     <>
       <Section aria-label="Brand System">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Brand System</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>Brand System</SectionHeader>
         <div className="max-w-3xl space-y-6">
           <TypographyH1>Brand Infrastructure</TypographyH1>
           <TypographyLead>
@@ -47,11 +45,7 @@ export default function BrandingPage() {
       </Section>
 
       <Section aria-label="Typography">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Typography</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
-
+        <SectionHeader>Typography</SectionHeader>
         <CardGrid cols="grid-cols-1 md:grid-cols-2">
           {[
             {
@@ -148,6 +142,10 @@ export default function BrandingPage() {
               ),
             },
             {
+              title: "Section Heading",
+              component: <SectionHeader>Section Heading</SectionHeader>,
+            },
+            {
               title: "Section Label",
               component: <SectionLabel>Section Label</SectionLabel>,
             },
@@ -176,11 +174,7 @@ export default function BrandingPage() {
       </Section>
 
       <Section aria-label="Logo Variants">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Logo Variants</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
-
+        <SectionHeader>Logo Variants</SectionHeader>
         <CardGrid cols="grid-cols-1 md:grid-cols-3">
           {[
             { label: "Icon", props: {}, description: "Pocket-sized identity" },
@@ -215,15 +209,10 @@ export default function BrandingPage() {
       </Section>
 
       <Section aria-label="Open Graph">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Open Graph</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
-
+        <SectionHeader>Open Graph</SectionHeader>
         <Card className="max-w-5xl p-0 @lg:p-0 overflow-hidden">
           <BrandingOGPreview />
         </Card>
-
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
             The thumbnail that decides whether someone clicks or keeps

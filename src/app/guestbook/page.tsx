@@ -3,7 +3,7 @@ import { GuestbookClient } from "@/app/guestbook/guestbook-client";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
-  SectionLabel,
+  SectionHeader,
   TypographyH1,
   TypographyLead,
   TypographyMark,
@@ -28,8 +28,7 @@ export default async function GuestbookPage() {
   const { userId } = await auth();
   const { entries, total } = await getGuestbookEntries();
 
-  const siteOwnerId =
-    process.env.OWNER_CLERK_USER_ID ?? "";
+  const siteOwnerId = process.env.OWNER_CLERK_USER_ID ?? "";
 
   return (
     <>
@@ -48,11 +47,7 @@ export default async function GuestbookPage() {
       </Section>
 
       <Section aria-label="Guestbook entries">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Messages</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
-
+        <SectionHeader>Messages</SectionHeader>
         <GuestbookClient
           initialEntries={entries}
           currentUserId={userId}

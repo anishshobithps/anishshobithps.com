@@ -15,18 +15,13 @@ import {
   TypographyH3,
   TypographyLead,
   TypographyMark,
-  SectionLabel,
+  SectionHeader,
 } from "@/components/ui/typography";
 
 export function Ecosystem() {
   return (
     <Section aria-label="Ecosystem">
-      <h2 className="sr-only">Ecosystem</h2>
-      <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-        <SectionLabel>Ecosystem</SectionLabel>
-        <div className="flex-1 h-px bg-border/40" />
-      </div>
-
+      <SectionHeader>Ecosystem</SectionHeader>
       <div className="mb-12 max-w-3xl">
         <TypographyLead>
           I mostly operate inside the{" "}

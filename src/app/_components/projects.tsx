@@ -8,7 +8,7 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import {
-  SectionLabel,
+  SectionHeader,
   TypographyH3,
   TypographyLead,
   TypographyMark,
@@ -21,12 +21,7 @@ import { projects } from "@/lib/config";
 export function BuiltThings() {
   return (
     <Section aria-label="Things I've Built">
-      <h2 className="sr-only">Things I&apos;ve Built</h2>
-      <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-        <SectionLabel>Things I've Built</SectionLabel>
-        <div className="flex-1 h-px bg-border/40" />
-      </div>
-
+      <SectionHeader>Things I've Built</SectionHeader>
       <div className="mb-12 max-w-3xl">
         <TypographyLead>
           A mix of{" "}

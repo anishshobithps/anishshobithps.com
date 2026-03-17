@@ -8,7 +8,7 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  SectionLabel,
+  SectionHeader,
 } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,11 +22,7 @@ import { Fragment } from "react";
 export function Contact() {
   return (
     <Section aria-label="Contact" id="contact">
-      <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-        <SectionLabel>Contact</SectionLabel>
-        <div className="flex-1 h-px bg-border/40" />
-      </div>
-
+      <SectionHeader>Contact</SectionHeader>
       <div className="w-full max-w-5xl">
         <Card className="@lg:p-10">
           <div className="space-y-8">

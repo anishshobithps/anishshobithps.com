@@ -8,7 +8,7 @@ import {
   TypographyMuted,
   TypographyMark,
   TypographyP,
-  SectionLabel,
+  SectionHeader,
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import { buildMeta } from "@/lib/og";
@@ -50,10 +50,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="What this site is">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>What this site is</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>What this site is</SectionHeader>
         <div className="max-w-2xl">
           <TypographyP>
             This is a personal portfolio and blog at{" "}
@@ -70,10 +67,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="What data is collected">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>What data is collected</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>What data is collected</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
             <TypographyH2>Blog read counts</TypographyH2>
@@ -159,10 +153,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Where data is stored">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Where data is stored</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>Where data is stored</SectionHeader>
         <div className="max-w-2xl space-y-4">
           <TypographyP>
             Read counts and reactions are stored in a PostgreSQL database hosted
@@ -200,10 +191,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Analytics">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Analytics</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>Analytics</SectionHeader>
         <div className="max-w-2xl">
           <TypographyP>
             This site uses{" "}
@@ -235,10 +223,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Third-party services">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Third-party services</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>Third-party services</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
             <TypographyH2>Spotify</TypographyH2>
@@ -315,10 +300,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Your rights">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Your rights</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>Your rights</SectionHeader>
         <div className="max-w-2xl space-y-4">
           <TypographyP>
             If you have never signed in to the guestbook or comments, the only
@@ -349,10 +331,7 @@ export default function PrivacyPolicyPage() {
       </Section>
 
       <Section aria-label="Changes to this policy">
-        <div className="flex items-center gap-3 mb-10" aria-hidden="true">
-          <SectionLabel>Changes to this policy</SectionLabel>
-          <div className="flex-1 h-px bg-border/40" />
-        </div>
+        <SectionHeader>Changes to this policy</SectionHeader>
         <div className="max-w-2xl">
           <TypographyP>
             If anything meaningful changes (like adding analytics), this page

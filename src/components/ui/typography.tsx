@@ -245,3 +245,15 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
   },
 );
 SectionLabel.displayName = "SectionLabel";
+
+export function SectionHeader({
+  children,
+  className,
+}: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("flex items-center gap-3 mb-10", className)} aria-hidden="true">
+      <SectionLabel>{children}</SectionLabel>
+      <div className="flex-1 h-px bg-border/40" />
+    </div>
+  );
+}

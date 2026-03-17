@@ -14,7 +14,7 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  SectionLabel,
+  SectionHeader,
 } from "@/components/ui/typography";
 import { LocationTag } from "@/components/ui/location";
 import { IconCircleFilled } from "@tabler/icons-react";
@@ -22,11 +22,7 @@ import { IconCircleFilled } from "@tabler/icons-react";
 export function Hero() {
   return (
     <Section variant="hero" aria-label="Introduction">
-      <div className="flex items-center gap-3 mb-6" aria-hidden="true">
-        <SectionLabel>Who am I?</SectionLabel>
-        <div className="flex-1 h-px bg-border/40" />
-      </div>
-
+      <SectionHeader>Who am I?</SectionHeader>
       <div className="w-full max-w-5xl flex flex-col gap-6">
         {siteConfig.availableForHire && (
           <Badge
