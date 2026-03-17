@@ -162,7 +162,7 @@ export default function PrivacyPolicyPage() {
               href="https://neon.tech"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
+              className="link-external"
             >
               Neon
             </a>
@@ -181,7 +181,7 @@ export default function PrivacyPolicyPage() {
               href="https://clerk.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
+              className="link-external"
             >
               Clerk
             </a>
@@ -199,7 +199,7 @@ export default function PrivacyPolicyPage() {
               href="https://umami.is"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
+              className="link-external"
             >
               Umami Analytics
             </a>{" "}
@@ -209,7 +209,7 @@ export default function PrivacyPolicyPage() {
               href="https://umami.is/docs/cloud"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
+              className="link-external"
             >
               Umami Cloud
             </a>
@@ -234,7 +234,7 @@ export default function PrivacyPolicyPage() {
                 href="https://developer.spotify.com/documentation/web-api"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground transition-colors"
+                className="link-external"
               >
                 Spotify Web API
               </a>
@@ -254,7 +254,7 @@ export default function PrivacyPolicyPage() {
                 href="https://clerk.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground transition-colors"
+                className="link-external"
               >
                 Clerk
               </a>
@@ -269,7 +269,7 @@ export default function PrivacyPolicyPage() {
                 href="https://clerk.com/legal/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground transition-colors"
+                className="link-external"
               >
                 Clerk&apos;s Privacy Policy
               </a>
@@ -288,7 +288,7 @@ export default function PrivacyPolicyPage() {
                 href="https://policies.google.com/privacy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground transition-colors"
+                className="link-external"
               >
                 Google&apos;s Privacy Policy
               </a>
@@ -312,10 +312,7 @@ export default function PrivacyPolicyPage() {
             If you have signed in and left a guestbook message, posted a
             comment, or liked either, you can request deletion of that data by
             emailing{" "}
-            <a
-              href={`mailto:${siteConfig.email}`}
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
-            >
+            <a href={`mailto:${siteConfig.email}`} className="link-external">
               {siteConfig.email}
             </a>
             . To delete your Clerk account and the profile data Clerk holds

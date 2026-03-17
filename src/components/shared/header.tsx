@@ -27,16 +27,11 @@ export function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
-    const handler = (e: MediaQueryListEvent) => {
-      if (e.matches) setOpen(false);
-    };
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    if (mq.matches) setOpen(false);
+    mq.addEventListener("change", (e) => e.matches && setOpen(false));
+    return () =>
+      mq.removeEventListener("change", (e) => e.matches && setOpen(false));
   }, []);
 
   return (

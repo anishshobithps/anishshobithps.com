@@ -1,4 +1,3 @@
-// src/components/shared/footer.tsx
 import { Logo } from "@/components/shared/logo";
 import { NowPlaying } from "@/components/shared/now-playing";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
