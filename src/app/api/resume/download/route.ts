@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchResume } from "@/lib/resume";
-import { siteConfig } from "@/lib/config";
+import { fetchResume, forwardResumeHeaders } from "@/lib/resume";
 import { getResumeFilename } from "@/lib/resume";
 
 export async function GET() {
@@ -12,20 +11,10 @@ export async function GET() {
         }
 
         const filename = getResumeFilename(true);
-
-        const contentLength = res.headers.get("content-length");
-        const etag = res.headers.get("etag");
-        const lastModified = res.headers.get("last-modified");
-
         return new NextResponse(res.body, {
-            headers: {
-                "Content-Type": "application/pdf",
+            headers: forwardResumeHeaders(res, {
                 "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${filename}`,
-                "Cache-Control": "public, max-age=3600",
-                ...(contentLength && { "Content-Length": contentLength }),
-                ...(etag && { ETag: etag }),
-                ...(lastModified && { "Last-Modified": lastModified }),
-            },
+            }),
         });
     } catch {
         return NextResponse.json(

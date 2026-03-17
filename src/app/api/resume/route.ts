@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchResume } from "@/lib/resume";
+import { fetchResume, forwardResumeHeaders } from "@/lib/resume";
 
 export async function GET() {
     try {
@@ -8,20 +8,8 @@ export async function GET() {
         if (!res.body) {
             throw new Error("No resume body found");
         }
-
-        const contentLength = res.headers.get("content-length");
-        const etag = res.headers.get("etag");
-        const lastModified = res.headers.get("last-modified");
-
         return new NextResponse(res.body, {
-            headers: {
-                "Content-Type": "application/pdf",
-                "Content-Disposition": "inline",
-                "Cache-Control": "public, max-age=3600",
-                ...(contentLength && { "Content-Length": contentLength }),
-                ...(etag && { ETag: etag }),
-                ...(lastModified && { "Last-Modified": lastModified }),
-            },
+            headers: forwardResumeHeaders(res, { "Content-Disposition": "inline" }),
         });
     } catch {
         return NextResponse.json(
