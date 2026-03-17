@@ -28,14 +28,36 @@ type SchemaProps =
     }
   | { type: "breadcrumb"; items: { name: string; url: string }[] };
 
+type ArticleProps = Extract<SchemaProps, { type: "article" }>;
+type AnySchema = WithContext<
+  Person | WebSite | WebPage | BlogPosting | BreadcrumbList
+>;
+
+const SCHEMA_CONTEXT = "https://schema.org" as const;
+const profileImageUrl = `${siteConfig.baseUrl}/profile.avif`;
+const schemaAuthor = {
+  "@type": "Person" as const,
+  name: siteConfig.name,
+  url: siteConfig.baseUrl,
+};
+const schemaPublisher = {
+  "@type": "Organization" as const,
+  name: siteConfig.name,
+  url: siteConfig.baseUrl,
+  logo: {
+    "@type": "ImageObject" as const,
+    url: profileImageUrl,
+    width: "460",
+    height: "460",
+  },
+};
+
 function buildPerson(): WithContext<Person> {
   return {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: siteConfig.name,
+    "@context": SCHEMA_CONTEXT,
+    ...schemaAuthor,
     alternateName: siteConfig.handle,
-    url: siteConfig.baseUrl,
-    image: `${siteConfig.baseUrl}/profile.avif`,
+    image: profileImageUrl,
     jobTitle: siteConfig.role,
     description: siteConfig.description,
     sameAs: [...siteConfig.sameAs],
@@ -44,16 +66,12 @@ function buildPerson(): WithContext<Person> {
 
 function buildWebSite(): WithContext<WebSite> {
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "WebSite",
     name: siteConfig.name,
     url: siteConfig.baseUrl,
     description: siteConfig.description,
-    author: {
-      "@type": "Person",
-      name: siteConfig.name,
-      url: siteConfig.baseUrl,
-    },
+    author: schemaAuthor,
   };
 }
 
@@ -63,59 +81,37 @@ function buildWebPage(
   canonicalUrl: string,
 ): WithContext<WebPage> {
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "WebPage",
     name: title,
     description,
     url: canonicalUrl,
     isPartOf: { "@type": "WebSite", url: siteConfig.baseUrl },
-    author: {
-      "@type": "Person",
-      name: siteConfig.name,
-      url: siteConfig.baseUrl,
-    },
+    author: schemaAuthor,
   };
 }
 
-function buildBlogPosting(params: {
-  title: string;
-  description: string;
-  canonicalUrl: string;
-  publishedAt?: string;
-  updatedAt?: string;
-  tags?: string[];
-}): WithContext<BlogPosting> {
+function buildBlogPosting({
+  title,
+  description,
+  canonicalUrl,
+  publishedAt,
+  updatedAt,
+  tags,
+}: ArticleProps): WithContext<BlogPosting> {
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "BlogPosting",
-    headline: params.title,
-    description: params.description,
-    url: params.canonicalUrl,
-    image: `${siteConfig.baseUrl}/profile.avif`,
-    ...(params.publishedAt && { datePublished: params.publishedAt }),
-    ...(params.updatedAt && { dateModified: params.updatedAt }),
-    ...(params.tags && { keywords: params.tags.join(", ") }),
-    author: {
-      "@type": "Person",
-      name: siteConfig.name,
-      url: siteConfig.baseUrl,
-      image: `${siteConfig.baseUrl}/profile.avif`,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      url: siteConfig.baseUrl,
-      logo: {
-        "@type": "ImageObject",
-        url: `${siteConfig.baseUrl}/profile.avif`,
-        width: "460",
-        height: "460",
-      },
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": params.canonicalUrl,
-    },
+    headline: title,
+    description,
+    url: canonicalUrl,
+    image: profileImageUrl,
+    ...(publishedAt && { datePublished: publishedAt }),
+    ...(updatedAt && { dateModified: updatedAt }),
+    ...(tags && { keywords: tags.join(", ") }),
+    author: { ...schemaAuthor, image: profileImageUrl },
+    publisher: schemaPublisher,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
   };
 }
 
@@ -123,7 +119,7 @@ function buildBreadcrumb(
   items: { name: string; url: string }[],
 ): WithContext<BreadcrumbList> {
   return {
-    "@context": "https://schema.org",
+    "@context": SCHEMA_CONTEXT,
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
@@ -134,7 +130,7 @@ function buildBreadcrumb(
   };
 }
 
-function resolveSchema(props: SchemaProps): WithContext<any> {
+function resolveSchema(props: SchemaProps): AnySchema {
   switch (props.type) {
     case "person":
       return buildPerson();
@@ -150,11 +146,10 @@ function resolveSchema(props: SchemaProps): WithContext<any> {
 }
 
 export function JsonLd(props: SchemaProps) {
-  const schema = resolveSchema(props);
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(resolveSchema(props)) }}
     />
   );
 }
