@@ -1,7 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { IconCheck, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import {
+  CheckIcon,
+  CaretUpIcon,
+  CaretDownIcon,
+} from "@/components/shared/icons";
 import { Select as SelectPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/cn";
@@ -44,7 +48,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <IconChevronDown className="size-4 opacity-50" />
+        <CaretDownIcon className="size-4 opacity-50" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -119,7 +123,7 @@ function SelectItem({
         className="absolute right-2 flex size-3.5 items-center justify-center"
       >
         <SelectPrimitive.ItemIndicator>
-          <IconCheck className="size-4" />
+          <CheckIcon className="size-4" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -153,7 +157,7 @@ function SelectScrollUpButton({
       )}
       {...props}
     >
-      <IconChevronUp className="size-4" />
+      <CaretUpIcon className="size-4" />
     </SelectPrimitive.ScrollUpButton>
   );
 }
@@ -171,7 +175,7 @@ function SelectScrollDownButton({
       )}
       {...props}
     >
-      <IconChevronDown className="size-4" />
+      <CaretDownIcon className="size-4" />
     </SelectPrimitive.ScrollDownButton>
   );
 }
