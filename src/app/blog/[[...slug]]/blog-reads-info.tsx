@@ -1,6 +1,6 @@
 import { getBlogReadsCount, trackRead } from "@/app/blog/[[...slug]]/actions";
 import { TypographyMuted } from "@/components/ui/typography";
-import { IconEye } from "@tabler/icons-react";
+import { EyeIcon } from "@phosphor-icons/react/dist/ssr";
 
 export async function BlogReadsInfo({ slug }: { slug: string }) {
   const [reads] = await Promise.all([getBlogReadsCount(slug), trackRead(slug)]);
@@ -9,7 +9,7 @@ export async function BlogReadsInfo({ slug }: { slug: string }) {
       className="font-mono tabular-nums text-xs flex items-center gap-1.5"
       aria-label={`${reads} reads`}
     >
-      <IconEye className="size-3.5 shrink-0" aria-hidden="true" />
+      <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
       {reads} reads
     </TypographyMuted>
   );

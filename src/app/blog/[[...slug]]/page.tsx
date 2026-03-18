@@ -22,7 +22,11 @@ import { buildMeta } from "@/lib/og";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 import { auth } from "@clerk/nextjs/server";
-import { IconCalendar, IconClock, IconGitCommit } from "@tabler/icons-react";
+import {
+  CalendarIcon,
+  GitCommitIcon,
+  ClockIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -116,7 +120,8 @@ export default async function Page(props: { params: { slug: string[] } }) {
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Published on ${formatLongDate(page.data.date)}`}
             >
-              <IconCalendar className="size-3.5 shrink-0" aria-hidden="true" />
+              <CalendarIcon className="size-3.5 shrink-0" aria-hidden="true" />
+
               <time dateTime={toISOString(page.data.date)}>
                 {formatLongDate(page.data.date)}
               </time>
@@ -127,7 +132,7 @@ export default async function Page(props: { params: { slug: string[] } }) {
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Last updated ${formatShortDate(page.data.lastModified)}`}
             >
-              <IconGitCommit className="size-3.5 shrink-0" aria-hidden="true" />
+              <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
               Updated{" "}
               <time dateTime={toISOString(page.data.lastModified)}>
                 {formatShortDate(page.data.lastModified)}
@@ -139,7 +144,7 @@ export default async function Page(props: { params: { slug: string[] } }) {
               className="font-mono text-xs flex items-center gap-1.5"
               aria-label={`Reading time: ${readingTime.text}`}
             >
-              <IconClock className="size-3.5 shrink-0" aria-hidden="true" />
+              <ClockIcon className="size-3.5 shrink-0" aria-hidden="true" />
               {readingTime.text}
             </TypographyMuted>
           )}

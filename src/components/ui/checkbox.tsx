@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { IconCheck } from "@tabler/icons-react";
+import { CheckIcon } from "@/components/shared/icons";
 import { Checkbox as CheckboxPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/cn";
@@ -23,7 +23,7 @@ function Checkbox({
         data-slot="checkbox-indicator"
         className="grid place-content-center text-current transition-none"
       >
-        <IconCheck className="size-3.5" />
+        <CheckIcon className="size-3.5" />
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

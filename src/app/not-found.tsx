@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
-import { IconHome } from "@tabler/icons-react";
+import { HouseIcon } from "@/components/shared/icons";
 import {
   TypographyP,
   TypographyMuted,
@@ -59,7 +59,7 @@ export default function NotFound() {
               aria-label="Go back to the home page"
               className="flex items-center gap-2"
             >
-              <IconHome aria-hidden="true" data-icon="inline-start" />
+              <HouseIcon aria-hidden="true" data-icon="inline-start" />
               Go Home
             </Link>
           </Button>

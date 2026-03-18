@@ -38,7 +38,7 @@ import {
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { formatShortDate } from "@/lib/date";
-import { IconSearch, IconTag, IconX } from "@tabler/icons-react";
+import { MagnifyingGlassIcon, TagIcon, XIcon } from "@/components/shared/icons";
 import Link from "next/link";
 import {
   parseAsArrayOf,
@@ -105,7 +105,7 @@ export function BlogsClient({
         <div className="w-full sm:w-auto sm:flex-1 min-w-0">
           <InputGroup>
             <InputGroupAddon align="inline-start">
-              <IconSearch aria-hidden="true" />
+              <MagnifyingGlassIcon aria-hidden="true" />
             </InputGroupAddon>
             <InputGroupInput
               placeholder="Search posts…"
@@ -120,7 +120,7 @@ export function BlogsClient({
                   onClick={() => setParams({ q: "", page: 1 })}
                   aria-label="Clear search"
                 >
-                  <IconX className="size-4" aria-hidden="true" />
+                  <XIcon className="size-4" aria-hidden="true" />
                 </InputGroupButton>
               </InputGroupAddon>
             )}
@@ -141,7 +141,8 @@ export function BlogsClient({
                     }
                     className="cursor-pointer gap-1.5 shrink-0 justify-start font-semibold"
                   >
-                    <IconTag className="size-4" aria-hidden="true" />
+                    <TagIcon className="size-4" aria-hidden="true" />
+
                     <span className="text-left">Tags</span>
                     {tags.length > 0 && (
                       <span
@@ -164,7 +165,7 @@ export function BlogsClient({
                         className="cursor-pointer h-auto px-1 py-0"
                         aria-label="Clear all tag filters"
                       >
-                        <IconX className="size-4" aria-hidden="true" />
+                        <XIcon className="size-4" aria-hidden="true" />
                       </Button>
                     )}
                   </div>
@@ -247,7 +248,7 @@ export function BlogsClient({
                 className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary hover:bg-primary/20 cursor-pointer h-auto"
               >
                 {tag}
-                <IconX className="size-3" aria-hidden="true" />
+                <XIcon className="size-3" aria-hidden="true" />
               </Button>
             </li>
           ))}

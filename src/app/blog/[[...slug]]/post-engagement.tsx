@@ -1,58 +1,57 @@
 "use client";
 
 import {
-  deleteComment,
-  getReactions,
-  submitComment,
-  submitReaction,
-  toggleCommentLike,
-  togglePinComment,
-  type CommentWithMeta,
-  type MoodId,
-  type ReactionCounts,
+    deleteComment,
+    getReactions,
+    submitComment,
+    submitReaction,
+    toggleCommentLike,
+    togglePinComment,
+    type CommentWithMeta,
+    type MoodId,
+    type ReactionCounts,
 } from "@/app/blog/[[...slug]]/actions";
 import { Card } from "@/components/layouts/page";
+import {
+    ArrowBendDownRightIcon,
+    ChatCircleIcon,
+    HeartIcon,
+    PaperPlaneTiltIcon,
+    PencilIcon,
+    PushPinSimpleIcon,
+    PushPinSimpleSlashIcon,
+    SignInIcon,
+    SignOutIcon,
+    SmileyMehIcon,
+    ThumbsDownIcon,
+    ThumbsUpIcon,
+    TrashIcon,
+} from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  ButtonGroup,
-  ButtonGroupSeparator,
+    ButtonGroup,
+    ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  SectionLabel,
-  TypographyMuted,
-  TypographySmall,
+    SectionLabel,
+    TypographyMuted,
+    TypographySmall,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { nowISO, timeAgo } from "@/lib/date";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
-import {
-  IconCornerDownRight,
-  IconHeart,
-  IconHeartFilled,
-  IconLogin,
-  IconLogout,
-  IconMessageCircle,
-  IconMoodNeutral,
-  IconPencil,
-  IconPin,
-  IconPinnedFilled,
-  IconSend,
-  IconThumbDown,
-  IconThumbUp,
-  IconTrash,
-} from "@tabler/icons-react";
 import NextImage from "next/image";
 import Link from "next/link";
 import {
-  startTransition,
-  useCallback,
-  useEffect,
-  useOptimistic,
-  useRef,
-  useState,
+    startTransition,
+    useCallback,
+    useEffect,
+    useOptimistic,
+    useRef,
+    useState,
 } from "react";
 import { toast } from "sonner";
 
@@ -83,7 +82,7 @@ const MOODS = [
   {
     id: "terrible" as MoodId,
     label: "Not for me",
-    icon: IconThumbDown,
+    icon: ThumbsDownIcon,
     activeClassName:
       "border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/15 hover:text-red-400",
     inactiveClassName:
@@ -92,7 +91,7 @@ const MOODS = [
   {
     id: "bad" as MoodId,
     label: "Meh",
-    icon: IconMoodNeutral,
+    icon: SmileyMehIcon,
     activeClassName:
       "border-orange-500/40 bg-orange-500/10 text-orange-400 hover:bg-orange-500/15 hover:text-orange-400",
     inactiveClassName:
@@ -101,7 +100,7 @@ const MOODS = [
   {
     id: "good" as MoodId,
     label: "Liked it",
-    icon: IconThumbUp,
+    icon: ThumbsUpIcon,
     activeClassName:
       "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/15 hover:text-blue-400",
     inactiveClassName:
@@ -110,7 +109,7 @@ const MOODS = [
   {
     id: "amazing" as MoodId,
     label: "Loved it",
-    icon: IconHeart,
+    icon: HeartIcon,
     activeClassName:
       "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15 hover:text-emerald-400",
     inactiveClassName:
@@ -348,7 +347,7 @@ function CommentComposer({
             aria-busy={submitting}
             className="gap-1.5 font-semibold"
           >
-            <IconSend size={14} aria-hidden="true" />
+            <PaperPlaneTiltIcon size={14} aria-hidden="true" />
             {submitting ? "Posting…" : isReply ? "Reply" : "Comment"}
           </Button>
         </div>
@@ -436,7 +435,7 @@ function CommentCard({
                   variant="secondary"
                   className="gap-1 h-4 px-1.5 text-[10px] py-0 font-medium"
                 >
-                  <IconPinnedFilled size={9} aria-hidden="true" />
+                  <PushPinSimpleIcon size={9} aria-hidden="true" />
                   Pinned
                 </Badge>
               )}
@@ -461,11 +460,11 @@ function CommentCard({
                   }
                   className="gap-1.5"
                 >
-                  {comment.likedByMe ? (
-                    <IconHeartFilled size={14} aria-hidden="true" />
-                  ) : (
-                    <IconHeart size={14} aria-hidden="true" />
-                  )}
+                  <HeartIcon
+                    size={14}
+                    weight={comment.likedByMe ? "fill" : "duotone"}
+                    aria-hidden="true"
+                  />
                   {comment.likeCount > 0 ? (
                     <span className="tabular-nums">{comment.likeCount}</span>
                   ) : (
@@ -485,7 +484,7 @@ function CommentCard({
                         aria-label="Reply to comment"
                         className="gap-1.5"
                       >
-                        <IconCornerDownRight size={14} aria-hidden="true" />
+                        <ArrowBendDownRightIcon size={14} aria-hidden="true" />
                         Reply
                         {comment.replies.length > 0 && !replying && (
                           <span className="tabular-nums opacity-60">
@@ -496,7 +495,10 @@ function CommentCard({
                     ) : (
                       <SignInButton mode="modal">
                         <Button variant="outline" size="sm" className="gap-1.5">
-                          <IconCornerDownRight size={14} aria-hidden="true" />
+                          <ArrowBendDownRightIcon
+                            size={14}
+                            aria-hidden="true"
+                          />
                           Reply
                           <span className="text-[10px] opacity-50">
                             (sign in)
@@ -523,9 +525,9 @@ function CommentCard({
                       )}
                     >
                       {comment.isPinned ? (
-                        <IconPinnedFilled size={14} aria-hidden="true" />
+                        <PushPinSimpleSlashIcon size={14} aria-hidden="true" />
                       ) : (
-                        <IconPin size={14} aria-hidden="true" />
+                        <PushPinSimpleIcon size={14} aria-hidden="true" />
                       )}
                       <span className="hidden sm:inline">
                         {comment.isPinned ? "Unpin" : "Pin"}
@@ -544,7 +546,11 @@ function CommentCard({
                       aria-label="Delete comment"
                       className="gap-1.5 text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
                     >
-                      <IconTrash size={14} aria-hidden="true" />
+                      <TrashIcon
+                        size={14}
+                        className="text-destructive"
+                        aria-hidden="true"
+                      />
                       <span className="hidden sm:inline">Delete</span>
                     </Button>
                   </>
@@ -804,11 +810,7 @@ export function PostEngagement({
                         isActive ? activeClassName : inactiveClassName,
                       )}
                     >
-                      <Icon
-                        size={14}
-                        strokeWidth={isActive ? 2.5 : 1.75}
-                        aria-hidden="true"
-                      />
+                      <Icon size={14} aria-hidden="true" />
                       {label}
                       {count !== null && count > 0 && (
                         <span className="tabular-nums text-xs opacity-70">
@@ -852,7 +854,7 @@ export function PostEngagement({
                       className="gap-1.5 text-xs"
                     >
                       <Link href="/guestbook">
-                        <IconPencil size={13} aria-hidden="true" />
+                        <PencilIcon size={13} aria-hidden="true" />
                         <span className="hidden sm:inline">
                           Checkout Guestbook!!
                         </span>
@@ -868,7 +870,7 @@ export function PostEngagement({
                       className="gap-1.5 text-xs text-muted-foreground hover:text-foreground"
                       aria-label="Sign out"
                     >
-                      <IconLogout size={13} aria-hidden="true" />
+                      <SignOutIcon size={13} aria-hidden="true" />
                       <span className="hidden sm:inline">Sign out</span>
                     </Button>
                   </ButtonGroup>
@@ -901,7 +903,7 @@ export function PostEngagement({
                     size="sm"
                     className="gap-1.5 shrink-0"
                   >
-                    <IconLogin size={14} aria-hidden="true" />
+                    <SignInIcon size={14} aria-hidden="true" />
                     Sign in
                   </Button>
                 </SignInButton>
@@ -929,7 +931,7 @@ export function PostEngagement({
               className="size-9 border flex items-center justify-center text-muted-foreground"
               aria-hidden="true"
             >
-              <IconMessageCircle size={18} />
+              <ChatCircleIcon size={18} />
             </div>
             <div className="space-y-1">
               <TypographySmall className="font-semibold">

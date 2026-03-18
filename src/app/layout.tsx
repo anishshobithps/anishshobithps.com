@@ -3,6 +3,7 @@ import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MouseGlow } from "@/components/shared/mouse-glow";
+import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
@@ -75,7 +76,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
                 <Header />
                 <Content className="scroll-smooth pt-14">
                   <TooltipProvider>
-                    {children}
+                    <PhosphorProvider>{children}</PhosphorProvider>
                     <Toaster />
                   </TooltipProvider>
                 </Content>

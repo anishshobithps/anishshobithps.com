@@ -16,17 +16,16 @@ import { Slot } from "@radix-ui/react-slot";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/cn";
 import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconDownload,
-  IconExternalLink,
-  IconRotateClockwise,
-  IconZoomIn,
-  IconZoomOut,
-} from "@tabler/icons-react";
+  CaretLeftIcon,
+  CaretRightIcon,
+  DownloadIcon,
+  ArrowSquareOutIcon,
+  ArrowClockwiseIcon,
+  MagnifyingGlassMinusIcon,
+  MagnifyingGlassPlusIcon,
+} from "@/components/shared/icons";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -262,7 +261,7 @@ export const PdfViewerPagination = () => {
         aria-label="Previous page"
         onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
       >
-        <IconChevronLeft className="h-4 w-4" aria-hidden="true" />
+        <CaretLeftIcon className="size-4" aria-hidden="true" />
       </Button>
 
       <span
@@ -279,7 +278,7 @@ export const PdfViewerPagination = () => {
         aria-label="Next page"
         onClick={() => setCurrentPage((p) => Math.min(p + 1, numPages!))}
       >
-        <IconChevronRight className="h-4 w-4" aria-hidden="true" />
+        <CaretRightIcon className="size-4" aria-hidden="true" />
       </Button>
     </div>
   );
@@ -300,7 +299,7 @@ export const PdfViewerZoom = () => {
         aria-label="Zoom out"
         onClick={() => setZoom((z) => Math.max(+(z - 0.1).toFixed(1), 0.5))}
       >
-        <IconZoomOut className="h-4 w-4" aria-hidden="true" />
+        <MagnifyingGlassMinusIcon className="size-4" aria-hidden="true" />
       </Button>
 
       <span
@@ -317,7 +316,7 @@ export const PdfViewerZoom = () => {
         aria-label="Zoom in"
         onClick={() => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3))}
       >
-        <IconZoomIn className="h-4 w-4" aria-hidden="true" />
+        <MagnifyingGlassPlusIcon className="size-4" aria-hidden="true" />
       </Button>
     </div>
   );
@@ -332,7 +331,7 @@ export const PdfViewerReload = () => {
       onClick={reload}
       aria-label="Reload PDF"
     >
-      <IconRotateClockwise className="h-4 w-4" />
+      <ArrowClockwiseIcon className="size-4" />
     </Button>
   );
 };
@@ -347,7 +346,7 @@ export const PdfViewerOpen = () => {
         rel="noopener noreferrer"
         aria-label="Open PDF in new tab"
       >
-        <IconExternalLink className="h-4 w-4" aria-hidden="true" />
+        <ArrowSquareOutIcon className="size-4" aria-hidden="true" />
       </a>
     </Button>
   );
@@ -361,7 +360,7 @@ export const PdfViewerDownload = ({ label }: { label?: string }) => {
         href={downloadHref}
         aria-label={label ? `${label} — download as PDF` : "Download as PDF"}
       >
-        <IconDownload className="h-4 w-4" aria-hidden="true" />
+        <DownloadIcon className="size-4" aria-hidden="true" />
         <span className="hidden sm:inline" aria-hidden="true">
           {label}
         </span>

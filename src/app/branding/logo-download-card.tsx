@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { IconCode, IconPhoto } from "@tabler/icons-react";
+import { CodeIcon, ImageIcon } from "@/components/shared/icons";
 import { useRef, useState } from "react";
 
 const DOWNLOAD_SIZES = [16, 32, 64, 128, 256, 512] as const;
@@ -164,7 +164,7 @@ export function LogoDownloadCard({
             svgRef.current && downloadSVG(svgRef.current, filename, size)
           }
         >
-          <IconCode className="size-3 shrink-0" aria-hidden="true" />
+          <CodeIcon className="size-3 shrink-0" aria-hidden="true" />
           SVG
         </Button>
         <Button
@@ -176,7 +176,7 @@ export function LogoDownloadCard({
             svgRef.current && downloadPNG(svgRef.current, filename, size)
           }
         >
-          <IconPhoto className="size-3 shrink-0" aria-hidden="true" />
+          <ImageIcon className="size-3 shrink-0" aria-hidden="true" />
           PNG
         </Button>
       </div>

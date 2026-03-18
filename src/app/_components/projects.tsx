@@ -14,7 +14,8 @@ import {
   TypographyMark,
   TypographyMuted,
 } from "@/components/ui/typography";
-import { IconBrandGithubFilled, IconArrowUpRight } from "@tabler/icons-react";
+import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
+
 import Link from "next/link";
 import { projects } from "@/lib/config";
 
@@ -67,10 +68,11 @@ export function BuiltThings() {
                           rel="noopener noreferrer"
                           aria-label={`View ${project.title} live site`}
                         >
-                          <IconArrowUpRight
+                          <ArrowUpRightIcon
                             className="size-4"
                             aria-hidden="true"
                           />
+
                           <span className="ml-2">View</span>
                         </Link>
                       </Button>
@@ -83,10 +85,7 @@ export function BuiltThings() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <IconBrandGithubFilled
-                        className="size-4"
-                        aria-hidden="true"
-                      />
+                      <GithubLogoIcon className="size-4" aria-hidden="true" />
                       <span className="ml-2" aria-hidden="true">
                         GitHub
                       </span>
@@ -117,9 +116,10 @@ export function BuiltThings() {
             rel="noopener noreferrer"
             aria-label="Explore the Chaos — view all projects on GitHub"
           >
-            <IconBrandGithubFilled className="size-5 mr-2" aria-hidden="true" />
+            <GithubLogoIcon className="size-5 mr-2" aria-hidden="true" />
+
             <span>Explore the Chaos</span>
-            <IconArrowUpRight
+            <ArrowUpRightIcon
               className="size-4 ml-2 opacity-70"
               aria-hidden="true"
             />

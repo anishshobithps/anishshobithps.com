@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { IconMail, IconArrowUpRight } from "@tabler/icons-react";
+import { EnvelopeIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import { Section, Card } from "@/components/layouts/page";
 import {
   TypographyH2,
@@ -51,9 +51,8 @@ export function Contact() {
                     href={`mailto:${siteConfig.email}`}
                     aria-label="Say Hello — send an email"
                   >
-                    <IconMail
+                    <EnvelopeIcon
                       className="size-4 shrink-0"
-                      stroke={1.5}
                       aria-hidden="true"
                     />
                     <span className="hidden @sm:inline">Say Hello</span>
@@ -77,12 +76,9 @@ export function Contact() {
                         aria-label={`${item.label} profile (opens in new tab)`}
                       >
                         {getPlatformIcon(item.platform, "size-4")}
-
                         <span className="hidden @sm:inline">{item.label}</span>
-
-                        <IconArrowUpRight
+                        <ArrowUpRightIcon
                           className="size-3.5 opacity-50 hidden @sm:inline-flex"
-                          stroke={1.5}
                           aria-hidden="true"
                         />
                       </a>

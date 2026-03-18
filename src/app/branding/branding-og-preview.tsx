@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/input-group";
 import { siteConfig } from "@/lib/config";
 import {
-  IconUser,
-  IconLetterT,
-  IconBriefcase,
-  IconWorld,
-  IconTags,
-  IconAlignLeft,
-} from "@tabler/icons-react";
+  UserIcon,
+  TextTIcon,
+  BriefcaseIcon,
+  GlobeIcon,
+  TagIcon,
+  AlignLeftIcon,
+} from "@/components/shared/icons";
 
 export function BrandingOGPreview() {
   const defaultTitle = siteConfig.name;
@@ -112,7 +112,7 @@ export function BrandingOGPreview() {
                 aria-label={`Title (default: ${defaultTitle})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <IconLetterT size={16} />
+                <TextTIcon size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -123,7 +123,7 @@ export function BrandingOGPreview() {
                 aria-label={`Description (default: ${defaultDescription})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <IconAlignLeft size={16} />
+                <AlignLeftIcon size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -134,7 +134,7 @@ export function BrandingOGPreview() {
                 aria-label={`Name (default: ${defaultName})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <IconUser size={16} />
+                <UserIcon size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -145,7 +145,7 @@ export function BrandingOGPreview() {
                 aria-label={`Role (default: ${defaultRole})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <IconBriefcase size={16} />
+                <BriefcaseIcon size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -156,7 +156,7 @@ export function BrandingOGPreview() {
                 aria-label={`Domain (default: ${defaultDomain})`}
               />
               <InputGroupAddon aria-hidden="true">
-                <IconWorld size={16} />
+                <GlobeIcon size={16} />
               </InputGroupAddon>
             </InputGroup>
             <InputGroup>
@@ -167,7 +167,7 @@ export function BrandingOGPreview() {
                 aria-label="Tags, comma separated"
               />
               <InputGroupAddon aria-hidden="true">
-                <IconTags size={16} />
+                <TagIcon size={16} />
               </InputGroupAddon>
             </InputGroup>
           </div>

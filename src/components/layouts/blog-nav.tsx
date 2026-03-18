@@ -1,6 +1,5 @@
 "use client";
 
-import { IconArrowLeft, IconLink } from "@tabler/icons-react";
 import Link from "next/link";
 import {
   PaginationContent,
@@ -11,9 +10,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { TypographySmall } from "@/components/ui/typography";
 import {
-  IconBrandLinkedinFilled,
-  IconBrandTwitterFilled,
-} from "@tabler/icons-react";
+  ArrowLeftIcon,
+  LinkIcon,
+  XLogoIcon,
+  LinkedinLogoIcon,
+} from "@/components/shared/icons";
 import { toast } from "sonner";
 
 interface BlogPostNavProps {
@@ -44,7 +45,7 @@ export function BlogPostNav({
     <>
       <Button variant="ghost" size="sm" asChild>
         <Link href="/blogs" aria-label="Back to all blog posts">
-          <IconArrowLeft className="size-3.5 shrink-0" aria-hidden="true" />
+          <ArrowLeftIcon className="size-3.5 shrink-0" aria-hidden="true" />
           <TypographySmall>Blog</TypographySmall>
         </Link>
       </Button>
@@ -61,7 +62,7 @@ export function BlogPostNav({
           aria-label="Copy link to this post"
           className="text-muted-foreground hover:text-foreground"
         >
-          <IconLink className="size-4" aria-hidden="true" />
+          <LinkIcon className="size-4" aria-hidden="true" />
         </Button>
 
         <Button
@@ -76,7 +77,7 @@ export function BlogPostNav({
             rel="noopener noreferrer"
             aria-label={`Share "${title}" on X (opens in new tab)`}
           >
-            <IconBrandTwitterFilled className="size-4" aria-hidden="true" />
+            <XLogoIcon className="size-4" aria-hidden="true" />
           </a>
         </Button>
 
@@ -92,7 +93,7 @@ export function BlogPostNav({
             rel="noopener noreferrer"
             aria-label={`Share "${title}" on LinkedIn (opens in new tab)`}
           >
-            <IconBrandLinkedinFilled className="size-4" aria-hidden="true" />
+            <LinkedinLogoIcon className="size-4" aria-hidden="true" />
           </a>
         </Button>
 

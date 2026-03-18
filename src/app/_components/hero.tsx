@@ -1,6 +1,10 @@
 import NextImage from "next/image";
 import Link from "next/link";
-import { IconFileText, IconMail } from "@tabler/icons-react";
+import {
+  FileTextIcon,
+  EnvelopeIcon,
+  CircleIcon,
+} from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
@@ -17,7 +21,6 @@ import {
   SectionHeader,
 } from "@/components/ui/typography";
 import { LocationTag } from "@/components/ui/location";
-import { IconCircleFilled } from "@tabler/icons-react";
 
 export function Hero() {
   return (
@@ -30,8 +33,9 @@ export function Hero() {
             className="inline-flex items-center gap-1.5 px-3 py-1 text-xs self-start"
             aria-label="Currently available for hire"
           >
-            <IconCircleFilled
+            <CircleIcon
               className="size-2 fill-green-500 text-green-500 animate-pulse"
+              weight="fill"
               aria-hidden="true"
             />
             Available for hire
@@ -77,10 +81,11 @@ export function Hero() {
                   aria-label="View resume"
                   className="flex items-center justify-center gap-2"
                 >
-                  <IconFileText
+                  <FileTextIcon
                     className="size-5 shrink-0"
                     aria-hidden="true"
                   />
+
                   <span>Resume</span>
                 </Link>
               </Button>
@@ -96,7 +101,10 @@ export function Hero() {
                   aria-label="Jump to contact section"
                   className="flex items-center justify-center gap-2"
                 >
-                  <IconMail className="size-5 shrink-0" aria-hidden="true" />
+                  <EnvelopeIcon
+                    className="size-5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>Contact</span>
                 </a>
               </Button>

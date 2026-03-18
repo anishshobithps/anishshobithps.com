@@ -1,9 +1,10 @@
 import * as React from "react";
+import Link from "next/link";
 import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
-} from "@tabler/icons-react";
+  CaretLeftIcon,
+  CaretRightIcon,
+  DotsThreeIcon,
+} from "@/components/shared/icons";
 
 import { cn } from "@/lib/cn";
 import { buttonVariants, type Button } from "@/components/ui/button";
@@ -40,7 +41,7 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 type PaginationLinkProps = {
   isActive?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">;
+  React.ComponentProps<typeof Link>;
 
 function PaginationLink({
   className,
@@ -49,7 +50,7 @@ function PaginationLink({
   ...props
 }: PaginationLinkProps) {
   return (
-    <a
+    <Link
       aria-current={isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={isActive}
@@ -76,7 +77,7 @@ function PaginationPrevious({
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
       {...props}
     >
-      <IconChevronLeft />
+      <CaretLeftIcon />
       <span className="hidden sm:block">Previous</span>
     </PaginationLink>
   );
@@ -94,7 +95,7 @@ function PaginationNext({
       {...props}
     >
       <span className="hidden sm:block">Next</span>
-      <IconChevronRight />
+      <CaretRightIcon />
     </PaginationLink>
   );
 }
@@ -110,7 +111,7 @@ function PaginationEllipsis({
       className={cn("flex size-9 items-center justify-center", className)}
       {...props}
     >
-      <IconDots className="size-4" />
+      <DotsThreeIcon className="size-4" />
       <span className="sr-only">More pages</span>
     </span>
   );

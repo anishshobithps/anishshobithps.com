@@ -10,16 +10,15 @@ import {
 import { useUser, SignInButton, useClerk } from "@clerk/nextjs";
 import { timeAgo, toTimestamp, nowISO } from "@/lib/date";
 import {
-  IconHeart,
-  IconHeartFilled,
-  IconPin,
-  IconPinnedFilled,
-  IconTrash,
-  IconSend,
-  IconBook,
-  IconLogout,
-  IconMessageCircle,
-} from "@tabler/icons-react";
+  HeartIcon,
+  PushPinSimpleIcon,
+  PushPinSimpleSlashIcon,
+  TrashIcon,
+  PaperPlaneTiltIcon,
+  BookOpenIcon,
+  SignOutIcon,
+  ChatCircleIcon,
+} from "@/components/shared/icons";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -214,14 +213,10 @@ function EntryCard({
             <TypographyMuted className="text-xs tabular-nums">
               <time dateTime={entry.createdAt}>{timeAgo(entry.createdAt)}</time>
             </TypographyMuted>
-            {entry.isPinned && (
-              <Badge
-                variant="secondary"
-                className="gap-1 h-4 px-1.5 text-[10px] py-0"
-              >
-                <IconPinnedFilled size={10} aria-hidden="true" />
-                Pinned
-              </Badge>
+            {entry.isPinned ? (
+              <PushPinSimpleSlashIcon size={14} aria-hidden="true" />
+            ) : (
+              <PushPinSimpleIcon size={14} aria-hidden="true" />
             )}
           </div>
 
@@ -260,11 +255,11 @@ function EntryCard({
                 }
                 className="gap-1.5"
               >
-                {entry.likedByMe ? (
-                  <IconHeartFilled size={14} aria-hidden="true" />
-                ) : (
-                  <IconHeart size={14} aria-hidden="true" />
-                )}
+                <HeartIcon
+                  size={14}
+                  weight={entry.likedByMe ? "fill" : "duotone"}
+                  aria-hidden="true"
+                />
                 {entry.likeCount > 0 && (
                   <span className="tabular-nums">{entry.likeCount}</span>
                 )}
@@ -285,9 +280,9 @@ function EntryCard({
                     className="gap-1.5"
                   >
                     {entry.isPinned ? (
-                      <IconPinnedFilled size={14} aria-hidden="true" />
+                      <PushPinSimpleSlashIcon size={14} aria-hidden="true" />
                     ) : (
-                      <IconPin size={14} aria-hidden="true" />
+                      <PushPinSimpleIcon size={14} aria-hidden="true" />
                     )}
                     <span className="hidden sm:inline">
                       {entry.isPinned ? "Unpin" : "Pin"}
@@ -300,13 +295,12 @@ function EntryCard({
                 <>
                   <ButtonGroupSeparator />
                   <Button
-                    variant="outline"
+                    variant="destructive"
                     size="sm"
                     onClick={() => onDelete(entry.id)}
                     aria-label="Delete message"
-                    className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/10 hover:border-destructive/30"
                   >
-                    <IconTrash size={14} aria-hidden="true" />
+                    <TrashIcon size={14} aria-hidden="true" />
                     <span className="hidden sm:inline">Delete</span>
                   </Button>
                 </>
@@ -449,7 +443,7 @@ export function GuestbookClient({
                   aria-label="Sign out"
                   className="gap-1.5"
                 >
-                  <IconLogout size={14} aria-hidden="true" />
+                  <SignOutIcon size={14} aria-hidden="true" />
                   <span className="hidden sm:inline">Sign out</span>
                 </Button>
               </ButtonGroup>
@@ -502,7 +496,7 @@ export function GuestbookClient({
                   aria-busy={submitting}
                   className="gap-1.5 font-semibold"
                 >
-                  <IconSend size={14} aria-hidden="true" />
+                  <PaperPlaneTiltIcon size={14} aria-hidden="true" />
                   {submitting ? "Sending…" : "Send"}
                 </Button>
               </ButtonGroup>
@@ -529,7 +523,7 @@ export function GuestbookClient({
             >
               <ButtonGroup>
                 <Button size="sm" className="gap-1.5 font-semibold shrink-0">
-                  <IconBook size={14} aria-hidden="true" />
+                  <BookOpenIcon size={14} aria-hidden="true" />
                   Sign in
                 </Button>
               </ButtonGroup>
@@ -558,7 +552,7 @@ export function GuestbookClient({
                 className="size-9 border flex items-center justify-center text-muted-foreground"
                 aria-hidden="true"
               >
-                <IconMessageCircle size={18} />
+                <ChatCircleIcon size={18} />
               </div>
               <div className="space-y-1">
                 <TypographySmall className="font-semibold">

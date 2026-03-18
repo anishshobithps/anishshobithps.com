@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { IconMenu2 } from "@tabler/icons-react";
+import { ListIcon } from "@/components/shared/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -84,7 +84,7 @@ export function Header() {
                   aria-label={open ? "Close menu" : "Open menu"}
                   aria-expanded={open}
                 >
-                  <IconMenu2 aria-hidden="true" />
+                  <ListIcon aria-hidden="true" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent

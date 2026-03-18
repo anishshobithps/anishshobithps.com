@@ -1,28 +1,28 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { IconDeviceDesktop, IconMoon, IconSun } from "@tabler/icons-react";
+import { SunIcon, MoonIcon, MonitorIcon } from "@/components/shared/icons";
 import { useTheme } from "next-themes";
 import { ComponentProps, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 
 const itemVariants = cva(
-  "size-6.5 p-1.5 text-foreground/40 transition-colors",
+  "size-6.5 p-1.5 transition-colors hover:bg-transparent",
   {
     variants: {
       active: {
-        true: "bg-foreground/10 text-foreground",
-        false: "text-foreground/40",
+        true: "bg-foreground/10 text-foreground hover:bg-foreground/10",
+        false: "bg-transparent text-foreground/40",
       },
     },
   },
 );
 
 const full = [
-  ["light", IconSun, "Switch to light theme"] as const,
-  ["dark", IconMoon, "Switch to dark theme"] as const,
-  ["system", IconDeviceDesktop, "Use system theme"] as const,
+  ["light", SunIcon, "Switch to light theme"] as const,
+  ["dark", MoonIcon, "Switch to dark theme"] as const,
+  ["system", MonitorIcon, "Use system theme"] as const,
 ];
 
 export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
@@ -59,7 +59,7 @@ export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
           )}
           onClick={() => setTheme(key)}
         >
-          <Icon className="size-full" fill="currentColor" aria-hidden="true" />
+          <Icon weight="fill" className="size-3.5" aria-hidden="true" />
         </Button>
       ))}
     </div>

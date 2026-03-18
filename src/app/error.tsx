@@ -2,7 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
-import { IconHome, IconRefresh } from "@tabler/icons-react";
+import {
+  HouseIcon,
+  ArrowCounterClockwiseIcon,
+} from "@/components/shared/icons";
 import {
   TypographyP,
   TypographyMuted,
@@ -64,7 +67,10 @@ export default function ErrorPage({ reset }: ErrorProps) {
               aria-label="Try the action again"
               className="flex items-center gap-2"
             >
-              <IconRefresh aria-hidden="true" data-icon="inline-start" />
+              <ArrowCounterClockwiseIcon
+                aria-hidden="true"
+                data-icon="inline-start"
+              />
               Try Again
             </Button>
             <Button asChild size="lg">
@@ -73,7 +79,7 @@ export default function ErrorPage({ reset }: ErrorProps) {
                 aria-label="Go back to the home page"
                 className="flex items-center gap-2"
               >
-                <IconHome aria-hidden="true" data-icon="inline-start" />
+                <HouseIcon aria-hidden="true" data-icon="inline-start" />
                 Go Home
               </Link>
             </Button>
