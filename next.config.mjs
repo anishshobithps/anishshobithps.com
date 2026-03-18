@@ -41,6 +41,10 @@ const config = {
         source: "/stats/api/send",
         destination: "https://cloud.umami.is/api/send",
       },
+      {
+        source: "/blog/:path*.mdx",
+        destination: "/llms.mdx/blog/:path*",
+      },
     ];
   },
   async redirects() {
