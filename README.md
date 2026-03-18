@@ -16,7 +16,8 @@ Source code for [anishshobithps.com](https://anishshobithps.com) — a personal 
 | Framework   | Next.js 16 (App Router, Turbopack)             |
 | Language    | TypeScript 5                                   |
 | UI          | React 19, Tailwind CSS v4, shadcn/ui, Radix UI |
-| Icons       | Lucide React, Tabler Icons                     |
+| Animation   | Motion (Framer Motion)                         |
+| Icons       | Tabler Icons                                   |
 | Blog / MDX  | Fumadocs Core + UI 16, fumadocs-mdx            |
 | Database    | Drizzle ORM + Neon (PostgreSQL, serverless)    |
 | Auth        | Clerk                                          |
@@ -32,13 +33,13 @@ Source code for [anishshobithps.com](https://anishshobithps.com) — a personal 
 
 - **Bun** (recommended) or **Node.js** 22 or later
 - A **[Neon](https://neon.tech)** PostgreSQL database (or any PostgreSQL connection string)
-- A **[Clerk](https://clerk.com)** application (for guestbook auth)
+- A **[Clerk](https://clerk.com)** application (for guestbook and blog comments auth)
 
 ---
 
 ## Auth Setup (Clerk)
 
-The guestbook requires a [Clerk](https://clerk.com) account.
+The guestbook and blog comments require a [Clerk](https://clerk.com) account.
 
 1. Create a new application at [dashboard.clerk.com](https://dashboard.clerk.com).
 2. Enable the sign-in providers you want (Google, GitHub, etc.) in the **User & Authentication** settings.
@@ -46,13 +47,13 @@ The guestbook requires a [Clerk](https://clerk.com) account.
 4. Get your **user ID** (for the site owner / admin role):
    - Sign in to your app once with the account you want to be the owner.
    - Find your user in Clerk dashboard → **Users** and copy the `user_xxx` ID.
-5. Set up a **webhook** so guestbook data is cleaned up when a user deletes their account:
+5. Set up a **webhook** so guestbook and comment data is cleaned up when a user deletes their account:
    - In the Clerk dashboard → **Webhooks**, create a new endpoint pointing to `https://yourdomain.com/api/webhooks/clerk`.
    - Subscribe to the `user.deleted` event.
    - Copy the **Signing Secret** (`whsec_...`) and add it as `CLERK_WEBHOOK_SECRET` in `.env.local`.
 6. Add all keys to `.env.local` (see [Environment Variables](#environment-variables) below).
 
-The owner user ID (`OWNER_CLERK_USER_ID`) grants admin capabilities on the guestbook: pinning entries and deleting any message.
+The owner user ID (`OWNER_CLERK_USER_ID`) grants admin capabilities on the guestbook and blog comments: pinning entries, pinning comments, and deleting any message or comment.
 
 ---
 
@@ -74,16 +75,16 @@ SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
 SPOTIFY_REFRESH_TOKEN=
 
-# Required for the guestbook (Clerk auth).
+# Required for the guestbook and blog comments (Clerk auth).
 # Get these from: https://dashboard.clerk.com → your app → API Keys
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 
-# Your own Clerk user ID — grants admin powers on the guestbook (pin, delete any entry).
+# Your own Clerk user ID — grants admin powers on the guestbook and blog comments.
 # Sign in once, then copy your user_xxx ID from the Clerk dashboard → Users.
 OWNER_CLERK_USER_ID=user_...
 
-# Required for the Clerk webhook (cleans up guestbook data when a user is deleted).
+# Required for the Clerk webhook (cleans up data when a user is deleted).
 # Get this from: Clerk dashboard → Webhooks → your endpoint → Signing Secret
 CLERK_WEBHOOK_SECRET=whsec_...
 
@@ -126,7 +127,7 @@ bun run lint        # Run ESLint
 
 ## Key Features
 
-- **Blog** with read counts and mood reactions (stored as hashed IPs — no raw PII)
+- **Blog** with read counts, mood reactions (stored as hashed IPs — no raw PII), threaded comments, comment likes, and comment pinning
 - **Guestbook** with Clerk auth — visitors can sign in, leave messages, and like entries; site owner can pin and moderate
 - **Spotify now-playing** widget in the footer — shows current or last played track via the Spotify Web API (server-side, 60s cache, no visitor data sent)
 - **PDF resume viewer** via react-pdf, proxied from GitHub Releases
@@ -134,7 +135,7 @@ bun run lint        # Run ESLint
 - **Full-text search** via Fumadocs built-in search
 - **Dark mode** with system preference detection
 - **Security headers** — CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy
-- **Structured data** — JSON-LD for Person, WebSite, BlogPosting, BreadcrumbList
+- **Structured data** — JSON-LD for Person, WebSite, WebPage, BlogPosting, BreadcrumbList
 
 ---
 
@@ -144,7 +145,9 @@ Schema is managed with Drizzle ORM. Tables:
 
 - `blog_reads` — unique read per (slug, ip_hash)
 - `blog_reactions` — mood vote per (slug, ip_hash): one of `not-for-me | meh | liked-it | loved-it`
-- `guestbook_entries` — signed-in user messages (Clerk user ID, name, avatar)
+- `blog_comments` — threaded comments per blog post (Clerk user ID, body, parent_id, is_pinned, soft-delete via is_deleted)
+- `blog_comment_likes` — per-comment likes keyed by Clerk user ID
+- `guestbook_entries` — signed-in user messages (Clerk user ID, message, is_pinned, soft-delete via is_deleted)
 - `guestbook_likes` — per-entry likes keyed by Clerk user ID
 
 ---
@@ -156,7 +159,7 @@ The `/guestbook` page lets visitors leave a message after signing in with Clerk.
 **Features:**
 
 - Sign in via Clerk modal — redirects back to `/guestbook` after sign-in or sign-up
-- Submit, delete your own messages
+- Submit and delete your own messages
 - Like any entry
 - Site owner (matched by `OWNER_CLERK_USER_ID`) can pin entries and delete any message
 
@@ -166,6 +169,27 @@ The `/guestbook` page lets visitors leave a message after signing in with Clerk.
 2. Ensure `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `OWNER_CLERK_USER_ID` are all set in `.env.local`
 
 Run `bun run drizzle-kit push` to apply schema changes. Migration files live in `drizzle/`.
+
+---
+
+## Blog Comments
+
+Each blog post has a threaded comment section powered by Clerk auth.
+
+**Features:**
+
+- Sign in via Clerk modal to comment
+- Threaded replies (one level deep)
+- Like any comment
+- Site owner (matched by `OWNER_CLERK_USER_ID`) can pin comments and delete any comment
+- Deleted comments are soft-deleted — text is hidden but record is retained for referential integrity
+
+**Setup checklist:**
+
+1. Complete [Auth Setup](#auth-setup-clerk) above
+2. Ensure `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `OWNER_CLERK_USER_ID` are all set in `.env.local`
+
+---
 
 ## Deploy
 
