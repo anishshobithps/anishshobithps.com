@@ -142,10 +142,6 @@ export default function BrandingPage() {
               ),
             },
             {
-              title: "Section Heading",
-              component: <SectionHeader>Section Heading</SectionHeader>,
-            },
-            {
               title: "Section Label",
               component: <SectionLabel>Section Label</SectionLabel>,
             },
