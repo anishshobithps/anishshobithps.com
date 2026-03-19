@@ -25,5 +25,12 @@ export default defineConfig({
     plugins: [lastModified()],
     mdxOptions: {
         remarkPlugins: [remarkReadingTime],
+        rehypeCodeOptions: {
+            inline: 'tailing-curly-colon',
+            themes: {
+                light: 'github-light',
+                dark: 'github-dark',
+            },
+        },
     },
 });
