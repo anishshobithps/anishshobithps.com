@@ -1,15 +1,13 @@
 const theme = {
   background: "#141417",
-  backgroundAlt: "#1a1a20",
-  foreground: "#f5f5f7",
-  primary: "#e8e8ec",
-  muted: "#6b6b80",
-  mutedBright: "#9999aa",
-  border: "rgba(255, 255, 255, 0.08)",
-  borderBright: "rgba(255, 255, 255, 0.15)",
-  accent: "#2a2a35",
-  green: "#10b981",
-  purpleAccent: "#8b7cf8",
+  foreground: "#f9f9fb",
+  mutedFg: "#8888a0",
+  border: "rgba(255,255,255,0.10)",
+  input: "rgba(255,255,255,0.15)",
+  purple: "#a855f7",
+  selectionBg: "#86efac",
+  selectionFg: "#052e16",
+  gridLine: "rgba(255,255,255,0.025)",
 };
 
 function LogoGlyph({ size = 32, color }: { size?: number; color: string }) {
@@ -28,6 +26,7 @@ function LogoGlyph({ size = 32, color }: { size?: number; color: string }) {
     </svg>
   );
 }
+
 export interface OGImageProps {
   title: string;
   description: string;
@@ -59,6 +58,56 @@ function getDescFontSize(desc: string): number {
   return 17;
 }
 
+function parsePathSegments(input: string): string[] {
+  let cleaned = input.trim();
+  try {
+    const url = new URL(cleaned);
+    cleaned = url.pathname;
+  } catch {}
+  return cleaned.split("/").filter(Boolean);
+}
+
+function PathDisplay({ path }: { path: string }) {
+  const segments = parsePathSegments(path);
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      {segments.map((segment, i) => {
+        const isLast = i === segments.length - 1;
+        return (
+          <div
+            key={i}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            {i > 0 && (
+              <span
+                style={{
+                  fontFamily: "'Geist Mono', monospace",
+                  fontSize: 13,
+                  color: "rgba(136,136,160,0.3)",
+                  fontWeight: 300,
+                }}
+              >
+                /
+              </span>
+            )}
+            <span
+              style={{
+                fontFamily: "'Geist Mono', monospace",
+                fontWeight: isLast ? 500 : 400,
+                fontSize: 13,
+                letterSpacing: "0.02em",
+                color: isLast ? theme.selectionBg : "rgba(136,136,160,0.4)",
+              }}
+            >
+              {segment}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function OGImage({
   title,
   description,
@@ -87,8 +136,8 @@ export function OGImage({
           top: 0,
           left: 0,
           right: 0,
-          height: 3,
-          background: `linear-gradient(90deg, ${theme.purpleAccent} 0%, #c084fc 40%, #f472b6 70%, transparent 100%)`,
+          height: 2,
+          background: `linear-gradient(90deg, transparent 0%, ${theme.selectionBg}88 20%, ${theme.selectionBg} 50%, ${theme.selectionBg}88 80%, transparent 100%)`,
         }}
       />
 
@@ -96,10 +145,7 @@ export function OGImage({
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
-          `,
+          backgroundImage: `linear-gradient(${theme.gridLine} 1px, transparent 1px), linear-gradient(90deg, ${theme.gridLine} 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
@@ -107,13 +153,26 @@ export function OGImage({
       <div
         style={{
           position: "absolute",
-          top: -120,
-          right: -80,
-          width: 600,
-          height: 600,
+          top: -140,
+          right: -100,
+          width: 640,
+          height: 640,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(139,124,248,0.08) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(134,239,172,0.08) 0%, transparent 70%)",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: -160,
+          left: -80,
+          width: 500,
+          height: 500,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(134,239,172,0.04) 0%, transparent 70%)",
         }}
       />
 
@@ -123,7 +182,7 @@ export function OGImage({
           inset: 0,
           width: "100%",
           height: "100%",
-          opacity: 0.035,
+          opacity: 0.04,
           mixBlendMode: "overlay",
         }}
       >
@@ -144,7 +203,7 @@ export function OGImage({
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)",
+            "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.6) 100%)",
           pointerEvents: "none",
         }}
       />
@@ -152,13 +211,13 @@ export function OGImage({
       <div
         style={{
           position: "absolute",
-          bottom: -100,
-          right: -30,
+          bottom: -110,
+          right: -40,
           transform: "rotate(10deg)",
-          opacity: 0.03,
+          opacity: 0.025,
         }}
       >
-        <LogoGlyph size={500} color={theme.foreground} />
+        <LogoGlyph size={520} color={theme.foreground} />
       </div>
 
       <div
@@ -168,6 +227,7 @@ export function OGImage({
           flexDirection: "column",
           justifyContent: "space-between",
           width: "100%",
+          position: "relative",
         }}
       >
         <div
@@ -180,35 +240,21 @@ export function OGImage({
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <LogoGlyph size={32} color={theme.foreground} />
-
             <div
               style={{
                 width: 1,
                 height: 20,
-                background: `linear-gradient(to bottom, transparent, ${theme.borderBright}, transparent)`,
+                background: `linear-gradient(to bottom, transparent, ${theme.input}, transparent)`,
               }}
             />
-
-            <span
-              style={{
-                fontFamily: "'Geist Mono', monospace",
-                fontWeight: 700,
-                fontSize: 12,
-                letterSpacing: "0.18em",
-                color: theme.muted,
-                textTransform: "uppercase",
-              }}
-            >
-              {path}
-            </span>
+            <PathDisplay path={path} />
           </div>
-
           <span
             style={{
               fontFamily: "'Geist Mono', monospace",
               fontSize: 20,
               fontStyle: "italic",
-              color: theme.muted,
+              color: theme.mutedFg,
             }}
           >
             {domain}
@@ -236,9 +282,9 @@ export function OGImage({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.12em",
-                    border: `1px solid rgba(139,124,248,0.3)`,
-                    backgroundColor: "rgba(139,124,248,0.07)",
-                    color: "#b8aefc",
+                    border: "1px solid rgba(134,239,172,0.2)",
+                    backgroundColor: "rgba(134,239,172,0.06)",
+                    color: theme.selectionBg,
                     borderRadius: 6,
                   }}
                 >
@@ -255,19 +301,15 @@ export function OGImage({
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
               color: theme.foreground,
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "baseline",
-              columnGap: 16,
             }}
           >
-            {title && <span>{truncate(title, 80)}</span>}
+            {truncate(title, 80)}
           </div>
 
           <div
             style={{
               fontSize: getDescFontSize(description),
-              color: theme.mutedBright,
+              color: theme.mutedFg,
               maxWidth: "72%",
               lineHeight: 1.55,
               fontStyle: "italic",
@@ -294,13 +336,12 @@ export function OGImage({
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.35em",
-                  color: theme.purpleAccent,
+                  color: theme.purple,
                   fontFamily: "'Geist Mono', monospace",
                 }}
               >
                 {role}
               </span>
-
               <div
                 style={{
                   fontSize: 36,
@@ -324,8 +365,8 @@ export function OGImage({
                   paddingLeft: 12,
                   paddingRight: 12,
                   borderRadius: 6,
-                  backgroundColor: "rgba(16, 185, 129, 0.06)",
-                  border: `1px solid rgba(16, 185, 129, 0.2)`,
+                  backgroundColor: "rgba(134,239,172,0.08)",
+                  border: "1px solid rgba(134,239,172,0.25)",
                   alignSelf: "flex-start",
                 }}
               >
@@ -334,7 +375,7 @@ export function OGImage({
                     width: 8,
                     height: 8,
                     borderRadius: 4,
-                    backgroundColor: theme.green,
+                    backgroundColor: theme.selectionBg,
                   }}
                 />
                 <span
@@ -344,7 +385,7 @@ export function OGImage({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.12em",
-                    color: theme.green,
+                    color: theme.selectionBg,
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -364,13 +405,13 @@ export function OGImage({
             }}
           >
             <div
-              style={{ width: 40, height: 1, backgroundColor: theme.muted }}
+              style={{ width: 40, height: 1, backgroundColor: theme.mutedFg }}
             />
             <span
               style={{
                 fontFamily: "'Geist Mono', monospace",
                 fontSize: 17,
-                color: theme.muted,
+                color: theme.mutedFg,
                 letterSpacing: "0.12em",
                 fontWeight: 600,
               }}
