@@ -90,6 +90,9 @@ CLERK_WEBHOOK_SECRET=whsec_...
 
 # Optional — base URL override. Auto-detected from Vercel env otherwise.
 NEXT_PUBLIC_BASE_URL=https://anishshobithps.com
+
+# Required or (Optional you can remove this feature from layout.tsx file)
+NEXT_PUBLIC_UMAMI_WEBSITE_ID=umami_id....
 ```
 
 ---

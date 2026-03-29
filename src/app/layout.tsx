@@ -63,7 +63,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
           {process.env.NODE_ENV === "production" && (
             <Script
               src="/stats/script.js"
-              data-website-id="bd850c68-5e13-4ae7-bfb6-58d4a8134f4e"
+              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
               data-host-url="/stats"
               strategy="afterInteractive"
             />
