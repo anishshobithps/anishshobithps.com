@@ -7,6 +7,9 @@ const config = {
   reactStrictMode: true,
   allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["@takumi-rs/image-response"],
+  experimental: {
+    optimizePackageImports: ["@tabler/icons-react", "@phosphor-icons/react"],
+  },
   images: {
     remotePatterns: [
       {
