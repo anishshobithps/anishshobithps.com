@@ -5,6 +5,7 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  poweredByHeader: false,
   allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["@takumi-rs/image-response"],
   experimental: {
