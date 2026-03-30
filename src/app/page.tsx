@@ -5,7 +5,7 @@ import { BuiltThings } from "@/app/_components/projects";
 import { RulesIFollow } from "@/app/_components/rules";
 import { JsonLd } from "@/components/shared/json-ld";
 import { siteConfig } from "@/lib/config";
-import { buildMeta } from "@/lib/og";
+import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMeta({

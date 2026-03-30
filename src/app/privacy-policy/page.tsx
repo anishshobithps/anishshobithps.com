@@ -11,7 +11,7 @@ import {
   SectionHeader,
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { buildMeta } from "@/lib/og";
+import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMeta({

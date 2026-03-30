@@ -18,7 +18,7 @@ import {
   toISOString,
   toTimestamp,
 } from "@/lib/date";
-import { buildMeta } from "@/lib/og";
+import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 import { auth } from "@clerk/nextjs/server";

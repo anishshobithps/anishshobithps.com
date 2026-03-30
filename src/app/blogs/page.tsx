@@ -7,7 +7,7 @@ import {
   TypographyMark,
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { buildMeta } from "@/lib/og";
+import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";
 import { Suspense } from "react";

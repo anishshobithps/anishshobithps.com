@@ -1,4 +1,4 @@
-import { buildMeta } from "@/lib/og";
+import { buildMeta } from "@/lib/metadata";
 import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
 
