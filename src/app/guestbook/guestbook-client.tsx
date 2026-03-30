@@ -5,6 +5,8 @@ import {
   useOptimistic,
   useRef,
   useState,
+  useCallback,
+  memo,
   startTransition,
 } from "react";
 import { useUser, SignInButton, useClerk } from "@clerk/nextjs";
@@ -57,7 +59,7 @@ type OptimisticAction =
   | { type: "like"; id: number; liked: boolean }
   | { type: "pin"; id: number; pinned: boolean };
 
-function UserAvatar({
+const UserAvatar = memo(function UserAvatar({
   imageUrl,
   name,
   className,
@@ -109,7 +111,7 @@ function UserAvatar({
       {initials}
     </div>
   );
-}
+});
 
 function optimisticReducer(
   state: GuestbookEntryWithMeta[],
@@ -147,7 +149,7 @@ function optimisticReducer(
   }
 }
 
-function EntryCard({
+const EntryCard = memo(function EntryCard({
   entry,
   currentUserId,
   siteOwnerId,
@@ -311,7 +313,7 @@ function EntryCard({
       </div>
     </li>
   );
-}
+});
 
 export function GuestbookClient({
   initialEntries,
@@ -328,6 +330,7 @@ export function GuestbookClient({
 
   const MAX = 280;
   const remaining = MAX - message.length;
+  const trimmedMessage = message.trim();
   const isNearLimit = remaining <= 40;
   const isAtLimit = remaining <= 10;
 
@@ -343,12 +346,12 @@ export function GuestbookClient({
     el.style.height = Math.min(el.scrollHeight, 200) + "px";
   }, [message]);
 
-  const handleSubmit = async () => {
-    if (!message.trim() || submitting || !user) return;
+  const handleSubmit = useCallback(async () => {
+    if (!trimmedMessage || submitting || !user) return;
 
     const tempEntry: GuestbookEntryWithMeta = {
       id: Date.now(),
-      message: message.trim(),
+      message: trimmedMessage,
       isPinned: false,
       createdAt: nowISO(),
       likeCount: 0,
@@ -371,46 +374,58 @@ export function GuestbookClient({
     });
 
     setSubmitting(false);
-  };
+  }, [trimmedMessage, submitting, user, dispatchOptimistic]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        handleSubmit();
+      }
+    },
+    [handleSubmit],
+  );
 
-  const handleLike = (id: number) => {
-    if (!currentUserId) {
-      toast.info("Sign in to like messages.");
-      return;
-    }
-    const entry = entries.find((e) => e.id === id);
-    if (!entry) return;
-    startTransition(async () => {
-      dispatchOptimistic({ type: "like", id, liked: !entry.likedByMe });
-      const result = await toggleLike(id);
-      if (!result.success) toast.error(result.error);
-    });
-  };
+  const handleLike = useCallback(
+    (id: number) => {
+      if (!currentUserId) {
+        toast.info("Sign in to like messages.");
+        return;
+      }
+      const entry = entries.find((e) => e.id === id);
+      if (!entry) return;
+      startTransition(async () => {
+        dispatchOptimistic({ type: "like", id, liked: !entry.likedByMe });
+        const result = await toggleLike(id);
+        if (!result.success) toast.error(result.error);
+      });
+    },
+    [currentUserId, entries, dispatchOptimistic],
+  );
 
-  const handleDelete = (id: number) => {
-    startTransition(async () => {
-      dispatchOptimistic({ type: "delete", id });
-      const result = await deleteGuestbookEntry(id);
-      if (!result.success) toast.error(result.error);
-    });
-  };
+  const handleDelete = useCallback(
+    (id: number) => {
+      startTransition(async () => {
+        dispatchOptimistic({ type: "delete", id });
+        const result = await deleteGuestbookEntry(id);
+        if (!result.success) toast.error(result.error);
+      });
+    },
+    [dispatchOptimistic],
+  );
 
-  const handlePin = (id: number) => {
-    const entry = entries.find((e) => e.id === id);
-    if (!entry) return;
-    startTransition(async () => {
-      dispatchOptimistic({ type: "pin", id, pinned: !entry.isPinned });
-      const result = await togglePinEntry(id);
-      if (!result.success) toast.error(result.error);
-    });
-  };
+  const handlePin = useCallback(
+    (id: number) => {
+      const entry = entries.find((e) => e.id === id);
+      if (!entry) return;
+      startTransition(async () => {
+        dispatchOptimistic({ type: "pin", id, pinned: !entry.isPinned });
+        const result = await togglePinEntry(id);
+        if (!result.success) toast.error(result.error);
+      });
+    },
+    [entries, dispatchOptimistic],
+  );
 
   return (
     <div className="w-full space-y-6">
@@ -492,7 +507,7 @@ export function GuestbookClient({
                 <Button
                   size="sm"
                   onClick={handleSubmit}
-                  disabled={submitting || !message.trim()}
+                  disabled={submitting || !trimmedMessage}
                   aria-busy={submitting}
                   className="gap-1.5 font-semibold"
                 >

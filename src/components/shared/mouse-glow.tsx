@@ -20,6 +20,7 @@ export function MouseGlow() {
   const glowRef = useRef<HTMLDivElement | null>(null);
   const positionRef = useRef<Point | null>(null);
   const rafRef = useRef<number | null>(null);
+  const visibleRef = useRef(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -42,19 +43,29 @@ export function MouseGlow() {
       scheduleFrame();
     }
 
-    function handlePointerMove(event: PointerEvent) {
-      updatePointer(event.clientX, event.clientY);
-      setIsVisible(true);
+    function updateVisibility(next: boolean) {
+      if (visibleRef.current === next) return;
+      visibleRef.current = next;
+      setIsVisible(next);
     }
 
-    function handlePointerLeave() { setIsVisible(false); }
-    function handlePointerEnter() { setIsVisible(true); }
+    function handlePointerMove(event: PointerEvent) {
+      updatePointer(event.clientX, event.clientY);
+      updateVisibility(true);
+    }
+
+    function handlePointerLeave() {
+      updateVisibility(false);
+    }
+    function handlePointerEnter() {
+      updateVisibility(true);
+    }
 
     function handleTouchStart(event: TouchEvent) {
       const point = getTouchPoint(event);
       if (!point) return;
       updatePointer(point.x, point.y);
-      setIsVisible(true);
+      updateVisibility(true);
     }
 
     function handleTouchMove(event: TouchEvent) {
@@ -63,7 +74,9 @@ export function MouseGlow() {
       updatePointer(point.x, point.y);
     }
 
-    function handleTouchEnd() { setIsVisible(false); }
+    function handleTouchEnd() {
+      updateVisibility(false);
+    }
 
     document.addEventListener("pointermove", handlePointerMove, { signal });
     document.addEventListener("pointerenter", handlePointerEnter, { signal });

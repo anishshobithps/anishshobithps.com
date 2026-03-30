@@ -91,9 +91,25 @@ export function BlogsClient({
     return result;
   }, [posts, q, tags]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / per));
-  const currentPage = Math.min(Math.max(1, page), totalPages);
-  const paginated = filtered.slice((currentPage - 1) * per, currentPage * per);
+  const totalPages = useMemo(
+    () => Math.max(1, Math.ceil(filtered.length / per)),
+    [filtered.length, per],
+  );
+
+  const currentPage = useMemo(
+    () => Math.min(Math.max(1, page), totalPages),
+    [page, totalPages],
+  );
+
+  const paginated = useMemo(
+    () => filtered.slice((currentPage - 1) * per, currentPage * per),
+    [filtered, currentPage, per],
+  );
+
+  const pageNumbers = useMemo(
+    () => buildPageNumbers(currentPage, totalPages),
+    [currentPage, totalPages],
+  );
 
   return (
     <div className="flex flex-col -mt-6">
@@ -356,7 +372,7 @@ export function BlogsClient({
                         )}
                       />
                     </PaginationItem>
-                    {buildPageNumbers(currentPage, totalPages).map((p, i) =>
+                    {pageNumbers.map((p, i) =>
                       p === "..." ? (
                         <PaginationItem key={`ellipsis-${i}`}>
                           <PaginationEllipsis />
