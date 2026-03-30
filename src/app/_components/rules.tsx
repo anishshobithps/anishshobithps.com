@@ -1,5 +1,3 @@
-"use client";
-
 import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
 import {
   TypographyH3,

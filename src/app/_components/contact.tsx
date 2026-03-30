@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import { Section, Card } from "@/components/layouts/page";
