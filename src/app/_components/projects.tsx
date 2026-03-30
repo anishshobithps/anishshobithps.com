@@ -15,9 +15,80 @@ import {
   TypographyMuted,
 } from "@/components/ui/typography";
 import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
-
 import Link from "next/link";
 import { projects } from "@/lib/config";
+
+export function ProjectGrid() {
+  return (
+    <CardGrid cols="grid-cols-1 md:grid-cols-2">
+      {projects.map((project) => (
+        <CardGridItem
+          key={project.title}
+          className="group transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
+        >
+          <article className="space-y-4" aria-label={project.title}>
+            <TypographyH3 className="text-xl">{project.title}</TypographyH3>
+            <TypographyMuted className="leading-relaxed">
+              {project.description}
+            </TypographyMuted>
+            <ul
+              role="list"
+              aria-label="Technologies used"
+              className="flex flex-wrap gap-2 pt-2"
+            >
+              {project.highlights.map((tag) => (
+                <li key={tag}>
+                  <Badge variant="outline" className="text-xs px-2 py-0.5">
+                    {tag}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+            <nav aria-label={`Links for ${project.title}`} className="pt-4">
+              <ButtonGroup>
+                {project.live && (
+                  <>
+                    <Button asChild size="sm" variant="outline">
+                      <Link
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`View ${project.title} live site`}
+                      >
+                        <ArrowUpRightIcon
+                          className="size-4"
+                          aria-hidden="true"
+                        />
+
+                        <span className="ml-2">View</span>
+                      </Link>
+                    </Button>
+                    <ButtonGroupSeparator />
+                  </>
+                )}
+                <Button asChild size="sm" variant="secondary">
+                  <Link
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <GithubLogoIcon className="size-4" aria-hidden="true" />
+                    <span className="ml-2" aria-hidden="true">
+                      GitHub
+                    </span>
+                    <span className="sr-only">
+                      View {project.title} on GitHub
+                    </span>
+                  </Link>
+                </Button>
+              </ButtonGroup>
+            </nav>
+          </article>
+        </CardGridItem>
+      ))}
+    </CardGrid>
+  );
+}
 
 export function BuiltThings() {
   return (
@@ -32,75 +103,7 @@ export function BuiltThings() {
           .
         </TypographyLead>
       </div>
-
-      <CardGrid cols="grid-cols-1 md:grid-cols-2">
-        {projects.map((project) => (
-          <CardGridItem
-            key={project.title}
-            className="group transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
-          >
-            <article className="space-y-4" aria-label={project.title}>
-              <TypographyH3 className="text-xl">{project.title}</TypographyH3>
-              <TypographyMuted className="leading-relaxed">
-                {project.description}
-              </TypographyMuted>
-              <ul
-                role="list"
-                aria-label="Technologies used"
-                className="flex flex-wrap gap-2 pt-2"
-              >
-                {project.highlights.map((tag) => (
-                  <li key={tag}>
-                    <Badge variant="outline" className="text-xs px-2 py-0.5">
-                      {tag}
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-              <nav aria-label={`Links for ${project.title}`} className="pt-4">
-                <ButtonGroup>
-                  {project.live && (
-                    <>
-                      <Button asChild size="sm" variant="outline">
-                        <Link
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`View ${project.title} live site`}
-                        >
-                          <ArrowUpRightIcon
-                            className="size-4"
-                            aria-hidden="true"
-                          />
-
-                          <span className="ml-2">View</span>
-                        </Link>
-                      </Button>
-                      <ButtonGroupSeparator />
-                    </>
-                  )}
-                  <Button asChild size="sm" variant="secondary">
-                    <Link
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <GithubLogoIcon className="size-4" aria-hidden="true" />
-                      <span className="ml-2" aria-hidden="true">
-                        GitHub
-                      </span>
-                      <span className="sr-only">
-                        View {project.title} on GitHub
-                      </span>
-                    </Link>
-                  </Button>
-                </ButtonGroup>
-              </nav>
-            </article>
-          </CardGridItem>
-        ))}
-      </CardGrid>
-
+      <ProjectGrid />
       <div className="mt-16 flex flex-col items-center gap-6 text-center">
         <TypographyLead className="max-w-2xl">
           There's more{" "}
