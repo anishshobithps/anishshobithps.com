@@ -37,7 +37,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.baseUrl),
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      {
+        url: "/favicon-dark.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/favicon-light.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: light)",
+      },
       { url: "/icon", type: "image/png", sizes: "32x32" },
     ],
     apple: "/apple-icon",

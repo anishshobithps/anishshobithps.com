@@ -13,10 +13,11 @@ export default function Icon() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "transparent",
+        background: "#09090b",
+        borderRadius: 6,
       }}
     >
-      <LogoIcon size={32} color="#000000" />
+      <LogoIcon size={24} color="#ffffff" />
     </div>,
     size,
   );
