@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useId, useState } from "react";
-import { motion } from "motion/react";
+import { LazyMotion, domAnimation, m } from "motion/react";
 import opentype from "opentype.js";
 
 interface SignatureProps {
@@ -14,6 +14,20 @@ interface SignatureProps {
 }
 
 let cachedFont: opentype.Font | null = null;
+let fontLoadPromise: Promise<opentype.Font> | null = null;
+
+function loadFont(): Promise<opentype.Font> {
+  if (cachedFont) return Promise.resolve(cachedFont);
+  if (!fontLoadPromise) {
+    fontLoadPromise = fetch("/fonts/LastoriaBoldRegular.otf")
+      .then((res) => res.arrayBuffer())
+      .then((buf) => {
+        cachedFont = opentype.parse(buf);
+        return cachedFont;
+      });
+  }
+  return fontLoadPromise;
+}
 
 export function Signature({
   text = "Signature",
@@ -34,14 +48,10 @@ export function Signature({
   const maskId = `sig-${useId().replace(/:/g, "")}`;
 
   useEffect(() => {
-    async function load() {
-      try {
-        if (!cachedFont) {
-          const res = await fetch("/fonts/LastoriaBoldRegular.otf");
-          cachedFont = opentype.parse(await res.arrayBuffer());
-        }
-
-        const font = cachedFont;
+    let cancelled = false;
+    loadFont()
+      .then((font) => {
+        if (cancelled) return;
         let x = horizontalPadding;
         const next: string[] = [];
 
@@ -54,13 +64,16 @@ export function Signature({
         }
 
         setPaths(next);
-        setWidth(x + horizontalPadding);
-      } catch {
+        setWidth(() => x + horizontalPadding);
+      })
+      .catch(() => {
+        if (cancelled) return;
         setPaths([]);
-        setWidth(text.length * fontSize * 0.6);
-      }
-    }
-    load();
+        setWidth(() => text.length * fontSize * 0.6);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [text, fontSize, baseline, horizontalPadding]);
 
   const variants = {
@@ -69,66 +82,72 @@ export function Signature({
   };
 
   return (
-    <motion.svg
-      key={paths.length}
-      width={width}
-      height={height}
-      viewBox={`0 0 ${width} ${height}`}
-      fill="none"
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once, amount: 0.5 }}
-    >
-      <defs>
-        <mask id={maskId} maskUnits="userSpaceOnUse">
-          {paths.map((d, i) => (
-            <motion.path
-              key={i}
-              d={d}
-              stroke="white"
-              strokeWidth={fontSize * 0.22}
-              fill="none"
-              variants={variants}
-              transition={{
-                pathLength: {
-                  delay: delay + i * 0.2,
-                  duration,
-                  ease: "easeInOut",
-                },
-                opacity: { delay: delay + i * 0.2 + 0.01, duration: 0.01 },
-              }}
-              vectorEffect="non-scaling-stroke"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          ))}
-        </mask>
-      </defs>
+    <LazyMotion features={domAnimation}>
+      <m.svg
+        key={paths.length}
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        fill="none"
+        className={className}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once, amount: 0.5 }}
+      >
+        <defs>
+          <mask id={maskId} maskUnits="userSpaceOnUse">
+            {paths.map((d, i) => (
+              <m.path
+                key={`mask-${i}-${d.slice(0, 8)}`}
+                d={d}
+                stroke="white"
+                strokeWidth={fontSize * 0.22}
+                fill="none"
+                variants={variants}
+                transition={{
+                  pathLength: {
+                    delay: delay + i * 0.2,
+                    duration,
+                    ease: "easeInOut",
+                  },
+                  opacity: { delay: delay + i * 0.2 + 0.01, duration: 0.01 },
+                }}
+                vectorEffect="non-scaling-stroke"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))}
+          </mask>
+        </defs>
 
-      {paths.map((d, i) => (
-        <motion.path
-          key={i}
-          d={d}
-          stroke={color}
-          strokeWidth={2}
-          fill="none"
-          variants={variants}
-          transition={{
-            pathLength: { delay: delay + i * 0.2, duration, ease: "easeInOut" },
-            opacity: { delay: delay + i * 0.2 + 0.01, duration: 0.01 },
-          }}
-          vectorEffect="non-scaling-stroke"
-          strokeLinecap="butt"
-          strokeLinejoin="round"
-        />
-      ))}
-
-      <g mask={`url(#${maskId})`}>
         {paths.map((d, i) => (
-          <path key={i} d={d} fill={color} />
+          <m.path
+            key={`stroke-${i}-${d.slice(0, 8)}`}
+            d={d}
+            stroke={color}
+            strokeWidth={2}
+            fill="none"
+            variants={variants}
+            transition={{
+              pathLength: {
+                delay: delay + i * 0.2,
+                duration,
+                ease: "easeInOut",
+              },
+              opacity: { delay: delay + i * 0.2 + 0.01, duration: 0.01 },
+            }}
+            vectorEffect="non-scaling-stroke"
+            strokeLinecap="butt"
+            strokeLinejoin="round"
+          />
         ))}
-      </g>
-    </motion.svg>
+
+        <g mask={`url(#${maskId})`}>
+          {paths.map((d, i) => (
+            <path key={`fill-${i}-${d.slice(0, 8)}`} d={d} fill={color} />
+          ))}
+        </g>
+      </m.svg>
+    </LazyMotion>
   );
 }
