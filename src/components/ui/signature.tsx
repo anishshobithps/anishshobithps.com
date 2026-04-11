@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useReducer } from "react";
 import { LazyMotion, domAnimation, m } from "motion/react";
 import opentype from "opentype.js";
 
@@ -29,6 +29,8 @@ function loadFont(): Promise<opentype.Font> {
   return fontLoadPromise;
 }
 
+type SigState = { entries: { d: string; key: string }[]; width: number };
+
 export function Signature({
   text = "Signature",
   color = "var(--foreground)",
@@ -38,8 +40,10 @@ export function Signature({
   className,
   once = true,
 }: SignatureProps) {
-  const [paths, setPaths] = useState<string[]>([]);
-  const [width, setWidth] = useState(300);
+  const [{ entries, width }, dispatch] = useReducer(
+    (_: SigState, next: SigState) => next,
+    { entries: [], width: 300 },
+  );
 
   const height = 100;
   const horizontalPadding = fontSize * 0.1;
@@ -53,23 +57,22 @@ export function Signature({
       .then((font) => {
         if (cancelled) return;
         let x = horizontalPadding;
-        const next: string[] = [];
+        const next: { d: string; key: string }[] = [];
 
         for (const char of text) {
           const glyph = font.charToGlyph(char);
-          next.push(glyph.getPath(x, baseline, fontSize).toPathData(3));
+          const d = glyph.getPath(x, baseline, fontSize).toPathData(3);
+          next.push({ d, key: `${char}@${Math.round(x)}` });
           x +=
             (glyph.advanceWidth ?? font.unitsPerEm) *
             (fontSize / font.unitsPerEm);
         }
 
-        setPaths(next);
-        setWidth(() => x + horizontalPadding);
+        dispatch({ entries: next, width: x + horizontalPadding });
       })
       .catch(() => {
         if (cancelled) return;
-        setPaths([]);
-        setWidth(() => text.length * fontSize * 0.6);
+        dispatch({ entries: [], width: text.length * fontSize * 0.6 });
       });
     return () => {
       cancelled = true;
@@ -84,7 +87,7 @@ export function Signature({
   return (
     <LazyMotion features={domAnimation}>
       <m.svg
-        key={paths.length}
+        key={entries.length}
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
@@ -96,9 +99,9 @@ export function Signature({
       >
         <defs>
           <mask id={maskId} maskUnits="userSpaceOnUse">
-            {paths.map((d, i) => (
+            {entries.map(({ d, key }, entryIndex) => (
               <m.path
-                key={`mask-${i}-${d.slice(0, 8)}`}
+                key={`mask-${key}`}
                 d={d}
                 stroke="white"
                 strokeWidth={fontSize * 0.22}
@@ -106,11 +109,14 @@ export function Signature({
                 variants={variants}
                 transition={{
                   pathLength: {
-                    delay: delay + i * 0.2,
+                    delay: delay + entryIndex * 0.2,
                     duration,
                     ease: "easeInOut",
                   },
-                  opacity: { delay: delay + i * 0.2 + 0.01, duration: 0.01 },
+                  opacity: {
+                    delay: delay + entryIndex * 0.2 + 0.01,
+                    duration: 0.01,
+                  },
                 }}
                 vectorEffect="non-scaling-stroke"
                 strokeLinecap="round"
@@ -120,9 +126,9 @@ export function Signature({
           </mask>
         </defs>
 
-        {paths.map((d, i) => (
+        {entries.map(({ d, key }, entryIndex) => (
           <m.path
-            key={`stroke-${i}-${d.slice(0, 8)}`}
+            key={`stroke-${key}`}
             d={d}
             stroke={color}
             strokeWidth={2}
@@ -130,11 +136,14 @@ export function Signature({
             variants={variants}
             transition={{
               pathLength: {
-                delay: delay + i * 0.2,
+                delay: delay + entryIndex * 0.2,
                 duration,
                 ease: "easeInOut",
               },
-              opacity: { delay: delay + i * 0.2 + 0.01, duration: 0.01 },
+              opacity: {
+                delay: delay + entryIndex * 0.2 + 0.01,
+                duration: 0.01,
+              },
             }}
             vectorEffect="non-scaling-stroke"
             strokeLinecap="butt"
@@ -143,8 +152,8 @@ export function Signature({
         ))}
 
         <g mask={`url(#${maskId})`}>
-          {paths.map((d, i) => (
-            <path key={`fill-${i}-${d.slice(0, 8)}`} d={d} fill={color} />
+          {entries.map(({ d, key }) => (
+            <path key={`fill-${key}`} d={d} fill={color} />
           ))}
         </g>
       </m.svg>

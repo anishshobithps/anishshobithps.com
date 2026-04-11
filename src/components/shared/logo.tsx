@@ -98,18 +98,25 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={cn(
-          "transition-colors select-none cursor-pointer",
+          "transition-colors select-none",
+          copyOnClick && "cursor-pointer",
           className,
         )}
-        onClick={() => {
-          if (copyOnClick) navigator.clipboard.writeText(defaultLabel);
-        }}
-        onKeyDown={(e) => {
-          if (copyOnClick && (e.key === "Enter" || e.key === " ")) {
-            e.preventDefault();
-            navigator.clipboard.writeText(defaultLabel);
-          }
-        }}
+        onClick={
+          copyOnClick
+            ? () => navigator.clipboard.writeText(defaultLabel)
+            : undefined
+        }
+        onKeyDown={
+          copyOnClick
+            ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  navigator.clipboard.writeText(defaultLabel);
+                }
+              }
+            : undefined
+        }
         {...props}
       >
         {!isHidden && <title>{ariaLabel ?? defaultLabel}</title>}

@@ -636,8 +636,9 @@ export function PostEngagement({
     return { value: newMood, counts: nextCounts };
   });
 
-  const [baseComments, setBaseComments] =
-    useState<CommentWithMeta[]>(initialComments);
+  const [baseComments, setBaseComments] = useState<CommentWithMeta[]>(
+    () => initialComments,
+  );
   const likePending = useRef<Set<number>>(new Set());
 
   const comments = baseComments;
