@@ -81,9 +81,9 @@ export function MouseGlow() {
     document.addEventListener("pointermove", handlePointerMove, { signal });
     document.addEventListener("pointerenter", handlePointerEnter, { signal });
     document.addEventListener("pointerleave", handlePointerLeave, { signal });
-    document.addEventListener("touchstart", handleTouchStart, { signal });
-    document.addEventListener("touchmove", handleTouchMove, { signal });
-    document.addEventListener("touchend", handleTouchEnd, { signal });
+    document.addEventListener("touchstart", handleTouchStart, { signal, passive: true });
+    document.addEventListener("touchmove", handleTouchMove, { signal, passive: true });
+    document.addEventListener("touchend", handleTouchEnd, { signal, passive: true });
     document.addEventListener("touchcancel", handleTouchEnd, { signal });
 
     return () => {

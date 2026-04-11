@@ -155,8 +155,10 @@ function resolveSchema(props: SchemaProps): AnySchema {
 
 export function JsonLd(props: SchemaProps) {
   return (
+    // eslint-disable-next-line react/no-danger
     <script
       type="application/ld+json"
+      // JSON-LD structured data: JSON.stringify output is XSS-safe here
       dangerouslySetInnerHTML={{ __html: JSON.stringify(resolveSchema(props)) }}
     />
   );

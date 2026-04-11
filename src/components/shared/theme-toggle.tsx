@@ -3,7 +3,7 @@
 import { cva } from "class-variance-authority";
 import { SunIcon, MoonIcon, MonitorIcon } from "@/components/shared/icons";
 import { useTheme } from "next-themes";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useSyncExternalStore } from "react";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 
@@ -27,11 +27,11 @@ const full = [
 
 export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
   const { setTheme, theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const value = mounted ? theme : null;
 

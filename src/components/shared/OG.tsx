@@ -75,7 +75,7 @@ function PathDisplay({ path }: { path: string }) {
         const isLast = i === segments.length - 1;
         return (
           <div
-            key={i}
+            key={`${segment}-${i}`}
             style={{ display: "flex", alignItems: "center", gap: 6 }}
           >
             {i > 0 && (

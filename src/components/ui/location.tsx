@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
@@ -41,29 +41,37 @@ export function LocationTag({
   timezone = "Asia/Kolkata",
 }: LocationTagProps) {
   const [isActive, setIsActive] = useState(false);
-  const [currentTime, setCurrentTime] = useState("");
-  const [offset, setOffset] = useState("");
+  const [{ currentTime, offset }, dispatchTime] = useReducer(
+    (
+      _state: { currentTime: string; offset: string },
+      action: { currentTime: string; offset: string },
+    ) => action,
+    { currentTime: "", offset: "" },
+  );
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
 
-      setCurrentTime(
-        new Intl.DateTimeFormat("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: timezone,
-        }).format(now),
-      );
+      const nextTime = new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: timezone,
+      }).format(now);
 
       const localOffsetMins = -now.getTimezoneOffset();
       const targetOffsetMins = getTargetOffsetMinutes(timezone, now);
       const diffHrs = Math.round((targetOffsetMins - localOffsetMins) / 60);
 
-      if (diffHrs === 0) setOffset("same TZ");
-      else if (diffHrs > 0) setOffset(`+${diffHrs}h`);
-      else setOffset(`-${Math.abs(diffHrs)}h`);
+      const nextOffset =
+        diffHrs === 0
+          ? "same TZ"
+          : diffHrs > 0
+            ? `+${diffHrs}h`
+            : `-${Math.abs(diffHrs)}h`;
+
+      dispatchTime({ currentTime: nextTime, offset: nextOffset });
     };
 
     updateTime();

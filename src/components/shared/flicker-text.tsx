@@ -139,7 +139,7 @@ export function FlickerText({
           const logoY = 5;
           return (
             <FlickerChar
-              key={i}
+              key={`logo-${i}`}
               char="logo"
               x={x}
               dur={preset.dur}
@@ -155,7 +155,7 @@ export function FlickerText({
 
         return (
           <FlickerChar
-            key={i}
+            key={`${char}-${i}`}
             char={char}
             x={x}
             dur={preset.dur}

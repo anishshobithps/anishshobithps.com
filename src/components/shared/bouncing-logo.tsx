@@ -108,7 +108,7 @@ export function BouncingLogos({
             }
           }}
           className={`pointer-events-none absolute ${opacity}`}
-          style={{ willChange: "transform", top: 0, left: 0 }}
+          style={{ top: 0, left: 0 }}
         >
           <Logo
             size={LOGO_SIZE}
