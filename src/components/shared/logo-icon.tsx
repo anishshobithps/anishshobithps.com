@@ -21,14 +21,25 @@ export const LogoIcon = forwardRef<SVGSVGElement, LogoIconProps>(
     return (
       <svg
         ref={ref}
-        role="img"
+        role={onClick ? "button" : "img"}
         aria-label="Anish Shobith P S logo"
+        tabIndex={onClick ? 0 : undefined}
         viewBox={`${CROP_LEFT} 0 ${VB_W} ${VB_HEIGHT}`}
         width={scaledWidth}
         height={size}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         onClick={onClick}
+        onKeyDown={
+          onClick
+            ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onClick(e as unknown as React.MouseEvent<SVGSVGElement>);
+                }
+              }
+            : undefined
+        }
         className={cn(
           "transition-colors select-none",
           onClick && "cursor-pointer",

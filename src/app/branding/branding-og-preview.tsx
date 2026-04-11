@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useReducer } from "react";
 import { ScaledOG } from "@/app/branding/scaled-og";
 import { OGImage } from "@/components/shared/OG";
 import { TypographyMuted } from "@/components/ui/typography";
@@ -26,16 +26,43 @@ export function BrandingOGPreview() {
   const defaultName = siteConfig.name;
   const defaultRole = siteConfig.role;
   const defaultDomain = siteConfig.domain;
-  const [titleInput, setTitleInput] = useState<string>("");
-  const [descriptionInput, setDescriptionInput] = useState<string>("");
-  const [nameInput, setNameInput] = useState<string>("");
-  const [roleInput, setRoleInput] = useState<string>("");
-  const [domainInput, setDomainInput] = useState<string>("");
   const defaultTags = ["tag1", "tag2"];
-  const [tagsInput, setTagsInput] = useState<string>("");
-  const [availableForHire, setAvailableForHire] = useState<boolean>(
-    siteConfig.availableForHire,
+
+  type OGFormState = {
+    titleInput: string;
+    descriptionInput: string;
+    nameInput: string;
+    roleInput: string;
+    domainInput: string;
+    tagsInput: string;
+    availableForHire: boolean;
+  };
+
+  const [state, dispatch] = useReducer(
+    (prev: OGFormState, update: Partial<OGFormState>): OGFormState => ({
+      ...prev,
+      ...update,
+    }),
+    {
+      titleInput: "",
+      descriptionInput: "",
+      nameInput: "",
+      roleInput: "",
+      domainInput: "",
+      tagsInput: "",
+      availableForHire: siteConfig.availableForHire,
+    },
   );
+
+  const {
+    titleInput,
+    descriptionInput,
+    nameInput,
+    roleInput,
+    domainInput,
+    tagsInput,
+    availableForHire,
+  } = state;
 
   const title = titleInput.trim() ? titleInput : defaultTitle;
   const description = descriptionInput.trim()
@@ -93,7 +120,7 @@ export function BrandingOGPreview() {
             <Switch
               checked={availableForHire}
               onCheckedChange={(checked: boolean) =>
-                setAvailableForHire(checked)
+                dispatch({ availableForHire: checked })
               }
               aria-labelledby="hire-label"
               className="cursor-pointer"
@@ -107,7 +134,7 @@ export function BrandingOGPreview() {
             <InputGroup>
               <InputGroupInput
                 value={titleInput}
-                onChange={(e) => setTitleInput(e.target.value)}
+                onChange={(e) => dispatch({ titleInput: e.target.value })}
                 placeholder="Title"
                 aria-label={`Title (default: ${defaultTitle})`}
               />
@@ -118,7 +145,7 @@ export function BrandingOGPreview() {
             <InputGroup>
               <InputGroupInput
                 value={descriptionInput}
-                onChange={(e) => setDescriptionInput(e.target.value)}
+                onChange={(e) => dispatch({ descriptionInput: e.target.value })}
                 placeholder="Description"
                 aria-label={`Description (default: ${defaultDescription})`}
               />
@@ -129,7 +156,7 @@ export function BrandingOGPreview() {
             <InputGroup>
               <InputGroupInput
                 value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
+                onChange={(e) => dispatch({ nameInput: e.target.value })}
                 placeholder="Name"
                 aria-label={`Name (default: ${defaultName})`}
               />
@@ -140,7 +167,7 @@ export function BrandingOGPreview() {
             <InputGroup>
               <InputGroupInput
                 value={roleInput}
-                onChange={(e) => setRoleInput(e.target.value)}
+                onChange={(e) => dispatch({ roleInput: e.target.value })}
                 placeholder="Role"
                 aria-label={`Role (default: ${defaultRole})`}
               />
@@ -151,7 +178,7 @@ export function BrandingOGPreview() {
             <InputGroup>
               <InputGroupInput
                 value={domainInput}
-                onChange={(e) => setDomainInput(e.target.value)}
+                onChange={(e) => dispatch({ domainInput: e.target.value })}
                 placeholder="Domain"
                 aria-label={`Domain (default: ${defaultDomain})`}
               />
@@ -162,7 +189,7 @@ export function BrandingOGPreview() {
             <InputGroup>
               <InputGroupInput
                 value={tagsInput}
-                onChange={(e) => setTagsInput(e.target.value)}
+                onChange={(e) => dispatch({ tagsInput: e.target.value })}
                 placeholder="tag1, tag2, ..."
                 aria-label="Tags, comma separated"
               />

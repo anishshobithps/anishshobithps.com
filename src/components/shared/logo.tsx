@@ -58,7 +58,9 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
             className,
           )}
           aria-label={
-            isHidden ? undefined : ((ariaLabel as string) ?? "Anish Shobith P S")
+            isHidden
+              ? undefined
+              : ((ariaLabel as string) ?? "Anish Shobith P S")
           }
           aria-hidden={isHidden ? true : undefined}
           onClick={() => {
@@ -69,22 +71,27 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
     }
 
     const fallbackW =
-      TEXT_X + Math.ceil(wordmark.length * CHAR_W * FONT_SIZE) + PADDING - (CONTENT_LEFT - PADDING);
+      TEXT_X +
+      Math.ceil(wordmark.length * CHAR_W * FONT_SIZE) +
+      PADDING -
+      (CONTENT_LEFT - PADDING);
     const vbX = CONTENT_LEFT - PADDING; // = 12
     const vbW = measuredW ?? fallbackW;
     const scaledWidth = Math.round((vbW / VB_HEIGHT) * size);
 
     const mergedRef = (node: SVGSVGElement | null) => {
       if (typeof ref === "function") ref(node);
-      else if (ref) (ref as React.MutableRefObject<SVGSVGElement | null>).current = node;
+      else if (ref)
+        (ref as React.MutableRefObject<SVGSVGElement | null>).current = node;
     };
 
     return (
       <svg
         ref={mergedRef}
-        role={isHidden ? undefined : "img"}
+        role={isHidden ? undefined : copyOnClick ? "button" : "img"}
         aria-label={isHidden ? undefined : (ariaLabel ?? defaultLabel)}
         aria-hidden={isHidden ? true : undefined}
+        tabIndex={copyOnClick ? 0 : undefined}
         viewBox={`${vbX} 0 ${vbW} ${VB_HEIGHT}`}
         width={scaledWidth}
         height={size}
@@ -97,6 +104,12 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
         onClick={() => {
           if (copyOnClick) navigator.clipboard.writeText(defaultLabel);
         }}
+        onKeyDown={(e) => {
+          if (copyOnClick && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            navigator.clipboard.writeText(defaultLabel);
+          }
+        }}
         {...props}
       >
         {!isHidden && <title>{ariaLabel ?? defaultLabel}</title>}
@@ -104,8 +117,22 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
           points="32,4 48,60 40.5,60 32,14 23.5,60 16,60"
           className="fill-current"
         />
-        <rect x="18" y="36" width="11" height="5" rx="2.5" className="fill-current" />
-        <rect x="35" y="36" width="11" height="5" rx="2.5" className="fill-current" />
+        <rect
+          x="18"
+          y="36"
+          width="11"
+          height="5"
+          rx="2.5"
+          className="fill-current"
+        />
+        <rect
+          x="35"
+          y="36"
+          width="11"
+          height="5"
+          rx="2.5"
+          className="fill-current"
+        />
         <text
           ref={textRef}
           x={TEXT_X}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -47,7 +48,6 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
           overflow: "hidden",
         }}
       >
-        {/* ── CRT noise + scanlines ── */}
         <svg
           aria-hidden="true"
           style={{
@@ -170,7 +170,6 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
             gap: "24px",
           }}
         >
-          {/* 500 with logo randomly replacing the middle 0 */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 232 96"
@@ -191,7 +190,6 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               `}</style>
             </defs>
 
-            {/* "5" */}
             <g>
               <text className="ge-n" x="0" y="88">
                 5
@@ -206,7 +204,6 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               />
             </g>
 
-            {/* Middle character: "0" or logo glyph */}
             <g>
               {showLogo ? (
                 <g transform="translate(79.6, 5) scale(1.375) translate(-14, 0)">
@@ -248,7 +245,6 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               )}
             </g>
 
-            {/* last "0" */}
             <g>
               <text className="ge-n" x="152" y="88">
                 0
@@ -301,7 +297,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
             >
               Try Again
             </button>
-            <a
+            <Link
               href="/"
               style={{
                 display: "flex",
@@ -318,7 +314,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               }}
             >
               Go Home
-            </a>
+            </Link>
           </div>
         </div>
       </body>
