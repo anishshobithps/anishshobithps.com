@@ -374,7 +374,9 @@ export function BlogsClient({
                     </PaginationItem>
                     {pageNumbers.map((p, i) =>
                       p === "..." ? (
-                        <PaginationItem key={`ellipsis-${i}`}>
+                        <PaginationItem
+                          key={`ellipsis-${pageNumbers[i - 1] ?? "start"}`}
+                        >
                           <PaginationEllipsis />
                         </PaginationItem>
                       ) : (

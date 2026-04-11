@@ -1,44 +1,44 @@
 "use client";
 
 import {
-    deleteComment,
-    getReactions,
-    submitComment,
-    submitReaction,
-    toggleCommentLike,
-    togglePinComment,
-    type CommentWithMeta,
-    type MoodId,
-    type ReactionCounts,
+  deleteComment,
+  getReactions,
+  submitComment,
+  submitReaction,
+  toggleCommentLike,
+  togglePinComment,
+  type CommentWithMeta,
+  type MoodId,
+  type ReactionCounts,
 } from "@/app/blog/[[...slug]]/actions";
 import { Card } from "@/components/layouts/page";
 import {
-    ArrowBendDownRightIcon,
-    ChatCircleIcon,
-    HeartIcon,
-    PaperPlaneTiltIcon,
-    PencilIcon,
-    PushPinSimpleIcon,
-    PushPinSimpleSlashIcon,
-    SignInIcon,
-    SignOutIcon,
-    SmileyMehIcon,
-    ThumbsDownIcon,
-    ThumbsUpIcon,
-    TrashIcon,
+  ArrowBendDownRightIcon,
+  ChatCircleIcon,
+  HeartIcon,
+  PaperPlaneTiltIcon,
+  PencilIcon,
+  PushPinSimpleIcon,
+  PushPinSimpleSlashIcon,
+  SignInIcon,
+  SignOutIcon,
+  SmileyMehIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+  TrashIcon,
 } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    ButtonGroup,
-    ButtonGroupSeparator,
+  ButtonGroup,
+  ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import {
-    SectionLabel,
-    TypographyMuted,
-    TypographySmall,
+  SectionLabel,
+  TypographyMuted,
+  TypographySmall,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { nowISO, timeAgo } from "@/lib/date";
@@ -46,12 +46,12 @@ import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import NextImage from "next/image";
 import Link from "next/link";
 import {
-    startTransition,
-    useCallback,
-    useEffect,
-    useOptimistic,
-    useRef,
-    useState,
+  startTransition,
+  useCallback,
+  useEffect,
+  useOptimistic,
+  useRef,
+  useState,
 } from "react";
 import { toast } from "sonner";
 
@@ -254,14 +254,12 @@ function CommentComposer({
   placeholder,
   onSubmit,
   onCancel,
-  autoFocus = false,
   isReply = false,
 }: {
   userName: string | null;
   placeholder?: string;
   onSubmit: (body: string) => void;
   onCancel?: () => void;
-  autoFocus?: boolean;
   isReply?: boolean;
 }) {
   const [body, setBody] = useState("");
@@ -277,8 +275,9 @@ function CommentComposer({
       : "Say something. I dare you.");
 
   useEffect(() => {
-    if (autoFocus) textareaRef.current?.focus();
-  }, [autoFocus]);
+    if (isReply) textareaRef.current?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const el = textareaRef.current;
@@ -563,7 +562,6 @@ function CommentCard({
                 <CommentComposer
                   userName={userName}
                   placeholder={`Reply to ${comment.user.name}…`}
-                  autoFocus
                   isReply
                   onSubmit={(body) => {
                     onReply(comment.id, body);

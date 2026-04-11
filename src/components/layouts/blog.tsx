@@ -25,6 +25,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 
 function clamp(value: number, min: number, max: number) {
@@ -102,7 +103,11 @@ export function MobileTOC() {
   const items = useTOCItems();
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -117,10 +122,6 @@ export function MobileTOC() {
     () => items.findIndex((item) => active === item.url.slice(1)),
     [items, active],
   );
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (items.length === 0) return null;
 
