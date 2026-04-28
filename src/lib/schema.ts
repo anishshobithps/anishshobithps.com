@@ -7,34 +7,52 @@ import {
     serial,
     boolean,
     text,
-    integer
+    integer,
+    unique,
 } from "drizzle-orm/pg-core";
+
+export const blogPosts = pgTable(
+    "blog_posts",
+    {
+        id: serial("id").primaryKey(),
+        slug: varchar("slug", { length: 256 }).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        unique("blog_posts_slug_unique").on(table.slug),
+    ],
+);
 
 export const blogReactions = pgTable(
     "blog_reactions",
     {
-        slug: varchar("slug", { length: 256 }).notNull(),
+        postId: integer("post_id")
+            .notNull()
+            .references(() => blogPosts.id, { onDelete: "cascade", onUpdate: "cascade" }),
         ipHash: varchar("ip_hash", { length: 64 }).notNull(),
         mood: varchar("mood", { length: 32 }).notNull(),
         createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
         updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (table) => [
-        primaryKey({ columns: [table.slug, table.ipHash] }),
-        index("blog_reactions_slug_idx").on(table.slug),
+        primaryKey({ columns: [table.postId, table.ipHash] }),
+        index("blog_reactions_post_idx").on(table.postId),
     ],
 );
 
 export const blogReads = pgTable(
     "blog_reads",
     {
-        slug: varchar("slug", { length: 256 }).notNull(),
+        postId: integer("post_id")
+            .notNull()
+            .references(() => blogPosts.id, { onDelete: "cascade", onUpdate: "cascade" }),
         ipHash: varchar("ip_hash", { length: 64 }).notNull(),
         createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (table) => [
-        primaryKey({ columns: [table.slug, table.ipHash] }),
-        index("blog_reads_slug_idx").on(table.slug),
+        primaryKey({ columns: [table.postId, table.ipHash] }),
+        index("blog_reads_post_idx").on(table.postId),
     ],
 );
 
@@ -74,7 +92,9 @@ export const blogComments = pgTable(
     "blog_comments",
     {
         id: serial("id").primaryKey(),
-        slug: varchar("slug", { length: 256 }).notNull(),
+        postId: integer("post_id")
+            .notNull()
+            .references(() => blogPosts.id, { onDelete: "cascade", onUpdate: "cascade" }),
         parentId: integer("parent_id"),
         clerkUserId: varchar("clerk_user_id", { length: 256 }).notNull(),
         body: text("body").notNull(),
@@ -84,7 +104,7 @@ export const blogComments = pgTable(
         updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (table) => [
-        index("blog_comments_slug_idx").on(table.slug),
+        index("blog_comments_post_idx").on(table.postId),
         index("blog_comments_parent_idx").on(table.parentId),
         index("blog_comments_pinned_idx").on(table.isPinned),
     ],

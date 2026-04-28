@@ -68,6 +68,13 @@ const config = {
         destination: "mailto:anish.shobith19@gmail.com",
         permanent: true,
       },
+      {
+        source:
+          "/blog/i-built-a-4am-alert-system-to-get-rcb-tickets-and-it-actually-worked",
+        destination:
+          "/blog/rcb-tickets-are-broken-so-i-built-an-alert-system-at-4am",
+        permanent: true,
+      },
     ];
   },
   async headers() {
