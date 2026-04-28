@@ -100,6 +100,7 @@ const config = {
               "font-src 'self' data: https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
               "connect-src 'self' blob: https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com https:",
+              "media-src 'self' https://res.cloudinary.com",
               "worker-src 'self' blob:",
               "frame-src 'self' https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com",
               "object-src 'none'",
