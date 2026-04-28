@@ -43,6 +43,14 @@ export const siteConfig = {
 
 export const projects = [
     {
+        title: "Luma",
+        description:
+            "A small, expressive programming language with a full lexer, recursive-descent parser, and tree-walking interpreter. Supports closures, first-class functions, pattern matching, arbitrary-precision integers, and more. Work in progress.",
+        highlights: ["Bun", "TypeScript", "Compilers", "Interpreters"],
+        live: null,
+        github: "https://github.com/anishshobithps/luma",
+    },
+    {
         title: "Tiara 2024 Tech Fest",
         description:
             "A full-scale event website for a national techno-cultural fest. Built with structured architecture, dynamic content, and zero room for things breaking mid-event (mostly).",
@@ -51,12 +59,12 @@ export const projects = [
         github: "https://github.com/tiarasjec/website",
     },
     {
-        title: "Reddit → Discord Meme Curator",
+        title: "snipshot",
         description:
-            "A bot that scrapes memes from Reddit and pipes them into Discord. Because manually sending memes is inefficient and I have priorities.",
-        highlights: ["Node.js", "Reddit API", "Discord.js", "Automation"],
+            "A CLI tool that turns any source file into a clean, themed screenshot. Uses Monaco Editor rendered headlessly via Puppeteer with Shiki for syntax highlighting. Supports 235 languages, 65 themes, interactive and direct modes, and fixed-size output for OG/social images.",
+        highlights: ["Bun", "TypeScript", "Puppeteer", "Monaco Editor", "Shiki"],
         live: null,
-        github: "https://github.com/anishshobithps/reddit-discord-meme-curator",
+        github: "https://github.com/anishshobithps/snipshot",
     },
     {
         title: "Codelyra",
@@ -67,12 +75,12 @@ export const projects = [
         github: "https://github.com/anishshobithps/codelyra",
     },
     {
-        title: "Certificate Generator",
+        title: "FRAxis",
         description:
-            "Automates certificate creation so I never have to manually edit names into templates again. Laziness, but productive.",
-        highlights: ["Python", "Pillow", "PDF Automation"],
+            "A frame-based glitch renderer that generates stylized animated GIFs from an input SVG. Applies analog-inspired distortions — horizontal slice displacement, camera shake, CRT noise, and temporal stutter — then encodes into a palette-constrained GIF via FFmpeg.",
+        highlights: ["Bun", "TypeScript", "Sharp", "FFmpeg"],
         live: null,
-        github: "https://github.com/gdgsjec/certificate-generator",
+        github: "https://github.com/anishshobithps/FRAxis",
     },
     {
         title: "Sorting Algorithm Visualizer",
@@ -80,15 +88,22 @@ export const projects = [
             "A C++ + OpenGL visualizer for sorting algorithms. Built to understand algorithms better and to make them look cooler than they actually are.",
         highlights: ["C++", "OpenGL", "Algorithms"],
         live: null,
-        github:
-            "https://github.com/anishshobithpscollege/sortingalgorithmvisualizer",
+        github: "https://github.com/anishshobithpscollege/sortingalgorithmvisualizer",
     },
     {
-        title: "TL;DR News",
+        title: "Reddit -> Discord Meme Curator",
         description:
-            "A cross-platform news app summarizing tech content. Because reading full articles is admirable but unrealistic.",
-        highlights: ["Flutter", "TypeScript", "Dart"],
+            "A bot that scrapes memes from Reddit and pipes them into Discord. Because manually sending memes is inefficient and I have priorities.",
+        highlights: ["Node.js", "Reddit API", "Discord.js", "Automation"],
         live: null,
-        github: "https://github.com/anishshobithpscollege/tldrnewsapp",
+        github: "https://github.com/anishshobithps/reddit-discord-meme-curator",
+    },
+    {
+        title: "Certificate Generator",
+        description:
+            "Automates certificate creation so I never have to manually edit names into templates again. Laziness, but productive.",
+        highlights: ["Python", "Pillow", "PDF Automation"],
+        live: null,
+        github: "https://github.com/gdgsjec/certificate-generator",
     },
 ];
