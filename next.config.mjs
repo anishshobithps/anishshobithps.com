@@ -70,7 +70,7 @@ const config = {
       },
       {
         source:
-          "/blog/i-built-a-4am-alert-system-to-get-rcb-tickets-and-it-actually-worked",
+          "/blog/i-built-a-4am-alert-system-to-get-RCB-tickets-and%20-it-actually-worked",
         destination:
           "/blog/rcb-tickets-are-broken-so-i-built-an-alert-system-at-4am",
         permanent: true,
