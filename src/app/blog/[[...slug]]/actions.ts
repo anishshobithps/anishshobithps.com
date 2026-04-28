@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getClientIp, hashIp } from "@/lib/ip";
-import { blogCommentLikes, blogComments, blogReactions, blogReads } from "@/lib/schema";
+import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -27,24 +27,63 @@ async function getIpHash(): Promise<string> {
     return hashIp(getClientIp(hdrs));
 }
 
+async function getOrCreatePost(slug: string): Promise<number> {
+    const [existing] = await db
+        .select({ id: blogPosts.id })
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+
+    if (existing) return existing.id;
+
+    const [inserted] = await db
+        .insert(blogPosts)
+        .values({ slug })
+        .onConflictDoNothing()
+        .returning({ id: blogPosts.id });
+
+    if (inserted) return inserted.id;
+
+    const [retry] = await db
+        .select({ id: blogPosts.id })
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+
+    return retry.id;
+}
+
 export async function trackRead(slug: string): Promise<void> {
-    const ipHash = await getIpHash();
-    await db
-        .insert(blogReads)
-        .values({ slug, ipHash })
-        .onConflictDoNothing();
+    const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
+    await db.insert(blogReads).values({ postId, ipHash }).onConflictDoNothing();
 }
 
 export async function getBlogReadsCount(slug: string): Promise<number> {
-    const count = await db
-        .select({ count: blogReads.slug })
+    const [post] = await db
+        .select({ id: blogPosts.id })
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+
+    if (!post) return 0;
+
+    const rows = await db
+        .select({ count: sql<number>`count(*)::int` })
         .from(blogReads)
-        .where(eq(blogReads.slug, slug));
-    return count.length;
+        .where(eq(blogReads.postId, post.id));
+
+    return rows[0]?.count ?? 0;
 }
 
 export async function getReactions(slug: string): Promise<ReactionsData> {
-    const ipHash = await getIpHash();
+    const [ipHash, post] = await Promise.all([
+        getIpHash(),
+        db.select({ id: blogPosts.id }).from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1),
+    ]);
+
+    if (!post[0]) return { counts: {}, userMood: null };
+
+    const postId = post[0].id;
 
     const [countRows, userRows] = await Promise.all([
         db
@@ -53,18 +92,13 @@ export async function getReactions(slug: string): Promise<ReactionsData> {
                 count: sql<number>`count(*)::int`,
             })
             .from(blogReactions)
-            .where(eq(blogReactions.slug, slug))
+            .where(eq(blogReactions.postId, postId))
             .groupBy(blogReactions.mood),
 
         db
             .select({ mood: blogReactions.mood })
             .from(blogReactions)
-            .where(
-                and(
-                    eq(blogReactions.slug, slug),
-                    eq(blogReactions.ipHash, ipHash)
-                )
-            )
+            .where(and(eq(blogReactions.postId, postId), eq(blogReactions.ipHash, ipHash)))
             .limit(1),
     ]);
 
@@ -81,37 +115,28 @@ export async function getReactions(slug: string): Promise<ReactionsData> {
     };
 }
 
-export async function submitReaction(
-    slug: string,
-    mood: MoodId | null
-): Promise<void> {
+export async function submitReaction(slug: string, mood: MoodId | null): Promise<void> {
     if (mood !== null && !isValidMood(mood)) {
         throw new Error(`Invalid mood: ${mood}`);
     }
 
-    const ipHash = await getIpHash();
+    const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
 
     if (mood === null) {
         await db
             .delete(blogReactions)
-            .where(
-                and(
-                    eq(blogReactions.slug, slug),
-                    eq(blogReactions.ipHash, ipHash)
-                )
-            );
+            .where(and(eq(blogReactions.postId, postId), eq(blogReactions.ipHash, ipHash)));
     } else {
         const now = new Date();
         await db
             .insert(blogReactions)
-            .values({ slug, ipHash, mood, updatedAt: now })
+            .values({ postId, ipHash, mood, updatedAt: now })
             .onConflictDoUpdate({
-                target: [blogReactions.slug, blogReactions.ipHash],
+                target: [blogReactions.postId, blogReactions.ipHash],
                 set: { mood, updatedAt: now },
             });
     }
 }
-
 
 const MAX_BODY_LENGTH = 1000;
 const MIN_BODY_LENGTH = 2;
@@ -155,10 +180,18 @@ function validateBody(body: string): void {
 export async function getComments(slug: string): Promise<GetCommentsResult> {
     const { userId } = await auth();
 
+    const [post] = await db
+        .select({ id: blogPosts.id })
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+
+    if (!post) return { comments: [], total: 0 };
+
     const rows = await db
         .select({
             id: blogComments.id,
-            slug: blogComments.slug,
+            postId: blogComments.postId,
             parentId: blogComments.parentId,
             clerkUserId: blogComments.clerkUserId,
             body: blogComments.body,
@@ -168,7 +201,7 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
         })
         .from(blogComments)
         .leftJoin(blogCommentLikes, eq(blogComments.id, blogCommentLikes.commentId))
-        .where(and(eq(blogComments.slug, slug), eq(blogComments.isDeleted, false)))
+        .where(and(eq(blogComments.postId, post.id), eq(blogComments.isDeleted, false)))
         .groupBy(blogComments.id)
         .orderBy(desc(blogComments.isPinned), desc(blogComments.createdAt));
 
@@ -201,7 +234,7 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
 
     const flat: CommentWithMeta[] = rows.map((row) => ({
         id: row.id,
-        slug: row.slug,
+        slug,
         parentId: row.parentId,
         body: row.body,
         isPinned: row.isPinned,
@@ -243,9 +276,11 @@ export async function submitComment(
         const trimmed = sanitize(body);
         validateBody(trimmed);
 
+        const postId = await getOrCreatePost(slug);
+
         const [inserted] = await db
             .insert(blogComments)
-            .values({ slug, clerkUserId: userId, body: trimmed, parentId: parentId ?? null })
+            .values({ postId, clerkUserId: userId, body: trimmed, parentId: parentId ?? null })
             .returning({ id: blogComments.id });
 
         revalidatePath(`/blog/${slug}`);
@@ -264,7 +299,7 @@ export async function deleteComment(
         if (!userId) return { success: false, error: "Not authenticated." };
 
         const [comment] = await db
-            .select({ clerkUserId: blogComments.clerkUserId, slug: blogComments.slug })
+            .select({ clerkUserId: blogComments.clerkUserId, postId: blogComments.postId })
             .from(blogComments)
             .where(and(eq(blogComments.id, commentId), eq(blogComments.isDeleted, false)))
             .limit(1);
@@ -282,7 +317,13 @@ export async function deleteComment(
             .set({ isDeleted: true, updatedAt: new Date() })
             .where(eq(blogComments.id, commentId));
 
-        revalidatePath(`/blog/${comment.slug}`);
+        const [post] = await db
+            .select({ slug: blogPosts.slug })
+            .from(blogPosts)
+            .where(eq(blogPosts.id, comment.postId))
+            .limit(1);
+
+        if (post) revalidatePath(`/blog/${post.slug}`);
         return { success: true };
     } catch {
         return { success: false, error: "Something went wrong." };
@@ -298,7 +339,7 @@ export async function togglePinComment(
             return { success: false, error: "Not authorized." };
 
         const [comment] = await db
-            .select({ isPinned: blogComments.isPinned, slug: blogComments.slug })
+            .select({ isPinned: blogComments.isPinned, postId: blogComments.postId })
             .from(blogComments)
             .where(eq(blogComments.id, commentId))
             .limit(1);
@@ -310,7 +351,13 @@ export async function togglePinComment(
             .set({ isPinned: !comment.isPinned, updatedAt: new Date() })
             .where(eq(blogComments.id, commentId));
 
-        revalidatePath(`/blog/${comment.slug}`);
+        const [post] = await db
+            .select({ slug: blogPosts.slug })
+            .from(blogPosts)
+            .where(eq(blogPosts.id, comment.postId))
+            .limit(1);
+
+        if (post) revalidatePath(`/blog/${post.slug}`);
         return { success: true };
     } catch {
         return { success: false, error: "Something went wrong." };
