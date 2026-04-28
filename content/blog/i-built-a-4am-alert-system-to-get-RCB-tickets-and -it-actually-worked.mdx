@@ -1,0 +1,258 @@
+---
+title: I Built a 4am Alert System to Get RCB Tickets, and It Actually Worked
+description: Two hours of sleep-deprived coding, a Discord ping at 3:30pm, and tickets in hand by 3:40pm. Here's what that journey actually looked like.
+date: 2026-04-27
+tags:
+  - RCB
+  - IPL
+  - TypeScript
+  - Effect
+  - Personal
+---
+
+import { TypographyMark } from "@/components/ui/typography";
+import {
+    MediaPlayer,
+    MediaPlayerControls,
+    MediaPlayerControlsOverlay,
+    MediaPlayerFullscreen,
+    MediaPlayerPiP,
+    MediaPlayerPlay,
+    MediaPlayerPlaybackSpeed,
+    MediaPlayerSeek,
+    MediaPlayerSeekBackward,
+    MediaPlayerSeekForward,
+    MediaPlayerTime,
+    MediaPlayerVideo,
+    MediaPlayerVolume,
+} from "@/components/ui/media-player";
+
+> Before anything else: I built this for myself. One ticket. To sit in the stands at Chinnaswamy and watch a match. Nothing was resold, nothing was listed anywhere. This system monitors a publicly accessible API endpoint and sends a notification - it doesn't automate purchases or touch any platform safeguard. I wanted my first ever live cricket match, and RCB tickets at face value feel more like a lottery than a purchase.
+
+## Why Getting RCB Tickets Is Broken
+
+When RCB's first home game for IPL 2026 went on sale on <TypographyMark>March 24 at 4pm</TypographyMark>, fans reported tickets disappearing before they could complete checkout. Social media flooded with complaints within minutes of the window opening. Some people said they got to the payment page, entered their details, and came back to find their seats gone.
+
+This isn't unique to one match or one season. For the [MI vs RCB fixture at Wankhede](https://creatives.jeetwin.com/sports/mi-vs-rcb-ipl-2026-tickets-sold-out-resale-controversy/), the entire online inventory vanished in under a minute, and within hours the same tickets appeared on resale sites at prices [ranging from ₹15,000 to ₹1 lakh per seat](https://8pmnews.com/fans-hit-by-sky-high-prices-of-mi-vs-rcb-clash/). The official base price for RCB home games at Chinnaswamy [starts at ₹3,750 and goes up to ₹65,800](https://www.ipl.com/cricket/news/rcb-tickets-2026-price-list-booking-details-amp-chinnaswamy-match-info/) under dynamic pricing - RCB is [the only IPL 2026 team using a confirmed dynamic pricing model](https://iplonly.com/tickets/royal-challengers-bangalore-ipl-2026/).
+
+Part of the problem is structural. A large chunk of capacity gets pre-allocated to sponsor quotas, BCCI and state association blocks, and club memberships before general sale opens. At Chinnaswamy this is compounded further: the stadium is running at a [reduced capacity of 28,000 for IPL 2026](https://www.newsx.com/sports/m-chinnaswamy-new-guidelines-for-ipl-2026-rcb-return-home-with-reduced-crowd-and-safety-measures-184522/) - down from its normal ~35,000 - following the crowd crush on <TypographyMark>June 4, 2025</TypographyMark>, where [11 people died and 56 were injured](https://en.wikipedia.org/wiki/2025_Bengaluru_crowd_crush) outside the stadium during RCB's title victory celebrations. The Karnataka government cleared the stadium to host matches [only after implementing recommendations from the Justice D'Cunha Committee](https://www.business-standard.com/cricket/ipl/ipl-2026-chinnaswamy-stadium-gets-karnataka-govt-nod-to-host-matches-126021301186_1.html), a 17-point infrastructure overhaul, and [a formal mock drill conducted on March 13, 2026](https://iplonly.com/tickets/royal-challengers-bangalore-ipl-2026/). So you're not competing for a full house - you're competing for 28,000 seats, a meaningful slice of which was already allocated before the public queue opened.
+
+There have also been [allegations of irregularities](https://www.sportsyaari.com/cricket/sold-out-before-it-began-rcb-ticket-chaos-raises-questions-23469/) across multiple IPL seasons - suggestions that pre-booking or diversion to secondary markets happens before the public window officially opens. I can't verify that. But the pattern of tickets disappearing in under 60 seconds and [reappearing on resale platforms at 10–15x the original price](https://www.newsx.com/sports/mi-vs-rcb-mi-vs-kkr-tickets-sold-out-in-minutes-ipl-2026-ticket-high-price-black-market-third-party-reselling-among-issues-faced-by-fans-before-indian-premier-league-188316/) repeats year after year without a satisfying explanation from anyone involved.
+
+The standard approach is sitting at your computer at exactly the right time, refreshing until the page loads, sprinting through checkout, and hoping inventory doesn't evaporate while you're entering your details. I decided it wasn't good enough for me.
+
+## 4am, An Idea, and Wrong Assumptions
+
+I sat down at <TypographyMark>4:00am</TypographyMark> with a rough plan: poll the ticketing endpoint, detect when tickets go live, fire a Discord notification fast enough to actually act on it. Simple in theory. In practice, I spent the first 90 minutes completely wrong about how the API worked.
+
+My first assumption was that the API required authentication. This seemed reasonable. Ticketing platforms have obvious incentives to block automated access. They'd gate their endpoints. So I opened the browser, loaded the ticketing site, and started inspecting network requests in the <TypographyMark>developer tools</TypographyMark>.
+
+I saw cookies. I saw a <TypographyMark>Bearer token</TypographyMark> in one of the authorization headers. My brain latched onto those and I started building around them.
+
+### The Cookie Phase
+
+I tried passing <TypographyMark>session cookies</TypographyMark> with my requests. Spent time figuring out which ones were relevant, copied them across, tried attaching them to fetch calls. Some requests came back with data, some didn't, none of it was reliable. Cookies from a browser session tied to a specific login don't carry cleanly to an independent script - the server-side session validation behaves inconsistently when the same session appears from a different network context.
+
+More importantly, I eventually realized the cookies I was chasing were completely unrelated to the ticketing API. They belonged to other services embedded on the page. I'd copied everything visible in the <TypographyMark>network tab</TypographyMark> without thinking carefully about which specific request actually mattered.
+
+That was 45 minutes gone.
+
+### The Bearer Token Phase
+
+The Bearer token felt more promising. I found it in the <TypographyMark>authorization header</TypographyMark> on a specific API call, copied it into my script, and the requests worked. For a while.
+
+Bearer tokens expire. This one lasted somewhere between <TypographyMark>30 and 60 minutes</TypographyMark> before requests started failing with auth errors. Re-generating it meant logging in again, which required an <TypographyMark>OTP</TypographyMark> sent to a phone number. There was no way to automate that step. The token approach was dead on arrival for anything meant to run unattended overnight.
+
+I also noticed something odd while debugging: the token still worked briefly after I logged out in the browser. That told me it wasn't tightly bound to a live session - it was a time-expiring credential, not a session-bound one. Useful to understand, useless for my purposes.
+
+### The Proxy Phase
+
+My third wrong turn was building a <TypographyMark>CORS proxy</TypographyMark>. Browser requests to the API were hitting CORS restrictions, so I'd route my fetch calls through a <TypographyMark>Cloudflare Worker</TypographyMark> that would strip those headers and forward the request server-side.
+
+I got the Worker running. Sent a request through it. Got a <TypographyMark>403</TypographyMark>.
+
+CORS is a browser security mechanism enforced by the browser, not the server. A proxy doesn't bypass server-side security - it moves the request to a different origin. If the server is blocking requests based on IP ranges or TLS fingerprints, routing through a Cloudflare Worker makes things worse, because Cloudflare's datacenter IPs are well-known and actively flagged by services that filter non-browser traffic.
+
+I tore down the proxy and went back to basics.
+
+### The Header Spoofing Phase
+
+By this point I'd read enough about request filtering to try full header spoofing. I copied every header from a real browser request: <TypographyMark>sec-ch-ua</TypographyMark>, <TypographyMark>sec-fetch-site</TypographyMark>, <TypographyMark>sec-fetch-mode</TypographyMark>, <TypographyMark>sec-fetch-dest</TypographyMark>, the full <TypographyMark>User-Agent</TypographyMark> string, <TypographyMark>accept-language</TypographyMark>, all of it pasted in.
+
+Requests that had been going through fine started failing more consistently.
+
+The reason, which I pieced together after, is that fingerprinting often happens at the <TypographyMark>TLS</TypographyMark> layer, not the HTTP layer. When a browser initiates a TLS handshake, the specific <TypographyMark>cipher suites</TypographyMark> it advertises, the order it lists them, and the extensions it includes form a fingerprint identifying it as <TypographyMark>Chrome on Windows</TypographyMark>. A script running in <TypographyMark>Bun</TypographyMark> makes a completely different TLS handshake even if the HTTP headers are identical. You can copy every header perfectly and still be identifiable because the TLS fingerprint doesn't match. Sending more headers doesn't help - it increases the mismatch signal by making the request look like something trying too hard to look like a browser.
+
+Minimal headers worked better. I settled on four: <TypographyMark>accept</TypographyMark>, <TypographyMark>accept-language</TypographyMark>, <TypographyMark>user-agent</TypographyMark>, and <TypographyMark>origin</TypographyMark> with the expected referer.
+
+## The Breakthrough
+
+Around <TypographyMark>5:30am</TypographyMark>, after an hour and a half of chasing dead ends, I stepped back and tried the thing I should have tried first: fetch the endpoint with minimal headers and see what comes back.
+
+It came back fine. No auth required. A clean JSON response with a list of events, each carrying details about the match, date, price range, and a field called <TypographyMark>event_Button_Text</TypographyMark>.
+
+When tickets aren't available yet, that field says something like <TypographyMark>"COMING SOON"</TypographyMark>. When they go live, it says <TypographyMark>"BUY TICKETS"</TypographyMark>.
+
+That's it. I'd spent 90 minutes building authentication systems for an endpoint that needed no authentication. The public event listing API exists to serve the website's front page - of course it's accessible without credentials. It has to be. That's its job.
+
+The detection logic ended up being a six-line filter:
+
+```ts
+const getValidEvents = (events: EventData[]) => {
+  const now = nowIST().getTime();
+  return events.filter(
+    (e) =>
+      new Date(e.event_Date).getTime() >= now &&
+      e.event_Button_Text === "BUY TICKETS"
+  );
+};
+```
+
+Future events only, button text matching exactly. Everything else is infrastructure around this function.
+
+## Building The Actual System
+
+With detection figured out, I wrote the rest in about 30 minutes.
+
+I built it on <TypographyMark>Effect</TypographyMark>, a <TypographyMark>TypeScript</TypographyMark> library for typed, composable async programs. I've been using it on other projects and it fits how I think about programs that need to run continuously, handle errors without crashing, and do multiple things at once. For something where a failed fetch shouldn't kill the whole process and retries need sensible backoff, Effect handles the plumbing without me wiring it manually.
+
+### Polling Strategy
+
+The polling loop runs on two intervals depending on what it finds. If nothing changed since the last check, it backs off to a slower interval with random jitter - somewhere between <TypographyMark>10 and 15 seconds</TypographyMark>. If it detects a change, it drops to a faster interval of <TypographyMark>3 seconds</TypographyMark>.
+
+```ts
+const nextPollDelay = (count: number) => {
+  const increased = count > lastEventCount;
+  lastEventCount = count;
+  return increased
+    ? Duration.millis(POLL_FAST_MS)
+    : Duration.millis(POLL_SLOW_MS + Math.random() * POLL_SLOW_JITTER_MS);
+};
+```
+
+The jitter matters because a perfectly regular polling interval looks mechanical and is more likely to trigger rate limiting from a server watching for patterns. Randomizing the slow interval makes the request cadence look more like a human periodically refreshing a page.
+
+### Change Detection
+
+Before filtering for available events, the system compares the full response against the previous one using a simple hash. If nothing changed, it skips the notification logic entirely. This avoids re-alerting on events that were already live from a previous check.
+
+```ts
+const checkAndSetChanged = (events: EventData[]) => {
+  const hash = JSON.stringify(events);
+  if (hash === lastEventHash) return false;
+  lastEventHash = hash;
+  return true;
+};
+```
+
+On top of that, there's a <TypographyMark>1-hour cooldown per event code</TypographyMark> tracked in a Map. Even if the change detector flags a difference, it won't notify for an event it already notified about within the last hour. This handles cases where the response changes for some other reason while the same event is still live.
+
+### Retry Logic
+
+The retry policy uses <TypographyMark>exponential backoff</TypographyMark> starting at <TypographyMark>1 second</TypographyMark>, composing up to <TypographyMark>5 retries</TypographyMark>:
+
+```ts
+const retryPolicy = Schedule.exponential(Duration.seconds(1)).pipe(
+  Schedule.compose(Schedule.recurs(5))
+);
+
+const count = yield* pollOnce.pipe(Effect.retry(retryPolicy));
+```
+
+If the endpoint is temporarily unreachable, the system waits progressively longer between each retry rather than hammering it. After 5 failed retries it surfaces the error and the outer loop handles it.
+
+### Two Concurrent Loops
+
+I ran two loops concurrently using Effect's <TypographyMark>fiber model</TypographyMark>: the main polling loop and a heartbeat that pings Discord every <TypographyMark>2 hours</TypographyMark> to confirm the process is still alive.
+
+```ts
+const fiber1 = yield* Effect.fork(pollLoop);
+const fiber2 = yield* Effect.fork(heartbeatLoop);
+yield* Fiber.joinAll([fiber1, fiber2]);
+```
+
+A message in Discord every 2 hours means I know it's running. Without that, a silent crash overnight means finding out after the sale window has already closed.
+
+### Telegram vs Discord
+
+My first notification target was Telegram. Delivery worked technically, but latency was inconsistent and I hit rate limits during testing. <TypographyMark>Discord webhooks</TypographyMark> were faster - consistently instant in every test - and supported role mentions, which meant the notification would actually push to my phone rather than sitting in a channel I might not have open.
+
+### The Cloud Deployment Problem
+
+I tried deploying this to a cloud hosting provider expecting it to run more reliably than leaving my laptop on overnight. Within a few minutes, every request came back with <TypographyMark>403 Forbidden</TypographyMark>.
+
+Cloud providers run on <TypographyMark>datacenter IP ranges</TypographyMark> that are publicly documented and actively flagged by services trying to filter non-browser traffic. My <TypographyMark>residential home IP</TypographyMark> behaved completely differently because residential IPs look like real users to <TypographyMark>IP reputation systems</TypographyMark>. No amount of header adjustment fixes a blocked IP range. The solution was to not deploy to a datacenter at all.
+
+The system ran on my machine at home for the rest of the night and the following day. By around <TypographyMark>6:30am</TypographyMark>, everything was running. I went to sleep.
+
+## 3:30pm, A Ping
+
+![Discord Notification screenshot](https://res.cloudinary.com/ds9wj6tjw/image/upload/v1777378071/discord.com_channels_1026787982616838154_1493075654491766794_xwvd7b.png)
+
+I was at my desk doing something unrelated when Discord fired on my phone. The role mention came through with enough noise that I looked immediately.
+
+The system had caught it. Match name, date, price range, all in the notification. I opened the ticketing site, found the stand I wanted, picked a seat, went through checkout without rushing.
+
+<TypographyMark>3:34pm</TypographyMark>. Order confirmed. Under five minutes from notification to tickets in hand.
+
+The people trying to buy manually at that same moment were probably still figuring out the window had opened. By the time a person notices the sale is live, navigates to the site, and gets to the checkout page, the better seats are gone and the checkout process itself is slow under peak traffic load. I was on the site within <TypographyMark>30 seconds</TypographyMark> of the window opening because I didn't have to notice it manually.
+
+To be clear about what this system does and doesn't do: it sends a notification. I still went through checkout myself, made the seat choice myself, paid myself. The system is a detection and alerting tool, not a purchase automation. Whether that distinction matters is a fair question, but it's the accurate description.
+
+## April 18, RCB vs DC
+
+![RCB Flag](https://res.cloudinary.com/ds9wj6tjw/image/upload/v1777331467/image_yntox2.jpg)
+
+This was my first ever live cricket match. I'd never been to any kind of live match before - not IPL, not domestic, nothing. I'd watched hundreds of games on TV and thought I had a reasonable picture of what it would feel like. I was wrong about this in most of the ways that matter.
+
+The match was [RCB vs Delhi Capitals on April 18](https://www.espncricinfo.com/series/ipl-2026-1510719/royal-challengers-bengaluru-vs-delhi-capitals-26th-match-1529269/full-scorecard), and it was an absolute heartbreaker. RCB put up <TypographyMark>175/8</TypographyMark> batting first, with <TypographyMark>Phil Salt</TypographyMark> top-scoring at <TypographyMark>63 off 38</TypographyMark> alongside a quick <TypographyMark>19 from Virat Kohli</TypographyMark> at the top. <TypographyMark>Tim David</TypographyMark> added a late 26 off 17, but DC's bowling - led by <TypographyMark>Axar Patel (2/18)</TypographyMark> and <TypographyMark>Kuldeep Yadav (2/32)</TypographyMark> - strangled the middle overs and the pitch played slower than expected throughout.
+
+DC's chase was a thriller. <TypographyMark>Bhuvneshwar Kumar</TypographyMark> took three wickets and had DC reeling at <TypographyMark>22/3</TypographyMark> inside three overs, and RCB fans believed. <TypographyMark>KL Rahul</TypographyMark> built a composed <TypographyMark>57 off 34</TypographyMark> and kept DC in it through the middle overs. <TypographyMark>Krunal Pandya</TypographyMark> dismissed Rahul just when it looked like he might finish it, and RCB squeezed beautifully in the death - conceding just <TypographyMark>13 runs across overs 17 to 19</TypographyMark>.
+
+It came down to the last over. DC needed <TypographyMark>15 off 6 balls</TypographyMark>. <TypographyMark>David Miller</TypographyMark> hit two massive sixes - one landed in the stands near where I was sitting and passed above my head - and [DC got there with one ball to spare](https://www.espncricinfo.com/series/ipl-2026-1510719/royal-challengers-bengaluru-vs-delhi-capitals-26th-match-1529269/full-scorecard), finishing 179/4. <TypographyMark>Tristan Stubbs</TypographyMark> took Player of the Match for his unbeaten 60 off 47 that held the chase together through the middle overs after DC lost three wickets in the powerplay.
+
+We lost. But I don't think I've ever been more present during any sporting event in my life.
+
+![View of the stands](https://res.cloudinary.com/ds9wj6tjw/image/upload/v1777331467/image2_uoofq0.jpg)
+
+The noise at Chinnaswamy doesn't translate through a broadcast. It's not just louder - it has a different quality. It fills the space around you rather than coming at you from one direction. Chants start somewhere in the crowd and spread across the full stadium in seconds, and when 28,000 people do the same thing simultaneously there's something physically different about it that I didn't expect.
+
+<MediaPlayer>
+  <MediaPlayerVideo src="https://res.cloudinary.com/ds9wj6tjw/video/upload/v1777335691/output_q92cr0.mp4" />
+      <MediaPlayerControls className="flex-col items-start gap-2.5">
+        <MediaPlayerControlsOverlay />
+        <MediaPlayerSeek />
+        <div className="flex w-full items-center gap-2">
+          <div className="flex flex-1 items-center gap-2">
+            <MediaPlayerPlay />
+            <MediaPlayerSeekBackward />
+            <MediaPlayerSeekForward />
+            <MediaPlayerVolume expandable />
+            <MediaPlayerTime />
+          </div>
+          <div className="flex items-center gap-2">
+            <MediaPlayerPlaybackSpeed />
+            <MediaPlayerPiP />
+            <MediaPlayerFullscreen />
+          </div>
+        </div>
+      </MediaPlayerControls>
+</MediaPlayer>
+
+Every boundary gets a reaction that feels disproportionate to what happened on the field, and that's exactly right. The TV broadcast smooths that out. When Bhuvneshwar took those wickets early and the noise went up. The crowd around me was a mix you don't get anywhere else - families, groups, people who clearly hadn't watched cricket in years but showed up anyway, and diehard RCB kit wearers in every direction.
+
+When the last over started and the whole ground knew it was going to be close, the stadium got quiet in a way I hadn't expected. Not silent - just held. When Miller hit those sixes, you could feel the air go out of the place. That collective deflation in a packed stadium is something I didn't know I'd ever feel, and somehow it made the whole experience more real, not less.
+
+I paid face value for that ticket. I sat in a stand I chose based on what I was willing to pay. The seat was mine because I built something that got me there fast enough.
+
+## What The Whole Thing Taught Me
+
+The technical lessons here are specific but generalize easily. Minimal headers beat spoofing because the fingerprint that matters isn't in your headers - it's in the TLS handshake. Residential IPs matter in ways you can't route around in software. Local execution often beats cloud for anything that looks scraping-adjacent. And public APIs serving frontend data are frequently unauthenticated even when you assume they're not, because they have to be accessible to serve the page.
+
+The meta-lesson is that problems that look complicated under sleep deprivation often have a simpler shape once you stop building toward your first assumption. I built an auth system, a proxy, and a header-spoofing setup before trying the thing I should have tried at minute one. Every one of those was wasted time that came from not questioning the assumption that launched it.
+
+There's also something worth noting about notification latency. Detecting availability is useless if the notification arrives 5 minutes later. The detection-to-Discord pipeline needed to be <TypographyMark>under 10 seconds end to end</TypographyMark>, and Discord webhooks with role mentions delivered that. The window between ping and confirmed purchase would have been impossible with slower notification infrastructure or any kind of batching.
+
+I'll run this again. The specific details - the endpoint shape, the response format, the field names - any of that might change. But the pattern stays the same: find the simplest signal that indicates what you're waiting for and wire it to the fastest notification path available.
+
+If you're an RCB fan who has missed sale windows staring at a refresh screen, the frustration is real and the system is structured in a way that makes the manual approach feel genuinely disadvantaged. The [transparency concerns around ticket distribution](https://8pmnews.com/fans-hit-by-sky-high-prices-of-mi-vs-rcb-clash/) have been raised repeatedly across multiple IPL seasons and haven't been answered clearly. What I built is one response to that. It doesn't fix anything structural - it just puts one more person on a slightly more level footing at the front of a queue that was already skewed.
