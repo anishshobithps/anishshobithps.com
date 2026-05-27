@@ -51,9 +51,9 @@ export default function BlogPage() {
       <Section variant="hero" aria-label="Blog header">
         <TypographyH1>Blogs</TypographyH1>
         <TypographyLead>
-          Engineering thoughts,{" "}
-          <TypographyMark>design experiments</TypographyMark>, and things I
-          overthought at 2AM.
+          Writing about what I built,{" "}
+          <TypographyMark>what broke</TypographyMark>, and occasionally both at
+          once.
         </TypographyLead>
       </Section>
 

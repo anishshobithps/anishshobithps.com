@@ -31,6 +31,7 @@ export {
   FileTextIcon,
   GearIcon,
   GithubLogoIcon,
+  GitCommitIcon,
   GlobeIcon,
   HeartIcon,
   HouseIcon,

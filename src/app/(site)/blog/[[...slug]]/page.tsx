@@ -27,7 +27,7 @@ import {
   GitCommitIcon,
   ClockIcon,
   EyeIcon,
-} from "@phosphor-icons/react/dist/ssr";
+} from "@/components/shared/icons";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -155,10 +155,10 @@ export default async function Page(props: {
           )}
           <TypographyMuted
             className="font-mono tabular-nums text-xs flex items-center gap-1.5"
-            aria-label={`${reads} reads`}
+            aria-label={`${reads} ${reads === 1 ? 'read' : 'reads'}`}
           >
             <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
-            {reads} reads
+            {reads} {reads === 1 ? "read" : "reads"}
           </TypographyMuted>
           {comments.length > 0 && (
             <ScrollToEngagement count={comments.length} />
@@ -177,9 +177,12 @@ export default async function Page(props: {
           >
             {page.data.tags.map((tag) => (
               <li key={tag}>
-                <span className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground">
+                <Link
+                  href={`/blogs?tags=${encodeURIComponent(tag)}`}
+                  className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                >
                   {tag}
-                </span>
+                </Link>
               </li>
             ))}
           </ul>

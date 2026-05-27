@@ -38,7 +38,12 @@ import {
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { formatShortDate } from "@/lib/date";
-import { MagnifyingGlassIcon, TagIcon, XIcon } from "@/components/shared/icons";
+import {
+  CaretRightIcon,
+  MagnifyingGlassIcon,
+  TagIcon,
+  XIcon,
+} from "@/components/shared/icons";
 import Link from "next/link";
 import {
   parseAsArrayOf,
@@ -62,7 +67,7 @@ const searchParsers = {
   q: parseAsString.withDefault(""),
   tags: parseAsArrayOf(parseAsString).withDefault([]),
   page: parseAsInteger.withDefault(1),
-  per: parseAsInteger.withDefault(5),
+  per: parseAsInteger.withDefault(10),
 };
 
 export function BlogsClient({
@@ -279,8 +284,26 @@ export function BlogsClient({
 
       <div>
         {paginated.length === 0 ? (
-          <div role="status" aria-live="polite" className="py-12 text-center">
-            <TypographyMuted>No posts found.</TypographyMuted>
+          <div
+            role="status"
+            aria-live="polite"
+            className="py-12 text-center space-y-2"
+          >
+            {posts.length === 0 ? (
+              <>
+                <TypographyMuted>No posts published yet.</TypographyMuted>
+                <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
+                  // check back soon.
+                </TypographyMuted>
+              </>
+            ) : (
+              <>
+                <TypographyMuted>Nothing matched that search.</TypographyMuted>
+                <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
+                  // try different terms or clear the filters.
+                </TypographyMuted>
+              </>
+            )}
           </div>
         ) : (
           <ul role="list" aria-label="Blog posts" aria-live="polite">
@@ -292,20 +315,26 @@ export function BlogsClient({
                   <Link
                     href={post.url}
                     aria-label={`${post.title}${date ? `, published ${date}` : ""}`}
-                    className="relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
+                    className="group relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
                   >
                     <div className="flex items-baseline justify-between gap-4">
                       <TypographySmall className="text-base font-semibold text-foreground">
                         {post.title}
                       </TypographySmall>
-                      {date && (
-                        <TypographyMuted
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {date && (
+                          <TypographyMuted
+                            aria-hidden="true"
+                            className="font-mono text-xs oldstyle-nums"
+                          >
+                            {date}
+                          </TypographyMuted>
+                        )}
+                        <CaretRightIcon
+                          className="size-3.5 text-muted-foreground/50 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
                           aria-hidden="true"
-                          className="shrink-0 font-mono text-xs oldstyle-nums"
-                        >
-                          {date}
-                        </TypographyMuted>
-                      )}
+                        />
+                      </div>
                     </div>
                     {post.description && (
                       <TypographyMuted className="leading-relaxed">
