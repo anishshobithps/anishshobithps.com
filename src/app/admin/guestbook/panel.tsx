@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import NextImage from "next/image";
 import { toast } from "sonner";
 import {
@@ -10,11 +10,24 @@ import {
 } from "@/app/(site)/guestbook/actions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   TrashIcon,
   PushPinSimpleIcon,
   PushPinSimpleSlashIcon,
   HeartIcon,
+  MagnifyingGlassIcon,
 } from "@/components/shared/icons";
 import { TypographySmall, TypographyMuted } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
@@ -26,10 +39,14 @@ export function GuestbookPanel({
   entries: GuestbookEntryWithMeta[];
 }) {
   const [entries, setEntries] = useState(initial);
-  const [pending, startTransition] = useTransition();
+  const [pendingId, setPendingId] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
+  const [pinnedOnly, setPinnedOnly] = useState(false);
 
-  function handleDelete(id: number) {
-    startTransition(async () => {
+  async function handleDelete(id: number) {
+    if (pendingId !== null) return;
+    setPendingId(id);
+    try {
       const result = await deleteGuestbookEntry(id);
       if (result.success) {
         setEntries((prev) => prev.filter((e) => e.id !== id));
@@ -37,11 +54,15 @@ export function GuestbookPanel({
       } else {
         toast.error(result.error);
       }
-    });
+    } finally {
+      setPendingId(null);
+    }
   }
 
-  function handlePin(id: number, currentlyPinned: boolean) {
-    startTransition(async () => {
+  async function handlePin(id: number, currentlyPinned: boolean) {
+    if (pendingId !== null) return;
+    setPendingId(id);
+    try {
       const result = await togglePinEntry(id);
       if (result.success) {
         setEntries((prev) =>
@@ -53,7 +74,9 @@ export function GuestbookPanel({
       } else {
         toast.error(result.error);
       }
-    });
+    } finally {
+      setPendingId(null);
+    }
   }
 
   if (entries.length === 0) {
@@ -64,84 +87,164 @@ export function GuestbookPanel({
     );
   }
 
+  const filtered = entries.filter((e) => {
+    if (pinnedOnly && !e.isPinned) return false;
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      return (
+        e.message.toLowerCase().includes(q) ||
+        e.user.name.toLowerCase().includes(q) ||
+        (e.user.username?.toLowerCase().includes(q) ?? false)
+      );
+    }
+    return true;
+  });
+
   return (
-    <div className="flex flex-col divide-y divide-border border rounded-lg overflow-hidden">
-      {entries.map((entry) => (
-        <div
-          key={entry.id}
-          className={cn(
-            "flex items-start gap-3 p-4",
-            entry.isPinned && "bg-accent/30",
-          )}
-        >
-          {entry.user.imageUrl ? (
-            <NextImage
-              src={entry.user.imageUrl}
-              alt={entry.user.name}
-              width={32}
-              height={32}
-              className="size-8 rounded-full shrink-0 object-cover"
-            />
-          ) : (
-            <div className="size-8 rounded-full shrink-0 bg-muted" />
-          )}
-
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-1.5 mb-1">
-              <TypographySmall className="font-medium">
-                {entry.user.name}
-              </TypographySmall>
-              {entry.user.username && (
-                <TypographyMuted className="text-xs">
-                  @{entry.user.username}
-                </TypographyMuted>
-              )}
-              {entry.isPinned && (
-                <Badge variant="secondary" className="text-xs gap-1">
-                  <PushPinSimpleIcon className="size-3" weight="fill" />
-                  Pinned
-                </Badge>
-              )}
-              <TypographyMuted className="text-xs ml-auto">
-                {formatShortDate(entry.createdAt)}
-              </TypographyMuted>
-            </div>
-            <p className="text-sm leading-relaxed wrap-break-word">
-              {entry.message}
-            </p>
-            <span className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
-              <HeartIcon className="size-3" weight="fill" />
-              {entry.likeCount}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1 shrink-0">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              disabled={pending}
-              onClick={() => handlePin(entry.id, entry.isPinned)}
-              title={entry.isPinned ? "Unpin" : "Pin"}
-            >
-              {entry.isPinned ? (
-                <PushPinSimpleSlashIcon className="size-4" />
-              ) : (
-                <PushPinSimpleIcon className="size-4" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              disabled={pending}
-              onClick={() => handleDelete(entry.id)}
-              title="Delete"
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <TrashIcon className="size-4" />
-            </Button>
-          </div>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <MagnifyingGlassIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
+          <Input
+            placeholder="Search entries, names..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-8 h-8 text-sm"
+          />
         </div>
-      ))}
+        <Button
+          variant={pinnedOnly ? "secondary" : "outline"}
+          size="sm"
+          onClick={() => setPinnedOnly((v) => !v)}
+          className="shrink-0 gap-1.5 h-8 text-xs"
+        >
+          <PushPinSimpleIcon
+            className="size-3"
+            weight={pinnedOnly ? "fill" : "regular"}
+          />
+          Pinned only
+        </Button>
+      </div>
+
+      {filtered.length === 0 ? (
+        <TypographyMuted className="py-6 text-center">
+          No entries match your filters.
+        </TypographyMuted>
+      ) : (
+        <div className="flex flex-col divide-y divide-border border rounded-lg overflow-hidden">
+          {filtered.map((entry) => (
+            <div
+              key={entry.id}
+              className={cn(
+                "flex items-start gap-3 p-4",
+                entry.isPinned && "bg-accent/30",
+              )}
+            >
+              {entry.user.imageUrl ? (
+                <NextImage
+                  src={entry.user.imageUrl}
+                  alt={entry.user.name}
+                  width={32}
+                  height={32}
+                  className="size-8 rounded-full shrink-0 object-cover"
+                />
+              ) : (
+                <div className="size-8 rounded-full shrink-0 bg-muted" />
+              )}
+
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                  <TypographySmall className="font-medium">
+                    {entry.user.name}
+                  </TypographySmall>
+                  {entry.user.username && (
+                    <TypographyMuted className="text-xs">
+                      @{entry.user.username}
+                    </TypographyMuted>
+                  )}
+                  {entry.isPinned && (
+                    <Badge variant="secondary" className="text-xs gap-1">
+                      <PushPinSimpleIcon className="size-3" weight="fill" />
+                      Pinned
+                    </Badge>
+                  )}
+                  <TypographyMuted className="text-xs ml-auto">
+                    {formatShortDate(entry.createdAt)}
+                  </TypographyMuted>
+                </div>
+                <TypographySmall
+                  as="p"
+                  className="font-normal leading-relaxed break-words"
+                >
+                  {entry.message}
+                </TypographySmall>
+                <TypographyMuted
+                  as="span"
+                  aria-label={`${entry.likeCount} like${entry.likeCount !== 1 ? "s" : ""}`}
+                  className="flex items-center gap-1 text-xs mt-2"
+                >
+                  <HeartIcon
+                    aria-hidden="true"
+                    className="size-3"
+                    weight="fill"
+                  />
+                  {entry.likeCount}
+                </TypographyMuted>
+              </div>
+
+              <div className="flex items-center gap-1 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  disabled={pendingId === entry.id}
+                  onClick={() => handlePin(entry.id, entry.isPinned)}
+                  aria-label={entry.isPinned ? "Unpin entry" : "Pin entry"}
+                >
+                  {entry.isPinned ? (
+                    <PushPinSimpleSlashIcon className="size-4" />
+                  ) : (
+                    <PushPinSimpleIcon className="size-4" />
+                  )}
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      disabled={pendingId !== null}
+                      aria-label={`Delete entry by ${entry.user.name}`}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <TrashIcon className="size-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent size="sm">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete entry?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This entry by{" "}
+                        <span className="font-medium text-foreground">
+                          {entry.user.name}
+                        </span>{" "}
+                        will be permanently removed and cannot be recovered.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        variant="destructive"
+                        onClick={() => handleDelete(entry.id)}
+                      >
+                        {pendingId === entry.id ? "Deleting…" : "Delete"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

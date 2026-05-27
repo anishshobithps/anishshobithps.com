@@ -10,6 +10,7 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographySmall,
+  Text,
 } from "@/components/ui/typography";
 import { getAdminStats } from "./actions";
 
@@ -32,9 +33,9 @@ function StatCard({
         </TypographySmall>
         <span className="text-muted-foreground">{icon}</span>
       </div>
-      <p className="text-3xl font-bold tabular-nums">
+      <Text as="p" className="text-3xl font-bold tabular-nums">
         {value.toLocaleString()}
-      </p>
+      </Text>
       {sub && <TypographyMuted className="text-xs">{sub}</TypographyMuted>}
     </div>
   );
