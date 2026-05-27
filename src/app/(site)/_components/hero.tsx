@@ -11,37 +11,20 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { Badge } from "@/components/ui/badge";
-import { Section, Card } from "@/components/layouts/page";
+import { Section } from "@/components/layouts/page";
 import { siteConfig } from "@/lib/config";
 import {
   TypographyH1,
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  SectionHeader,
 } from "@/components/ui/typography";
 import { LocationTag } from "@/components/ui/location";
 
 export function Hero() {
   return (
     <Section variant="hero" aria-label="Introduction">
-      <SectionHeader>Who am I?</SectionHeader>
-      <div className="w-full max-w-5xl flex flex-col gap-6">
-        {siteConfig.availableForHire && (
-          <Badge
-            variant="outline"
-            className="inline-flex items-center gap-1.5 px-3 py-1 text-xs self-start"
-            aria-label="Currently available for hire"
-          >
-            <CircleIcon
-              className="size-2 fill-green-500 text-green-500 animate-pulse"
-              weight="fill"
-              aria-hidden="true"
-            />
-            Available for hire
-          </Badge>
-        )}
-
+      <div className="w-full max-w-5xl flex flex-col gap-8">
         <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95">
           <NextImage
             src="/profile.avif"
@@ -55,13 +38,31 @@ export function Hero() {
           />
         </div>
 
-        <Card className="@sm:p-8 flex flex-col gap-8 bg-background/80 backdrop-blur-md">
-          <div className="space-y-4">
+        <div className="flex flex-col gap-6 px-1">
+          <div className="flex flex-col gap-3">
+            {siteConfig.availableForHire && (
+              <div>
+                <Badge
+                  variant="outline"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs"
+                  aria-label="Currently available for hire"
+                >
+                  <CircleIcon
+                    className="size-2 fill-green-500 text-green-500 animate-pulse"
+                    weight="fill"
+                    aria-hidden="true"
+                  />
+                  Available for hire
+                </Badge>
+              </div>
+            )}
             <TypographyH1>{siteConfig.name}</TypographyH1>
-            <TypographyMuted aria-label={`Role: ${siteConfig.role}`}>
-              {siteConfig.role}
-            </TypographyMuted>
-            <LocationTag />
+            <div className="flex flex-wrap items-center gap-3">
+              <TypographyMuted aria-label={`Role: ${siteConfig.role}`}>
+                {siteConfig.role}
+              </TypographyMuted>
+              <LocationTag />
+            </div>
           </div>
 
           <TypographyLead>
@@ -69,7 +70,7 @@ export function Hero() {
             <TypographyMark>
               interfaces, bots, and questionable automation scripts
             </TypographyMark>{" "}
-            — mostly so I don't have to repeat myself.
+            — mostly so I don&apos;t have to repeat myself.
           </TypographyLead>
 
           <nav aria-label="Primary actions">
@@ -85,7 +86,6 @@ export function Hero() {
                     className="size-5 shrink-0"
                     aria-hidden="true"
                   />
-
                   <span>Resume</span>
                 </Link>
               </Button>
@@ -110,7 +110,7 @@ export function Hero() {
               </Button>
             </ButtonGroup>
           </nav>
-        </Card>
+        </div>
       </div>
     </Section>
   );

@@ -22,7 +22,7 @@ export function ProjectGrid() {
       {projects.map((project) => (
         <CardGridItem
           key={project.title}
-          className="group transition-transform duration-300 hover:-translate-y-0.5 will-change-transform"
+          className="group transition-all duration-200 hover:-translate-y-1.5 hover:shadow-md"
         >
           <article className="space-y-4" aria-label={project.title}>
             <TypographyH3 className="text-xl">{project.title}</TypographyH3>
