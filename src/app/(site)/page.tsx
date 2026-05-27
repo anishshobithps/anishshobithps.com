@@ -1,5 +1,4 @@
 import { Contact } from "@/app/(site)/_components/contact";
-import { Ecosystem } from "@/app/(site)/_components/ecosystem";
 import { Hero } from "@/app/(site)/_components/hero";
 import { BuiltThings } from "@/app/(site)/_components/projects";
 import { RulesIFollow } from "@/app/(site)/_components/rules";
@@ -32,9 +31,17 @@ export default function Page() {
       <Hero />
       <RulesIFollow />
       <BuiltThings />
-      <Ecosystem />
       <BlogTeaser />
-      <Suspense>
+      <Suspense
+        fallback={
+          <div className="flex flex-col gap-6 px-6 sm:px-8 lg:px-10 pb-12 pt-10 animate-pulse">
+            <div className="h-3 w-24 rounded-full bg-muted" />
+            <div className="h-5 w-80 rounded bg-muted" />
+            <div className="h-20 rounded-md bg-muted/50" />
+            <div className="h-9 w-40 rounded-md bg-muted" />
+          </div>
+        }
+      >
         <GuestbookTeaser />
       </Suspense>
       <Contact />
