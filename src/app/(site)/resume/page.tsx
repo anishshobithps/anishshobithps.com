@@ -27,7 +27,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 export const metadata: Metadata = buildMeta({
   title: "Resume",
   pageTitle: "Professional Resume",
-  description: `${siteConfig.name}'s resume — professional experience, projects, and technical expertise. Full-stack engineer building modern web applications.`,
+  description: `${siteConfig.name}'s resume — experience, projects, and what I actually know. One page, everything that matters.`,
   path: "home / resume",
   canonicalPath: "/resume",
   type: "profile",
@@ -48,8 +48,8 @@ export default function ResumePage() {
       <Section variant="hero" aria-label="Resume">
         <TypographyH1>Resume</TypographyH1>
         <TypographyLead>
-          Professional experience, projects, and{" "}
-          <TypographyMark>technical expertise</TypographyMark>.
+          Where I&apos;ve been, what I built, and{" "}
+          <TypographyMark>what I actually know</TypographyMark> — one page.
         </TypographyLead>
       </Section>
 

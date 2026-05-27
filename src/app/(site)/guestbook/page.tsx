@@ -3,7 +3,6 @@ import { GuestbookClient } from "@/app/(site)/guestbook/guestbook-client";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
-  SectionHeader,
   TypographyH1,
   TypographyLead,
   TypographyMark,
@@ -45,7 +44,6 @@ export default async function GuestbookPage() {
       </Section>
 
       <Section aria-label="Guestbook entries">
-        <SectionHeader>Messages</SectionHeader>
         <GuestbookClient
           initialEntries={entries}
           currentUserId={userId}

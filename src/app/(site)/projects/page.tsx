@@ -32,11 +32,9 @@ export default function ProjectsPage() {
       <Section variant="hero" aria-label="Projects header">
         <TypographyH1>Projects</TypographyH1>
         <TypographyLead>
-          A mix of{" "}
-          <TypographyMark>
-            real systems, useful tools, and controlled chaos
-          </TypographyMark>
-          .
+          Everything I actually shipped — and{" "}
+          <TypographyMark>a few things I started at midnight</TypographyMark>{" "}
+          and never quite finished.
         </TypographyLead>
       </Section>
       <Section aria-label="Projects list">
