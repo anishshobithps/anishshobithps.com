@@ -1,4 +1,4 @@
-import { BlogsClient, type BlogPost } from "@/app/blogs/blogs-client";
+import { BlogsClient, type BlogPost } from "./blogs-client";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
