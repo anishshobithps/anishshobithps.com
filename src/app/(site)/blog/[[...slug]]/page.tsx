@@ -1,7 +1,5 @@
-import { BlogReadsInfo } from "./blog-reads-info";
-import { EndOfPost } from "./end-of-post";
-import { ScrollToEngagement } from "./scroll-to-engagement";
-import { getComments } from "./actions";
+import { EndOfPost, ScrollToEngagement } from "./end-of-post";
+import { getComments, getBlogReadsCount, trackRead } from "./actions";
 import { PostEngagement } from "./post-engagement";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
@@ -28,6 +26,7 @@ import {
   CalendarIcon,
   GitCommitIcon,
   ClockIcon,
+  EyeIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
@@ -43,6 +42,10 @@ export default async function Page(props: {
 
   const { userId } = await auth();
   const { comments } = await getComments(page.url);
+  const [reads] = await Promise.all([
+    getBlogReadsCount(page.url),
+    trackRead(page.url),
+  ]);
   const MDX = page.data.body;
   const readingTime = (page.data as any)._exports?.readingTime;
 
@@ -150,7 +153,13 @@ export default async function Page(props: {
               {readingTime.text}
             </TypographyMuted>
           )}
-          <BlogReadsInfo slug={page.url} />
+          <TypographyMuted
+            className="font-mono tabular-nums text-xs flex items-center gap-1.5"
+            aria-label={`${reads} reads`}
+          >
+            <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
+            {reads} reads
+          </TypographyMuted>
           {comments.length > 0 && (
             <ScrollToEngagement count={comments.length} />
           )}
