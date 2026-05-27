@@ -1,7 +1,7 @@
 "use client";
 
 import { useReducer } from "react";
-import { ScaledOG } from "@/app/branding/scaled-og";
+import { ScaledOG } from "./scaled-og";
 import { OGImage } from "@/components/shared/OG";
 import { TypographyMuted } from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
