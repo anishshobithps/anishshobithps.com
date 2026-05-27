@@ -1,7 +1,10 @@
 "use client";
 
-import type { MoodId, ReactionCounts } from "./actions";
-import { EngagementNudge } from "./engagement-nudge";
+import type {
+  MoodId,
+  ReactionCounts,
+} from "@/app/(site)/blog/[[...slug]]/actions";
+import { EngagementNudge } from "@/app/(site)/blog/[[...slug]]/engagement-nudge";
 import {
   CheckIcon,
   HeartIcon,

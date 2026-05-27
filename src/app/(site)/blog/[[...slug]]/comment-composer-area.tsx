@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "./avatar";
+import { Avatar } from "@/app/(site)/blog/[[...slug]]/avatar";
 import {
   PaperPlaneTiltIcon,
   PencilIcon,

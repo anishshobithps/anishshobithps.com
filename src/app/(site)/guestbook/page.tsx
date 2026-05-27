@@ -1,5 +1,5 @@
-import { getGuestbookEntries } from "./actions";
-import { GuestbookClient } from "./guestbook-client";
+import { getGuestbookEntries } from "@/app/(site)/guestbook/actions";
+import { GuestbookClient } from "@/app/(site)/guestbook/guestbook-client";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {

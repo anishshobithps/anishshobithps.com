@@ -1,5 +1,5 @@
 import { getAllAdminGuestbookEntries } from "@/app/admin/actions";
-import { GuestbookPanel } from "./panel";
+import { GuestbookPanel } from "@/app/admin/guestbook/panel";
 
 export default async function AdminGuestbookPage() {
   const entries = await getAllAdminGuestbookEntries();

@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AdminSidebar } from "./sidebar";
-import { AdminHeader } from "./admin-header";
-import { AdminUnauthorized } from "./unauthorized";
+import { AdminSidebar } from "@/app/admin/sidebar";
+import { AdminHeader } from "@/app/admin/admin-header";
+import { AdminUnauthorized } from "@/app/admin/unauthorized";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

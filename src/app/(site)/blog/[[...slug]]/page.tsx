@@ -1,6 +1,13 @@
-import { EndOfPost, ScrollToEngagement } from "./end-of-post";
-import { getComments, getBlogReadsCount, trackRead } from "./actions";
-import { PostEngagement } from "./post-engagement";
+import {
+  EndOfPost,
+  ScrollToEngagement,
+} from "@/app/(site)/blog/[[...slug]]/end-of-post";
+import {
+  getComments,
+  getBlogReadsCount,
+  trackRead,
+} from "@/app/(site)/blog/[[...slug]]/actions";
+import { PostEngagement } from "@/app/(site)/blog/[[...slug]]/post-engagement";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
@@ -155,7 +162,7 @@ export default async function Page(props: {
           )}
           <TypographyMuted
             className="font-mono tabular-nums text-xs flex items-center gap-1.5"
-            aria-label={`${reads} ${reads === 1 ? 'read' : 'reads'}`}
+            aria-label={`${reads} ${reads === 1 ? "read" : "reads"}`}
           >
             <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
             {reads} {reads === 1 ? "read" : "reads"}

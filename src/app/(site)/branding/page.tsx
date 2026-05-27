@@ -6,8 +6,8 @@ import {
   CardGrid,
   CardGridItem,
 } from "@/components/layouts/page";
-import { LogoDownloadCard } from "./logo-download-card";
-import { BrandingOGPreview } from "./branding-og-preview";
+import { LogoDownloadCard } from "@/app/(site)/branding/logo-download-card";
+import { BrandingOGPreview } from "@/app/(site)/branding/branding-og-preview";
 import {
   TypographyH1,
   TypographyH2,

@@ -1,5 +1,5 @@
 import { getAllAdminComments } from "@/app/admin/actions";
-import { CommentsPanel } from "./panel";
+import { CommentsPanel } from "@/app/admin/comments/panel";
 
 export default async function AdminCommentsPage() {
   const comments = await getAllAdminComments();

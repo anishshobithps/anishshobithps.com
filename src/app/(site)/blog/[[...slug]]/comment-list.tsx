@@ -1,8 +1,8 @@
 "use client";
 
-import type { CommentWithMeta } from "./actions";
-import { CommentCard } from "./comment-card";
-import { EngagementNudge } from "./engagement-nudge";
+import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
+import { CommentCard } from "@/app/(site)/blog/[[...slug]]/comment-card";
+import { EngagementNudge } from "@/app/(site)/blog/[[...slug]]/engagement-nudge";
 import { Card } from "@/components/layouts/page";
 import { ChatCircleIcon } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";

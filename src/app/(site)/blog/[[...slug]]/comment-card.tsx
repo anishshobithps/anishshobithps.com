@@ -1,8 +1,8 @@
 "use client";
 
-import type { CommentWithMeta } from "./actions";
-import { Avatar } from "./avatar";
-import { CommentComposer } from "./comment-composer-area";
+import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
+import { Avatar } from "@/app/(site)/blog/[[...slug]]/avatar";
+import { CommentComposer } from "@/app/(site)/blog/[[...slug]]/comment-composer-area";
 import {
   ArrowBendDownRightIcon,
   HeartIcon,

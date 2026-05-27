@@ -12,7 +12,7 @@ import {
   TypographySmall,
   Text,
 } from "@/components/ui/typography";
-import { getAdminStats } from "./actions";
+import { getAdminStats } from "@/app/admin/actions";
 
 function StatCard({
   label,

@@ -1,6 +1,6 @@
 
 import { siteConfig } from "@/lib/config";
-import { formatFileDate } from "./date";
+import { formatFileDate } from "@/lib/date";
 
 export async function fetchResume() {
     const res = await fetch(siteConfig.resumeURL, {
