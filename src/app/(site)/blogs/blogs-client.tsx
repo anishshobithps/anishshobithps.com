@@ -87,7 +87,8 @@ export function BlogsClient({
       result = result.filter(
         (p) =>
           p.title.toLowerCase().includes(lower) ||
-          p.description?.toLowerCase().includes(lower),
+          p.description?.toLowerCase().includes(lower) ||
+          p.tags?.some((t) => t.toLowerCase().includes(lower)),
       );
     }
     if (tags.length > 0) {

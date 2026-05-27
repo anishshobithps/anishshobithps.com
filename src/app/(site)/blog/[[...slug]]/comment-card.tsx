@@ -66,7 +66,7 @@ export function CommentCard({
       {comment.isPinned && depth === 0 && (
         <span
           aria-hidden="true"
-          className="absolute left-0 top-0 h-full w-0.5 bg-primary/50"
+          className="absolute left-0 top-0 h-full w-px bg-primary/50"
         />
       )}
 

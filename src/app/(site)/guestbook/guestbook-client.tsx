@@ -14,7 +14,6 @@ import { timeAgo, toTimestamp, nowISO } from "@/lib/date";
 import {
   HeartIcon,
   PushPinSimpleIcon,
-  PushPinSimpleSlashIcon,
   TrashIcon,
   PaperPlaneTiltIcon,
   BookOpenIcon,
@@ -208,10 +207,8 @@ const EntryCard = memo(function EntryCard({
             <TypographyMuted className="text-xs tabular-nums">
               <time dateTime={entry.createdAt}>{timeAgo(entry.createdAt)}</time>
             </TypographyMuted>
-            {entry.isPinned ? (
-              <PushPinSimpleSlashIcon size={14} aria-hidden="true" />
-            ) : (
-              <PushPinSimpleIcon size={14} aria-hidden="true" />
+            {entry.isPinned && (
+              <PushPinSimpleIcon size={14} weight="fill" aria-label="Pinned" />
             )}
           </div>
 
@@ -241,7 +238,6 @@ const EntryCard = memo(function EntryCard({
                 variant={entry.likedByMe ? "default" : "outline"}
                 size="sm"
                 onClick={() => onLike(entry.id)}
-                disabled={!currentUserId}
                 aria-pressed={entry.likedByMe}
                 aria-label={
                   entry.likedByMe
@@ -374,10 +370,18 @@ export function GuestbookClient({
 
   const handleDelete = useCallback(
     (id: number) => {
-      startTransition(async () => {
-        dispatchOptimistic({ type: "delete", id });
-        const result = await deleteGuestbookEntry(id);
-        if (!result.success) toast.error(result.error);
+      toast("Delete this message?", {
+        action: {
+          label: "Delete",
+          onClick: () => {
+            startTransition(async () => {
+              dispatchOptimistic({ type: "delete", id });
+              const result = await deleteGuestbookEntry(id);
+              if (!result.success) toast.error(result.error);
+            });
+          },
+        },
+        cancel: { label: "Keep", onClick: () => {} },
       });
     },
     [dispatchOptimistic],

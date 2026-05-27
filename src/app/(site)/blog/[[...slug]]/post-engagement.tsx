@@ -211,11 +211,19 @@ export function PostEngagement({
   );
 
   const handleCommentDelete = useCallback((id: number) => {
-    setBaseComments((prev) => patchDelete(prev, id));
-    startTransition(async () => {
-      const result = await deleteComment(id);
-      if (!result.success)
-        typedToast(classifyError(result.error), result.error);
+    toast("Delete this comment?", {
+      action: {
+        label: "Delete",
+        onClick: () => {
+          setBaseComments((prev) => patchDelete(prev, id));
+          startTransition(async () => {
+            const result = await deleteComment(id);
+            if (!result.success)
+              typedToast(classifyError(result.error), result.error);
+          });
+        },
+      },
+      cancel: { label: "Keep", onClick: () => {} },
     });
   }, []);
 
