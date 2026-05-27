@@ -107,6 +107,54 @@ export async function getGuestbookEntries(): Promise<GetEntriesResult> {
     return { entries, total: entries.length };
 }
 
+export interface GuestbookPreviewEntry {
+    id: number;
+    message: string;
+    createdAt: string;
+    user: {
+        name: string;
+        imageUrl: string;
+    };
+}
+
+export async function getGuestbookPreview(limit = 15): Promise<GuestbookPreviewEntry[]> {
+    const rows = await db
+        .select({
+            id: guestbookEntries.id,
+            clerkUserId: guestbookEntries.clerkUserId,
+            message: guestbookEntries.message,
+            isPinned: guestbookEntries.isPinned,
+            createdAt: guestbookEntries.createdAt,
+        })
+        .from(guestbookEntries)
+        .where(and(eq(guestbookEntries.isDeleted, false), eq(guestbookEntries.isPinned, false)))
+        .orderBy(sql`RANDOM()`)
+        .limit(limit);
+
+    if (rows.length === 0) return [];
+
+    const uniqueUserIds = [...new Set(rows.map((r) => r.clerkUserId))];
+    const client = await clerkClient();
+    const clerkUsers = await client.users.getUserList({ userId: uniqueUserIds, limit: 500 });
+
+    const userMap = new Map(
+        clerkUsers.data.map((u) => [
+            u.id,
+            {
+                name: [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username || "Anonymous",
+                imageUrl: u.imageUrl,
+            },
+        ]),
+    );
+
+    return rows.map((row) => ({
+        id: row.id,
+        message: row.message,
+        createdAt: row.createdAt.toISOString(),
+        user: userMap.get(row.clerkUserId) ?? { name: "Anonymous", imageUrl: "" },
+    }));
+}
+
 export async function submitGuestbookEntry(
     rawMessage: string,
 ): Promise<{ success: true; id: number } | { success: false; error: string }> {
