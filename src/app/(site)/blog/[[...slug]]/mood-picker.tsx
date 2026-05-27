@@ -1,6 +1,6 @@
 "use client";
 
-import type { MoodId, ReactionCounts } from "@/app/blog/[[...slug]]/actions";
+import type { MoodId, ReactionCounts } from "./actions";
 import {
   HeartIcon,
   SmileyMehIcon,

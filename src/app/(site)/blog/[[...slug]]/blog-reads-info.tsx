@@ -1,4 +1,4 @@
-import { getBlogReadsCount, trackRead } from "@/app/blog/[[...slug]]/actions";
+import { getBlogReadsCount, trackRead } from "./actions";
 import { TypographyMuted } from "@/components/ui/typography";
 import { EyeIcon } from "@phosphor-icons/react/dist/ssr";
 

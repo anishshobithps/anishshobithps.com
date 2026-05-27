@@ -1,7 +1,7 @@
 "use client";
 
-import type { CommentWithMeta } from "@/app/blog/[[...slug]]/actions";
-import { CommentCard } from "@/app/blog/[[...slug]]/comment-card";
+import type { CommentWithMeta } from "./actions";
+import { CommentCard } from "./comment-card";
 import { Card } from "@/components/layouts/page";
 import { ChatCircleIcon } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
@@ -16,12 +16,10 @@ export interface CommentListProps {
   comments: CommentWithMeta[];
   totalComments: number;
   currentUserId: string | null;
-  siteOwnerId: string;
   userName: string | null;
   isSignedIn: boolean;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  onPin: (id: number) => void;
   onReply: (parentId: number, body: string) => void;
   likePendingRef: React.RefObject<Set<number>>;
 }
@@ -30,12 +28,10 @@ export function CommentList({
   comments,
   totalComments,
   currentUserId,
-  siteOwnerId,
   userName,
   isSignedIn,
   onLike,
   onDelete,
-  onPin,
   onReply,
   likePendingRef,
 }: CommentListProps) {
@@ -80,13 +76,11 @@ export function CommentList({
                   key={comment.id}
                   comment={comment}
                   currentUserId={currentUserId}
-                  siteOwnerId={siteOwnerId}
                   depth={0}
                   userName={userName}
                   isSignedIn={isSignedIn}
                   onLike={onLike}
                   onDelete={onDelete}
-                  onPin={onPin}
                   onReply={onReply}
                   likePendingRef={likePendingRef}
                 />

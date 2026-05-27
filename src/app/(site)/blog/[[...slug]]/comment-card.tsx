@@ -1,13 +1,12 @@
 "use client";
 
-import type { CommentWithMeta } from "@/app/blog/[[...slug]]/actions";
-import { Avatar } from "@/app/blog/[[...slug]]/avatar";
-import { CommentComposer } from "@/app/blog/[[...slug]]/comment-composer";
+import type { CommentWithMeta } from "./actions";
+import { Avatar } from "./avatar";
+import { CommentComposer } from "./comment-composer";
 import {
   ArrowBendDownRightIcon,
   HeartIcon,
   PushPinSimpleIcon,
-  PushPinSimpleSlashIcon,
   TrashIcon,
 } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
@@ -25,25 +24,21 @@ import { useEffect, useRef, useState } from "react";
 export function CommentCard({
   comment,
   currentUserId,
-  siteOwnerId,
   depth,
   userName,
   isSignedIn,
   onLike,
   onDelete,
-  onPin,
   onReply,
   likePendingRef,
 }: {
   comment: CommentWithMeta;
   currentUserId: string | null;
-  siteOwnerId: string;
   depth: number;
   userName: string | null;
   isSignedIn: boolean;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  onPin: (id: number) => void;
   onReply: (parentId: number, body: string) => void;
   likePendingRef: React.RefObject<Set<number>>;
 }) {
@@ -53,9 +48,7 @@ export function CommentCard({
   const isOptimistic = comment.id < 0;
   const isLikePending = likePendingRef.current?.has(comment.id) ?? false;
   const isOwn = currentUserId === comment.user.id;
-  const isSiteOwner = currentUserId === siteOwnerId;
-  const canDelete = isOwn || isSiteOwner;
-  const canPin = isSiteOwner && depth === 0;
+  const canDelete = isOwn;
 
   useEffect(() => {
     if (replying && replyRef.current) {
@@ -175,33 +168,6 @@ export function CommentCard({
                   </>
                 )}
 
-                {canPin && !isOptimistic && (
-                  <>
-                    <ButtonGroupSeparator />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onPin(comment.id)}
-                      aria-pressed={comment.isPinned}
-                      aria-label={comment.isPinned ? "Unpin" : "Pin"}
-                      className={cn(
-                        "gap-1.5",
-                        comment.isPinned &&
-                          "text-primary border-primary/40 bg-primary/5 hover:bg-primary/10 hover:text-primary",
-                      )}
-                    >
-                      {comment.isPinned ? (
-                        <PushPinSimpleSlashIcon size={14} aria-hidden="true" />
-                      ) : (
-                        <PushPinSimpleIcon size={14} aria-hidden="true" />
-                      )}
-                      <span className="hidden sm:inline">
-                        {comment.isPinned ? "Unpin" : "Pin"}
-                      </span>
-                    </Button>
-                  </>
-                )}
-
                 {canDelete && !isOptimistic && (
                   <>
                     <ButtonGroupSeparator />
@@ -253,13 +219,11 @@ export function CommentCard({
               key={reply.id}
               comment={reply}
               currentUserId={currentUserId}
-              siteOwnerId={siteOwnerId}
               depth={depth + 1}
               userName={userName}
               isSignedIn={isSignedIn}
               onLike={onLike}
               onDelete={onDelete}
-              onPin={onPin}
               onReply={onReply}
               likePendingRef={likePendingRef}
             />

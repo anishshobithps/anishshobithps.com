@@ -6,13 +6,12 @@ import {
   submitComment,
   submitReaction,
   toggleCommentLike,
-  togglePinComment,
   type CommentWithMeta,
   type MoodId,
-} from "@/app/blog/[[...slug]]/actions";
-import { CommentComposerArea } from "@/app/blog/[[...slug]]/comment-composer-area";
-import { CommentList } from "@/app/blog/[[...slug]]/comment-list";
-import { type MoodState, MoodPicker } from "@/app/blog/[[...slug]]/mood-picker";
+} from "./actions";
+import { CommentComposerArea } from "./comment-composer-area";
+import { CommentList } from "./comment-list";
+import { type MoodState, MoodPicker } from "./mood-picker";
 import { Card } from "@/components/layouts/page";
 import { SectionLabel } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
@@ -67,23 +66,6 @@ function patchLike(
   }));
 }
 
-function patchPin(
-  list: CommentWithMeta[],
-  id: number,
-  pinned: boolean,
-): CommentWithMeta[] {
-  const patched = list.map((c) => ({
-    ...c,
-    ...(c.id === id ? { isPinned: pinned } : {}),
-    replies: patchPin(c.replies, id, pinned),
-  }));
-  return patched.sort((a, b) => {
-    if (a.isPinned && !b.isPinned) return -1;
-    if (!a.isPinned && b.isPinned) return 1;
-    return 0;
-  });
-}
-
 function patchAdd(
   list: CommentWithMeta[],
   comment: CommentWithMeta,
@@ -133,14 +115,12 @@ interface PostEngagementProps {
   slug: string;
   initialComments: CommentWithMeta[];
   currentUserId: string | null;
-  siteOwnerId: string;
 }
 
 export function PostEngagement({
   slug,
   initialComments,
   currentUserId,
-  siteOwnerId,
 }: PostEngagementProps) {
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
@@ -236,25 +216,6 @@ export function PostEngagement({
     });
   }, []);
 
-  const handleCommentPin = useCallback(
-    (id: number) => {
-      const comment = findComment(baseComments, id);
-      if (!comment) return;
-      const pinned = !comment.isPinned;
-
-      const pinned_list = patchPin(baseComments, id, pinned);
-      setBaseComments(pinned_list);
-      startTransition(async () => {
-        const result = await togglePinComment(id);
-        if (!result.success) {
-          setBaseComments((prev) => patchPin(prev, id, !pinned));
-          typedToast(classifyError(result.error), result.error);
-        }
-      });
-    },
-    [baseComments],
-  );
-
   const handleCommentLike = useCallback(
     (id: number) => {
       if (!currentUserId) {
@@ -324,12 +285,10 @@ export function PostEngagement({
         comments={comments}
         totalComments={totalComments}
         currentUserId={currentUserId}
-        siteOwnerId={siteOwnerId}
         userName={userName}
         isSignedIn={!!isSignedIn}
         onLike={handleCommentLike}
         onDelete={handleCommentDelete}
-        onPin={handleCommentPin}
         onReply={(parentId, body) => handleCommentSubmit(body, parentId)}
         likePendingRef={likePending}
       />

@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar } from "@/app/blog/[[...slug]]/avatar";
-import { CommentComposer } from "@/app/blog/[[...slug]]/comment-composer";
+import { Avatar } from "./avatar";
+import { CommentComposer } from "./comment-composer";
 import { PencilIcon, SignInIcon, SignOutIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
 import {

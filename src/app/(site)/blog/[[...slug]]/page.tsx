@@ -1,6 +1,6 @@
-import { BlogReadsInfo } from "@/app/blog/[[...slug]]/blog-reads-info";
-import { getComments } from "@/app/blog/[[...slug]]/actions";
-import { PostEngagement } from "@/app/blog/[[...slug]]/post-engagement";
+import { BlogReadsInfo } from "./blog-reads-info";
+import { getComments } from "./actions";
+import { PostEngagement } from "./post-engagement";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
@@ -41,8 +41,6 @@ export default async function Page(props: {
 
   const { userId } = await auth();
   const { comments } = await getComments(page.url);
-  const siteOwnerId = process.env.OWNER_CLERK_USER_ID ?? "";
-
   const MDX = page.data.body;
   const readingTime = (page.data as any)._exports?.readingTime;
 
@@ -188,7 +186,6 @@ export default async function Page(props: {
           slug={page.url}
           initialComments={comments}
           currentUserId={userId}
-          siteOwnerId={siteOwnerId}
         />
       </Section>
 
