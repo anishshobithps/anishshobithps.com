@@ -1,7 +1,9 @@
 "use client";
 
 import type { MoodId, ReactionCounts } from "./actions";
+import { EngagementNudge } from "./engagement-nudge";
 import {
+  CheckIcon,
   HeartIcon,
   SmileyMehIcon,
   ThumbsDownIcon,
@@ -10,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { TypographyMuted } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
+import { useState } from "react";
 
 export interface MoodState {
   value: MoodId | "";
@@ -55,6 +58,14 @@ export const MOODS = [
   },
 ] as const;
 
+const MOOD_FACES: Record<MoodId | "", string> = {
+  "": "( ¬‿¬ )",
+  terrible: "(╯°□°）╯",
+  bad: "( ._. )",
+  good: "( ᵔ◡ᵔ )",
+  amazing: "( ﾉ◕ᴗ◕)ﾉ",
+};
+
 export interface MoodPickerProps {
   moodOptimistic: MoodState;
   moodLoading: boolean;
@@ -66,11 +77,27 @@ export function MoodPicker({
   moodLoading,
   onSelect,
 }: MoodPickerProps) {
+  const [hoveredMood, setHoveredMood] = useState<MoodId | null>(null);
+  const displayMood = hoveredMood ?? moodOptimistic.value;
+  const face = MOOD_FACES[displayMood];
+
   return (
-    <div className="space-y-3" aria-label="How was this read?">
-      <TypographyMuted className="text-xs font-semibold uppercase tracking-widest text-center">
-        How was this read?
-      </TypographyMuted>
+    <div className="space-y-3" aria-label="What did you think?">
+      <div className="flex flex-col items-center gap-1.5">
+        <TypographyMuted className="text-xs font-semibold uppercase tracking-widest text-center">
+          What did you think?
+        </TypographyMuted>
+        <span
+          className="font-mono text-sm text-muted-foreground/35 select-none transition-all duration-150"
+          aria-hidden="true"
+        >
+          {moodLoading ? "( · ‿ · )" : face}
+        </span>
+        <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/60 bg-muted/50 px-2 py-0.5 rounded-full border border-border/40">
+          <CheckIcon size={9} aria-hidden="true" />
+          No account needed
+        </span>
+      </div>
       <fieldset
         aria-label="Rate this post"
         className="flex flex-wrap gap-2 justify-center border-0 p-0 m-0"
@@ -86,6 +113,8 @@ export function MoodPicker({
                 variant="outline"
                 size="sm"
                 onClick={() => onSelect(id)}
+                onMouseEnter={() => setHoveredMood(id)}
+                onMouseLeave={() => setHoveredMood(null)}
                 aria-pressed={isActive}
                 aria-label={`${label}${count !== null && count > 0 ? `, ${count} reaction${count === 1 ? "" : "s"}` : ""}`}
                 className={cn(
@@ -105,9 +134,7 @@ export function MoodPicker({
           },
         )}
       </fieldset>
-      <p className="text-center text-[11px] text-muted-foreground/50">
-        No sign-in needed to react — only comments require an account.
-      </p>
+      <EngagementNudge type="mood" />
     </div>
   );
 }

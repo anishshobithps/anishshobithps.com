@@ -2,6 +2,7 @@
 
 import type { CommentWithMeta } from "./actions";
 import { CommentCard } from "./comment-card";
+import { EngagementNudge } from "./engagement-nudge";
 import { Card } from "@/components/layouts/page";
 import { ChatCircleIcon } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
@@ -59,9 +60,11 @@ export function CommentList({
               Crickets. Loud ones.
             </TypographySmall>
             <TypographyMuted className="text-xs">
-              Be the first to say something — good, bad, or unhinged.
+              Be the first to say something — good, bad, or completely off the
+              wall.
             </TypographyMuted>
           </div>
+          <EngagementNudge type="comment" />
         </div>
       ) : (
         <ScrollArea className="max-h-[60vh]">

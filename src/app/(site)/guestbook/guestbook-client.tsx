@@ -43,6 +43,7 @@ import {
   toggleLike,
   type GuestbookEntryWithMeta,
 } from "./actions";
+import { GuestbookNudge } from "./guestbook-nudge";
 import { Card } from "@/components/layouts/page";
 
 interface GuestbookClientProps {
@@ -431,7 +432,7 @@ export function GuestbookClient({
                 onKeyDown={handleKeyDown}
                 rows={3}
                 maxLength={MAX}
-                placeholder="Leave a message for the world…"
+                placeholder="Say hi, share a thought, or just let me know you were here…"
                 aria-describedby="guestbook-counter"
                 className="resize-none min-h-20 max-h-50"
                 autoComplete="off"
@@ -473,32 +474,35 @@ export function GuestbookClient({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-4 @sm:flex-row @sm:items-center @sm:justify-between min-w-0">
-            {" "}
-            <div className="space-y-1 min-w-0 flex-1">
+          <>
+            <div className="flex flex-col gap-4 @sm:flex-row @sm:items-center @sm:justify-between min-w-0">
               {" "}
-              <TypographySmall className="font-semibold">
-                Drop something in the guestbook.
-              </TypographySmall>
-              <TypographyMuted className="text-sm text-pretty wrap-break-word">
+              <div className="space-y-1 min-w-0 flex-1">
                 {" "}
-                Say hi, share a thought, or just let me know you were here. You
-                gotta sign in first 🙂
-              </TypographyMuted>
+                <TypographySmall className="font-semibold">
+                  You stopped by. Leave a mark.
+                </TypographySmall>
+                <TypographyMuted className="text-sm text-pretty wrap-break-word">
+                  {" "}
+                  Say hi, share a thought, or just let me know you were here.
+                  Sign in — it only takes a second.
+                </TypographyMuted>
+              </div>
+              <SignInButton
+                mode="modal"
+                forceRedirectUrl="/guestbook"
+                signUpForceRedirectUrl="/guestbook"
+              >
+                <ButtonGroup>
+                  <Button size="sm" className="gap-1.5 font-semibold shrink-0">
+                    <BookOpenIcon size={14} aria-hidden="true" />
+                    Sign in
+                  </Button>
+                </ButtonGroup>
+              </SignInButton>
             </div>
-            <SignInButton
-              mode="modal"
-              forceRedirectUrl="/guestbook"
-              signUpForceRedirectUrl="/guestbook"
-            >
-              <ButtonGroup>
-                <Button size="sm" className="gap-1.5 font-semibold shrink-0">
-                  <BookOpenIcon size={14} aria-hidden="true" />
-                  Sign in
-                </Button>
-              </ButtonGroup>
-            </SignInButton>
-          </div>
+            <GuestbookNudge className="pt-1" />
+          </>
         )}
       </Card>
 
@@ -526,12 +530,13 @@ export function GuestbookClient({
               </div>
               <div className="space-y-1">
                 <TypographySmall className="font-semibold">
-                  No messages yet
+                  Nobody here yet.
                 </TypographySmall>
                 <TypographyMuted className="text-xs text-pretty">
-                  Be the first to leave a note.
+                  Be the first to leave a mark. It takes 10 seconds.
                 </TypographyMuted>
               </div>
+              <GuestbookNudge />
             </div>
           ) : (
             <ScrollArea className="max-h-[60vh]">

@@ -98,15 +98,15 @@ export function CommentComposerArea({
             href="/guestbook"
             className="underline underline-offset-4 hover:text-foreground transition-colors"
           >
-            leaving your mark on the guestbook
+            leave a note in the guestbook
           </Link>{" "}
           — it&apos;s like a comments section but less chaotic.
         </TypographyMuted>
       </div>
       <SignInButton mode="modal">
-        <Button variant="outline" size="sm" className="gap-1.5 shrink-0">
+        <Button size="sm" className="gap-1.5 shrink-0">
           <SignInIcon size={14} aria-hidden="true" />
-          Sign in
+          Sign in to comment
         </Button>
       </SignInButton>
     </div>
