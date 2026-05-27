@@ -7,7 +7,6 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import {
-  SectionHeader,
   TypographyH3,
   TypographyLead,
   TypographyMark,
@@ -94,7 +93,6 @@ export function ProjectGrid() {
 export function BuiltThings() {
   return (
     <Section aria-label="Things I've Built">
-      <SectionHeader>Things I've Built</SectionHeader>
       <Reveal>
         <div className="mb-12 max-w-3xl">
           <TypographyLead>

@@ -7,7 +7,6 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  SectionHeader,
 } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +20,6 @@ import { Fragment } from "react";
 export function Contact() {
   return (
     <Section aria-label="Contact" id="contact">
-      <SectionHeader>Contact</SectionHeader>
       <Reveal className="w-full max-w-5xl">
         <Card className="@lg:p-10">
           <div className="space-y-8">

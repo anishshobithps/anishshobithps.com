@@ -1,7 +1,6 @@
 import { source } from "@/lib/source";
 import { Section } from "@/components/layouts/page";
 import {
-  SectionHeader,
   TypographyLead,
   TypographyMark,
   TypographyMuted,
@@ -26,8 +25,6 @@ export function BlogTeaser() {
 
   return (
     <Section aria-label="Recent writing">
-      <SectionHeader>Blogs</SectionHeader>
-
       <Reveal>
         <div className="mb-4 max-w-2xl">
           <TypographyLead>

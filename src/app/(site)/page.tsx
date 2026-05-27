@@ -29,8 +29,8 @@ export default function Page() {
         canonicalUrl={`${siteConfig.baseUrl}`}
       />
       <Hero />
-      <RulesIFollow />
       <BuiltThings />
+      <RulesIFollow />
       <BlogTeaser />
       <Suspense
         fallback={
