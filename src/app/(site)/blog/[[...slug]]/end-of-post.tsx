@@ -35,7 +35,7 @@ export function EndOfPost({ commentCount, className }: EndOfPostProps) {
           aria-label="Scroll to reactions and comments"
         >
           <ChatCircleIcon size={13} aria-hidden="true" />
-          React or comment
+          Leave a comment
           <CaretDownIcon size={12} aria-hidden="true" />
         </button>
       </div>

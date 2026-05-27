@@ -25,7 +25,7 @@ export function Hero() {
   return (
     <Section variant="hero" aria-label="Introduction">
       <div className="w-full max-w-5xl flex flex-col gap-8">
-        <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95">
+        <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95 animate-in fade-in-0 slide-in-from-bottom-6 duration-700">
           <NextImage
             src="/profile.avif"
             alt={`Profile photo of ${siteConfig.name}`}
@@ -38,7 +38,7 @@ export function Hero() {
           />
         </div>
 
-        <div className="flex flex-col gap-6 px-1">
+        <div className="flex flex-col gap-6 px-1 animate-in fade-in-0 slide-in-from-bottom-6 duration-700 [animation-delay:180ms]">
           <div className="flex flex-col gap-3">
             {siteConfig.availableForHire && (
               <div>
