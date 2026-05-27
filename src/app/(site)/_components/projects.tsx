@@ -48,7 +48,7 @@ export function ProjectGrid() {
                 <ButtonGroup>
                   {project.live && (
                     <>
-                      <Button asChild size="sm" variant="outline">
+                      <Button asChild size="sm" variant="default">
                         <Link
                           href={project.live}
                           target="_blank"
@@ -66,7 +66,7 @@ export function ProjectGrid() {
                       <ButtonGroupSeparator />
                     </>
                   )}
-                  <Button asChild size="sm" variant="secondary">
+                  <Button asChild size="sm" variant="outline">
                     <Link
                       href={project.github}
                       target="_blank"

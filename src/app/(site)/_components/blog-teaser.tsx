@@ -26,13 +26,13 @@ export function BlogTeaser() {
 
   return (
     <Section aria-label="Recent writing">
-      <SectionHeader>Writing</SectionHeader>
+      <SectionHeader>Blogs</SectionHeader>
 
       <Reveal>
         <div className="mb-4 max-w-2xl">
           <TypographyLead>
-            Thinking out loud. <TypographyMark>Code, breakdowns</TypographyMark>
-            , and the occasional 3am adventure.
+            <TypographyMark>Code, breakdowns</TypographyMark>, and the
+            occasional 3am adventure.
           </TypographyLead>
         </div>
 
