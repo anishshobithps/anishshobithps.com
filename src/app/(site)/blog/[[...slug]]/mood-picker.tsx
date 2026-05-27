@@ -1,0 +1,143 @@
+"use client";
+
+import type {
+  MoodId,
+  ReactionCounts,
+} from "@/app/(site)/blog/[[...slug]]/actions";
+import { EngagementNudge } from "@/app/(site)/blog/[[...slug]]/engagement-nudge";
+import {
+  CheckIcon,
+  HeartIcon,
+  SmileyMehIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from "@/components/shared/icons";
+import { Button } from "@/components/ui/button";
+import { TypographyMuted } from "@/components/ui/typography";
+import { cn } from "@/lib/cn";
+import { useState } from "react";
+
+export interface MoodState {
+  value: MoodId | "";
+  counts: ReactionCounts;
+}
+
+export const MOODS = [
+  {
+    id: "terrible" as MoodId,
+    label: "Not for me",
+    icon: ThumbsDownIcon,
+    activeClassName:
+      "border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/15 hover:text-red-400",
+    inactiveClassName:
+      "hover:border-red-500/20 hover:bg-red-500/5 hover:text-red-400",
+  },
+  {
+    id: "bad" as MoodId,
+    label: "Meh",
+    icon: SmileyMehIcon,
+    activeClassName:
+      "border-orange-500/40 bg-orange-500/10 text-orange-400 hover:bg-orange-500/15 hover:text-orange-400",
+    inactiveClassName:
+      "hover:border-orange-500/20 hover:bg-orange-500/5 hover:text-orange-400",
+  },
+  {
+    id: "good" as MoodId,
+    label: "Liked it",
+    icon: ThumbsUpIcon,
+    activeClassName:
+      "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/15 hover:text-blue-400",
+    inactiveClassName:
+      "hover:border-blue-500/20 hover:bg-blue-500/5 hover:text-blue-400",
+  },
+  {
+    id: "amazing" as MoodId,
+    label: "Loved it",
+    icon: HeartIcon,
+    activeClassName:
+      "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15 hover:text-emerald-400",
+    inactiveClassName:
+      "hover:border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-400",
+  },
+] as const;
+
+const MOOD_FACES: Record<MoodId | "", string> = {
+  "": "( ¬‿¬ )",
+  terrible: "(╯°□°）╯",
+  bad: "( ._. )",
+  good: "( ᵔ◡ᵔ )",
+  amazing: "( ﾉ◕ᴗ◕)ﾉ",
+};
+
+export interface MoodPickerProps {
+  moodOptimistic: MoodState;
+  moodLoading: boolean;
+  onSelect: (id: MoodId) => void;
+}
+
+export function MoodPicker({
+  moodOptimistic,
+  moodLoading,
+  onSelect,
+}: MoodPickerProps) {
+  const [hoveredMood, setHoveredMood] = useState<MoodId | null>(null);
+  const displayMood = hoveredMood ?? moodOptimistic.value;
+  const face = MOOD_FACES[displayMood];
+
+  return (
+    <div className="space-y-3" aria-label="What did you think?">
+      <div className="flex flex-col items-center gap-1.5">
+        <TypographyMuted className="text-xs font-semibold uppercase tracking-widest text-center">
+          What did you think?
+        </TypographyMuted>
+        <span
+          className="font-mono text-sm text-muted-foreground/35 select-none transition-all duration-150"
+          aria-hidden="true"
+        >
+          {moodLoading ? "( · ‿ · )" : face}
+        </span>
+        <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/60 bg-muted/50 px-2 py-0.5 rounded-full border border-border/40">
+          <CheckIcon size={9} aria-hidden="true" />
+          No account needed
+        </span>
+      </div>
+      <fieldset
+        aria-label="Rate this post"
+        className="flex flex-wrap gap-2 justify-center border-0 p-0 m-0"
+      >
+        {MOODS.map(
+          ({ id, label, icon: Icon, activeClassName, inactiveClassName }) => {
+            const isActive = moodOptimistic.value === id;
+            const count = moodLoading ? null : (moodOptimistic.counts[id] ?? 0);
+
+            return (
+              <Button
+                key={id}
+                variant="outline"
+                size="sm"
+                onClick={() => onSelect(id)}
+                onMouseEnter={() => setHoveredMood(id)}
+                onMouseLeave={() => setHoveredMood(null)}
+                aria-pressed={isActive}
+                aria-label={`${label}${count !== null && count > 0 ? `, ${count} reaction${count === 1 ? "" : "s"}` : ""}`}
+                className={cn(
+                  "gap-2 transition-[color,background-color,border-color] duration-150 cursor-pointer",
+                  isActive ? activeClassName : inactiveClassName,
+                )}
+              >
+                <Icon size={14} aria-hidden="true" />
+                {label}
+                {count !== null && count > 0 && (
+                  <span className="tabular-nums text-xs opacity-70">
+                    {count}
+                  </span>
+                )}
+              </Button>
+            );
+          },
+        )}
+      </fieldset>
+      <EngagementNudge type="mood" />
+    </div>
+  );
+}

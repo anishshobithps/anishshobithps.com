@@ -69,7 +69,8 @@
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
+  --ring: oklch(0.58 0.14 155);
+  --brand: oklch(0.58 0.14 155);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -86,7 +87,7 @@
   --scrollbar-thumb: oklch(0.65 0 0 / 0.35);
   --scrollbar-border: oklch(1 0 0);
   --grid-line: oklch(0.2 0 0 / 0.04);
-  --glow: oklch(0.6 0.04 40 / 0.12);
+  --glow: oklch(0.58 0.14 155 / 0.1);
   --selection-bg: oklch(0.82 0.155 155);
   --selection-fg: oklch(0.112 0.008 155);
 }
@@ -127,8 +128,6 @@
   --scrollbar-border: oklch(0.141 0.005 285.823);
   --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
-  --selection-bg: oklch(0.82 0.155 155);
-  --selection-fg: oklch(0.112 0.008 155);
 }
 
 @property --top-mask-height {
@@ -258,6 +257,17 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
 }
 
 @keyframes fd-fade-in {

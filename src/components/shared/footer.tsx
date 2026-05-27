@@ -25,14 +25,19 @@ export function Footer() {
           <DecorIcon position="top-right" pageBorder />
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-[1fr_auto]">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-10">
           <div className="flex flex-col gap-4">
             <Link href="/" aria-label={`${siteConfig.name} — home`}>
               <Logo size={32} showWordmark aria-hidden="true" />
             </Link>
-            <TypographyMuted className="max-w-xs text-balance">
+            <TypographyMuted className="max-w-sm text-balance leading-relaxed">
               {siteConfig.description}
             </TypographyMuted>
+
+            <TypographySmall className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/80">
+              Building opinionated interfaces for the web.
+            </TypographySmall>
+
             <nav aria-label="Social links" className="flex gap-2">
               {siteConfig.social.map((item) => (
                 <Button
@@ -40,6 +45,7 @@ export function Footer() {
                   asChild
                   size="icon-sm"
                   variant="outline"
+                  className="bg-background/70"
                 >
                   <a
                     href={item.href}
@@ -70,20 +76,25 @@ export function Footer() {
 
           <nav aria-label="Footer navigation" className="flex flex-col gap-2">
             <TypographyMuted
-              className="uppercase tracking-widest font-mono mb-1"
+              className="mb-1 font-mono uppercase tracking-widest"
               aria-hidden="true"
             >
               Pages
             </TypographyMuted>
-            {footerNav.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-muted-foreground hover:text-foreground transition-colors w-max"
-              >
-                <TypographySmall>{label}</TypographySmall>
-              </Link>
-            ))}
+
+            <div className="flex flex-wrap gap-2 sm:max-w-68 sm:justify-end">
+              {footerNav.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="w-max rounded-full border border-border bg-background/70 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <TypographySmall className="leading-none">
+                    {label}
+                  </TypographySmall>
+                </Link>
+              ))}
+            </div>
           </nav>
         </div>
 
