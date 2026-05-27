@@ -1,4 +1,4 @@
-import { ProjectGrid } from "@/app/_components/projects";
+import { ProjectGrid } from "../_components/projects";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {

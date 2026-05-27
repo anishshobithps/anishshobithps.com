@@ -1,8 +1,8 @@
-import { Contact } from "@/app/_components/contact";
-import { Ecosystem } from "@/app/_components/ecosystem";
-import { Hero } from "@/app/_components/hero";
-import { BuiltThings } from "@/app/_components/projects";
-import { RulesIFollow } from "@/app/_components/rules";
+import { Contact } from "./_components/contact";
+import { Ecosystem } from "./_components/ecosystem";
+import { Hero } from "./_components/hero";
+import { BuiltThings } from "./_components/projects";
+import { RulesIFollow } from "./_components/rules";
 import { JsonLd } from "@/components/shared/json-ld";
 import { siteConfig } from "@/lib/config";
 import { buildMeta } from "@/lib/metadata";
