@@ -1,8 +1,3 @@
-import { Content, PageLayout } from "@/components/layouts/page";
-import { Footer } from "@/components/shared/footer";
-import { Header } from "@/components/shared/header";
-import { JsonLd } from "@/components/shared/json-ld";
-import { MouseGlow } from "@/components/shared/mouse-glow";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -60,7 +55,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function Layout({ children }: LayoutProps<"/">) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
       <html
@@ -77,23 +72,16 @@ export default function Layout({ children }: LayoutProps<"/">) {
               strategy="afterInteractive"
             />
           )}
-          <JsonLd type="person" />
-          <JsonLd type="website" />
           <RootProvider>
             <NuqsAdapter>
-              <PageLayout>
-                <Header />
-                <Content className="scroll-smooth pt-14">
-                  <TooltipProvider>
-                    <PhosphorProvider>{children}</PhosphorProvider>
-                    <Toaster />
-                  </TooltipProvider>
-                </Content>
-                <Footer />
-              </PageLayout>
+              <TooltipProvider>
+                <PhosphorProvider>
+                  {children}
+                  <Toaster />
+                </PhosphorProvider>
+              </TooltipProvider>
             </NuqsAdapter>
           </RootProvider>
-          <MouseGlow />
         </body>
       </html>
     </ClerkProvider>
