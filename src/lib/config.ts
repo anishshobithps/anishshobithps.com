@@ -4,7 +4,7 @@ export const siteConfig = {
     role: "Software Developer",
     email: "anish.shobith19@gmail.com",
     description:
-        "I design and build high-performance web experiences with a focus on clarity, motion, and precision. Specializing in TypeScript, React, and Next.js.",
+        "I build interfaces, bots, and questionable automation scripts — mostly so I don't have to repeat myself. TypeScript, React, and Next.js.",
     baseUrl:
         process.env.NEXT_PUBLIC_BASE_URL ??
         (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
