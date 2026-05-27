@@ -270,6 +270,15 @@ html {
   }
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes fd-fade-in {
   from {
     opacity: 0;

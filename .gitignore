@@ -29,3 +29,6 @@ next-env.d.ts
 /.agents
 /.claude
 skills-lock.json
+
+# Seed artifacts
+scripts/.seed-guestbook-ids.json
