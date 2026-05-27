@@ -1,5 +1,5 @@
-import { getGuestbookEntries } from "@/app/guestbook/actions";
-import { GuestbookClient } from "@/app/guestbook/guestbook-client";
+import { getGuestbookEntries } from "./actions";
+import { GuestbookClient } from "./guestbook-client";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
@@ -28,8 +28,6 @@ export default async function GuestbookPage() {
   const { userId } = await auth();
   const { entries, total } = await getGuestbookEntries();
 
-  const siteOwnerId = process.env.OWNER_CLERK_USER_ID ?? "";
-
   return (
     <>
       <JsonLd
@@ -51,7 +49,6 @@ export default async function GuestbookPage() {
         <GuestbookClient
           initialEntries={entries}
           currentUserId={userId}
-          siteOwnerId={siteOwnerId}
           total={total}
         />
       </Section>

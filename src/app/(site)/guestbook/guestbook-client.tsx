@@ -40,16 +40,14 @@ import { cn } from "@/lib/cn";
 import {
   submitGuestbookEntry,
   deleteGuestbookEntry,
-  togglePinEntry,
   toggleLike,
   type GuestbookEntryWithMeta,
-} from "@/app/guestbook/actions";
+} from "./actions";
 import { Card } from "@/components/layouts/page";
 
 interface GuestbookClientProps {
   initialEntries: GuestbookEntryWithMeta[];
   currentUserId: string | null;
-  siteOwnerId: string;
   total: number;
 }
 
@@ -152,21 +150,15 @@ function optimisticReducer(
 const EntryCard = memo(function EntryCard({
   entry,
   currentUserId,
-  siteOwnerId,
   onLike,
   onDelete,
-  onPin,
 }: {
   entry: GuestbookEntryWithMeta;
   currentUserId: string | null;
-  siteOwnerId: string;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  onPin: (id: number) => void;
 }) {
-  const isOwner = currentUserId === entry.user.id;
-  const isSiteOwner = currentUserId === siteOwnerId;
-  const canDelete = isOwner || isSiteOwner;
+  const canDelete = currentUserId === entry.user.id;
   const [expanded, setExpanded] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
   const msgRef = useRef<HTMLParagraphElement>(null);
@@ -270,29 +262,6 @@ const EntryCard = memo(function EntryCard({
                 )}
               </Button>
 
-              {isSiteOwner && (
-                <>
-                  <ButtonGroupSeparator />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onPin(entry.id)}
-                    aria-pressed={entry.isPinned}
-                    aria-label={entry.isPinned ? "Unpin" : "Pin"}
-                    className="gap-1.5"
-                  >
-                    {entry.isPinned ? (
-                      <PushPinSimpleSlashIcon size={14} aria-hidden="true" />
-                    ) : (
-                      <PushPinSimpleIcon size={14} aria-hidden="true" />
-                    )}
-                    <span className="hidden sm:inline">
-                      {entry.isPinned ? "Unpin" : "Pin"}
-                    </span>
-                  </Button>
-                </>
-              )}
-
               {canDelete && (
                 <>
                   <ButtonGroupSeparator />
@@ -318,7 +287,6 @@ const EntryCard = memo(function EntryCard({
 export function GuestbookClient({
   initialEntries,
   currentUserId,
-  siteOwnerId,
   total,
 }: GuestbookClientProps) {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -412,19 +380,6 @@ export function GuestbookClient({
       });
     },
     [dispatchOptimistic],
-  );
-
-  const handlePin = useCallback(
-    (id: number) => {
-      const entry = entries.find((e) => e.id === id);
-      if (!entry) return;
-      startTransition(async () => {
-        dispatchOptimistic({ type: "pin", id, pinned: !entry.isPinned });
-        const result = await togglePinEntry(id);
-        if (!result.success) toast.error(result.error);
-      });
-    },
-    [entries, dispatchOptimistic],
   );
 
   return (
@@ -591,10 +546,8 @@ export function GuestbookClient({
                       key={entry.id}
                       entry={entry}
                       currentUserId={currentUserId}
-                      siteOwnerId={siteOwnerId}
                       onLike={handleLike}
                       onDelete={handleDelete}
-                      onPin={handlePin}
                     />
                   ))}
                 </ul>
