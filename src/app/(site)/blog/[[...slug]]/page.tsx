@@ -1,4 +1,6 @@
 import { BlogReadsInfo } from "./blog-reads-info";
+import { EndOfPost } from "./end-of-post";
+import { ScrollToEngagement } from "./scroll-to-engagement";
 import { getComments } from "./actions";
 import { PostEngagement } from "./post-engagement";
 import { BlogBody } from "@/components/layouts/blog";
@@ -149,6 +151,9 @@ export default async function Page(props: {
             </TypographyMuted>
           )}
           <BlogReadsInfo slug={page.url} />
+          {comments.length > 0 && (
+            <ScrollToEngagement count={comments.length} />
+          )}
         </div>
 
         {page.data.description && (
@@ -178,10 +183,11 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
+        <EndOfPost commentCount={comments.length} />
         <Signature text={siteConfig.name} />
       </BlogBody>
 
-      <Section variant="compact" aria-label="Post engagement">
+      <Section id="engagement" variant="compact" aria-label="Post engagement">
         <PostEngagement
           slug={page.url}
           initialComments={comments}
