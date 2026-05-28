@@ -5,7 +5,8 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import {
   BookOpenIcon,
   ChatCircleIcon,
-  GearIcon,
+  FolderOpenIcon,
+  ListIcon,
 } from "@/components/shared/icons";
 import { TypographySmall } from "@/components/ui/typography";
 import { usePathname } from "next/navigation";
@@ -13,7 +14,8 @@ import { usePathname } from "next/navigation";
 const routes = [
   { href: "/admin/guestbook", label: "Guestbook", icon: ChatCircleIcon },
   { href: "/admin/comments", label: "Blog Comments", icon: BookOpenIcon },
-  { href: "/admin", label: "Overview", icon: GearIcon },
+  { href: "/admin/projects", label: "Projects", icon: FolderOpenIcon },
+  { href: "/admin", label: "Overview", icon: ListIcon },
 ];
 
 export function AdminHeader() {

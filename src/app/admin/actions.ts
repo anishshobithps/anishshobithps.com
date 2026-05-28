@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/lib/db";
 import {
     blogCommentLikes,
@@ -7,13 +9,14 @@ import {
     blogReads,
     guestbookEntries,
     guestbookLikes,
+    projects,
 } from "@/lib/schema";
 import { clerkClient } from "@clerk/nextjs/server";
-import { count, desc, eq, sql } from "drizzle-orm";
+import { assertAdmin } from "@/lib/assert-admin";
+import { asc, count, desc, eq, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import type { GuestbookUser, GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import type { CommentUser } from "@/app/(site)/blog/[[...slug]]/actions";
-
-export type { GuestbookEntryWithMeta };
 
 export interface AdminCommentRow {
     id: number;
@@ -27,6 +30,7 @@ export interface AdminCommentRow {
 }
 
 export async function getAdminStats() {
+    await assertAdmin();
     const [
         [guestbookTotal],
         [guestbookActive],
@@ -52,6 +56,7 @@ export async function getAdminStats() {
 }
 
 export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithMeta[]> {
+    await assertAdmin();
     const rows = await db
         .select({
             id: guestbookEntries.id,
@@ -97,6 +102,7 @@ export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithM
 }
 
 export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
+    await assertAdmin();
     const rows = await db
         .select({
             id: blogComments.id,
@@ -143,4 +149,151 @@ export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
         likeCount: row.likeCount,
         user: userMap.get(row.clerkUserId) ?? { id: row.clerkUserId, name: "Unknown User", username: null, imageUrl: "" },
     }));
+}
+
+// ── Projects ─────────────────────────────────────────────────────────────────
+
+export type ProjectRow = {
+    id: number;
+    title: string;
+    description: string;
+    highlights: string[];
+    live: string | null;
+    github: string | null;
+    enabled: boolean;
+    sortOrder: number;
+};
+
+export async function getAdminProjects(): Promise<ProjectRow[]> {
+    await assertAdmin();
+    return db
+        .select({
+            id: projects.id,
+            title: projects.title,
+            description: projects.description,
+            highlights: projects.highlights,
+            live: projects.live,
+            github: projects.github,
+            enabled: projects.enabled,
+            sortOrder: projects.sortOrder,
+        })
+        .from(projects)
+        .orderBy(asc(projects.sortOrder), asc(projects.id));
+}
+
+export async function createProject(data: {
+    title: string;
+    description: string;
+    highlights: string[];
+    live: string | null;
+    github: string | null;
+}): Promise<{ success: boolean; error?: string }> {
+    try {
+        await assertAdmin();
+        const [last] = await db
+            .select({ max: sql<number>`coalesce(max(${projects.sortOrder}), -1)` })
+            .from(projects);
+        await db.insert(projects).values({
+            ...data,
+            sortOrder: (last?.max ?? -1) + 1,
+            enabled: true,
+        });
+        revalidatePath("/projects");
+        revalidatePath("/");
+        revalidatePath("/admin/projects");
+        return { success: true };
+    } catch {
+        return { success: false, error: "Failed to create project." };
+    }
+}
+
+export async function updateProject(
+    id: number,
+    data: {
+        title: string;
+        description: string;
+        highlights: string[];
+        live: string | null;
+        github: string | null;
+    },
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        await assertAdmin();
+        await db
+            .update(projects)
+            .set({ ...data, updatedAt: new Date() })
+            .where(eq(projects.id, id));
+        revalidatePath("/projects");
+        revalidatePath("/");
+        revalidatePath("/admin/projects");
+        return { success: true };
+    } catch {
+        return { success: false, error: "Failed to update project." };
+    }
+}
+
+export async function toggleProjectEnabled(
+    id: number,
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        await assertAdmin();
+        await db
+            .update(projects)
+            .set({ enabled: sql`NOT ${projects.enabled}`, updatedAt: new Date() })
+            .where(eq(projects.id, id));
+        revalidatePath("/projects");
+        revalidatePath("/");
+        revalidatePath("/admin/projects");
+        return { success: true };
+    } catch {
+        return { success: false, error: "Failed to toggle project visibility." };
+    }
+}
+
+export async function deleteProject(
+    id: number,
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        await assertAdmin();
+        await db.delete(projects).where(eq(projects.id, id));
+        revalidatePath("/projects");
+        revalidatePath("/");
+        revalidatePath("/admin/projects");
+        return { success: true };
+    } catch {
+        return { success: false, error: "Failed to delete project." };
+    }
+}
+
+export async function moveProject(
+    id: number,
+    direction: "up" | "down",
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        await assertAdmin();
+        const all = await db
+            .select({ id: projects.id, sortOrder: projects.sortOrder })
+            .from(projects)
+            .orderBy(asc(projects.sortOrder), asc(projects.id));
+        const idx = all.findIndex((p) => p.id === id);
+        if (idx === -1) return { success: false, error: "Project not found." };
+        const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (swapIdx < 0 || swapIdx >= all.length) return { success: true };
+        const current = all[idx]!;
+        const swap = all[swapIdx]!;
+        await db
+            .update(projects)
+            .set({ sortOrder: swap.sortOrder, updatedAt: new Date() })
+            .where(eq(projects.id, current.id));
+        await db
+            .update(projects)
+            .set({ sortOrder: current.sortOrder, updatedAt: new Date() })
+            .where(eq(projects.id, swap.id));
+        revalidatePath("/projects");
+        revalidatePath("/");
+        revalidatePath("/admin/projects");
+        return { success: true };
+    } catch {
+        return { success: false, error: "Failed to reorder projects." };
+    }
 }

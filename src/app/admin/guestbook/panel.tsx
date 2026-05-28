@@ -146,6 +146,7 @@ export function GuestbookPanel({
                   alt={entry.user.name}
                   width={32}
                   height={32}
+                  unoptimized
                   className="size-8 rounded-full shrink-0 object-cover"
                 />
               ) : (

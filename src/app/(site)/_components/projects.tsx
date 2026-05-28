@@ -14,9 +14,19 @@ import {
 } from "@/components/ui/typography";
 import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import Link from "next/link";
-import { projects } from "@/lib/config";
+import { getPublicProjects } from "@/lib/projects";
 
-export function ProjectGrid() {
+export async function ProjectGrid() {
+  const projects = await getPublicProjects();
+
+  if (projects.length === 0) {
+    return (
+      <TypographyMuted className="py-12 text-center font-mono text-sm">
+        // nothing shipped yet. check back soon.
+      </TypographyMuted>
+    );
+  }
+
   return (
     <CardGrid cols="grid-cols-1 md:grid-cols-2">
       {projects.map((project, index) => (
@@ -65,21 +75,23 @@ export function ProjectGrid() {
                       <ButtonGroupSeparator />
                     </>
                   )}
-                  <Button asChild size="sm" variant="outline">
-                    <Link
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <GithubLogoIcon className="size-4" aria-hidden="true" />
-                      <span className="ml-2" aria-hidden="true">
-                        GitHub
-                      </span>
-                      <span className="sr-only">
-                        View {project.title} on GitHub
-                      </span>
-                    </Link>
-                  </Button>
+                  {project.github && (
+                    <Button asChild size="sm" variant="outline">
+                      <Link
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <GithubLogoIcon className="size-4" aria-hidden="true" />
+                        <span className="ml-2" aria-hidden="true">
+                          GitHub
+                        </span>
+                        <span className="sr-only">
+                          View {project.title} on GitHub
+                        </span>
+                      </Link>
+                    </Button>
+                  )}
                 </ButtonGroup>
               </nav>
             </article>

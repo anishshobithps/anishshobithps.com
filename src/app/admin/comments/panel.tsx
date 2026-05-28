@@ -199,6 +199,7 @@ export function CommentsPanel({
                       alt={comment.user.name}
                       width={28}
                       height={28}
+                      unoptimized
                       className="size-7 rounded-full shrink-0 object-cover"
                     />
                   ) : (

@@ -60,6 +60,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <ClerkProvider>
       <html
         lang="en"
+        data-scroll-behavior="smooth"
         className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
         suppressHydrationWarning
       >
