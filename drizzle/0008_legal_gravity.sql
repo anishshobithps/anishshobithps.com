@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ALTER COLUMN "github" DROP NOT NULL;

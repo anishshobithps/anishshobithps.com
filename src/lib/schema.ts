@@ -10,6 +10,7 @@ import {
     integer,
     unique,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const blogPosts = pgTable(
     "blog_posts",
@@ -122,5 +123,25 @@ export const blogCommentLikes = pgTable(
     (table) => [
         primaryKey({ columns: [table.commentId, table.clerkUserId] }),
         index("blog_comment_likes_comment_idx").on(table.commentId),
+    ],
+);
+
+export const projects = pgTable(
+    "projects",
+    {
+        id: serial("id").primaryKey(),
+        title: varchar("title", { length: 256 }).notNull(),
+        description: text("description").notNull(),
+        highlights: text("highlights").array().notNull().default(sql`'{}'::text[]`),
+        live: varchar("live", { length: 512 }),
+        github: varchar("github", { length: 512 }),
+        enabled: boolean("enabled").default(true).notNull(),
+        sortOrder: integer("sort_order").default(0).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        index("projects_enabled_idx").on(table.enabled),
+        index("projects_sort_order_idx").on(table.sortOrder),
     ],
 );

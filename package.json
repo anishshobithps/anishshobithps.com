@@ -8,6 +8,7 @@
     "start": "next start",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
     "db:seed:guestbook": "bun --env-file=.env.local run scripts/seed-guestbook.ts",
     "db:seed:guestbook:cleanup": "bun --env-file=.env.local run scripts/seed-guestbook.ts --cleanup",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",

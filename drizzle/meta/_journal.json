@@ -50,6 +50,20 @@
       "when": 1777409702204,
       "tag": "0006_slimy_psylocke",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1779918080218,
+      "tag": "0007_rapid_leper_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1779919867741,
+      "tag": "0008_legal_gravity",
+      "breakpoints": true
     }
   ]
 }
