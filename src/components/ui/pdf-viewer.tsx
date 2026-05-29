@@ -12,7 +12,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { Slot } from "@radix-ui/react-slot";
+import { Slot } from "radix-ui";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
 
 import { Button } from "@/components/ui/button";
@@ -185,7 +185,7 @@ export const PdfViewerToolbar = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
 >(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot.Root : "div";
   return (
     <Comp
       ref={ref}
@@ -203,7 +203,7 @@ export const PdfViewerFooter = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
 >(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot : "div";
+  const Comp = asChild ? Slot.Root : "div";
   return (
     <Comp
       ref={ref}

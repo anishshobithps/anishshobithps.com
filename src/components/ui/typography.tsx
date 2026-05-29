@@ -1,4 +1,4 @@
-import { Slot } from "@radix-ui/react-slot";
+import { Slot } from "radix-ui";
 import { type VariantProps, cva } from "class-variance-authority";
 import { type ElementType, type HTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/cn";
@@ -28,7 +28,7 @@ type HeadingProps = HTMLAttributes<HTMLHeadingElement> &
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   ({ className, level = "h1", as, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : (as ?? level ?? "h1");
+    const Tag = asChild ? Slot.Root : (as ?? level ?? "h1");
     return (
       <Tag
         ref={ref}
@@ -95,7 +95,7 @@ const TEXT_DEFAULT_TAGS: Record<string, ElementType> = {
 export const Text = forwardRef<HTMLElement, TextProps>(
   ({ className, variant, as, asChild = false, ...props }, ref) => {
     const Tag = asChild
-      ? Slot
+      ? Slot.Root
       : (as ?? TEXT_DEFAULT_TAGS[variant ?? ""] ?? "p");
     return (
       <Tag
@@ -144,7 +144,7 @@ export const TypographyBlockquote = forwardRef<
   HTMLQuoteElement,
   BlockquoteProps
 >(({ className, asChild = false, ...props }, ref) => {
-  const Tag = asChild ? Slot : "blockquote";
+  const Tag = asChild ? Slot.Root : "blockquote";
   return (
     <Tag
       ref={ref}
@@ -163,7 +163,7 @@ type ListProps = HTMLAttributes<HTMLUListElement> & AsChildProps;
 
 export const TypographyList = forwardRef<HTMLUListElement, ListProps>(
   ({ className, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : "ul";
+    const Tag = asChild ? Slot.Root : "ul";
     return (
       <Tag
         ref={ref}
@@ -183,7 +183,7 @@ type InlineCodeProps = HTMLAttributes<HTMLElement> & AsChildProps;
 
 export const TypographyInlineCode = forwardRef<HTMLElement, InlineCodeProps>(
   ({ className, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : "code";
+    const Tag = asChild ? Slot.Root : "code";
     return (
       <Tag
         ref={ref}
@@ -206,7 +206,7 @@ type MarkProps = HTMLAttributes<HTMLElement> & AsChildProps;
 
 export const TypographyMark = forwardRef<HTMLElement, MarkProps>(
   ({ className, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : "mark";
+    const Tag = asChild ? Slot.Root : "mark";
     return (
       <Tag
         ref={ref}
@@ -230,7 +230,7 @@ type SectionLabelProps = HTMLAttributes<HTMLParagraphElement> & AsChildProps;
 
 export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
   ({ className, asChild = false, ...props }, ref) => {
-    const Tag = asChild ? Slot : "p";
+    const Tag = asChild ? Slot.Root : "p";
     return (
       <Tag
         ref={ref}
@@ -251,7 +251,10 @@ export function SectionHeader({
   className,
 }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("flex items-center gap-3 mb-10", className)} aria-hidden="true">
+    <div
+      className={cn("flex items-center gap-3 mb-10", className)}
+      aria-hidden="true"
+    >
       <SectionLabel>{children}</SectionLabel>
       <div className="flex-1 h-px bg-border/40" />
     </div>
