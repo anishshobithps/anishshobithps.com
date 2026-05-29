@@ -9,7 +9,7 @@ const config = {
   allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["@takumi-rs/image-response"],
   experimental: {
-    optimizePackageImports: ["@tabler/icons-react", "@phosphor-icons/react"],
+    optimizePackageImports: ["@phosphor-icons/react"],
   },
   images: {
     remotePatterns: [
