@@ -10,6 +10,7 @@ const config = {
   serverExternalPackages: ["@takumi-rs/image-response"],
   experimental: {
     optimizePackageImports: ["@phosphor-icons/react"],
+    typedRoutes: true,
   },
   images: {
     remotePatterns: [
