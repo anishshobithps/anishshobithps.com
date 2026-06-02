@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useQueryStates, parseAsString, parseAsBoolean } from "nuqs";
 import NextImage from "next/image";
 import { toast } from "sonner";
 import {
@@ -32,6 +32,12 @@ import {
 import { TypographySmall, TypographyMuted } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
 import { cn } from "@/lib/cn";
+import { useState } from "react";
+
+const searchParsers = {
+  q: parseAsString.withDefault(""),
+  pinned: parseAsBoolean.withDefault(false),
+};
 
 export function GuestbookPanel({
   entries: initial,
@@ -40,8 +46,9 @@ export function GuestbookPanel({
 }) {
   const [entries, setEntries] = useState(initial);
   const [pendingId, setPendingId] = useState<number | null>(null);
-  const [search, setSearch] = useState("");
-  const [pinnedOnly, setPinnedOnly] = useState(false);
+  const [{ q, pinned }, setParams] = useQueryStates(searchParsers, {
+    shallow: true,
+  });
 
   async function handleDelete(id: number) {
     if (pendingId !== null) return;
@@ -88,13 +95,13 @@ export function GuestbookPanel({
   }
 
   const filtered = entries.filter((e) => {
-    if (pinnedOnly && !e.isPinned) return false;
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
+    if (pinned && !e.isPinned) return false;
+    if (q.trim()) {
+      const query = q.trim().toLowerCase();
       return (
-        e.message.toLowerCase().includes(q) ||
-        e.user.name.toLowerCase().includes(q) ||
-        (e.user.username?.toLowerCase().includes(q) ?? false)
+        e.message.toLowerCase().includes(query) ||
+        e.user.name.toLowerCase().includes(query) ||
+        (e.user.username?.toLowerCase().includes(query) ?? false)
       );
     }
     return true;
@@ -107,20 +114,20 @@ export function GuestbookPanel({
           <MagnifyingGlassIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search entries, names..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={q}
+            onChange={(e) => setParams({ q: e.target.value })}
             className="pl-8 h-8 text-sm"
           />
         </div>
         <Button
-          variant={pinnedOnly ? "secondary" : "outline"}
+          variant={pinned ? "secondary" : "outline"}
           size="sm"
-          onClick={() => setPinnedOnly((v) => !v)}
+          onClick={() => setParams({ pinned: !pinned })}
           className="shrink-0 gap-1.5 h-8 text-xs"
         >
           <PushPinSimpleIcon
             className="size-3"
-            weight={pinnedOnly ? "fill" : "regular"}
+            weight={pinned ? "fill" : "regular"}
           />
           Pinned only
         </Button>

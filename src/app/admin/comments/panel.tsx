@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useQueryStates, parseAsString, parseAsBoolean } from "nuqs";
 import NextImage from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -38,6 +38,12 @@ import {
 } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
 import { cn } from "@/lib/cn";
+import { useState } from "react";
+
+const searchParsers = {
+  q: parseAsString.withDefault(""),
+  pinned: parseAsBoolean.withDefault(false),
+};
 
 function slugToTitle(slug: string): string {
   const segment = slug.replace(/^\/blog\//, "").replace(/\//g, " / ");
@@ -54,8 +60,9 @@ export function CommentsPanel({
 }) {
   const [comments, setComments] = useState(initial);
   const [pendingId, setPendingId] = useState<number | null>(null);
-  const [search, setSearch] = useState("");
-  const [pinnedOnly, setPinnedOnly] = useState(false);
+  const [{ q, pinned }, setParams] = useQueryStates(searchParsers, {
+    shallow: true,
+  });
 
   async function handleDelete(id: number) {
     if (pendingId !== null) return;
@@ -104,13 +111,13 @@ export function CommentsPanel({
   }
 
   const filtered = comments.filter((c) => {
-    if (pinnedOnly && !c.isPinned) return false;
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
+    if (pinned && !c.isPinned) return false;
+    if (q.trim()) {
+      const query = q.trim().toLowerCase();
       return (
-        c.body.toLowerCase().includes(q) ||
-        c.user.name.toLowerCase().includes(q) ||
-        (c.user.username?.toLowerCase().includes(q) ?? false)
+        c.body.toLowerCase().includes(query) ||
+        c.user.name.toLowerCase().includes(query) ||
+        (c.user.username?.toLowerCase().includes(query) ?? false)
       );
     }
     return true;
@@ -132,20 +139,20 @@ export function CommentsPanel({
           <MagnifyingGlassIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search comments, names..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={q}
+            onChange={(e) => setParams({ q: e.target.value })}
             className="pl-8 h-8 text-sm"
           />
         </div>
         <Button
-          variant={pinnedOnly ? "secondary" : "outline"}
+          variant={pinned ? "secondary" : "outline"}
           size="sm"
-          onClick={() => setPinnedOnly((v) => !v)}
+          onClick={() => setParams({ pinned: !pinned })}
           className="shrink-0 gap-1.5 h-8 text-xs"
         >
           <PushPinSimpleIcon
             className="size-3"
-            weight={pinnedOnly ? "fill" : "regular"}
+            weight={pinned ? "fill" : "regular"}
           />
           Pinned only
         </Button>
