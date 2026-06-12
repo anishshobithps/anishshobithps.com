@@ -8,9 +8,9 @@ const config = {
   poweredByHeader: false,
   allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["@takumi-rs/image-response"],
+  typedRoutes: true,
   experimental: {
     optimizePackageImports: ["@phosphor-icons/react"],
-    typedRoutes: true,
   },
   images: {
     remotePatterns: [
