@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 type AsChildProps = { asChild?: boolean };
 
 const headingVariants = cva(
-  "scroll-m-20 tracking-tight text-balance leading-[1.1]",
+  "scroll-m-20 tracking-tight text-balance leading-[1.1] font-[family-name:var(--font-space-grotesk)]",
   {
     variants: {
       level: {

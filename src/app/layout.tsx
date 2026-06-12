@@ -5,16 +5,22 @@ import { siteConfig } from "@/lib/config";
 import { ClerkProvider } from "@clerk/nextjs";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist_Mono, Inter, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./global.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-plus-jakarta-sans",
+  variable: "--font-inter",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
 });
 
 const geistMono = Geist_Mono({
@@ -61,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <html
         lang="en"
         data-scroll-behavior="smooth"
-        className={`${plusJakartaSans.className} ${geistMono.className} antialiased`}
+        className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
         <body className="relative flex flex-col min-h-screen">
