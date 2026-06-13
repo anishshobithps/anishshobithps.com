@@ -16,6 +16,7 @@ import {
   LinkedinLogoIcon,
 } from "@/components/shared/icons";
 import { toast } from "sonner";
+import type { Route } from "next";
 
 interface BlogPostNavProps {
   pageUrl: string;
@@ -103,7 +104,7 @@ export function BlogPostNav({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                href={prevPost?.url ?? "#"}
+                href={(prevPost?.url ?? "#") as Route}
                 aria-label={
                   prevPost
                     ? `Previous post: ${prevPost.title}`
@@ -117,7 +118,7 @@ export function BlogPostNav({
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
-                href={nextPost?.url ?? "#"}
+                href={(nextPost?.url ?? "#") as Route}
                 aria-label={
                   nextPost ? `Next post: ${nextPost.title}` : "No next post"
                 }

@@ -15,7 +15,6 @@ import {
 import {
   BookOpenIcon,
   ChatCircleIcon,
-  GearIcon,
   HouseIcon,
   ListIcon,
   SignOutIcon,
@@ -24,6 +23,7 @@ import {
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";
+import type { Route } from "next";
 import { usePathname } from "next/navigation";
 
 const navItems = [
@@ -69,7 +69,7 @@ export function AdminSidebar() {
                   isActive={pathname === href}
                   tooltip={title}
                 >
-                  <Link href={href}>
+                  <Link href={href as Route}>
                     <Icon className="size-4" />
                     <span>{title}</span>
                   </Link>

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CaretRightIcon } from "@/components/shared/icons";
 import { formatShortDate } from "@/lib/date";
 import Link from "next/link";
+import type { Route } from "next";
 
 export function BlogTeaser() {
   const posts = source
@@ -37,7 +38,7 @@ export function BlogTeaser() {
           {posts.map((post) => (
             <Link
               key={post.url}
-              href={post.url}
+              href={post.url as Route}
               className="group flex items-baseline justify-between gap-4 py-4 border-b last:border-b-0 -mx-6 px-6 sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10 hover:bg-muted/40 transition-colors"
             >
               <span className="font-medium text-foreground flex items-center gap-2 min-w-0">

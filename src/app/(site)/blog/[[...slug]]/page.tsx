@@ -36,8 +36,9 @@ import {
   EyeIcon,
 } from "@/components/shared/icons";
 import { createRelativeLink } from "fumadocs-ui/mdx";
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
+
 import { notFound } from "next/navigation";
 
 export default async function Page(props: {
@@ -119,7 +120,7 @@ export default async function Page(props: {
           <address className="not-italic contents">
             <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
               <Link
-                href={siteConfig.baseUrl}
+                href={siteConfig.baseUrl as Route}
                 className="hover:text-foreground transition-colors"
                 rel="author"
               >

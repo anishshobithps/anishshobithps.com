@@ -9,6 +9,7 @@ import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { currentYear } from "@/lib/date";
 import Link from "next/link";
 import { Suspense } from "react";
+import type { Route } from "next";
 
 const footerNav = [
   ...siteConfig.nav,
@@ -86,7 +87,7 @@ export function Footer() {
               {footerNav.map(({ href, label }) => (
                 <Link
                   key={href}
-                  href={href}
+                  href={href as Route}
                   className="w-max rounded-full border border-border bg-background/70 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <TypographySmall className="leading-none">

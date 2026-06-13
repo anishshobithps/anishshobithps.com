@@ -7,13 +7,14 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import {
-  TypographyH3,
+  TypographyH2,
   TypographyLead,
   TypographyMark,
   TypographyMuted,
 } from "@/components/ui/typography";
 import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import Link from "next/link";
+import type { Route } from "next";
 import { getPublicProjects } from "@/lib/projects";
 
 export async function ProjectGrid() {
@@ -36,7 +37,9 @@ export async function ProjectGrid() {
         >
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
-              <TypographyH3 className="text-xl">{project.title}</TypographyH3>
+              <TypographyH2 className="text-xl border-none pb-0">
+                {project.title}
+              </TypographyH2>
               <TypographyMuted className="leading-relaxed">
                 {project.description}
               </TypographyMuted>
@@ -59,7 +62,7 @@ export async function ProjectGrid() {
                     <>
                       <Button asChild size="sm" variant="default">
                         <Link
-                          href={project.live}
+                          href={project.live as Route}
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`View ${project.title} live site`}
@@ -78,16 +81,13 @@ export async function ProjectGrid() {
                   {project.github && (
                     <Button asChild size="sm" variant="outline">
                       <Link
-                        href={project.github}
+                        href={project.github as Route}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <GithubLogoIcon className="size-4" aria-hidden="true" />
                         <span className="ml-2" aria-hidden="true">
                           GitHub
-                        </span>
-                        <span className="sr-only">
-                          View {project.title} on GitHub
                         </span>
                       </Link>
                     </Button>

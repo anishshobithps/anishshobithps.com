@@ -52,6 +52,7 @@ import {
   useQueryStates,
 } from "nuqs";
 import { useMemo } from "react";
+import type { Route } from "next";
 
 export type BlogPost = {
   url: string;
@@ -314,7 +315,7 @@ export function BlogsClient({
                 <li key={post.url}>
                   {index > 0 && <Divider plain />}
                   <Link
-                    href={post.url}
+                    href={post.url as Route}
                     aria-label={`${post.title}${date ? `, published ${date}` : ""}`}
                     className="group relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
                   >

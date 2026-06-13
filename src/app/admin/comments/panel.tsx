@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
 import { cn } from "@/lib/cn";
+import type { Route } from "next";
 import { useState } from "react";
 
 const searchParsers = {
@@ -170,7 +171,7 @@ export function CommentsPanel({
             <div className="flex items-center justify-between mb-3">
               <SectionHeader className="text-sm mb-0 min-w-0 mr-3">
                 <Link
-                  href={slug}
+                  href={slug as Route}
                   target="_blank"
                   className="hover:underline underline-offset-2 truncate block"
                   title={slug}
