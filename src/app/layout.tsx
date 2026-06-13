@@ -5,25 +5,25 @@ import { siteConfig } from "@/lib/config";
 import { ClerkProvider } from "@clerk/nextjs";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Inter, Space_Grotesk } from "next/font/google";
+import { Fira_Code, Manrope, Syne } from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./global.css";
 
-const inter = Inter({
+const syne = Syne({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-syne",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-space-grotesk",
+  variable: "--font-manrope",
 });
 
-const geistMono = Geist_Mono({
+const firaCode = Fira_Code({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-geist-mono",
@@ -67,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <html
         lang="en"
         data-scroll-behavior="smooth"
-        className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} antialiased`}
+        className={`${syne.variable} ${manrope.variable} ${firaCode.variable} antialiased`}
         suppressHydrationWarning
       >
         <body className="relative flex flex-col min-h-screen">
