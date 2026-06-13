@@ -236,7 +236,7 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
         ref={ref}
         aria-hidden="true"
         className={cn(
-          "text-sm font-mono font-medium tracking-widest text-muted-foreground/80 uppercase",
+          "text-sm font-mono font-medium tracking-widest text-muted-foreground uppercase",
           className,
         )}
         {...props}

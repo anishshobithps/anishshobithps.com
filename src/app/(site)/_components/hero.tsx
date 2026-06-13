@@ -43,7 +43,7 @@ export function Hero() {
               <div>
                 <Badge
                   variant="outline"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs border-[--brand]/30 text-[--brand] bg-[--brand]/8"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 text-xs border-(--brand)/30 text-(--brand-text) bg-(--brand)/8"
                   aria-label="Currently available for hire"
                 >
                   <CircleIcon

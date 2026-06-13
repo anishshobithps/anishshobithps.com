@@ -35,7 +35,7 @@ export function Footer() {
               {siteConfig.description}
             </TypographyMuted>
 
-            <TypographySmall className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/80">
+            <TypographySmall className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
               Building opinionated interfaces for the web.
             </TypographySmall>
 
@@ -46,7 +46,7 @@ export function Footer() {
                   asChild
                   size="icon-sm"
                   variant="outline"
-                  className="bg-background/70"
+                  className="bg-background/70 pointer-coarse:size-11"
                 >
                   <a
                     href={item.href}
@@ -88,7 +88,7 @@ export function Footer() {
                 <Link
                   key={href}
                   href={href as Route}
-                  className="w-max rounded-full border border-border bg-background/70 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                  className="inline-flex w-max items-center rounded-full border border-border bg-background/70 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground pointer-coarse:min-h-11 pointer-coarse:px-4"
                 >
                   <TypographySmall className="leading-none">
                     {label}

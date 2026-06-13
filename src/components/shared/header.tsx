@@ -80,7 +80,7 @@ export function Header() {
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
-                  className="size-8"
+                  className="size-8 pointer-coarse:size-11"
                   variant="ghost"
                   size="icon"
                   aria-label={open ? "Close menu" : "Open menu"}

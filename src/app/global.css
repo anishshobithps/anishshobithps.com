@@ -71,6 +71,8 @@
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.58 0.14 155);
   --brand: oklch(0.58 0.14 155);
+  /* Darker brand for text on light surfaces — 7.09:1 on bg (AAA). --brand stays for borders/fills. */
+  --brand-text: oklch(0.44 0.13 155);
   --color-available: oklch(0.72 0.19 142);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -91,6 +93,12 @@
   --glow: oklch(0.58 0.14 155 / 0.1);
   --selection-bg: oklch(0.82 0.155 155);
   --selection-fg: oklch(0.112 0.008 155);
+
+  /* Semantic z-index scale. Layering order, low → high:
+     decor/grid (0) · page rails (20) · sticky header (50) · radix overlays (50) · skip link (60). */
+  --z-rail: 20;
+  --z-header: 50;
+  --z-skip-link: 60;
 }
 
 .dark {
@@ -130,6 +138,8 @@
   --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
   --color-available: oklch(0.78 0.19 142);
+  /* Lighter brand for text on dark surfaces — 8.54:1 on bg (AAA). */
+  --brand-text: oklch(0.72 0.15 155);
 }
 
 @property --top-mask-height {
@@ -291,7 +301,6 @@ html {
 }
 
 main {
-  will-change: opacity;
   animation: fd-fade-in 0.25s ease-out both;
 }
 

@@ -33,7 +33,7 @@ export async function ProjectGrid() {
       {projects.map((project, index) => (
         <CardGridItem
           key={project.title}
-          className="group transition-all duration-200 hover:-translate-y-1.5 hover:shadow-md"
+          className="group transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1.5 hover:shadow-md"
         >
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
