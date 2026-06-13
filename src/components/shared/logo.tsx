@@ -41,10 +41,17 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
     const wordmark = full ? "nish Shobith P S" : "nish";
     const defaultLabel = "Anish Shobith P S";
     useEffect(() => {
-      if (!textRef.current) return;
-      const bbox = textRef.current.getBBox();
-      const contentRight = bbox.x + bbox.width;
-      setMeasuredW(contentRight + PADDING - (CONTENT_LEFT - PADDING));
+      const el = textRef.current;
+      if (!el) return;
+      const measure = () => {
+        const bbox = el.getBBox();
+        const contentRight = bbox.x + bbox.width;
+        setMeasuredW(contentRight + PADDING - (CONTENT_LEFT - PADDING));
+      };
+      measure();
+      // Re-measure once the display font swaps in so the viewBox tracks the
+      // real glyph metrics instead of the fallback's.
+      document.fonts?.ready.then(measure).catch(() => {});
     }, [wordmark]);
 
     if (!showWordmark) {
@@ -144,7 +151,10 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
           ref={textRef}
           x={TEXT_X}
           y={TEXT_Y}
-          fontFamily="'Geist', 'Geist Fallback', ui-sans-serif, system-ui, sans-serif"
+          style={{
+            fontFamily:
+              "var(--font-bricolage), ui-sans-serif, system-ui, sans-serif",
+          }}
           fontSize={FONT_SIZE}
           fontWeight={600}
           letterSpacing="-0.03em"

@@ -6,14 +6,14 @@ import { cn } from "@/lib/cn";
 type AsChildProps = { asChild?: boolean };
 
 const headingVariants = cva(
-  "scroll-m-20 tracking-tight text-balance leading-[1.1] font-[family-name:var(--font-space-grotesk)]",
+  "scroll-m-20 font-display [font-optical-sizing:auto] tracking-tight text-balance leading-[1.1]",
   {
     variants: {
       level: {
-        h1: "text-[clamp(2rem,5cqi+1rem,3.5rem)] font-extrabold",
-        h2: "text-[clamp(1.5rem,3cqi+0.75rem,2.25rem)] font-bold",
-        h3: "text-[clamp(1.25rem,2cqi+0.75rem,1.875rem)] font-semibold",
-        h4: "text-[clamp(1.125rem,1cqi+0.875rem,1.5rem)] font-semibold",
+        h1: "text-[clamp(2.25rem,1.4rem+3.4vw,3.5rem)] font-extrabold",
+        h2: "text-[clamp(1.75rem,1.2rem+2.2vw,2.5rem)] font-bold",
+        h3: "text-[clamp(1.375rem,1.05rem+1.4vw,1.75rem)] font-semibold",
+        h4: "text-[clamp(1.125rem,0.95rem+0.75vw,1.375rem)] font-semibold",
       },
     },
     defaultVariants: { level: "h1" },

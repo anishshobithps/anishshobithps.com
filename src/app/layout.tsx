@@ -4,16 +4,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
 import { ThemeProvider } from "next-themes";
 import type { Metadata, Viewport } from "next";
-import { Fira_Code, Manrope, Syne } from "next/font/google";
+import { Bricolage_Grotesque, Fira_Code, Manrope } from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./global.css";
 
-const syne = Syne({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-syne",
+  axes: ["opsz"],
+  variable: "--font-bricolage",
 });
 
 const manrope = Manrope({
@@ -65,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${syne.variable} ${manrope.variable} ${firaCode.variable} antialiased`}
+      className={`${bricolage.variable} ${manrope.variable} ${firaCode.variable} antialiased`}
       suppressHydrationWarning
     >
       <head>
