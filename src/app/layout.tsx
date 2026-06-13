@@ -2,7 +2,7 @@ import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
-import { RootProvider } from "fumadocs-ui/provider/next";
+import { ThemeProvider } from "next-themes";
 import type { Metadata, Viewport } from "next";
 import { Fira_Code, Manrope, Syne } from "next/font/google";
 import Script from "next/script";
@@ -81,7 +81,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             strategy="afterInteractive"
           />
         )}
-        <RootProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <NuqsAdapter>
             <TooltipProvider>
               <PhosphorProvider>
@@ -90,7 +95,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </PhosphorProvider>
             </TooltipProvider>
           </NuqsAdapter>
-        </RootProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
