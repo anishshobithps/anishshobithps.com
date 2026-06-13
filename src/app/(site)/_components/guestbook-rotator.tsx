@@ -14,14 +14,19 @@ function EntryAvatar({ entry }: { entry: GuestbookPreviewEntry }) {
     .toUpperCase();
 
   if (entry.user.imageUrl) {
+    const src = entry.user.imageUrl.includes("img.clerk.com")
+      ? `${entry.user.imageUrl}?width=56`
+      : entry.user.imageUrl;
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={entry.user.imageUrl}
+        src={src}
         alt={entry.user.name}
         className="size-7 rounded-full ring-1 ring-border shrink-0 object-cover"
         width={28}
         height={28}
+        loading="lazy"
+        decoding="async"
       />
     );
   }

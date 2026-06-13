@@ -30,6 +30,7 @@ next-env.d.ts
 /.claude
 .impeccable/
 skills-lock.json
+.unlighthouse/
 
 # Seed artifacts
 scripts/.seed-guestbook-ids.json
