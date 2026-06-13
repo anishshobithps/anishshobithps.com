@@ -11,7 +11,7 @@ const headingVariants = cva(
     variants: {
       level: {
         h1: "text-[clamp(2rem,5cqi+1rem,3.5rem)] font-extrabold",
-        h2: "text-[clamp(1.5rem,3cqi+0.75rem,2.25rem)] font-bold border-b border-border pb-2 first:mt-0",
+        h2: "text-[clamp(1.5rem,3cqi+0.75rem,2.25rem)] font-bold",
         h3: "text-[clamp(1.25rem,2cqi+0.75rem,1.875rem)] font-semibold",
         h4: "text-[clamp(1.125rem,1cqi+0.875rem,1.5rem)] font-semibold",
       },
@@ -72,7 +72,7 @@ const textVariants = cva("text-pretty", {
   variants: {
     variant: {
       default: "text-base leading-7 not-first:mt-6",
-      lead: "text-[clamp(1.0625rem,1.5cqi+0.75rem,1.25rem)] leading-relaxed text-muted-foreground",
+      lead: "text-[clamp(1.0625rem,1.5cqi+0.75rem,1.25rem)] leading-relaxed",
       muted: "text-sm leading-normal text-muted-foreground",
       large: "text-lg leading-7 font-semibold",
       small: "text-sm leading-none font-medium",

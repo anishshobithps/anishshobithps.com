@@ -64,7 +64,7 @@ export function Header() {
                 <NavigationMenuItem key={link.href}>
                   <NavigationMenuLink
                     href={link.href}
-                    className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-1.5 transition-colors aria-[current=page]:text-foreground aria-[current=page]:font-medium aria-[current=page]:bg-(--brand)/8 dark:aria-[current=page]:bg-accent"
+                    className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-colors aria-[current=page]:text-foreground aria-[current=page]:font-medium aria-[current=page]:bg-(--brand)/8 dark:aria-[current=page]:bg-accent"
                     aria-current={pathname === link.href ? "page" : undefined}
                   >
                     <TypographySmall>{link.label}</TypographySmall>

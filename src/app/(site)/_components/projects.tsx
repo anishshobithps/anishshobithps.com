@@ -37,7 +37,7 @@ export async function ProjectGrid() {
         >
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
-              <TypographyH2 className="text-xl border-none pb-0">
+              <TypographyH2 className="text-xl">
                 {project.title}
               </TypographyH2>
               <TypographyMuted className="leading-relaxed">

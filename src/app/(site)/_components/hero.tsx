@@ -31,7 +31,6 @@ export function Hero() {
             alt={`Profile photo of ${siteConfig.name}`}
             width={6000}
             height={4000}
-            unoptimized
             priority
             sizes="(max-width: 1024px) 100vw, 1024px"
             className="w-full h-auto lg:h-95 lg:object-cover lg:object-center"
@@ -48,7 +47,7 @@ export function Hero() {
                   aria-label="Currently available for hire"
                 >
                   <CircleIcon
-                    className="size-2 fill-green-500 text-green-500 animate-pulse"
+                    className="size-2 fill-(--color-available) text-(--color-available) animate-pulse"
                     weight="fill"
                     aria-hidden="true"
                   />
@@ -67,10 +66,9 @@ export function Hero() {
 
           <TypographyLead>
             I build{" "}
-            <TypographyMark>
-              interfaces, bots, and questionable automation scripts
-            </TypographyMark>{" "}
-            — mostly so I don&apos;t have to repeat myself.
+            <TypographyMark>interfaces and tooling</TypographyMark>, the
+            occasional bot, and questionable automation scripts — mostly so I
+            don&apos;t have to repeat myself.
           </TypographyLead>
 
           <nav aria-label="Primary actions">

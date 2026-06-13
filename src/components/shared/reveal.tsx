@@ -12,8 +12,10 @@ interface RevealProps {
 export function Reveal({ children, className, delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const el = ref.current;
     if (!el) return;
 
@@ -36,7 +38,7 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
       ref={ref}
       className={cn(
         "transition-[opacity,transform] duration-700 ease-out",
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5",
+        mounted && !visible ? "opacity-0 translate-y-5" : "opacity-100 translate-y-0",
         className,
       )}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}

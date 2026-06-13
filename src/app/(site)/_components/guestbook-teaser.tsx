@@ -2,7 +2,6 @@ import { getGuestbookPreview } from "@/app/(site)/guestbook/actions";
 import { GuestbookRotator } from "@/app/(site)/_components/guestbook-rotator";
 import { Section } from "@/components/layouts/page";
 import {
-  SectionHeader,
   TypographyLead,
   TypographyMark,
 } from "@/components/ui/typography";
@@ -16,8 +15,6 @@ export async function GuestbookTeaser() {
 
   return (
     <Section aria-label="Guestbook preview">
-      <SectionHeader>Guestbook</SectionHeader>
-
       <Reveal>
         <div className="mb-4 max-w-2xl">
           <TypographyLead>

@@ -5,34 +5,11 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-  SectionHeader,
 } from "@/components/ui/typography";
 
 export function RulesIFollow() {
   return (
     <Section aria-label="Rules I Follow">
-      <SectionHeader>Rules I Follow</SectionHeader>
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
-        {rules.map((item, index) => (
-          <Reveal key={item.title} delay={index * 90}>
-            <div className="flex gap-5">
-              <span
-                className="text-4xl font-mono font-bold text-muted-foreground/15 leading-none tabular-nums select-none shrink-0 pt-1"
-                aria-hidden="true"
-              >
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="space-y-2">
-                <TypographyH3 className="text-xl">{item.title}</TypographyH3>
-                <TypographyMuted className="leading-relaxed">
-                  {item.description}
-                </TypographyMuted>
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
       <div className="max-w-3xl">
         <TypographyLead>
           I build with{" "}
@@ -42,6 +19,18 @@ export function RulesIFollow() {
           — because software should feel simple, even when the logic behind it
           isn&apos;t.
         </TypographyLead>
+      </div>
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+        {rules.map((item, index) => (
+          <Reveal key={item.title} delay={index * 90}>
+            <div className="space-y-2">
+              <TypographyH3 className="text-xl">{item.title}</TypographyH3>
+              <TypographyMuted className="leading-relaxed">
+                {item.description}
+              </TypographyMuted>
+            </div>
+          </Reveal>
+        ))}
       </div>
     </Section>
   );

@@ -24,7 +24,7 @@ export function Contact() {
         <Card className="@lg:p-10">
           <div className="space-y-8">
             <div className="space-y-4 max-w-2xl">
-              <TypographyH2 className="border-none pb-0">
+              <TypographyH2>
                 Got something worth building?
               </TypographyH2>
 

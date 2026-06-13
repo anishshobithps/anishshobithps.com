@@ -28,6 +28,7 @@ next-env.d.ts
 .env
 /.agents
 /.claude
+.impeccable/
 skills-lock.json
 
 # Seed artifacts

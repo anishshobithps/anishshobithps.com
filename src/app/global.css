@@ -71,6 +71,7 @@
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.58 0.14 155);
   --brand: oklch(0.58 0.14 155);
+  --color-available: oklch(0.72 0.19 142);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -128,6 +129,7 @@
   --scrollbar-border: oklch(0.141 0.005 285.823);
   --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
+  --color-available: oklch(0.78 0.19 142);
 }
 
 @property --top-mask-height {

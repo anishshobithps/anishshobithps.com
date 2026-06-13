@@ -70,7 +70,7 @@ export default function PrivacyPolicyPage() {
         <SectionHeader>What data is collected</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
-            <TypographyH2>Blog read counts</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Blog read counts</TypographyH2>
             <TypographyP>
               When you visit a blog post, a{" "}
               <TypographyMark>hashed</TypographyMark> version of your IP address
@@ -84,7 +84,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH2>Reactions / mood votes</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Reactions / mood votes</TypographyH2>
             <TypographyP>
               If you click one of the reaction buttons on a blog post, your
               choice (one of: <em>Not for me, Meh, Liked it, Loved it</em>) is
@@ -95,7 +95,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH2>Guestbook entries &amp; likes</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Guestbook entries &amp; likes</TypographyH2>
             <TypographyP>
               If you sign in and leave a guestbook message, the following is
               stored in our database:{" "}
@@ -114,7 +114,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH2>Blog post comments &amp; comment likes</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Blog post comments &amp; comment likes</TypographyH2>
             <TypographyP>
               If you sign in and post a comment on a blog post, the following is
               stored in our database:{" "}
@@ -226,7 +226,7 @@ export default function PrivacyPolicyPage() {
         <SectionHeader>Third-party services</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
-            <TypographyH2>Spotify</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Spotify</TypographyH2>
             <TypographyP>
               The footer displays what I&apos;m currently listening to (or last
               listened to) via the{" "}
@@ -247,7 +247,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH2>Clerk (Authentication)</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Clerk (Authentication)</TypographyH2>
             <TypographyP>
               Sign-in for the guestbook and blog comments is handled by{" "}
               <a
@@ -281,7 +281,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH2>Google Fonts &amp; GitHub</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Google Fonts &amp; GitHub</TypographyH2>
             <TypographyP>
               This site uses Google Fonts (loaded via CSS, subject to{" "}
               <a
