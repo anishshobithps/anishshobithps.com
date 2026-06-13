@@ -205,7 +205,9 @@ const EntryCard = memo(function EntryCard({
               {entry.user.name}
             </TypographySmall>
             <TypographyMuted className="text-xs tabular-nums">
-              <time dateTime={entry.createdAt}>{timeAgo(entry.createdAt)}</time>
+              <time dateTime={entry.createdAt} suppressHydrationWarning>
+                {timeAgo(entry.createdAt)}
+              </time>
             </TypographyMuted>
             {entry.isPinned && (
               <PushPinSimpleIcon size={14} weight="fill" aria-label="Pinned" />

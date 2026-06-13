@@ -1,4 +1,5 @@
-import { BlogsClient, type BlogPost } from "./blogs-client";
+import { BlogsClient, type BlogPost } from "@/app/(site)/blogs/blogs-client";
+import { BlogsSkeleton } from "@/app/(site)/blogs/blogs-skeleton";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
@@ -58,11 +59,7 @@ export default function BlogPage() {
       </Section>
 
       <Section className="pb-6" aria-label="Blog posts">
-        <Suspense
-          fallback={
-            <p aria-live="polite">Loading... probably compiling thoughts.</p>
-          }
-        >
+        <Suspense fallback={<BlogsSkeleton count={Math.min(posts.length, 10)} />}>
           <BlogsClient posts={posts} allTags={allTags} />
         </Suspense>
       </Section>

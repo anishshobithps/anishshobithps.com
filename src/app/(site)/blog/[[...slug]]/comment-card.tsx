@@ -85,7 +85,7 @@ export function CommentCard({
                 </TypographyMuted>
               )}
               <TypographyMuted className="text-xs tabular-nums">
-                <time dateTime={comment.createdAt}>
+                <time dateTime={comment.createdAt} suppressHydrationWarning>
                   {timeAgo(comment.createdAt)}
                 </time>
               </TypographyMuted>

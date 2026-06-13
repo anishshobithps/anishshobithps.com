@@ -316,7 +316,6 @@ export function BlogsClient({
                   {index > 0 && <Divider plain />}
                   <Link
                     href={post.url as Route}
-                    aria-label={`${post.title}${date ? `, published ${date}` : ""}`}
                     className="group relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
                   >
                     <div className="flex items-baseline justify-between gap-4">

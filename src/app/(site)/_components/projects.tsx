@@ -84,6 +84,7 @@ export async function ProjectGrid() {
                         href={project.github as Route}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`View ${project.title} on GitHub`}
                       >
                         <GithubLogoIcon className="size-4" aria-hidden="true" />
                         <span className="ml-2" aria-hidden="true">
