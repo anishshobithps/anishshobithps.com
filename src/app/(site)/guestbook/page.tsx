@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import { buildMeta } from "@/lib/metadata";
+import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 
@@ -28,7 +29,7 @@ export default async function GuestbookPage() {
   const { entries, total } = await getGuestbookEntries();
 
   return (
-    <>
+    <ClerkProvider>
       <JsonLd
         type="webpage"
         title="Guestbook"
@@ -50,6 +51,6 @@ export default async function GuestbookPage() {
           total={total}
         />
       </Section>
-    </>
+    </ClerkProvider>
   );
 }

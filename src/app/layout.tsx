@@ -2,7 +2,6 @@ import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
-import { ClerkProvider } from "@clerk/nextjs";
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata, Viewport } from "next";
 import { Fira_Code, Manrope, Syne } from "next/font/google";
@@ -63,34 +62,32 @@ export const viewport: Viewport = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
-      <html
-        lang="en"
-        data-scroll-behavior="smooth"
-        className={`${syne.variable} ${manrope.variable} ${firaCode.variable} antialiased`}
-        suppressHydrationWarning
-      >
-        <body className="relative flex flex-col min-h-screen">
-          {process.env.NODE_ENV === "production" && (
-            <Script
-              src="/stats/script.js"
-              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-              data-host-url="/stats"
-              strategy="afterInteractive"
-            />
-          )}
-          <RootProvider>
-            <NuqsAdapter>
-              <TooltipProvider>
-                <PhosphorProvider>
-                  {children}
-                  <Toaster />
-                </PhosphorProvider>
-              </TooltipProvider>
-            </NuqsAdapter>
-          </RootProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${syne.variable} ${manrope.variable} ${firaCode.variable} antialiased`}
+      suppressHydrationWarning
+    >
+      <body className="relative flex flex-col min-h-screen">
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            src="/stats/script.js"
+            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            data-host-url="/stats"
+            strategy="afterInteractive"
+          />
+        )}
+        <RootProvider>
+          <NuqsAdapter>
+            <TooltipProvider>
+              <PhosphorProvider>
+                {children}
+                <Toaster />
+              </PhosphorProvider>
+            </TooltipProvider>
+          </NuqsAdapter>
+        </RootProvider>
+      </body>
+    </html>
   );
 }

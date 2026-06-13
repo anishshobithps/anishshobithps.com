@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/app/admin/sidebar";
@@ -23,12 +24,14 @@ export default async function AdminLayout({
   if (userId !== process.env.OWNER_CLERK_USER_ID) return <AdminUnauthorized />;
 
   return (
-    <SidebarProvider>
-      <AdminSidebar />
-      <SidebarInset>
-        <AdminHeader />
-        {children}
-      </SidebarInset>
-    </SidebarProvider>
+    <ClerkProvider>
+      <SidebarProvider>
+        <AdminSidebar />
+        <SidebarInset>
+          <AdminHeader />
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
+    </ClerkProvider>
   );
 }
