@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { checkRateLimit, rateLimitError } from "@/lib/rate-limit";
 import { guestbookEntries, guestbookLikes } from "@/lib/schema";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
@@ -162,6 +163,9 @@ export async function submitGuestbookEntry(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to leave a message." };
 
+        const { ok } = await checkRateLimit("GUESTBOOK", userId);
+        if (!ok) return { success: false, error: rateLimitError() };
+
         const message = sanitize(rawMessage);
         validateMessage(message);
 
@@ -247,6 +251,9 @@ export async function toggleLike(
     try {
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to like entries." };
+
+        const { ok } = await checkRateLimit("LIKE", userId);
+        if (!ok) return { success: false, error: rateLimitError() };
 
         const [existing] = await db
             .select()

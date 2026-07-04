@@ -153,6 +153,32 @@ export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
 
 // ── Projects ─────────────────────────────────────────────────────────────────
 
+const URL_PATTERN = /^https?:\/\/.+/;
+
+function validateProjectInput(data: {
+    title: string;
+    description: string;
+    highlights: string[];
+    live: string | null;
+    github: string | null;
+}): { valid: true } | { valid: false; error: string } {
+    if (!data.title || data.title.length > 256)
+        return { valid: false, error: "Title must be 1–256 characters." };
+    if (!data.description || data.description.length > 2000)
+        return { valid: false, error: "Description must be 1–2000 characters." };
+    if (data.highlights.length > 10)
+        return { valid: false, error: "A project can have at most 10 highlights." };
+    for (const h of data.highlights) {
+        if (!h || h.length > 500)
+            return { valid: false, error: "Each highlight must be 1–500 characters." };
+    }
+    if (data.live !== null && (data.live.length > 512 || !URL_PATTERN.test(data.live)))
+        return { valid: false, error: "Live URL must be a valid http(s) URL (max 512 chars)." };
+    if (data.github !== null && (data.github.length > 512 || !URL_PATTERN.test(data.github)))
+        return { valid: false, error: "GitHub URL must be a valid http(s) URL (max 512 chars)." };
+    return { valid: true };
+}
+
 export type ProjectRow = {
     id: number;
     title: string;
@@ -190,6 +216,8 @@ export async function createProject(data: {
 }): Promise<{ success: boolean; error?: string }> {
     try {
         await assertAdmin();
+        const validation = validateProjectInput(data);
+        if (!validation.valid) return { success: false, error: validation.error };
         const [last] = await db
             .select({ max: sql<number>`coalesce(max(${projects.sortOrder}), -1)` })
             .from(projects);
@@ -219,6 +247,8 @@ export async function updateProject(
 ): Promise<{ success: boolean; error?: string }> {
     try {
         await assertAdmin();
+        const validation = validateProjectInput(data);
+        if (!validation.valid) return { success: false, error: validation.error };
         await db
             .update(projects)
             .set({ ...data, updatedAt: new Date() })

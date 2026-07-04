@@ -10,6 +10,7 @@ import {
     integer,
     unique,
 } from "drizzle-orm/pg-core";
+
 import { sql } from "drizzle-orm";
 
 export const blogPosts = pgTable(
@@ -123,6 +124,19 @@ export const blogCommentLikes = pgTable(
     (table) => [
         primaryKey({ columns: [table.commentId, table.clerkUserId] }),
         index("blog_comment_likes_comment_idx").on(table.commentId),
+    ],
+);
+
+export const rateLimits = pgTable(
+    "rate_limits",
+    {
+        key: varchar("key", { length: 192 }).notNull(),
+        windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
+        count: integer("count").default(1).notNull(),
+    },
+    (table) => [
+        primaryKey({ columns: [table.key, table.windowStart] }),
+        index("rate_limits_window_start_idx").on(table.windowStart),
     ],
 );
 

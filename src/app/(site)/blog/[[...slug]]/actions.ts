@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getClientIp, hashIp } from "@/lib/ip";
+import { checkRateLimit, rateLimitError } from "@/lib/rate-limit";
 import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { and, desc, eq, sql } from "drizzle-orm";
@@ -54,7 +55,10 @@ async function getOrCreatePost(slug: string): Promise<number> {
 }
 
 export async function trackRead(slug: string): Promise<void> {
-    const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
+    const ipHash = await getIpHash();
+    const { ok } = await checkRateLimit("READ_TRACK", ipHash);
+    if (!ok) return;
+    const postId = await getOrCreatePost(slug);
     await db.insert(blogReads).values({ postId, ipHash }).onConflictDoNothing();
 }
 
@@ -120,7 +124,11 @@ export async function submitReaction(slug: string, mood: MoodId | null): Promise
         throw new Error(`Invalid mood: ${mood}`);
     }
 
-    const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
+    const ipHash = await getIpHash();
+    const { ok } = await checkRateLimit("REACTION", ipHash);
+    if (!ok) return;
+
+    const [postId] = await Promise.all([getOrCreatePost(slug)]);
 
     if (mood === null) {
         await db
@@ -273,10 +281,25 @@ export async function submitComment(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to leave a comment." };
 
+        const { ok } = await checkRateLimit("COMMENT", userId);
+        if (!ok) return { success: false, error: rateLimitError() };
+
         const trimmed = sanitize(body);
         validateBody(trimmed);
 
         const postId = await getOrCreatePost(slug);
+
+        if (parentId !== undefined) {
+            const [parent] = await db
+                .select({ postId: blogComments.postId, isDeleted: blogComments.isDeleted })
+                .from(blogComments)
+                .where(eq(blogComments.id, parentId))
+                .limit(1);
+
+            if (!parent || parent.isDeleted || parent.postId !== postId) {
+                return { success: false, error: "The comment you're replying to no longer exists." };
+            }
+        }
 
         const [inserted] = await db
             .insert(blogComments)
@@ -370,6 +393,9 @@ export async function toggleCommentLike(
     try {
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to like comments." };
+
+        const { ok } = await checkRateLimit("LIKE", userId);
+        if (!ok) return { success: false, error: rateLimitError() };
 
         const [existing] = await db
             .select()

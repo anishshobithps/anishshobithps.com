@@ -64,6 +64,13 @@
       "when": 1779919867741,
       "tag": "0008_legal_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1783110235425,
+      "tag": "0009_faithful_shocker",
+      "breakpoints": true
     }
   ]
 }
