@@ -1,8 +1,8 @@
 "use client";
 
 import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
-import { Avatar } from "@/app/(site)/blog/[[...slug]]/avatar";
-import { CommentComposer } from "@/app/(site)/blog/[[...slug]]/comment-composer-area";
+import { Avatar } from "@/components/engagement/avatar";
+import { Composer } from "@/components/engagement/composer";
 import {
   ArrowBendDownRightIcon,
   HeartIcon,
@@ -15,17 +15,23 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+import {
+  Text,
+  TypographyMuted,
+  TypographySmall,
+} from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { timeAgo } from "@/lib/date";
 import { SignInButton } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
 
+const COMMENT_MAX_LENGTH = 1000;
+const MAX_DEPTH = 2;
+
 export function CommentCard({
   comment,
   currentUserId,
   depth,
-  userName,
   isSignedIn,
   onLike,
   onDelete,
@@ -35,7 +41,6 @@ export function CommentCard({
   comment: CommentWithMeta;
   currentUserId: string | null;
   depth: number;
-  userName: string | null;
   isSignedIn: boolean;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
@@ -47,8 +52,8 @@ export function CommentCard({
 
   const isOptimistic = comment.id < 0;
   const isLikePending = likePendingRef.current?.has(comment.id) ?? false;
-  const isOwn = currentUserId === comment.user.id;
-  const canDelete = isOwn;
+  const canDelete = currentUserId === comment.user.id;
+  const isPinnedRoot = comment.isPinned && depth === 0;
 
   useEffect(() => {
     if (replying && replyRef.current) {
@@ -57,13 +62,8 @@ export function CommentCard({
   }, [replying]);
 
   return (
-    <li
-      className={cn(
-        "relative",
-        comment.isPinned && depth === 0 && "bg-primary/3",
-      )}
-    >
-      {comment.isPinned && depth === 0 && (
+    <li className={cn("relative", isPinnedRoot && "bg-primary/3")}>
+      {isPinnedRoot && (
         <span
           aria-hidden="true"
           className="absolute left-0 top-0 h-full w-px bg-primary/50"
@@ -89,7 +89,7 @@ export function CommentCard({
                   {timeAgo(comment.createdAt)}
                 </time>
               </TypographyMuted>
-              {comment.isPinned && depth === 0 && (
+              {isPinnedRoot && (
                 <Badge
                   variant="secondary"
                   className="gap-1 h-4 px-1.5 text-[10px] py-0 font-medium"
@@ -100,9 +100,13 @@ export function CommentCard({
               )}
             </div>
 
-            <p className="text-[13px] sm:text-sm leading-relaxed whitespace-pre-wrap wrap-break-word">
+            <Text
+              as="p"
+              variant="none"
+              className="text-[13px] sm:text-sm leading-relaxed whitespace-pre-wrap wrap-break-word"
+            >
               {comment.body}
-            </p>
+            </Text>
 
             <div className="pt-0.5">
               <ButtonGroup>
@@ -131,7 +135,7 @@ export function CommentCard({
                   )}
                 </Button>
 
-                {depth < 2 && !isOptimistic && (
+                {depth < MAX_DEPTH && !isOptimistic && (
                   <>
                     <ButtonGroupSeparator />
                     {isSignedIn ? (
@@ -192,10 +196,14 @@ export function CommentCard({
 
             {replying && (
               <div ref={replyRef} className="pt-3">
-                <CommentComposer
-                  userName={userName}
+                <Composer
+                  maxLength={COMMENT_MAX_LENGTH}
                   placeholder={`Reply to ${comment.user.name}…`}
-                  isReply
+                  submitLabel="Reply"
+                  ariaLabel="Write a reply"
+                  rows={2}
+                  autoFocus
+                  maxHeight={240}
                   onSubmit={(body) => {
                     onReply(comment.id, body);
                     setReplying(false);
@@ -220,7 +228,6 @@ export function CommentCard({
               comment={reply}
               currentUserId={currentUserId}
               depth={depth + 1}
-              userName={userName}
               isSignedIn={isSignedIn}
               onLike={onLike}
               onDelete={onDelete}

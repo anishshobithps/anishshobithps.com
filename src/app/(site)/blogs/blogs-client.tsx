@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/button-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Divider } from "@/components/ui/divider";
+import { Label } from "@/components/ui/label";
 import {
   InputGroup,
   InputGroupAddon,
@@ -36,6 +37,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+import { Reveal } from "@/components/shared/reveal";
 import { cn } from "@/lib/cn";
 import { formatShortDate } from "@/lib/date";
 import {
@@ -51,8 +53,9 @@ import {
   parseAsString,
   useQueryStates,
 } from "nuqs";
-import { useMemo } from "react";
+import { useMemo, ViewTransition } from "react";
 import type { Route } from "next";
+import { postTransitionName } from "@/lib/view-transition";
 
 export type BlogPost = {
   url: string;
@@ -199,7 +202,7 @@ export function BlogsClient({
                   >
                     {allTags.map((tag) => (
                       <li key={tag}>
-                        <label className="flex items-center gap-2 rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors">
+                        <Label className="rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors">
                           <Checkbox
                             checked={tags.includes(tag)}
                             aria-label={`Filter by ${tag}`}
@@ -216,7 +219,7 @@ export function BlogsClient({
                           <TypographySmall className="font-semibold uppercase">
                             {tag}
                           </TypographySmall>
-                        </label>
+                        </Label>
                       </li>
                     ))}
                   </ul>
@@ -314,14 +317,17 @@ export function BlogsClient({
               return (
                 <li key={post.url}>
                   {index > 0 && <Divider plain />}
+                  <Reveal delay={Math.min(index, 6) * 55}>
                   <Link
                     href={post.url as Route}
                     className="group relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
                   >
                     <div className="flex items-baseline justify-between gap-4">
-                      <TypographySmall className="text-base font-semibold text-foreground">
-                        {post.title}
-                      </TypographySmall>
+                      <ViewTransition name={postTransitionName(post.url)}>
+                        <TypographySmall className="text-base font-semibold text-foreground">
+                          {post.title}
+                        </TypographySmall>
+                      </ViewTransition>
                       <div className="flex items-center gap-1.5 shrink-0">
                         {date && (
                           <TypographyMuted
@@ -358,6 +364,7 @@ export function BlogsClient({
                       </ul>
                     )}
                   </Link>
+                  </Reveal>
                 </li>
               );
             })}

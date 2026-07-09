@@ -11,7 +11,7 @@ import { TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
 import { useActiveAnchor } from "fumadocs-core/toc";
-import { TOCItems } from "fumadocs-ui/components/toc/clerk";
+import { TOCItem, TOCItems } from "fumadocs-ui/components/toc/clerk";
 import {
   TOCProvider,
   TOCScrollArea,
@@ -30,6 +30,30 @@ import {
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+// fumadocs-ui 16: <TOCItems> is a container that renders the thumb-track plus
+// its children — the caller maps the items into <TOCItem>. (Older versions
+// rendered the list internally.)
+function TOCList() {
+  const items = useTOCItems();
+  if (items.length === 0) return null;
+  // Retint fumadocs' `fd-primary` (a monochrome shadcn token) to the site's
+  // brand green for this subtree. --brand is the vivid fill/line green (same in
+  // both themes) so the active-section thumb reads as green in light mode too;
+  // the active item *text* is nudged back to the contrast-tuned --brand-text
+  // (AAA), since raw --brand is too light for legible small text on white.
+  return (
+    <TOCItems className="[--color-fd-primary:var(--brand)]">
+      {items.map((item) => (
+        <TOCItem
+          key={item.url}
+          item={item}
+          className="data-[active=true]:font-medium data-[active=true]:text-(--brand-text)!"
+        />
+      ))}
+    </TOCItems>
+  );
 }
 
 function ProgressCircle({
@@ -108,6 +132,7 @@ export function MobileTOC() {
     () => true,
     () => false,
   );
+  const rootRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -118,6 +143,24 @@ export function MobileTOC() {
     activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [active]);
 
+  // Dismiss the open panel on an outside tap or Escape — on mobile there is no
+  // hover, so without this the only way to close it is to hit the trigger again.
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
   const selected = useMemo(
     () => items.findIndex((item) => active === item.url.slice(1)),
     [items, active],
@@ -126,64 +169,91 @@ export function MobileTOC() {
   if (items.length === 0) return null;
 
   return (
-    <div className="sticky top-14 z-50 xl:hidden bg-background shadow-sm before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border backdrop-blur-md supports-backdrop-filter:bg-background/80">
-      <FullWidthDivider position="top" />
-      <DecorIcon position="top-left" pageBorder />
-      <DecorIcon position="top-right" pageBorder />
-      <DecorIcon position="bottom-left" pageBorder />
-      <DecorIcon position="bottom-right" pageBorder />
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <header
-          className={cn(
-            "backdrop-blur-sm transition-colors bg-background/80",
-            open && "shadow-lg",
-          )}
-        >
-          <CollapsibleTrigger className="flex w-full h-10 items-center text-sm gap-2.5 px-6 sm:px-8 lg:px-10 cursor-pointer">
-            <ProgressCircle
-              value={(selected + 1) / Math.max(1, items.length)}
-              max={1}
-              className={cn(
-                "size-4 text-muted-foreground",
-                selected !== -1 && "text-primary",
-              )}
-            />
-            <span className="flex-1 truncate text-start text-muted-foreground">
-              {selected !== -1 ? items[selected]?.title : ""}
-            </span>
-            <span className="shrink-0 font-mono text-xs text-muted-foreground/60 tabular-nums">
-              {selected !== -1 ? selected + 1 : 0}
-              <span className="mx-0.5">/</span>
-              {items.length}
-            </span>
-            <CaretDownIcon
-              className={cn(
-                "size-4 shrink-0 text-muted-foreground transition-transform",
-                open && "rotate-180",
-              )}
-            />
-          </CollapsibleTrigger>
-
-          <CollapsibleContent
+    <>
+      {/* Dim the article behind the open panel. Purely visual — outside taps are
+          caught by the document listener above, which also covers the header.
+          No backdrop blur here: it made the article text read as blurry. */}
+      {open && (
+        <div
+          className="fixed inset-0 z-40 xl:hidden bg-background/60 pointer-events-none animate-in fade-in-0 duration-200"
+          aria-hidden
+        />
+      )}
+      <div
+        ref={rootRef}
+        className="sticky top-14 z-50 xl:hidden bg-background shadow-sm before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border backdrop-blur-md supports-backdrop-filter:bg-background/80"
+      >
+        <FullWidthDivider position="top" />
+        <DecorIcon position="top-left" pageBorder />
+        <DecorIcon position="top-right" pageBorder />
+        <DecorIcon position="bottom-left" pageBorder />
+        <DecorIcon position="bottom-right" pageBorder />
+        <Collapsible open={open} onOpenChange={setOpen}>
+          <header
             className={cn(
-              "overflow-hidden",
-              mounted &&
-                "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up bg-background/80",
+              "backdrop-blur-sm transition-colors bg-background/80",
+              open && "shadow-lg",
             )}
           >
-            <div
-              className="px-6 sm:px-8 lg:px-10 pb-3"
-              ref={scrollContainerRef}
+            <CollapsibleTrigger
+              aria-label={open ? "Hide table of contents" : "Show table of contents"}
+              className="flex w-full h-10 items-center text-sm gap-2.5 px-6 sm:px-8 lg:px-10 cursor-pointer"
             >
-              <TOCScrollArea className="max-h-[50vh]">
-                <TOCItems />
-              </TOCScrollArea>
-            </div>
-          </CollapsibleContent>
-        </header>
-      </Collapsible>
-      <FullWidthDivider position="bottom" />
-    </div>
+              <ProgressCircle
+                value={(selected + 1) / Math.max(1, items.length)}
+                max={1}
+                className={cn(
+                  "size-4 text-muted-foreground transition-colors",
+                  selected !== -1 && "text-(--brand)",
+                )}
+              />
+              <span
+                className={cn(
+                  "flex-1 truncate text-start",
+                  selected !== -1 ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
+                {selected !== -1 ? items[selected]?.title : "On this page"}
+              </span>
+              <span className="shrink-0 font-mono text-xs text-muted-foreground/60 tabular-nums">
+                {selected !== -1 ? selected + 1 : 0}
+                <span className="mx-0.5">/</span>
+                {items.length}
+              </span>
+              <CaretDownIcon
+                className={cn(
+                  "size-4 shrink-0 text-muted-foreground transition-transform",
+                  open && "rotate-180",
+                )}
+              />
+            </CollapsibleTrigger>
+
+            <CollapsibleContent
+              className={cn(
+                "overflow-hidden bg-background",
+                mounted &&
+                  "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up",
+              )}
+            >
+              <div
+                className="px-6 sm:px-8 lg:px-10 pb-3"
+                ref={scrollContainerRef}
+                // Tapping a heading link should collapse the panel and let the
+                // page scroll to that section.
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest("a")) setOpen(false);
+                }}
+              >
+                <TOCScrollArea className="max-h-[50vh]">
+                  <TOCList />
+                </TOCScrollArea>
+              </div>
+            </CollapsibleContent>
+          </header>
+        </Collapsible>
+        <FullWidthDivider position="bottom" />
+      </div>
+    </>
   );
 }
 
@@ -211,7 +281,7 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
                 </TypographySmall>
 
                 <TOCScrollArea className="max-h-[calc(100vh-8rem)] **:data-[slot=scroll-area-viewport]:scroll-fade-effect-y">
-                  <TOCItems />
+                  <TOCList />
                 </TOCScrollArea>
               </div>
             </div>

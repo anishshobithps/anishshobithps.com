@@ -1,10 +1,12 @@
 "use server";
 
+import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@/lib/db";
 import { getClientIp, hashIp } from "@/lib/ip";
 import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { sanitizeText, validateLength } from "@/lib/text";
+import { auth } from "@clerk/nextjs/server";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -141,12 +143,7 @@ export async function submitReaction(slug: string, mood: MoodId | null): Promise
 const MAX_BODY_LENGTH = 1000;
 const MIN_BODY_LENGTH = 2;
 
-export interface CommentUser {
-    id: string;
-    name: string;
-    username: string | null;
-    imageUrl: string;
-}
+export type CommentUser = PublicUser;
 
 export interface CommentWithMeta {
     id: number;
@@ -166,15 +163,22 @@ export interface GetCommentsResult {
     total: number;
 }
 
-function sanitize(body: string): string {
-    return body.trim().replace(/\s+/g, " ");
-}
+/** Cheap count of non-deleted comments for a post — no Clerk round-trip. */
+export async function getCommentCount(slug: string): Promise<number> {
+    const [post] = await db
+        .select({ id: blogPosts.id })
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
 
-function validateBody(body: string): void {
-    if (body.length < MIN_BODY_LENGTH)
-        throw new Error(`Comment must be at least ${MIN_BODY_LENGTH} characters.`);
-    if (body.length > MAX_BODY_LENGTH)
-        throw new Error(`Comment must be ${MAX_BODY_LENGTH} characters or fewer.`);
+    if (!post) return 0;
+
+    const [row] = await db
+        .select({ count: count() })
+        .from(blogComments)
+        .where(and(eq(blogComments.postId, post.id), eq(blogComments.isDeleted, false)));
+
+    return row?.count ?? 0;
 }
 
 export async function getComments(slug: string): Promise<GetCommentsResult> {
@@ -216,21 +220,7 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
         likedIds = new Set(likes.map((l) => l.commentId));
     }
 
-    const uniqueUserIds = [...new Set(rows.map((r) => r.clerkUserId))];
-    const client = await clerkClient();
-    const clerkUsers = await client.users.getUserList({ userId: uniqueUserIds, limit: 500 });
-
-    const userMap = new Map<string, CommentUser>(
-        clerkUsers.data.map((u) => [
-            u.id,
-            {
-                id: u.id,
-                name: [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username || "Anonymous",
-                username: u.username,
-                imageUrl: u.imageUrl,
-            },
-        ]),
-    );
+    const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
     const flat: CommentWithMeta[] = rows.map((row) => ({
         id: row.id,
@@ -241,12 +231,7 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
         createdAt: row.createdAt.toISOString(),
         likeCount: row.likeCount,
         likedByMe: likedIds.has(row.id),
-        user: userMap.get(row.clerkUserId) ?? {
-            id: row.clerkUserId,
-            name: "Unknown User",
-            username: null,
-            imageUrl: "",
-        },
+        user: resolveUser(userMap, row.clerkUserId),
         replies: [],
     }));
 
@@ -273,8 +258,8 @@ export async function submitComment(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to leave a comment." };
 
-        const trimmed = sanitize(body);
-        validateBody(trimmed);
+        const trimmed = sanitizeText(body);
+        validateLength(trimmed, { min: MIN_BODY_LENGTH, max: MAX_BODY_LENGTH, label: "Comment" });
 
         const postId = await getOrCreatePost(slug);
 

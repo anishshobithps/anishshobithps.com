@@ -4,7 +4,7 @@ import type {
   MoodId,
   ReactionCounts,
 } from "@/app/(site)/blog/[[...slug]]/actions";
-import { EngagementNudge } from "@/app/(site)/blog/[[...slug]]/engagement-nudge";
+import { EngagementNudge } from "@/components/engagement/nudge";
 import {
   CheckIcon,
   HeartIcon,

@@ -9,15 +9,16 @@ import {
   type CommentWithMeta,
   type MoodId,
 } from "@/app/(site)/blog/[[...slug]]/actions";
-import { CommentComposerArea } from "@/app/(site)/blog/[[...slug]]/comment-composer-area";
-import { CommentList } from "@/app/(site)/blog/[[...slug]]/comment-list";
+import { CommentComposerArea } from "@/app/(site)/blog/[[...slug]]/_components/comment-composer-area";
+import { CommentList } from "@/app/(site)/blog/[[...slug]]/_components/comment-list";
 import {
   type MoodState,
   MoodPicker,
-} from "@/app/(site)/blog/[[...slug]]/mood-picker";
+} from "@/app/(site)/blog/[[...slug]]/_components/mood-picker";
 import { Card } from "@/components/layouts/page";
 import { SectionLabel } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
+import { classifyError, typedToast } from "@/lib/toast";
 import { useClerk, useUser } from "@clerk/nextjs";
 import {
   startTransition,
@@ -28,29 +29,6 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-
-type ToastType = "error" | "warning" | "info" | "success";
-
-function typedToast(type: ToastType, message: string) {
-  toast[type](message);
-}
-
-function classifyError(error: string): ToastType {
-  const msg = error.toLowerCase();
-  if (
-    msg.includes("permission") ||
-    msg.includes("not allowed") ||
-    msg.includes("unauthorized")
-  )
-    return "warning";
-  if (
-    msg.includes("sign in") ||
-    msg.includes("logged in") ||
-    msg.includes("auth")
-  )
-    return "info";
-  return "error";
-}
 
 function patchLike(
   list: CommentWithMeta[],
@@ -296,7 +274,6 @@ export function PostEngagement({
         comments={comments}
         totalComments={totalComments}
         currentUserId={currentUserId}
-        userName={userName}
         isSignedIn={!!isSignedIn}
         onLike={handleCommentLike}
         onDelete={handleCommentDelete}

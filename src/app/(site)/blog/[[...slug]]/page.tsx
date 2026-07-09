@@ -1,13 +1,16 @@
 import {
   EndOfPost,
   ScrollToEngagement,
-} from "@/app/(site)/blog/[[...slug]]/end-of-post";
+} from "@/app/(site)/blog/[[...slug]]/_components/end-of-post";
 import {
-  getComments,
   getBlogReadsCount,
+  getCommentCount,
   trackRead,
 } from "@/app/(site)/blog/[[...slug]]/actions";
-import { PostEngagement } from "@/app/(site)/blog/[[...slug]]/post-engagement";
+import {
+  CommentsFallback,
+  CommentsSection,
+} from "@/app/(site)/blog/[[...slug]]/_components/comments-section";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
@@ -41,6 +44,8 @@ import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { notFound } from "next/navigation";
+import { Suspense, ViewTransition } from "react";
+import { postTransitionName } from "@/lib/view-transition";
 
 export default async function Page(props: {
   params: Promise<{ slug: string[] }>;
@@ -50,9 +55,9 @@ export default async function Page(props: {
   if (!page) notFound();
 
   const { userId } = await auth();
-  const { comments } = await getComments(page.url);
-  const [reads] = await Promise.all([
+  const [reads, commentCount] = await Promise.all([
     getBlogReadsCount(page.url),
+    getCommentCount(page.url),
     trackRead(page.url),
   ]);
   const MDX = page.data.body;
@@ -112,7 +117,9 @@ export default async function Page(props: {
       </Section>
 
       <Section variant="hero" aria-label="Post header">
-        <TypographyH1>{page.data.title}</TypographyH1>
+        <ViewTransition name={postTransitionName(page.url)}>
+          <TypographyH1>{page.data.title}</TypographyH1>
+        </ViewTransition>
 
         <div
           className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
@@ -169,9 +176,7 @@ export default async function Page(props: {
             <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
             {reads} {reads === 1 ? "read" : "reads"}
           </TypographyMuted>
-          {comments.length > 0 && (
-            <ScrollToEngagement count={comments.length} />
-          )}
+          {commentCount > 0 && <ScrollToEngagement count={commentCount} />}
         </div>
 
         {page.data.description && (
@@ -204,17 +209,15 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
-        <EndOfPost commentCount={comments.length} />
+        <EndOfPost commentCount={commentCount} />
         <Signature text={siteConfig.name} />
       </BlogBody>
 
       <Section id="engagement" variant="compact" aria-label="Post engagement">
         <ClerkProvider>
-          <PostEngagement
-            slug={page.url}
-            initialComments={comments}
-            currentUserId={userId}
-          />
+          <Suspense fallback={<CommentsFallback />}>
+            <CommentsSection slug={page.url} currentUserId={userId} />
+          </Suspense>
         </ClerkProvider>
       </Section>
 
