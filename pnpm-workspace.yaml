@@ -1,0 +1,6 @@
+allowBuilds:
+  '@clerk/shared': true
+  esbuild: true
+  msw: false
+  sharp: true
+  unrs-resolver: true
