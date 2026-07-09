@@ -16,7 +16,7 @@ import {
   TOCProvider,
   TOCScrollArea,
   useTOCItems,
-} from "fumadocs-ui/components/toc/index";
+} from "fumadocs-ui/components/toc";
 import { CaretDownIcon, TextAlignLeftIcon } from "@/components/shared/icons";
 import {
   type ComponentProps,
