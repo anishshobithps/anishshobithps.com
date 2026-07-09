@@ -5,6 +5,14 @@ import type { GuestbookPreviewEntry } from "@/app/(site)/guestbook/actions";
 import { TypographyMuted } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
 
+function isClerkImageHost(url: string): boolean {
+  try {
+    return new URL(url).hostname === "img.clerk.com";
+  } catch {
+    return false;
+  }
+}
+
 function EntryAvatar({ entry }: { entry: GuestbookPreviewEntry }) {
   const initials = entry.user.name
     .split(" ")
@@ -14,7 +22,7 @@ function EntryAvatar({ entry }: { entry: GuestbookPreviewEntry }) {
     .toUpperCase();
 
   if (entry.user.imageUrl) {
-    const src = entry.user.imageUrl.includes("img.clerk.com")
+    const src = isClerkImageHost(entry.user.imageUrl)
       ? `${entry.user.imageUrl}?width=56`
       : entry.user.imageUrl;
     return (
