@@ -13,7 +13,7 @@ Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, b
 
 [![License](https://www.shieldcn.dev/group/badge/Code-MIT-22C55E%2Bbadge/Content-CC_BY--NC--ND_4.0-F97316.svg?size=sm)](LICENSE.md)
 
-![Next.js](https://www.shieldcn.dev/badge/Next.js-000000.svg?logo=nextdotjs&logoColor=fff&variant=branded&size=sm) ![React](https://www.shieldcn.dev/badge/React-61DAFB.svg?logo=react&logoColor=000&variant=branded&size=sm) ![TypeScript](https://www.shieldcn.dev/badge/TypeScript-3178C6.svg?logo=typescript&logoColor=fff&variant=branded&size=sm) ![Tailwind CSS](https://www.shieldcn.dev/badge/Tailwind_CSS-06B6D4.svg?logo=tailwindcss&logoColor=fff&variant=branded&size=sm) ![Drizzle](https://www.shieldcn.dev/badge/Drizzle-C5F74F.svg?logo=drizzle&logoColor=000&variant=branded&size=sm) ![PostgreSQL](https://www.shieldcn.dev/badge/PostgreSQL-4169E1.svg?logo=postgresql&logoColor=fff&variant=branded&size=sm) ![Bun](https://www.shieldcn.dev/badge/Bun-000000.svg?logo=bun&logoColor=fff&variant=branded&size=sm) ![ESLint](https://www.shieldcn.dev/badge/ESLint-4B32C3.svg?logo=eslint&logoColor=fff&variant=branded&size=sm)
+![Next.js](https://www.shieldcn.dev/badge/Next.js-000000.svg?logo=nextdotjs&logoColor=fff&variant=branded&size=sm) ![React](https://www.shieldcn.dev/badge/React-61DAFB.svg?logo=react&logoColor=000&variant=branded&size=sm) ![TypeScript](https://www.shieldcn.dev/badge/TypeScript-3178C6.svg?logo=typescript&logoColor=fff&variant=branded&size=sm) ![Tailwind CSS](https://www.shieldcn.dev/badge/Tailwind_CSS-06B6D4.svg?logo=tailwindcss&logoColor=fff&variant=branded&size=sm) ![Drizzle](https://www.shieldcn.dev/badge/Drizzle-C5F74F.svg?logo=drizzle&logoColor=000&variant=branded&size=sm) ![PostgreSQL](https://www.shieldcn.dev/badge/PostgreSQL-4169E1.svg?logo=postgresql&logoColor=fff&variant=branded&size=sm) ![pnpm](https://www.shieldcn.dev/badge/pnpm-F69220.svg?logo=pnpm&logoColor=fff&variant=branded&size=sm) ![ESLint](https://www.shieldcn.dev/badge/ESLint-4B32C3.svg?logo=eslint&logoColor=fff&variant=branded&size=sm)
 
 </div>
 
@@ -22,9 +22,9 @@ Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, b
 ## Running locally
 
 ```bash
-bun install
-bun run drizzle-kit push   # sets up the database tables
-bun dev                    # http://localhost:3000
+pnpm install
+pnpm drizzle-kit push   # sets up the database tables
+pnpm dev                # http://localhost:3000
 ```
 
 You'll need a few things first:
@@ -61,10 +61,10 @@ NEXT_PUBLIC_UMAMI_WEBSITE_ID=...       # optional, or remove from layout.tsx
 ## Commands
 
 ```bash
-bun run build        # push schema + next build
-bun start            # production server
-bun run types:check  # tsc --noEmit
-bun run lint         # ESLint
+pnpm build        # next build
+pnpm start        # production server
+pnpm types:check  # tsc --noEmit
+pnpm lint         # ESLint
 ```
 
 ---
