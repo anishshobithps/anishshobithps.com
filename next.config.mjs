@@ -10,6 +10,9 @@ const config = {
   serverExternalPackages: ["@takumi-rs/image-response"],
   typedRoutes: true,
   experimental: {
+    // Enables React's <ViewTransition> component so App Router navigations can
+    // animate (root cross-fade + shared-element morphs). See src/app/(site)/layout.tsx.
+    viewTransition: true,
     optimizePackageImports: [
       "@phosphor-icons/react",
       "radix-ui",

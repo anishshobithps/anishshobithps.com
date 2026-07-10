@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/pdf-viewer";
 import { getResumeFilename } from "@/lib/resume";
 import { LogoLoader } from "@/components/shared/loader";
+import { Reveal } from "@/components/shared/reveal";
 import { buildMeta } from "@/lib/metadata";
 import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
@@ -54,6 +55,7 @@ export default function ResumePage() {
       </Section>
 
       <Section noTopDivider variant="compact" aria-label="Resume document">
+        <Reveal>
         <PdfViewer
           file="/api/resume"
           downloadHref="/api/resume/download"
@@ -94,6 +96,7 @@ export default function ResumePage() {
             </TypographyMuted>
           </PdfViewerFooter>
         </PdfViewer>
+        </Reveal>
       </Section>
     </>
   );

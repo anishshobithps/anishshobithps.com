@@ -304,6 +304,40 @@ main {
   animation: fd-fade-in 0.25s ease-out both;
 }
 
+/* ─── View Transitions ─────────────────────────────────────────────
+   Page navigations are wrapped in <ViewTransition> (see (site)/layout.tsx);
+   React drives document.startViewTransition, and the browser cross-fades the
+   root snapshot. We just tune the timing so every group animates uniformly. */
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Theme toggle drives its own startViewTransition with data-theme-transition on
+   <html> and animates a clip-path circle on ::view-transition-new(root). Suppress
+   the default cross-fade so only the circular reveal is visible, and stack the new
+   snapshot above the old one so the wipe reads correctly. */
+html[data-theme-transition]::view-transition-old(root),
+html[data-theme-transition]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-theme-transition]::view-transition-old(root) {
+  z-index: 1;
+}
+html[data-theme-transition]::view-transition-new(root) {
+  z-index: 9999;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 *::-webkit-scrollbar {
   width: 12px;
   height: 12px;

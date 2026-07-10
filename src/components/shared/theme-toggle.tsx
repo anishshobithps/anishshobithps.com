@@ -3,7 +3,12 @@
 import { cva } from "class-variance-authority";
 import { SunIcon, MoonIcon, MonitorIcon } from "@/components/shared/icons";
 import { useTheme } from "next-themes";
-import { ComponentProps, useSyncExternalStore } from "react";
+import {
+  ComponentProps,
+  useSyncExternalStore,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
+import { flushSync } from "react-dom";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +29,68 @@ const full = [
   ["dark", MoonIcon, "Switch to dark theme"] as const,
   ["system", MonitorIcon, "Use system theme"] as const,
 ];
+
+// Animate the theme change as a circular wipe originating from the clicked
+// control, using the View Transitions API. Falls back to an instant swap when
+// the API is unavailable or the user prefers reduced motion.
+function applyTheme(
+  setTheme: (theme: string) => void,
+  key: string,
+  event: ReactMouseEvent<HTMLButtonElement>,
+) {
+  const root = document.documentElement;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (prefersReducedMotion || typeof document.startViewTransition !== "function") {
+    setTheme(key);
+    return;
+  }
+
+  // Keyboard activation reports (0, 0) — fall back to the button's centre.
+  let x = event.clientX;
+  let y = event.clientY;
+  if (x === 0 && y === 0) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    x = rect.left + rect.width / 2;
+    y = rect.top + rect.height / 2;
+  }
+
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  );
+
+  root.dataset.themeTransition = "";
+  const transition = document.startViewTransition(() => {
+    // flushSync guarantees next-themes has applied the new class to <html>
+    // before the transition snapshots the "new" state.
+    flushSync(() => setTheme(key));
+  });
+
+  transition.ready
+    .then(() => {
+      root.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 450,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      );
+    })
+    .catch(() => {});
+
+  transition.finished.finally(() => {
+    delete root.dataset.themeTransition;
+  });
+}
 
 export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
   const { setTheme, theme } = useTheme();
@@ -57,7 +124,7 @@ export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
             itemVariants({ active: value === key }),
             "cursor-pointer",
           )}
-          onClick={() => setTheme(key)}
+          onClick={(event) => applyTheme(setTheme, key, event)}
         >
           <Icon weight="fill" className="size-3.5" aria-hidden="true" />
         </Button>
