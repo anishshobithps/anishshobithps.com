@@ -76,6 +76,8 @@ const textVariants = cva("text-pretty", {
       muted: "text-sm leading-normal text-muted-foreground",
       large: "text-lg leading-7 font-semibold",
       small: "text-sm leading-none font-medium",
+      // Semantic element with no imposed sizing — bring your own via className.
+      none: "",
     },
   },
   defaultVariants: { variant: "default" },
