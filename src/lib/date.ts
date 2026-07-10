@@ -1,8 +1,14 @@
+// A fixed time zone keeps the rendered calendar day identical on the server
+// (UTC) and in the browser (the visitor's local zone). Without it, a date
+// stored as UTC midnight renders one day earlier for viewers west of UTC,
+// which trips React hydration text mismatches (error #418) in the client
+// components that render these (blog list, guestbook rotator, admin panels).
 export function formatLongDate(date: Date | string): string {
     return new Date(date).toLocaleDateString("en-US", {
         month: "long",
         day: "numeric",
         year: "numeric",
+        timeZone: "UTC",
     });
 };
 
@@ -11,6 +17,7 @@ export function formatShortDate(date: Date | string): string {
         month: "short",
         day: "numeric",
         year: "numeric",
+        timeZone: "UTC",
     });
 }
 
