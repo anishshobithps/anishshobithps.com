@@ -37,7 +37,7 @@ export function Hero() {
           />
         </div>
 
-        <div className="flex flex-col gap-6 px-1 animate-in fade-in-0 slide-in-from-bottom-6 duration-700 [animation-delay:180ms]">
+        <div className="flex flex-col gap-6 px-1 animate-in fade-in-0 slide-in-from-bottom-6 duration-700 fill-mode-backwards [animation-delay:180ms]">
           <div className="flex flex-col gap-3">
             {siteConfig.availableForHire && (
               <div>

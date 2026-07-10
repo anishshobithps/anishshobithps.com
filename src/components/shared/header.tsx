@@ -37,7 +37,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-background/80 fixed top-0 z-50 w-full backdrop-blur border-b border-border">
+    <header className="bg-background/80 fixed top-0 z-50 w-full backdrop-blur border-b border-border [view-transition-name:site-header]">
       <div
         className="relative mx-auto flex h-14 max-w-5xl items-center justify-between px-6 sm:px-8 lg:px-10
         before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border

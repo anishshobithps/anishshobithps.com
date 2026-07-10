@@ -71,7 +71,6 @@
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.58 0.14 155);
   --brand: oklch(0.58 0.14 155);
-  /* Darker brand for text on light surfaces — 7.09:1 on bg (AAA). --brand stays for borders/fills. */
   --brand-text: oklch(0.44 0.13 155);
   --color-available: oklch(0.72 0.19 142);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -93,9 +92,6 @@
   --glow: oklch(0.58 0.14 155 / 0.1);
   --selection-bg: oklch(0.82 0.155 155);
   --selection-fg: oklch(0.112 0.008 155);
-
-  /* Semantic z-index scale. Layering order, low → high:
-     decor/grid (0) · page rails (20) · sticky header (50) · radix overlays (50) · skip link (60). */
   --z-rail: 20;
   --z-header: 50;
   --z-skip-link: 60;
@@ -138,7 +134,6 @@
   --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
   --color-available: oklch(0.78 0.19 142);
-  /* Lighter brand for text on dark surfaces — 8.54:1 on bg (AAA). */
   --brand-text: oklch(0.72 0.15 155);
 }
 
@@ -303,19 +298,19 @@ main {
   animation: fd-fade-in 0.25s ease-out both;
 }
 
-/* Page navigations are wrapped in <ViewTransition> (see (site)/layout.tsx); React
-   drives document.startViewTransition and the browser cross-fades the root
-   snapshot. This just tunes the timing so every group animates uniformly. */
 ::view-transition-old(*),
 ::view-transition-new(*) {
   animation-duration: 0.28s;
   animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-/* Theme toggle drives its own startViewTransition with data-theme-transition on
-   <html> and animates a clip-path circle on ::view-transition-new(root). Suppress
-   the default cross-fade so only the circular reveal is visible, and stack the new
-   snapshot above the old one so the wipe reads correctly. */
+::view-transition-group(site-header) {
+  z-index: 100;
+}
+html[data-theme-transition] header {
+  view-transition-name: none;
+}
+
 html[data-theme-transition]::view-transition-old(root),
 html[data-theme-transition]::view-transition-new(root) {
   animation: none;
