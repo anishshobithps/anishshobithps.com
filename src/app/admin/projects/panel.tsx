@@ -12,6 +12,7 @@ import {
 } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -95,9 +96,9 @@ function ProjectForm({
   return (
     <div className="flex flex-col gap-4">
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="pf-title">
+        <Label htmlFor="pf-title">
           Title
-        </label>
+        </Label>
         <Input
           id="pf-title"
           value={form.title}
@@ -107,9 +108,9 @@ function ProjectForm({
         />
       </div>
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="pf-description">
+        <Label htmlFor="pf-description">
           Description
-        </label>
+        </Label>
         <Textarea
           id="pf-description"
           value={form.description}
@@ -121,12 +122,12 @@ function ProjectForm({
         />
       </div>
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="pf-highlights">
+        <Label htmlFor="pf-highlights">
           Tech highlights
-          <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+          <span className="text-xs font-normal text-muted-foreground">
             (comma-separated)
           </span>
-        </label>
+        </Label>
         <Input
           id="pf-highlights"
           value={form.highlights}
@@ -136,12 +137,12 @@ function ProjectForm({
         />
       </div>
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="pf-github">
+        <Label htmlFor="pf-github">
           GitHub URL
-          <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+          <span className="text-xs font-normal text-muted-foreground">
             (optional)
           </span>
-        </label>
+        </Label>
         <Input
           id="pf-github"
           value={form.github}
@@ -152,12 +153,12 @@ function ProjectForm({
         />
       </div>
       <div className="space-y-1.5">
-        <label className="text-sm font-medium" htmlFor="pf-live">
+        <Label htmlFor="pf-live">
           Live URL
-          <span className="ml-1.5 text-xs font-normal text-muted-foreground">
+          <span className="text-xs font-normal text-muted-foreground">
             (optional)
           </span>
-        </label>
+        </Label>
         <Input
           id="pf-live"
           value={form.live}
@@ -405,9 +406,9 @@ export function ProjectsPanel({
                             </Badge>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed max-w-sm">
+                        <TypographyMuted className="text-xs line-clamp-2 leading-relaxed max-w-sm">
                           {project.description}
-                        </p>
+                        </TypographyMuted>
                       </div>
                     </TableCell>
 

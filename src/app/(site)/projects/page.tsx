@@ -1,4 +1,5 @@
 import { ProjectGrid } from "@/app/(site)/_components/projects";
+import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
@@ -9,6 +10,7 @@ import {
 import { siteConfig } from "@/lib/config";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = buildMeta({
   title: "Projects",
@@ -38,7 +40,9 @@ export default function ProjectsPage() {
         </TypographyLead>
       </Section>
       <Section aria-label="Projects list">
-        <ProjectGrid />
+        <Suspense fallback={<ProjectsSkeleton count={6} />}>
+          <ProjectGrid />
+        </Suspense>
       </Section>
     </>
   );

@@ -11,11 +11,11 @@ import {
     guestbookLikes,
     projects,
 } from "@/lib/schema";
-import { clerkClient } from "@clerk/nextjs/server";
 import { assertAdmin } from "@/lib/assert-admin";
+import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
 import { asc, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import type { GuestbookUser, GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
+import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import type { CommentUser } from "@/app/(site)/blog/[[...slug]]/actions";
 
 export interface AdminCommentRow {
@@ -74,21 +74,7 @@ export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithM
 
     if (rows.length === 0) return [];
 
-    const uniqueUserIds = [...new Set(rows.map((r) => r.clerkUserId))];
-    const client = await clerkClient();
-    const clerkUsers = await client.users.getUserList({ userId: uniqueUserIds, limit: 500 });
-
-    const userMap = new Map<string, GuestbookUser>(
-        clerkUsers.data.map((u) => [
-            u.id,
-            {
-                id: u.id,
-                name: [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username || "Anonymous",
-                username: u.username,
-                imageUrl: u.imageUrl,
-            },
-        ]),
-    );
+    const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
     return rows.map((row) => ({
         id: row.id,
@@ -97,7 +83,7 @@ export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithM
         createdAt: row.createdAt.toISOString(),
         likeCount: row.likeCount,
         likedByMe: false,
-        user: userMap.get(row.clerkUserId) ?? { id: row.clerkUserId, name: "Unknown User", username: null, imageUrl: "" },
+        user: resolveUser(userMap, row.clerkUserId),
     }));
 }
 
@@ -123,21 +109,7 @@ export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
 
     if (rows.length === 0) return [];
 
-    const uniqueUserIds = [...new Set(rows.map((r) => r.clerkUserId))];
-    const client = await clerkClient();
-    const clerkUsers = await client.users.getUserList({ userId: uniqueUserIds, limit: 500 });
-
-    const userMap = new Map<string, CommentUser>(
-        clerkUsers.data.map((u) => [
-            u.id,
-            {
-                id: u.id,
-                name: [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username || "Anonymous",
-                username: u.username,
-                imageUrl: u.imageUrl,
-            },
-        ]),
-    );
+    const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
     return rows.map((row) => ({
         id: row.id,
@@ -147,7 +119,7 @@ export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
         isPinned: row.isPinned,
         createdAt: row.createdAt.toISOString(),
         likeCount: row.likeCount,
-        user: userMap.get(row.clerkUserId) ?? { id: row.clerkUserId, name: "Unknown User", username: null, imageUrl: "" },
+        user: resolveUser(userMap, row.clerkUserId),
     }));
 }
 

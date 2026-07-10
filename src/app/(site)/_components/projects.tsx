@@ -1,4 +1,5 @@
 import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
+import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
 import { Reveal } from "@/components/shared/reveal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import {
 import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import Link from "next/link";
 import type { Route } from "next";
+import { Suspense } from "react";
 import { getPublicProjects } from "@/lib/projects";
 
 export async function ProjectGrid() {
@@ -117,7 +119,9 @@ export function BuiltThings() {
           </TypographyLead>
         </div>
       </Reveal>
-      <ProjectGrid />
+      <Suspense fallback={<ProjectsSkeleton count={4} />}>
+        <ProjectGrid />
+      </Suspense>
       <Reveal className="mt-16 flex flex-col items-center gap-6 text-center">
         <TypographyLead className="max-w-2xl">
           There's more{" "}
