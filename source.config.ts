@@ -1,6 +1,5 @@
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
-import lastModified from 'fumadocs-mdx/plugins/last-modified';
 import { remarkReadingTime } from "@/lib/remarkReadingTime";
 import { z } from "zod/v4";
 
@@ -10,6 +9,11 @@ export const docs = defineDocs({
         schema: pageSchema.extend({
             tags: z.array(z.string()).optional(),
             date: z.coerce.date().optional(),
+            // Set explicitly in frontmatter when a post is meaningfully edited.
+            // Previously derived from git history, but shallow clones on the
+            // deploy host made every push re-date every post. Frontmatter is
+            // deterministic and gives full control over what counts as an update.
+            lastModified: z.coerce.date().optional(),
         }),
         postprocess: {
             includeProcessedMarkdown: true,
@@ -22,7 +26,6 @@ export const docs = defineDocs({
 });
 
 export default defineConfig({
-    plugins: [lastModified()],
     mdxOptions: {
         remarkPlugins: [remarkReadingTime],
         rehypeCodeOptions: {
