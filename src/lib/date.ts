@@ -1,8 +1,3 @@
-// A fixed time zone keeps the rendered calendar day identical on the server
-// (UTC) and in the browser (the visitor's local zone). Without it, a date
-// stored as UTC midnight renders one day earlier for viewers west of UTC,
-// which trips React hydration text mismatches (error #418) in the client
-// components that render these (blog list, guestbook rotator, admin panels).
 export function formatLongDate(date: Date | string): string {
     return new Date(date).toLocaleDateString("en-US", {
         month: "long",
@@ -41,6 +36,42 @@ export function currentYear(): number {
 
 export function nowISO(): string {
     return new Date().toISOString();
+}
+
+export function formatTimeInZone(timezone: string, date: Date = new Date()): string {
+    return new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: timezone,
+    }).format(date);
+}
+
+export function getZoneOffsetHours(timezone: string, from: Date = new Date()): number {
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: timezone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+    }).formatToParts(from);
+
+    const get = (type: string) =>
+        parseInt(parts.find((p) => p.type === type)?.value ?? "0");
+    const zoneAsUTC = Date.UTC(
+        get("year"),
+        get("month") - 1,
+        get("day"),
+        get("hour"),
+        get("minute"),
+        get("second"),
+    );
+    const zoneOffsetMins = Math.round((zoneAsUTC - from.getTime()) / 60000);
+    const localOffsetMins = -from.getTimezoneOffset();
+    return Math.round((zoneOffsetMins - localOffsetMins) / 60);
 }
 
 export function timeAgo(date: string): string {
