@@ -12,6 +12,7 @@ import { buildMeta } from "@/lib/metadata";
 import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = buildMeta({
   title: "Guestbook",
@@ -22,11 +23,29 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-export const revalidate = 60;
+async function GuestbookFeed({ currentUserId }: { currentUserId: string | null }) {
+  const { entries, total, hasMore } = await getGuestbookEntries();
+  return (
+    <GuestbookClient
+      initialEntries={entries}
+      currentUserId={currentUserId}
+      total={total}
+      initialHasMore={hasMore}
+    />
+  );
+}
+
+function GuestbookFallback() {
+  return (
+    <div className="w-full space-y-6" aria-hidden="true">
+      <div className="h-32 rounded-md border border-border/40 bg-muted/20 animate-pulse" />
+      <div className="h-[50vh] rounded-md border border-border/40 bg-muted/20 animate-pulse" />
+    </div>
+  );
+}
 
 export default async function GuestbookPage() {
   const { userId } = await auth();
-  const { entries, total } = await getGuestbookEntries();
 
   return (
     <ClerkProvider>
@@ -45,11 +64,9 @@ export default async function GuestbookPage() {
       </Section>
 
       <Section aria-label="Guestbook entries">
-        <GuestbookClient
-          initialEntries={entries}
-          currentUserId={userId}
-          total={total}
-        />
+        <Suspense fallback={<GuestbookFallback />}>
+          <GuestbookFeed currentUserId={userId} />
+        </Suspense>
       </Section>
     </ClerkProvider>
   );

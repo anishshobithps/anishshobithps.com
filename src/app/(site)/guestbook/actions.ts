@@ -1,20 +1,17 @@
 "use server";
 
+import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@/lib/db";
 import { guestbookEntries, guestbookLikes } from "@/lib/schema";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { sanitizeText, validateLength } from "@/lib/text";
+import { auth } from "@clerk/nextjs/server";
+import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 const MAX_MESSAGE_LENGTH = 280;
 const MIN_MESSAGE_LENGTH = 2;
 
-export interface GuestbookUser {
-    id: string;
-    name: string;
-    username: string | null;
-    imageUrl: string;
-}
+const GUESTBOOK_PAGE_SIZE = 20;
 
 export interface GuestbookEntryWithMeta {
     id: number;
@@ -23,71 +20,58 @@ export interface GuestbookEntryWithMeta {
     createdAt: string;
     likeCount: number;
     likedByMe: boolean;
-    user: GuestbookUser;
+    user: PublicUser;
 }
 
 export interface GetEntriesResult {
     entries: GuestbookEntryWithMeta[];
     total: number;
+    hasMore: boolean;
 }
 
-function sanitize(message: string): string {
-    return message.trim().replace(/\s+/g, " ");
-}
-
-function validateMessage(message: string): void {
-    if (message.length < MIN_MESSAGE_LENGTH) {
-        throw new Error("Message must be at least " + MIN_MESSAGE_LENGTH + " characters.");
-    }
-    if (message.length > MAX_MESSAGE_LENGTH) {
-        throw new Error("Message must be " + MAX_MESSAGE_LENGTH + " characters or fewer.");
-    }
-}
-
-export async function getGuestbookEntries(): Promise<GetEntriesResult> {
+export async function getGuestbookEntries(
+    { limit = GUESTBOOK_PAGE_SIZE, offset = 0 }: { limit?: number; offset?: number } = {},
+): Promise<GetEntriesResult> {
     const { userId } = await auth();
 
-    const rows = await db
-        .select({
-            id: guestbookEntries.id,
-            clerkUserId: guestbookEntries.clerkUserId,
-            message: guestbookEntries.message,
-            isPinned: guestbookEntries.isPinned,
-            createdAt: guestbookEntries.createdAt,
-            likeCount: sql<number>`count(${guestbookLikes.entryId})::int`,
-        })
-        .from(guestbookEntries)
-        .leftJoin(guestbookLikes, eq(guestbookEntries.id, guestbookLikes.entryId))
-        .where(eq(guestbookEntries.isDeleted, false))
-        .groupBy(guestbookEntries.id)
-        .orderBy(desc(guestbookEntries.isPinned), desc(guestbookEntries.createdAt));
+    const [rows, [totalRow]] = await Promise.all([
+        db
+            .select({
+                id: guestbookEntries.id,
+                clerkUserId: guestbookEntries.clerkUserId,
+                message: guestbookEntries.message,
+                isPinned: guestbookEntries.isPinned,
+                createdAt: guestbookEntries.createdAt,
+                likeCount: sql<number>`count(${guestbookLikes.entryId})::int`,
+            })
+            .from(guestbookEntries)
+            .leftJoin(guestbookLikes, eq(guestbookEntries.id, guestbookLikes.entryId))
+            .where(eq(guestbookEntries.isDeleted, false))
+            .groupBy(guestbookEntries.id)
+            .orderBy(desc(guestbookEntries.isPinned), desc(guestbookEntries.createdAt))
+            .limit(limit)
+            .offset(offset),
+        db.select({ count: count() }).from(guestbookEntries).where(eq(guestbookEntries.isDeleted, false)),
+    ]);
 
-    if (rows.length === 0) return { entries: [], total: 0 };
+    const total = totalRow?.count ?? 0;
+    if (rows.length === 0) return { entries: [], total, hasMore: false };
 
     let likedEntryIds = new Set<number>();
     if (userId) {
         const likes = await db
             .select({ entryId: guestbookLikes.entryId })
             .from(guestbookLikes)
-            .where(eq(guestbookLikes.clerkUserId, userId));
+            .where(
+                and(
+                    eq(guestbookLikes.clerkUserId, userId),
+                    inArray(guestbookLikes.entryId, rows.map((r) => r.id)),
+                ),
+            );
         likedEntryIds = new Set(likes.map((l) => l.entryId));
     }
 
-    const uniqueUserIds = [...new Set(rows.map((r) => r.clerkUserId))];
-    const client = await clerkClient();
-    const clerkUsers = await client.users.getUserList({ userId: uniqueUserIds, limit: 500 });
-
-    const userMap = new Map<string, GuestbookUser>(
-        clerkUsers.data.map((u) => [
-            u.id,
-            {
-                id: u.id,
-                name: [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username || "Anonymous",
-                username: u.username,
-                imageUrl: u.imageUrl,
-            },
-        ]),
-    );
+    const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
     const entries: GuestbookEntryWithMeta[] = rows.map((row) => ({
         id: row.id,
@@ -96,15 +80,10 @@ export async function getGuestbookEntries(): Promise<GetEntriesResult> {
         createdAt: row.createdAt.toISOString(),
         likeCount: row.likeCount,
         likedByMe: likedEntryIds.has(row.id),
-        user: userMap.get(row.clerkUserId) ?? {
-            id: row.clerkUserId,
-            name: "Unknown User",
-            username: null,
-            imageUrl: "",
-        },
+        user: resolveUser(userMap, row.clerkUserId),
     }));
 
-    return { entries, total: entries.length };
+    return { entries, total, hasMore: offset + entries.length < total };
 }
 
 export interface GuestbookPreviewEntry {
@@ -133,26 +112,17 @@ export async function getGuestbookPreview(limit = 15): Promise<GuestbookPreviewE
 
     if (rows.length === 0) return [];
 
-    const uniqueUserIds = [...new Set(rows.map((r) => r.clerkUserId))];
-    const client = await clerkClient();
-    const clerkUsers = await client.users.getUserList({ userId: uniqueUserIds, limit: 500 });
+    const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
-    const userMap = new Map(
-        clerkUsers.data.map((u) => [
-            u.id,
-            {
-                name: [u.firstName, u.lastName].filter(Boolean).join(" ") || u.username || "Anonymous",
-                imageUrl: u.imageUrl,
-            },
-        ]),
-    );
-
-    return rows.map((row) => ({
-        id: row.id,
-        message: row.message,
-        createdAt: row.createdAt.toISOString(),
-        user: userMap.get(row.clerkUserId) ?? { name: "Anonymous", imageUrl: "" },
-    }));
+    return rows.map((row) => {
+        const user = resolveUser(userMap, row.clerkUserId);
+        return {
+            id: row.id,
+            message: row.message,
+            createdAt: row.createdAt.toISOString(),
+            user: { name: user.name, imageUrl: user.imageUrl },
+        };
+    });
 }
 
 export async function submitGuestbookEntry(
@@ -162,8 +132,8 @@ export async function submitGuestbookEntry(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to leave a message." };
 
-        const message = sanitize(rawMessage);
-        validateMessage(message);
+        const message = sanitizeText(rawMessage);
+        validateLength(message, { min: MIN_MESSAGE_LENGTH, max: MAX_MESSAGE_LENGTH, label: "Message" });
 
         const [inserted] = await db
             .insert(guestbookEntries)
