@@ -163,7 +163,6 @@ export interface GetCommentsResult {
     total: number;
 }
 
-/** Cheap count of non-deleted comments for a post — no Clerk round-trip. */
 export async function getCommentCount(slug: string): Promise<number> {
     const [post] = await db
         .select({ id: blogPosts.id })

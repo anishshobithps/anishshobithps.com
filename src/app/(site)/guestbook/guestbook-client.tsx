@@ -248,7 +248,7 @@ export function GuestbookClient({
                 </ButtonGroup>
               </SignInButton>
             </div>
-            <EngagementNudge type="guestbook" className="pt-1" />
+            <EngagementNudge type="guestbook" className="pt-1 text-left" />
           </>
         )}
       </Card>

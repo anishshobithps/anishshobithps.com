@@ -9,32 +9,21 @@ import { cn } from "@/lib/cn";
 import { useEffect, useRef, useState } from "react";
 
 export interface ComposerProps {
-  /** Hard character cap; also drives the counter. */
   maxLength: number;
   onSubmit: (value: string) => void;
   onCancel?: () => void;
   placeholder?: string;
-  /** Label for the submit button, e.g. "Send" | "Comment" | "Reply". */
   submitLabel: string;
   ariaLabel?: string;
-  /** Id wired to the counter so the textarea can `aria-describedby` it. */
   counterId?: string;
   rows?: number;
   autoFocus?: boolean;
-  /** Max auto-grow height in px. */
   maxHeight?: number;
-  /** Remaining chars at which the counter turns amber. */
   warnThreshold?: number;
-  /** Remaining chars at which the counter turns destructive. */
   dangerThreshold?: number;
   className?: string;
 }
 
-/**
- * A self-contained text composer: auto-resizing textarea, live character
- * counter, and ⌘/Ctrl+Enter to submit. Owns its own draft state and clears on
- * submit. Shared by the guestbook and blog comments.
- */
 export function Composer({
   maxLength,
   onSubmit,

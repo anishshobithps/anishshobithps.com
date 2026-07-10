@@ -8,7 +8,6 @@ export function remarkReadingTime() {
         const textParts: string[] = [];
 
         visit(tree, (node) => {
-            // Skip code blocks and inline code entirely — not prose
             if (node.type === 'code' || node.type === 'inlineCode') {
                 return SKIP;
             }

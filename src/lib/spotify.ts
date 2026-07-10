@@ -53,7 +53,6 @@ export const getNowPlaying = unstable_cache(
             const res = await fetch(NOW_PLAYING_ENDPOINT, { headers });
 
             if (res.status === 204 || res.status >= 400) {
-                // Nothing actively playing — fall back to recently played
                 const recentRes = await fetch(RECENTLY_PLAYED_ENDPOINT, { headers });
                 if (!recentRes.ok)
                     return { isPlaying: false, title: null, artist: null, albumArt: null, songUrl: null };

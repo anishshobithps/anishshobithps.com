@@ -231,7 +231,6 @@ export function ProjectsPanel({
       } else {
         const result = await createProject(data);
         if (result.success) {
-          // Re-fetch would be ideal; for now add optimistically at end
           const fakeId = Date.now();
           const maxOrder = Math.max(...projects.map((p) => p.sortOrder), -1);
           setProjects((prev) => [
@@ -364,7 +363,6 @@ export function ProjectsPanel({
                       isRowPending && "opacity-40 pointer-events-none",
                     )}
                   >
-                    {/* Reorder */}
                     <TableCell className="py-2 align-middle">
                       <div className="flex flex-col gap-0.5 items-center">
                         <Button
@@ -390,7 +388,6 @@ export function ProjectsPanel({
                       </div>
                     </TableCell>
 
-                    {/* Title + description */}
                     <TableCell className="py-3">
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
@@ -412,7 +409,6 @@ export function ProjectsPanel({
                       </div>
                     </TableCell>
 
-                    {/* Stack badges */}
                     <TableCell className="hidden md:table-cell py-3">
                       <div className="flex flex-wrap gap-1">
                         {project.highlights.slice(0, 4).map((h) => (
@@ -431,7 +427,6 @@ export function ProjectsPanel({
                       </div>
                     </TableCell>
 
-                    {/* Visible toggle */}
                     <TableCell className="text-center py-3">
                       <Switch
                         checked={project.enabled}
@@ -445,7 +440,6 @@ export function ProjectsPanel({
                       />
                     </TableCell>
 
-                    {/* Edit + Delete */}
                     <TableCell className="text-right py-3">
                       <div className="flex items-center justify-end gap-1">
                         <Button

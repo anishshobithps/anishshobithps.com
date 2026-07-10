@@ -6,7 +6,6 @@ export function typedToast(type: ToastType, message: string): void {
     toast[type](message);
 }
 
-/** Pick a toast severity from a server-action error message. */
 export function classifyError(error: string): ToastType {
     const msg = error.toLowerCase();
     if (
@@ -22,7 +21,6 @@ export function classifyError(error: string): ToastType {
     return "error";
 }
 
-/** Show an error toast with a severity inferred from its message. */
 export function toastError(error: string): void {
     typedToast(classifyError(error), error);
 }

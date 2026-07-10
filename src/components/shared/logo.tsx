@@ -82,7 +82,7 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
       Math.ceil(wordmark.length * CHAR_W * FONT_SIZE) +
       PADDING -
       (CONTENT_LEFT - PADDING);
-    const vbX = CONTENT_LEFT - PADDING; // = 12
+    const vbX = CONTENT_LEFT - PADDING;
     const vbW = measuredW ?? fallbackW;
     const scaledWidth = Math.round((vbW / VB_HEIGHT) * size);
 

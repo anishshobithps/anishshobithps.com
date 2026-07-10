@@ -123,8 +123,6 @@ export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
     }));
 }
 
-// ── Projects ─────────────────────────────────────────────────────────────────
-
 export type ProjectRow = {
     id: number;
     title: string;

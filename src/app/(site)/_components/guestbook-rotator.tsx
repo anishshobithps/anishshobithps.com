@@ -80,7 +80,6 @@ export function GuestbookRotator({
     );
   }
 
-  // Duplicate enough copies for a seamless loop (min 2 full sets)
   const copies = entries.length < 5 ? 4 : 2;
   const track = Array.from({ length: copies }, () => entries).flat();
   // Duration scales with entry count so speed stays consistent (~50px/s at w-56=224px)
@@ -88,7 +87,6 @@ export function GuestbookRotator({
 
   return (
     <div className="mb-8 -mx-6 sm:-mx-8 lg:-mx-10">
-      {/* Marquee — hidden when motion is reduced */}
       <div
         className="overflow-hidden motion-reduce:hidden"
         style={{
@@ -112,7 +110,6 @@ export function GuestbookRotator({
         </div>
       </div>
 
-      {/* Static fallback for prefers-reduced-motion */}
       <ul
         className="hidden motion-reduce:flex flex-col gap-4 px-6 sm:px-8 lg:px-10 mb-2"
         aria-label="Guestbook entries"
@@ -132,7 +129,6 @@ export function GuestbookRotator({
         ))}
       </ul>
 
-      {/* Always-accessible sr-only version */}
       <ul className="sr-only motion-reduce:hidden">
         {entries.map((e) => (
           <li key={e.id}>

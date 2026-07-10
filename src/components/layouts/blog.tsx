@@ -143,8 +143,6 @@ export function MobileTOC() {
     activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [active]);
 
-  // Dismiss the open panel on an outside tap or Escape — on mobile there is no
-  // hover, so without this the only way to close it is to hit the trigger again.
   useEffect(() => {
     if (!open) return;
     const onPointerDown = (e: PointerEvent) => {
@@ -170,9 +168,7 @@ export function MobileTOC() {
 
   return (
     <>
-      {/* Dim the article behind the open panel. Purely visual — outside taps are
-          caught by the document listener above, which also covers the header.
-          No backdrop blur here: it made the article text read as blurry. */}
+      {/* No backdrop blur here — it made the article text read as blurry. */}
       {open && (
         <div
           className="fixed inset-0 z-40 xl:hidden bg-background/60 pointer-events-none animate-in fade-in-0 duration-200"
@@ -238,8 +234,6 @@ export function MobileTOC() {
               <div
                 className="px-6 sm:px-8 lg:px-10 pb-3"
                 ref={scrollContainerRef}
-                // Tapping a heading link should collapse the panel and let the
-                // page scroll to that section.
                 onClick={(e) => {
                   if ((e.target as HTMLElement).closest("a")) setOpen(false);
                 }}

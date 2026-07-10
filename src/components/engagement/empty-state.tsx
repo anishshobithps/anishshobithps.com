@@ -4,7 +4,6 @@ import { ChatCircleIcon } from "@/components/shared/icons";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import type { ComponentType, ReactNode } from "react";
 
-/** Shared empty state for the guestbook feed and the comment list. */
 export function EngagementEmptyState({
   title,
   description,

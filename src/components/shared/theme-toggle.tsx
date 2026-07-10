@@ -30,9 +30,6 @@ const full = [
   ["system", MonitorIcon, "Use system theme"] as const,
 ];
 
-// Animate the theme change as a circular wipe originating from the clicked
-// control, using the View Transitions API. Falls back to an instant swap when
-// the API is unavailable or the user prefers reduced motion.
 function applyTheme(
   setTheme: (theme: string) => void,
   key: string,

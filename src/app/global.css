@@ -183,7 +183,6 @@
       pointer !important;
   }
 
-  /* ─── Scroll-fade keyframes ─── */
   @keyframes show-top-mask {
     to {
       --top-mask-height: var(--mask-height);
@@ -304,10 +303,9 @@ main {
   animation: fd-fade-in 0.25s ease-out both;
 }
 
-/* ─── View Transitions ─────────────────────────────────────────────
-   Page navigations are wrapped in <ViewTransition> (see (site)/layout.tsx);
-   React drives document.startViewTransition, and the browser cross-fades the
-   root snapshot. We just tune the timing so every group animates uniformly. */
+/* Page navigations are wrapped in <ViewTransition> (see (site)/layout.tsx); React
+   drives document.startViewTransition and the browser cross-fades the root
+   snapshot. This just tunes the timing so every group animates uniformly. */
 ::view-transition-old(*),
 ::view-transition-new(*) {
   animation-duration: 0.28s;

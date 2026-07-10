@@ -1,11 +1,6 @@
 import { getComments } from "@/app/(site)/blog/[[...slug]]/actions";
 import { PostEngagement } from "@/app/(site)/blog/[[...slug]]/_components/post-engagement";
 
-/**
- * Server component that performs the Clerk-backed comment fetch. Rendered
- * inside a <Suspense> boundary so the article streams to the client before the
- * comments finish loading.
- */
 export async function CommentsSection({
   slug,
   currentUserId,
