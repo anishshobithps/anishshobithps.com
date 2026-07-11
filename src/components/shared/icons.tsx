@@ -2,6 +2,7 @@
 
 export {
   AlignLeftIcon,
+  ArchiveIcon,
   ArrowBendDownRightIcon,
   ArrowClockwiseIcon,
   ArrowCounterClockwiseIcon,
@@ -35,6 +36,7 @@ export {
   GearIcon,
   GithubLogoIcon,
   GitCommitIcon,
+  GitForkIcon,
   GlobeIcon,
   HeartIcon,
   HouseIcon,
@@ -58,6 +60,7 @@ export {
   PushPinSimpleSlashIcon,
   RepeatIcon,
   RewindIcon,
+  ScalesIcon,
   SidebarSimpleIcon,
   SignInIcon,
   SignOutIcon,
@@ -66,6 +69,7 @@ export {
   SpeakerHighIcon,
   SpeakerLowIcon,
   SpeakerSlashIcon,
+  StarIcon,
   SubtitlesIcon,
   SubtitlesSlashIcon,
   SunIcon,
