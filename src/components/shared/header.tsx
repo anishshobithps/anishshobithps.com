@@ -10,21 +10,19 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { ListIcon } from "@/components/shared/icons";
+import { cn } from "@/lib/cn";
+import { ListIcon, XIcon } from "@/components/shared/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -35,6 +33,35 @@ export function Header() {
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (
+        menuRef.current?.contains(target) ||
+        triggerRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
 
   return (
     <header className="bg-background/80 fixed top-0 z-50 w-full backdrop-blur border-b border-border [view-transition-name:site-header]">
@@ -55,10 +82,7 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-1">
-          <NavigationMenu
-            className="max-md:hidden"
-            aria-label="Main navigation"
-          >
+          <NavigationMenu className="max-md:hidden" aria-label="Main navigation">
             <NavigationMenuList className="gap-0.5">
               {siteConfig.nav.map((link) => (
                 <NavigationMenuItem key={link.href}>
@@ -76,53 +100,55 @@ export function Header() {
 
           <ThemeToggle className="max-md:hidden" />
 
-          <div className="md:hidden">
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  className="size-8 pointer-coarse:size-11"
-                  variant="ghost"
-                  size="icon"
-                  aria-label={open ? "Close menu" : "Open menu"}
-                  aria-expanded={open}
-                >
-                  <ListIcon aria-hidden="true" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                align="end"
-                sideOffset={8}
-                className="bg-background/95 w-screen rounded-none border-x-0 p-0 shadow-md backdrop-blur-md"
-              >
-                <nav
-                  id="mobile-nav"
-                  className="flex flex-col divide-y"
-                  aria-label="Mobile navigation"
-                >
-                  {siteConfig.nav.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
-                      aria-current={pathname === link.href ? "page" : undefined}
-                    >
-                      <TypographySmall>{link.label}</TypographySmall>
-                    </Link>
-                  ))}
-                  <div className="flex items-center justify-between px-6 py-3.5">
-                    <TypographySmall
-                      className="text-foreground"
-                      id="theme-label"
-                    >
-                      Theme
-                    </TypographySmall>
-                    <ThemeToggle aria-labelledby="theme-label" />
-                  </div>
-                </nav>
-              </PopoverContent>
-            </Popover>
+          <div ref={triggerRef} className="md:hidden">
+            <Button
+              className="size-8 pointer-coarse:size-11"
+              variant="ghost"
+              size="icon"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              {open ? (
+                <XIcon aria-hidden="true" />
+              ) : (
+                <ListIcon aria-hidden="true" />
+              )}
+            </Button>
           </div>
         </div>
+      </div>
+
+      <div
+        ref={menuRef}
+        id="mobile-nav"
+        className={cn(
+          "absolute inset-x-0 top-full border-b border-border bg-background/95 shadow-md backdrop-blur-md transition duration-200 ease-out md:hidden",
+          open
+            ? "visible translate-y-0 opacity-100"
+            : "pointer-events-none invisible -translate-y-1 opacity-0",
+        )}
+      >
+        <nav className="flex flex-col divide-y" aria-label="Mobile navigation">
+          {siteConfig.nav.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
+              aria-current={pathname === link.href ? "page" : undefined}
+            >
+              <TypographySmall>{link.label}</TypographySmall>
+            </Link>
+          ))}
+          <div className="flex items-center justify-between px-6 py-3.5">
+            <TypographySmall className="text-foreground" id="theme-label">
+              Theme
+            </TypographySmall>
+            <ThemeToggle aria-labelledby="theme-label" />
+          </div>
+        </nav>
       </div>
     </header>
   );
