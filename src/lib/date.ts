@@ -91,3 +91,17 @@ export function timeAgo(date: string): string {
     }
     return "just now";
 }
+
+export function formatRelativeDate(iso: string): string {
+    const date = new Date(iso);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / 86_400_000);
+
+    if (diffDays === 0) return "today";
+    if (diffDays === 1) return "yesterday";
+    if (diffDays < 30) return `${diffDays}d ago`;
+    const months = Math.floor(diffDays / 30);
+    if (months < 12) return `${months}mo ago`;
+    const years = Math.floor(diffDays / 365);
+    return `${years}y ago`;
+}

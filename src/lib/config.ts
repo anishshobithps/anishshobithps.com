@@ -13,6 +13,8 @@ export const siteConfig = {
     availableForHire: true,
     handle: "n10nce",
     twitterHandle: "n10nce",
+    githubRepo: "anishshobithps/anishshobithps.com",
+    repoUrl: "https://github.com/anishshobithps/anishshobithps.com",
     sameAs: [
         "https://github.com/anishshobithps",
         "https://x.com/n10nce",
