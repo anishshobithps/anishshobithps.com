@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import { buildMeta } from "@/lib/metadata";
-import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -48,7 +47,7 @@ export default async function GuestbookPage() {
   const { userId } = await auth();
 
   return (
-    <ClerkProvider>
+    <>
       <JsonLd
         type="webpage"
         title="Guestbook"
@@ -68,6 +67,6 @@ export default async function GuestbookPage() {
           <GuestbookFeed currentUserId={userId} />
         </Suspense>
       </Section>
-    </ClerkProvider>
+    </>
   );
 }

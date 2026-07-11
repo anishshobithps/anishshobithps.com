@@ -31,7 +31,6 @@ import {
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
-import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import {
   CalendarIcon,
@@ -213,12 +212,15 @@ export default async function Page(props: {
         <Signature text={siteConfig.name} />
       </BlogBody>
 
-      <Section id="engagement" variant="compact" aria-label="Post engagement">
-        <ClerkProvider>
-          <Suspense fallback={<CommentsFallback />}>
-            <CommentsSection slug={page.url} currentUserId={userId} />
-          </Suspense>
-        </ClerkProvider>
+      <Section
+        id="engagement"
+        variant="compact"
+        aria-label="Post engagement"
+        data-comment-count={commentCount}
+      >
+        <Suspense fallback={<CommentsFallback />}>
+          <CommentsSection slug={page.url} currentUserId={userId} />
+        </Suspense>
       </Section>
 
       <Section variant="nav" aria-label="Post navigation">

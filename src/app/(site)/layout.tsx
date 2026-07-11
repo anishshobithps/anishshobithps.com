@@ -3,7 +3,9 @@ import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MouseGlow } from "@/components/shared/mouse-glow";
-import { ViewTransition } from "react";
+import { FloatingHubServer } from "@/components/shared/floating-hub-server";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Suspense, ViewTransition } from "react";
 
 export default function SiteLayout({
   children,
@@ -11,7 +13,7 @@ export default function SiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ClerkProvider>
       <JsonLd type="person" />
       <JsonLd type="website" />
       <PageLayout>
@@ -28,6 +30,9 @@ export default function SiteLayout({
         <Footer />
       </PageLayout>
       <MouseGlow />
-    </>
+      <Suspense fallback={null}>
+        <FloatingHubServer />
+      </Suspense>
+    </ClerkProvider>
   );
 }
