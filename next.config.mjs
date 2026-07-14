@@ -10,8 +10,6 @@ const config = {
   serverExternalPackages: ["@takumi-rs/image-response"],
   typedRoutes: true,
   experimental: {
-    // Enables React's <ViewTransition> component so App Router navigations can
-    // animate (root cross-fade + shared-element morphs). See src/app/(site)/layout.tsx.
     viewTransition: true,
     optimizePackageImports: [
       "@phosphor-icons/react",
@@ -62,21 +60,6 @@ const config = {
   },
   async redirects() {
     return [
-      {
-        source: "/github",
-        destination: "https://github.com/anishshobithps",
-        permanent: true,
-      },
-      {
-        source: "/linkedin",
-        destination: "https://linkedin.com/in/anishshobithps",
-        permanent: true,
-      },
-      {
-        source: "/mail",
-        destination: "mailto:anish.shobith19@gmail.com",
-        permanent: true,
-      },
       {
         source:
           "/blog/i-built-a-4am-alert-system-to-get-RCB-tickets-and%20-it-actually-worked",
