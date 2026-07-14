@@ -16,6 +16,7 @@ import {
   BookOpenIcon,
   ChatCircleIcon,
   HouseIcon,
+  LinkIcon,
   ListIcon,
   SignOutIcon,
   FolderOpenIcon,
@@ -31,6 +32,7 @@ const navItems = [
   { title: "Guestbook", href: "/admin/guestbook", icon: ChatCircleIcon },
   { title: "Comments", href: "/admin/comments", icon: BookOpenIcon },
   { title: "Projects", href: "/admin/projects", icon: FolderOpenIcon },
+  { title: "Links", href: "/admin/links", icon: LinkIcon },
 ];
 
 export function AdminSidebar() {
