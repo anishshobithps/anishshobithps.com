@@ -2,6 +2,15 @@ export function sanitizeText(input: string): string {
     return input.trim().replace(/\s+/g, " ");
 }
 
+
+export function slugify(input: string): string {
+    return input
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
 export function validateLength(
     text: string,
     { min, max, label }: { min: number; max: number; label: string },
