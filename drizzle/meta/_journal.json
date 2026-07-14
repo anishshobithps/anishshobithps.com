@@ -64,6 +64,20 @@
       "when": 1779919867741,
       "tag": "0008_legal_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1784041717691,
+      "tag": "0009_solid_speedball",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1784055523584,
+      "tag": "0010_strong_loners",
+      "breakpoints": true
     }
   ]
 }

@@ -145,3 +145,41 @@ export const projects = pgTable(
         index("projects_sort_order_idx").on(table.sortOrder),
     ],
 );
+
+export const links = pgTable(
+    "links",
+    {
+        id: serial("id").primaryKey(),
+        target: varchar("target", { length: 2048 }).notNull(),
+        title: varchar("title", { length: 256 }),
+        description: text("description"),
+        ogEnabled: boolean("og_enabled").default(false).notNull(),
+        ogImage: varchar("og_image", { length: 2048 }),
+        permanent: boolean("permanent").default(false).notNull(),
+        enabled: boolean("enabled").default(true).notNull(),
+        clicks: integer("clicks").default(0).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        index("links_enabled_idx").on(table.enabled),
+    ],
+);
+
+export const linkSlugs = pgTable(
+    "link_slugs",
+    {
+        id: serial("id").primaryKey(),
+        linkId: integer("link_id")
+            .notNull()
+            .references(() => links.id, { onDelete: "cascade", onUpdate: "cascade" }),
+        tag: varchar("tag", { length: 64 }).default("").notNull(),
+        slug: varchar("slug", { length: 128 }).notNull(),
+        isPrimary: boolean("is_primary").default(false).notNull(),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        unique("link_slugs_tag_slug_unique").on(table.tag, table.slug),
+        index("link_slugs_link_idx").on(table.linkId),
+    ],
+);
