@@ -13,8 +13,9 @@ import {
 } from "@/lib/schema";
 import { assertAdmin } from "@/lib/assert-admin";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
+import { RESUME_CACHE_TAG } from "@/lib/resume";
 import { asc, count, desc, eq, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import type { CommentUser } from "@/app/(site)/blog/[[...slug]]/actions";
 
@@ -53,6 +54,16 @@ export async function getAdminStats() {
         reads: reads?.count ?? 0,
         reactions: reactions?.count ?? 0,
     };
+}
+
+export async function refreshResume(): Promise<{ success: boolean; error?: string }> {
+    try {
+        await assertAdmin();
+        updateTag(RESUME_CACHE_TAG);
+        return { success: true };
+    } catch {
+        return { success: false, error: "Failed to refresh resume." };
+    }
 }
 
 export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithMeta[]> {

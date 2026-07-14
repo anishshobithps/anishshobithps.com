@@ -13,6 +13,7 @@ import {
   Text,
 } from "@/components/ui/typography";
 import { getAdminStats } from "@/app/admin/actions";
+import { ResumeRefresh } from "@/app/admin/resume-refresh";
 
 function StatCard({
   label,
@@ -78,6 +79,8 @@ export default async function AdminPage() {
             icon={<HeartIcon className="size-4" weight="duotone" />}
           />
         </div>
+
+        <ResumeRefresh />
       </div>
     </div>
   );

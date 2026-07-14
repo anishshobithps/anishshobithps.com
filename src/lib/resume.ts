@@ -2,9 +2,11 @@
 import { siteConfig } from "@/lib/config";
 import { formatFileDate } from "@/lib/date";
 
+export const RESUME_CACHE_TAG = "resume-pdf";
+
 export async function fetchResume() {
     const res = await fetch(siteConfig.resumeURL, {
-        next: { revalidate: 3600 },
+        next: { revalidate: 3600, tags: [RESUME_CACHE_TAG] },
     });
 
     if (!res.ok || !res.body) {
