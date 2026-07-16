@@ -28,6 +28,7 @@ next-env.d.ts
 .env
 /.agents
 /.claude
+/plans
 .impeccable/
 skills-lock.json
 .unlighthouse/
