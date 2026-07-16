@@ -7,7 +7,7 @@ import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } f
 import { source } from "@/lib/source";
 import { sanitizeText, validateLength } from "@/lib/text";
 import { auth } from "@clerk/nextjs/server";
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { cache } from "react";
@@ -33,6 +33,15 @@ async function getIpHash(): Promise<string> {
 
 const isKnownPost = cache(async (slug: string): Promise<boolean> => {
     return source.getPages().some((page) => page.url === slug);
+});
+
+const getPostIdBySlug = cache(async (slug: string): Promise<number | null> => {
+    const [post] = await db
+        .select({ id: blogPosts.id })
+        .from(blogPosts)
+        .where(eq(blogPosts.slug, slug))
+        .limit(1);
+    return post?.id ?? null;
 });
 
 async function getOrCreatePost(slug: string): Promise<number | null> {
@@ -70,31 +79,25 @@ export async function trackRead(slug: string): Promise<void> {
 }
 
 export async function getBlogReadsCount(slug: string): Promise<number> {
-    const [post] = await db
-        .select({ id: blogPosts.id })
-        .from(blogPosts)
-        .where(eq(blogPosts.slug, slug))
-        .limit(1);
+    const postId = await getPostIdBySlug(slug);
 
-    if (!post) return 0;
+    if (postId === null) return 0;
 
     const rows = await db
         .select({ count: sql<number>`count(*)::int` })
         .from(blogReads)
-        .where(eq(blogReads.postId, post.id));
+        .where(eq(blogReads.postId, postId));
 
     return rows[0]?.count ?? 0;
 }
 
 export async function getReactions(slug: string): Promise<ReactionsData> {
-    const [ipHash, post] = await Promise.all([
+    const [ipHash, postId] = await Promise.all([
         getIpHash(),
-        db.select({ id: blogPosts.id }).from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1),
+        getPostIdBySlug(slug),
     ]);
 
-    if (!post[0]) return { counts: {}, userMood: null };
-
-    const postId = post[0].id;
+    if (postId === null) return { counts: {}, userMood: null };
 
     const [countRows, userRows] = await Promise.all([
         db
@@ -174,18 +177,14 @@ export interface GetCommentsResult {
 }
 
 export async function getCommentCount(slug: string): Promise<number> {
-    const [post] = await db
-        .select({ id: blogPosts.id })
-        .from(blogPosts)
-        .where(eq(blogPosts.slug, slug))
-        .limit(1);
+    const postId = await getPostIdBySlug(slug);
 
-    if (!post) return 0;
+    if (postId === null) return 0;
 
     const [row] = await db
         .select({ count: count() })
         .from(blogComments)
-        .where(and(eq(blogComments.postId, post.id), eq(blogComments.isDeleted, false)));
+        .where(and(eq(blogComments.postId, postId), eq(blogComments.isDeleted, false)));
 
     return row?.count ?? 0;
 }
@@ -193,13 +192,9 @@ export async function getCommentCount(slug: string): Promise<number> {
 export async function getComments(slug: string): Promise<GetCommentsResult> {
     const { userId } = await auth();
 
-    const [post] = await db
-        .select({ id: blogPosts.id })
-        .from(blogPosts)
-        .where(eq(blogPosts.slug, slug))
-        .limit(1);
+    const postId = await getPostIdBySlug(slug);
 
-    if (!post) return { comments: [], total: 0 };
+    if (postId === null) return { comments: [], total: 0 };
 
     const rows = await db
         .select({
@@ -214,7 +209,7 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
         })
         .from(blogComments)
         .leftJoin(blogCommentLikes, eq(blogComments.id, blogCommentLikes.commentId))
-        .where(and(eq(blogComments.postId, post.id), eq(blogComments.isDeleted, false)))
+        .where(and(eq(blogComments.postId, postId), eq(blogComments.isDeleted, false)))
         .groupBy(blogComments.id)
         .orderBy(desc(blogComments.isPinned), desc(blogComments.createdAt));
 
@@ -225,7 +220,12 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
         const likes = await db
             .select({ commentId: blogCommentLikes.commentId })
             .from(blogCommentLikes)
-            .where(eq(blogCommentLikes.clerkUserId, userId));
+            .where(
+                and(
+                    eq(blogCommentLikes.clerkUserId, userId),
+                    inArray(blogCommentLikes.commentId, rows.map((r) => r.id)),
+                ),
+            );
         likedIds = new Set(likes.map((l) => l.commentId));
     }
 
