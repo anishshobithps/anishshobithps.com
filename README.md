@@ -39,7 +39,7 @@ Create `.env.local` at the root:
 
 ```env
 DATABASE_URL=postgresql://...
-IP_HASH_SALT=some-random-secret        # optional, defaults to "blog-salt"
+IP_HASH_SALT=some-random-secret        # required — any long random string; keep it secret
 
 SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=

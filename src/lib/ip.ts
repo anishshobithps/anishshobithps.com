@@ -1,5 +1,10 @@
 export async function hashIp(ip: string): Promise<string> {
-    const salt = process.env.IP_HASH_SALT ?? "blog-salt";
+    const salt = process.env.IP_HASH_SALT;
+    if (!salt) {
+        throw new Error(
+            "IP_HASH_SALT is not set. It is required to hash IP addresses; without a secret salt, stored hashes are trivially reversible.",
+        );
+    }
     const data = new TextEncoder().encode(`${ip}:${salt}`);
     const buf = await crypto.subtle.digest("SHA-256", data);
     return Array.from(new Uint8Array(buf))
