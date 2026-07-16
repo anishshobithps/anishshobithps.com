@@ -97,7 +97,7 @@ export interface GuestbookPreviewEntry {
 }
 
 export async function getGuestbookPreview(limit = 15): Promise<GuestbookPreviewEntry[]> {
-    const rows = await db
+    const pool = await db
         .select({
             id: guestbookEntries.id,
             clerkUserId: guestbookEntries.clerkUserId,
@@ -107,8 +107,14 @@ export async function getGuestbookPreview(limit = 15): Promise<GuestbookPreviewE
         })
         .from(guestbookEntries)
         .where(and(eq(guestbookEntries.isDeleted, false), eq(guestbookEntries.isPinned, false)))
-        .orderBy(sql`RANDOM()`)
-        .limit(limit);
+        .orderBy(desc(guestbookEntries.createdAt))
+        .limit(60);
+
+    const rows = pool
+        .map((row) => ({ row, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .slice(0, limit)
+        .map(({ row }) => row);
 
     if (rows.length === 0) return [];
 
