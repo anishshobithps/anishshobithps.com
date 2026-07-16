@@ -69,7 +69,7 @@ async function getOrCreatePost(slug: string): Promise<number | null> {
         .where(eq(blogPosts.slug, slug))
         .limit(1);
 
-    return retry.id;
+    return retry?.id ?? null;
 }
 
 export async function trackRead(slug: string): Promise<void> {
