@@ -23,7 +23,7 @@ Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, b
 
 ```bash
 pnpm install
-pnpm drizzle-kit push   # sets up the database tables
+pnpm db:migrate         # applies the committed migrations in drizzle/
 pnpm dev                # http://localhost:3000
 ```
 
@@ -61,10 +61,20 @@ NEXT_PUBLIC_UMAMI_WEBSITE_ID=...       # optional, or remove from layout.tsx
 ## Commands
 
 ```bash
+pnpm dev          # dev server — http://localhost:3000
 pnpm build        # next build
 pnpm start        # production server
-pnpm types:check  # tsc --noEmit
+pnpm types:check  # fumadocs codegen + tsc --noEmit
 pnpm lint         # ESLint
+pnpm test         # Vitest
+pnpm knip         # unused code/dependency check
+
+pnpm db:migrate   # apply committed migrations
+pnpm db:push      # push schema directly (dev only — skips migrations)
+pnpm db:studio    # Drizzle Studio
+pnpm db:seed:guestbook          # seed fake guestbook entries
+pnpm db:seed:guestbook:cleanup  # remove seeded entries
+pnpm db:seed:links              # seed short links
 ```
 
 ---
@@ -77,4 +87,4 @@ pnpm lint         # ESLint
 
 </div>
 
-Add the env vars, point `DATABASE_URL` at Neon, done. The build command runs `drizzle-kit push` before `next build`, so schema is always up to date on deploy.
+Add the env vars and point `DATABASE_URL` at Neon. The build runs `next build` only — it does **not** migrate. Run `pnpm db:migrate` against the production database yourself when the schema changes.
