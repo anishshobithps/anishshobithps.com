@@ -3,6 +3,7 @@
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@/lib/db";
 import { guestbookEntries, guestbookLikes } from "@/lib/schema";
+import { resolvePagination } from "@/lib/pagination";
 import { sanitizeText, ValidationError, validateLength } from "@/lib/text";
 import { auth } from "@clerk/nextjs/server";
 import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
@@ -12,6 +13,7 @@ const MAX_MESSAGE_LENGTH = 280;
 const MIN_MESSAGE_LENGTH = 2;
 
 const GUESTBOOK_PAGE_SIZE = 20;
+const GUESTBOOK_MAX_PAGE_SIZE = 50;
 
 export interface GuestbookEntryWithMeta {
     id: number;
@@ -30,9 +32,14 @@ export interface GetEntriesResult {
 }
 
 export async function getGuestbookEntries(
-    { limit = GUESTBOOK_PAGE_SIZE, offset = 0 }: { limit?: number; offset?: number } = {},
+    { limit, offset }: { limit?: number; offset?: number } = {},
 ): Promise<GetEntriesResult> {
     const { userId } = await auth();
+
+    const page = resolvePagination(
+        { limit, offset },
+        { defaultLimit: GUESTBOOK_PAGE_SIZE, maxLimit: GUESTBOOK_MAX_PAGE_SIZE },
+    );
 
     const [rows, [totalRow]] = await Promise.all([
         db
@@ -49,8 +56,8 @@ export async function getGuestbookEntries(
             .where(eq(guestbookEntries.isDeleted, false))
             .groupBy(guestbookEntries.id)
             .orderBy(desc(guestbookEntries.isPinned), desc(guestbookEntries.createdAt))
-            .limit(limit)
-            .offset(offset),
+            .limit(page.limit)
+            .offset(page.offset),
         db.select({ count: count() }).from(guestbookEntries).where(eq(guestbookEntries.isDeleted, false)),
     ]);
 
@@ -83,7 +90,7 @@ export async function getGuestbookEntries(
         user: resolveUser(userMap, row.clerkUserId),
     }));
 
-    return { entries, total, hasMore: offset + entries.length < total };
+    return { entries, total, hasMore: page.offset + entries.length < total };
 }
 
 export interface GuestbookPreviewEntry {
