@@ -4,11 +4,13 @@ import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users
 import { db } from "@/lib/db";
 import { getClientIp, hashIp } from "@/lib/ip";
 import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
+import { source } from "@/lib/source";
 import { sanitizeText, validateLength } from "@/lib/text";
 import { auth } from "@clerk/nextjs/server";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { cache } from "react";
 
 export type MoodId = "terrible" | "bad" | "good" | "amazing";
 export type ReactionCounts = Partial<Record<MoodId, number>>;
@@ -29,7 +31,13 @@ async function getIpHash(): Promise<string> {
     return hashIp(getClientIp(hdrs));
 }
 
-async function getOrCreatePost(slug: string): Promise<number> {
+const isKnownPost = cache(async (slug: string): Promise<boolean> => {
+    return source.getPages().some((page) => page.url === slug);
+});
+
+async function getOrCreatePost(slug: string): Promise<number | null> {
+    if (!(await isKnownPost(slug))) return null;
+
     const [existing] = await db
         .select({ id: blogPosts.id })
         .from(blogPosts)
@@ -57,6 +65,7 @@ async function getOrCreatePost(slug: string): Promise<number> {
 
 export async function trackRead(slug: string): Promise<void> {
     const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
+    if (postId === null) return;
     await db.insert(blogReads).values({ postId, ipHash }).onConflictDoNothing();
 }
 
@@ -123,6 +132,7 @@ export async function submitReaction(slug: string, mood: MoodId | null): Promise
     }
 
     const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
+    if (postId === null) return;
 
     if (mood === null) {
         await db
@@ -261,6 +271,7 @@ export async function submitComment(
         validateLength(trimmed, { min: MIN_BODY_LENGTH, max: MAX_BODY_LENGTH, label: "Comment" });
 
         const postId = await getOrCreatePost(slug);
+        if (postId === null) return { success: false, error: "Post not found." };
 
         const [inserted] = await db
             .insert(blogComments)
