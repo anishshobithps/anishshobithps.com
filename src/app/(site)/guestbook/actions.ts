@@ -3,7 +3,7 @@
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@/lib/db";
 import { guestbookEntries, guestbookLikes } from "@/lib/schema";
-import { sanitizeText, validateLength } from "@/lib/text";
+import { sanitizeText, ValidationError, validateLength } from "@/lib/text";
 import { auth } from "@clerk/nextjs/server";
 import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -149,8 +149,9 @@ export async function submitGuestbookEntry(
         revalidatePath("/guestbook");
         return { success: true, id: inserted.id };
     } catch (err) {
-        const message = err instanceof Error ? err.message : "Something went wrong.";
-        return { success: false, error: message };
+        if (err instanceof ValidationError) return { success: false, error: err.message };
+        console.error("[submitGuestbookEntry]", err);
+        return { success: false, error: "Something went wrong. Please try again." };
     }
 }
 

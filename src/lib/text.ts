@@ -11,14 +11,21 @@ export function slugify(input: string): string {
         .replace(/^-+|-+$/g, "");
 }
 
+export class ValidationError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "ValidationError";
+    }
+}
+
 export function validateLength(
     text: string,
     { min, max, label }: { min: number; max: number; label: string },
 ): void {
     if (text.length < min) {
-        throw new Error(`${label} must be at least ${min} characters.`);
+        throw new ValidationError(`${label} must be at least ${min} characters.`);
     }
     if (text.length > max) {
-        throw new Error(`${label} must be ${max} characters or fewer.`);
+        throw new ValidationError(`${label} must be ${max} characters or fewer.`);
     }
 }

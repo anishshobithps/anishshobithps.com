@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeText, slugify, validateLength } from "@/lib/text";
+import { sanitizeText, slugify, ValidationError, validateLength } from "@/lib/text";
 
 describe("slugify", () => {
     it.each([
@@ -65,5 +65,30 @@ describe("validateLength", () => {
         expect(() => validateLength("abcdef", bounds)).toThrow(
             "Message must be 5 characters or fewer.",
         );
+    });
+});
+
+describe("ValidationError", () => {
+    const bounds = { min: 2, max: 5, label: "Message" };
+
+    it("is thrown by validateLength so callers can distinguish it from a driver error", () => {
+        expect(() => validateLength("a", bounds)).toThrow(ValidationError);
+        expect(() => validateLength("abcdef", bounds)).toThrow(ValidationError);
+    });
+
+    it("is still an Error and keeps its user-facing message", () => {
+        try {
+            validateLength("a", bounds);
+            expect.unreachable();
+        } catch (err) {
+            expect(err).toBeInstanceOf(Error);
+            expect(err).toBeInstanceOf(ValidationError);
+            expect((err as Error).message).toBe("Message must be at least 2 characters.");
+            expect((err as Error).name).toBe("ValidationError");
+        }
+    });
+
+    it("does not match an ordinary Error", () => {
+        expect(new Error("boom")).not.toBeInstanceOf(ValidationError);
     });
 });

@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { getClientIp, hashIp } from "@/lib/ip";
 import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
 import { source } from "@/lib/source";
-import { sanitizeText, validateLength } from "@/lib/text";
+import { sanitizeText, ValidationError, validateLength } from "@/lib/text";
 import { auth } from "@clerk/nextjs/server";
 import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -281,8 +281,9 @@ export async function submitComment(
         revalidatePath(`/blog/${slug}`);
         return { success: true, id: inserted.id };
     } catch (err) {
+        if (err instanceof ValidationError) return { success: false, error: err.message };
         console.error("[submitComment]", err);
-        return { success: false, error: err instanceof Error ? err.message : "Something went wrong." };
+        return { success: false, error: "Something went wrong. Please try again." };
     }
 }
 
