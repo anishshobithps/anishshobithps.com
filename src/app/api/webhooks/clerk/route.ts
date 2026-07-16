@@ -1,5 +1,10 @@
 import { db } from "@/lib/db";
-import { guestbookEntries, guestbookLikes } from "@/lib/schema";
+import {
+    blogCommentLikes,
+    blogComments,
+    guestbookEntries,
+    guestbookLikes,
+} from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
@@ -46,6 +51,12 @@ export async function POST(req: Request) {
         await db
             .delete(guestbookEntries)
             .where(eq(guestbookEntries.clerkUserId, userId));
+        await db
+            .delete(blogCommentLikes)
+            .where(eq(blogCommentLikes.clerkUserId, userId));
+        await db
+            .delete(blogComments)
+            .where(eq(blogComments.clerkUserId, userId));
     }
 
     return new Response(null, { status: 200 });
