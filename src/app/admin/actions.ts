@@ -13,6 +13,7 @@ import {
 } from "@/lib/schema";
 import { assertAdmin } from "@/lib/assert-admin";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
+import { PROJECTS_CACHE_TAG } from "@/lib/projects";
 import { RESUME_CACHE_TAG } from "@/lib/resume";
 import { asc, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath, updateTag } from "next/cache";
@@ -182,6 +183,7 @@ export async function createProject(data: {
         revalidatePath("/projects");
         revalidatePath("/");
         revalidatePath("/admin/projects");
+        updateTag(PROJECTS_CACHE_TAG);
         return { success: true };
     } catch {
         return { success: false, error: "Failed to create project." };
@@ -207,6 +209,7 @@ export async function updateProject(
         revalidatePath("/projects");
         revalidatePath("/");
         revalidatePath("/admin/projects");
+        updateTag(PROJECTS_CACHE_TAG);
         return { success: true };
     } catch {
         return { success: false, error: "Failed to update project." };
@@ -225,6 +228,7 @@ export async function toggleProjectEnabled(
         revalidatePath("/projects");
         revalidatePath("/");
         revalidatePath("/admin/projects");
+        updateTag(PROJECTS_CACHE_TAG);
         return { success: true };
     } catch {
         return { success: false, error: "Failed to toggle project visibility." };
@@ -240,6 +244,7 @@ export async function deleteProject(
         revalidatePath("/projects");
         revalidatePath("/");
         revalidatePath("/admin/projects");
+        updateTag(PROJECTS_CACHE_TAG);
         return { success: true };
     } catch {
         return { success: false, error: "Failed to delete project." };
@@ -273,6 +278,7 @@ export async function moveProject(
         revalidatePath("/projects");
         revalidatePath("/");
         revalidatePath("/admin/projects");
+        updateTag(PROJECTS_CACHE_TAG);
         return { success: true };
     } catch {
         return { success: false, error: "Failed to reorder projects." };
