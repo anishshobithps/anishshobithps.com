@@ -24,6 +24,10 @@ export function toTimestamp(date: Date | string | undefined): number {
     return date ? new Date(date).getTime() : 0;
 }
 
+export function toRFC822(date: Date | string): string {
+    return new Date(date).toUTCString();
+}
+
 export function formatFileDate(date: Date = new Date()): string {
     return new Intl.DateTimeFormat("en-GB")
         .format(date)

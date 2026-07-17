@@ -81,6 +81,14 @@ export function buildMeta(
         metadataBase: new URL(siteConfig.baseUrl),
         alternates: {
             canonical,
+            types: {
+                "application/rss+xml": [
+                    {
+                        url: `${siteConfig.baseUrl}/feed.xml`,
+                        title: `${siteConfig.name} — Blog`,
+                    },
+                ],
+            },
         },
 
         ...(params.noIndex && {
