@@ -58,7 +58,7 @@ You'll need a few things first:
 | ---------- | --------------------------------------------------------- |
 | PostgreSQL | [neon.tech](https://neon.tech) (free tier works)          |
 | Auth       | [clerk.com](https://clerk.com) (for guestbook & comments) |
-| Spotify    | run `scripts/get-spotify-refresh-token.ts` once           |
+| Spotify    | run `pnpm spotify:token` once                             |
 
 Create `.env.local` at the root:
 
@@ -83,6 +83,8 @@ GITHUB_TOKEN=ghp_...                   # optional — only lifts the API rate li
 Only `DATABASE_URL` and `IP_HASH_SALT` are truly required to boot. `IP_HASH_SALT` throws loudly if missing rather than silently hashing with nothing. `NEXT_PUBLIC_BASE_URL` falls back to the Vercel production URL, then `http://localhost:3000`.
 
 **Clerk webhook:** point `https://yourdomain.com/api/webhooks/clerk` at `user.deleted` to keep the DB clean when users delete their accounts.
+
+**Spotify token:** `pnpm spotify:token` prints the authorize URL to open, then swaps the code it gives back for a refresh token. Register `http://127.0.0.1:3000` as a redirect URI in the Spotify dashboard first, or the exchange fails.
 
 ---
 

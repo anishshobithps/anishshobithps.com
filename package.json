@@ -13,6 +13,7 @@
     "db:seed:guestbook": "tsx --env-file=.env.local scripts/seed-guestbook.ts",
     "db:seed:guestbook:cleanup": "tsx --env-file=.env.local scripts/seed-guestbook.ts --cleanup",
     "db:seed:links": "tsx --env-file=.env.local scripts/seed-links.ts",
+    "spotify:token": "tsx --env-file=.env.local scripts/get-spotify-refresh-token.ts",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
