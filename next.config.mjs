@@ -10,7 +10,6 @@ const config = {
   serverExternalPackages: ["@takumi-rs/image-response"],
   typedRoutes: true,
   experimental: {
-    viewTransition: true,
     optimizePackageImports: [
       "@phosphor-icons/react",
       "radix-ui",
