@@ -1,3 +1,5 @@
+
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset=".github/banner-dark.svg"/>
@@ -54,11 +56,11 @@ pnpm dev                # http://localhost:3000
 
 You'll need a few things first:
 
-| What       | Where                                                     |
-| ---------- | --------------------------------------------------------- |
-| PostgreSQL | [neon.tech](https://neon.tech) (free tier works)          |
-| Auth       | [clerk.com](https://clerk.com) (for guestbook & comments) |
-| Spotify    | run `pnpm spotify:token` once                             |
+| What       | Where                                                                        |
+| ---------- | ---------------------------------------------------------------------------- |
+| PostgreSQL | [neon.tech](https://neon.tech) (free tier works)                              |
+| Auth       | [clerk.com](https://clerk.com) (for guestbook & comments)                    |
+| Spotify    | [developer.spotify.com](https://developer.spotify.com) (for now-playing)      |
 
 Create `.env.local` at the root:
 
