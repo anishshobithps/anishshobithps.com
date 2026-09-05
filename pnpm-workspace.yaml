@@ -5,8 +5,8 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 overrides:
-  # drizzle-kit still drags the deprecated @esbuild-kit chain (pins old esbuild);
-  # remove once drizzle-kit drops @esbuild-kit/esm-loader.
-  esbuild@<0.24.3: 0.25.12
+  # drizzle-kit declares the deprecated @esbuild-kit/esm-loader but its code uses tsx;
+  # alias it to tsx to drop the dead chain. Remove once drizzle-kit drops the dep.
+  '@esbuild-kit/esm-loader': 'npm:tsx@^4'
   # next pins postcss exactly (8.4.31), even on latest; remove when next ships >=8.5.10.
   postcss@<8.5.10: ^8.5.10
