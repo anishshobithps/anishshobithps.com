@@ -38,6 +38,7 @@ export const Avatar = memo(function Avatar({
           alt={name}
           fill
           sizes="36px"
+          unoptimized
           className="object-cover"
         />
       </div>
