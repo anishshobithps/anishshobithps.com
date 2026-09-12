@@ -34,7 +34,11 @@ export async function GuestbookTeaser() {
         <Button asChild variant="outline">
           <Link href="/guestbook">
             Sign the guestbook
-            <CaretRightIcon className="size-3.5" aria-hidden="true" />
+            <CaretRightIcon
+              data-icon="inline-end"
+              className="size-3.5"
+              aria-hidden="true"
+            />
           </Link>
         </Button>
       </Reveal>

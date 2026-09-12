@@ -76,6 +76,7 @@ export async function ProjectGrid() {
                           aria-label={`View ${project.title} live site`}
                         >
                           <ArrowUpRightIcon
+                            data-icon="inline-start"
                             className="size-4"
                             aria-hidden="true"
                           />
@@ -94,7 +95,11 @@ export async function ProjectGrid() {
                         rel="noopener noreferrer"
                         aria-label={`View ${project.title} on GitHub`}
                       >
-                        <GithubLogoIcon className="size-4" aria-hidden="true" />
+                        <GithubLogoIcon
+                          data-icon="inline-start"
+                          className="size-4"
+                          aria-hidden="true"
+                        />
                         <span className="ml-2" aria-hidden="true">
                           GitHub
                         </span>
@@ -143,10 +148,15 @@ export function BuiltThings() {
             rel="noopener noreferrer"
             aria-label="Explore the Chaos — view all projects on GitHub"
           >
-            <GithubLogoIcon className="size-5 mr-2" aria-hidden="true" />
+            <GithubLogoIcon
+              data-icon="inline-start"
+              className="size-5 mr-2"
+              aria-hidden="true"
+            />
 
             <span>Explore the Chaos</span>
             <ArrowUpRightIcon
+              data-icon="inline-end"
               className="size-4 ml-2 opacity-70"
               aria-hidden="true"
             />

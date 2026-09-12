@@ -127,6 +127,7 @@ export function GuestbookPanel({
           className="shrink-0 gap-1.5 h-8 text-xs"
         >
           <PushPinSimpleIcon
+            data-icon="inline-start"
             className="size-3"
             weight={pinned ? "fill" : "regular"}
           />

@@ -213,7 +213,7 @@ function LinkForm({
               onClick={() => append({ tag: values.primary.tag, slug: "" })}
               disabled={submitting}
             >
-              <PlusIcon className="size-3.5" aria-hidden="true" />
+              <PlusIcon data-icon="inline-start" className="size-3.5" aria-hidden="true" />
               Add alias
             </Button>
           </div>
@@ -516,7 +516,7 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
           </TypographyMuted>
         </div>
         <Button size="sm" className="gap-1.5" onClick={openAdd}>
-          <PlusIcon className="size-3.5" aria-hidden="true" />
+          <PlusIcon data-icon="inline-start" className="size-3.5" aria-hidden="true" />
           Add Link
         </Button>
       </div>
