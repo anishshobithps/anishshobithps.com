@@ -29,6 +29,7 @@
     "@takumi-rs/image-response": "^0.68.17",
     "@wojtekmaj/react-hooks": "^2.2.0",
     "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
     "cn": "^0.2.5",
     "drizzle-orm": "^0.45.2",
     "fumadocs-core": "16.11.1",

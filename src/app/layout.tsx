@@ -1,4 +1,6 @@
+import { CommandMenu } from "@/components/shared/command-menu";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
+import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
@@ -91,6 +93,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <NuqsAdapter>
             <TooltipProvider>
               <PhosphorProvider>
+                <ThemeHotkey />
+                <CommandMenu />
                 {children}
                 <Toaster />
               </PhosphorProvider>
