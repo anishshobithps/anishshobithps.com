@@ -144,6 +144,16 @@ export function MobileTOC() {
   }, [active]);
 
   useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const onLinkClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest("a")) setOpen(false);
+    };
+    container.addEventListener("click", onLinkClick);
+    return () => container.removeEventListener("click", onLinkClick);
+  }, []);
+
+  useEffect(() => {
     if (!open) return;
     const onPointerDown = (e: PointerEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
@@ -168,7 +178,6 @@ export function MobileTOC() {
 
   return (
     <>
-      {/* No backdrop blur here — it made the article text read as blurry. */}
       {open && (
         <div
           className="fixed inset-0 z-40 xl:hidden bg-background/60 pointer-events-none animate-in fade-in-0 duration-200"
@@ -234,9 +243,6 @@ export function MobileTOC() {
               <div
                 className="px-6 sm:px-8 lg:px-10 pb-3"
                 ref={scrollContainerRef}
-                onClick={(e) => {
-                  if ((e.target as HTMLElement).closest("a")) setOpen(false);
-                }}
               >
                 <TOCScrollArea className="max-h-[50vh]">
                   <TOCList />
