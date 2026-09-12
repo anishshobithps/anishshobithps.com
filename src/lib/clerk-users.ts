@@ -1,4 +1,4 @@
-import { clerkClient } from "@clerk/nextjs/server";
+import { createClerkClient } from "@clerk/nextjs/server";
 
 export interface PublicUser {
     id: string;
@@ -19,14 +19,23 @@ function resolveUserName(user: {
     );
 }
 
+let backendClient: ReturnType<typeof createClerkClient> | null = null;
+
+function getBackendClient() {
+    backendClient ??= createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    return backendClient;
+}
+
 export async function getClerkUserMap(
     userIds: string[],
 ): Promise<Map<string, PublicUser>> {
     const uniqueIds = [...new Set(userIds)];
     if (uniqueIds.length === 0) return new Map();
 
-    const client = await clerkClient();
-    const { data } = await client.users.getUserList({ userId: uniqueIds, limit: 500 });
+    const { data } = await getBackendClient().users.getUserList({
+        userId: uniqueIds,
+        limit: 500,
+    });
 
     return new Map(
         data.map((u) => [

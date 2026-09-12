@@ -18,12 +18,14 @@ import Link from "next/link";
 import type { Route } from "next";
 import { Suspense } from "react";
 import { getPublicProjects } from "@/lib/projects";
+import { unstable_rethrow } from "next/navigation";
 
 export async function ProjectGrid() {
   let projects: Awaited<ReturnType<typeof getPublicProjects>>;
   try {
     projects = await getPublicProjects();
   } catch (error) {
+    unstable_rethrow(error);
     console.error("Failed to load public projects:", error);
     projects = [];
   }

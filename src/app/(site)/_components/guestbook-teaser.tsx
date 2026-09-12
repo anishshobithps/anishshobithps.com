@@ -9,12 +9,17 @@ import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
 import { CaretRightIcon } from "@/components/shared/icons";
 import Link from "next/link";
+import { unstable_rethrow } from "next/navigation";
+import { connection } from "next/server";
 
 export async function GuestbookTeaser() {
+  await connection();
+
   let entries: Awaited<ReturnType<typeof getGuestbookPreview>>;
   try {
     entries = await getGuestbookPreview(15);
   } catch (error) {
+    unstable_rethrow(error);
     console.error("Failed to load guestbook preview:", error);
     entries = [];
   }
