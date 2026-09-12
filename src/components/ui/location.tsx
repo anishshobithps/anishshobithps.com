@@ -102,6 +102,7 @@ export function LocationTag({
       </span>
 
       <svg
+        data-icon="inline-end"
         className="size-3 shrink-0 text-muted-foreground transition-[transform,opacity] duration-300"
         style={{
           transform: isActive

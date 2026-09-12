@@ -7,13 +7,28 @@ import type { ReactNode } from "react";
 
 const iconMap: Record<string, (className?: string) => ReactNode> = {
   github: (className) => (
-    <GithubLogoIcon weight="fill" className={className} aria-hidden="true" />
+    <GithubLogoIcon
+      data-icon="inline-start"
+      weight="fill"
+      className={className}
+      aria-hidden="true"
+    />
   ),
   linkedin: (className) => (
-    <LinkedinLogoIcon weight="fill" className={className} aria-hidden="true" />
+    <LinkedinLogoIcon
+      data-icon="inline-start"
+      weight="fill"
+      className={className}
+      aria-hidden="true"
+    />
   ),
   x: (className) => (
-    <XLogoIcon weight="fill" className={className} aria-hidden="true" />
+    <XLogoIcon
+      data-icon="inline-start"
+      weight="fill"
+      className={className}
+      aria-hidden="true"
+    />
   ),
 };
 

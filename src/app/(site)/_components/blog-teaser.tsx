@@ -61,7 +61,11 @@ export function BlogTeaser() {
         <Button asChild variant="outline">
           <Link href="/blogs">
             See all posts
-            <CaretRightIcon className="size-3.5" aria-hidden="true" />
+            <CaretRightIcon
+              data-icon="inline-end"
+              className="size-3.5"
+              aria-hidden="true"
+            />
           </Link>
         </Button>
       </Reveal>

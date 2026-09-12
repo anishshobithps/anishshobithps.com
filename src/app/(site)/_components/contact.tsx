@@ -49,6 +49,7 @@ export function Contact() {
                     aria-label="Say Hello — send an email"
                   >
                     <EnvelopeIcon
+                      data-icon="inline-start"
                       className="size-4 shrink-0"
                       aria-hidden="true"
                     />
@@ -75,6 +76,7 @@ export function Contact() {
                           {getPlatformIcon(item.platform, "size-4")}
                           <span className="hidden sm:inline">{item.label}</span>
                           <ArrowUpRightIcon
+                            data-icon="inline-end"
                             className="size-3.5 opacity-50 hidden @sm:inline-flex"
                             aria-hidden="true"
                           />

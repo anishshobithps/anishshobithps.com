@@ -54,9 +54,9 @@ export function ResumeRefresh() {
         className="shrink-0 gap-1.5"
       >
         {pending ? (
-          <SpinnerIcon className="size-4 animate-spin" />
+          <SpinnerIcon data-icon="inline-start" className="size-4 animate-spin" />
         ) : (
-          <ArrowClockwiseIcon className="size-4" />
+          <ArrowClockwiseIcon data-icon="inline-start" className="size-4" />
         )}
         {pending ? "Refreshing…" : "Force refresh"}
       </Button>

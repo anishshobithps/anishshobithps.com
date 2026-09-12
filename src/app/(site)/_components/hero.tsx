@@ -81,6 +81,7 @@ export function Hero() {
                   className="flex items-center justify-center gap-2"
                 >
                   <FileTextIcon
+                    data-icon="inline-start"
                     className="size-5 shrink-0"
                     aria-hidden="true"
                   />
@@ -100,6 +101,7 @@ export function Hero() {
                   className="flex items-center justify-center gap-2"
                 >
                   <EnvelopeIcon
+                    data-icon="inline-start"
                     className="size-5 shrink-0"
                     aria-hidden="true"
                   />

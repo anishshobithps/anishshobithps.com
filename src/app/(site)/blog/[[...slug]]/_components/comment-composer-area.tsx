@@ -72,7 +72,7 @@ export function CommentComposerArea({
               className="gap-1.5 text-xs"
             >
               <Link href="/guestbook">
-                <PencilIcon size={13} aria-hidden="true" />
+                <PencilIcon data-icon="inline-start" size={13} aria-hidden="true" />
                 <span className="hidden sm:inline">Checkout Guestbook!!</span>
               </Link>
             </Button>
@@ -84,7 +84,7 @@ export function CommentComposerArea({
               className="gap-1.5 text-xs text-muted-foreground hover:text-foreground"
               aria-label="Sign out"
             >
-              <SignOutIcon size={13} aria-hidden="true" />
+              <SignOutIcon data-icon="inline-start" size={13} aria-hidden="true" />
               <span className="hidden sm:inline">Sign out</span>
             </Button>
           </ButtonGroup>
@@ -120,7 +120,7 @@ export function CommentComposerArea({
       </div>
       <SignInButton mode="modal">
         <Button size="sm" className="gap-1.5 shrink-0">
-          <SignInIcon size={14} aria-hidden="true" />
+          <SignInIcon data-icon="inline-start" size={14} aria-hidden="true" />
           Sign in to comment
         </Button>
       </SignInButton>

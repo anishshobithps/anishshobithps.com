@@ -53,7 +53,7 @@ export function AdminUnauthorized() {
         <ButtonGroup>
           <Button asChild size="lg" variant="outline" className="font-semibold">
             <Link href="/" aria-label="Back to site">
-              <HouseIcon weight="bold" aria-hidden="true" />
+              <HouseIcon data-icon="inline-start" weight="bold" aria-hidden="true" />
               Back to site
             </Link>
           </Button>
@@ -65,7 +65,7 @@ export function AdminUnauthorized() {
             onClick={() => signOut({ redirectUrl: "/" })}
             aria-label="Sign out"
           >
-            <SignOutIcon weight="bold" aria-hidden="true" />
+            <SignOutIcon data-icon="inline-start" weight="bold" aria-hidden="true" />
             Sign out
           </Button>
         </ButtonGroup>

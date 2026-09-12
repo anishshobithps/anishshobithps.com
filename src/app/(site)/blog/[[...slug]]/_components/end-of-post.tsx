@@ -37,9 +37,9 @@ export function EndOfPost({ commentCount, className }: EndOfPostProps) {
           className="gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground rounded-sm shrink-0"
           aria-label="Scroll to reactions and comments"
         >
-          <ChatCircleIcon size={13} aria-hidden="true" />
+          <ChatCircleIcon data-icon="inline-start" size={13} aria-hidden="true" />
           Leave a comment
-          <CaretDownIcon size={12} aria-hidden="true" />
+          <CaretDownIcon data-icon="inline-end" size={12} aria-hidden="true" />
         </Button>
       </div>
     </div>
@@ -59,7 +59,12 @@ export function ScrollToEngagement({ count }: { count: number }) {
       className="h-auto px-0 py-0 font-mono text-xs text-muted-foreground gap-1.5 hover:bg-transparent hover:text-foreground"
       aria-label={`${count} comment${count !== 1 ? "s" : ""} — scroll to discussion`}
     >
-      <ChatCircleIcon size={14} className="shrink-0" aria-hidden="true" />
+      <ChatCircleIcon
+        data-icon="inline-start"
+        size={14}
+        className="shrink-0"
+        aria-hidden="true"
+      />
       {count} comment{count !== 1 ? "s" : ""}
     </Button>
   );

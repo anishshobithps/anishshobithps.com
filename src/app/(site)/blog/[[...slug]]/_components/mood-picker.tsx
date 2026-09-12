@@ -125,7 +125,7 @@ export function MoodPicker({
                   isActive ? activeClassName : inactiveClassName,
                 )}
               >
-                <Icon size={14} aria-hidden="true" />
+                <Icon data-icon="inline-start" size={14} aria-hidden="true" />
                 {label}
                 {count !== null && count > 0 && (
                   <span className="tabular-nums text-xs opacity-70">

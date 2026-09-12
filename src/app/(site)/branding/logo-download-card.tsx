@@ -164,7 +164,7 @@ export function LogoDownloadCard({
             svgRef.current && downloadSVG(svgRef.current, filename, size)
           }
         >
-          <CodeIcon className="size-3 shrink-0" aria-hidden="true" />
+          <CodeIcon data-icon="inline-start" className="size-3 shrink-0" aria-hidden="true" />
           SVG
         </Button>
         <Button
@@ -176,7 +176,7 @@ export function LogoDownloadCard({
             svgRef.current && downloadPNG(svgRef.current, filename, size)
           }
         >
-          <ImageIcon className="size-3 shrink-0" aria-hidden="true" />
+          <ImageIcon data-icon="inline-start" className="size-3 shrink-0" aria-hidden="true" />
           PNG
         </Button>
       </div>

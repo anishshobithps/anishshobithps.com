@@ -127,6 +127,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
                 className="gap-1.5"
               >
                 <HeartIcon
+                  data-icon="inline-start"
                   size={14}
                   weight={entry.likedByMe ? "fill" : "duotone"}
                   aria-hidden="true"
@@ -149,6 +150,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
                     className="gap-1.5 text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
                   >
                     <TrashIcon
+                      data-icon="inline-start"
                       size={14}
                       className="text-destructive"
                       aria-hidden="true"

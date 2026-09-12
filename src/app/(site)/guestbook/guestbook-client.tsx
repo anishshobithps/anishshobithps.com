@@ -206,7 +206,7 @@ export function GuestbookClient({
                   aria-label="Sign out"
                   className="gap-1.5"
                 >
-                  <SignOutIcon size={14} aria-hidden="true" />
+                  <SignOutIcon data-icon="inline-start" size={14} aria-hidden="true" />
                   <span className="hidden sm:inline">Sign out</span>
                 </Button>
               </ButtonGroup>
@@ -242,7 +242,7 @@ export function GuestbookClient({
               >
                 <ButtonGroup>
                   <Button size="sm" className="gap-1.5 font-semibold shrink-0">
-                    <BookOpenIcon size={14} aria-hidden="true" />
+                    <BookOpenIcon data-icon="inline-start" size={14} aria-hidden="true" />
                     Sign in
                   </Button>
                 </ButtonGroup>

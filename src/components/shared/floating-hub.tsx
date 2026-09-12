@@ -87,7 +87,7 @@ function AuthSection({ onClose }: { onClose: () => void }) {
             }}
             className="shrink-0 gap-1.5 text-muted-foreground hover:text-foreground"
           >
-            <SignOutIcon aria-hidden="true" className="size-3.5" />
+            <SignOutIcon data-icon="inline-start" aria-hidden="true" className="size-3.5" />
             Sign out
           </Button>
         </div>
@@ -102,7 +102,7 @@ function AuthSection({ onClose }: { onClose: () => void }) {
             variant="outline"
             className="w-full gap-2 pointer-coarse:h-11"
           >
-            <SignInIcon aria-hidden="true" className="size-4" />
+            <SignInIcon data-icon="inline-start" aria-hidden="true" className="size-4" />
             Sign in
           </Button>
         </SignInButton>
@@ -139,7 +139,7 @@ function HubBody({
             className={CARD_CLASS}
           >
             <span className="flex items-center gap-1.5 text-rose-500">
-              <HeartIcon weight="fill" aria-hidden="true" className="size-4" />
+              <HeartIcon data-icon="inline-start" weight="fill" aria-hidden="true" className="size-4" />
             </span>
             <span className="flex min-w-0 flex-1 flex-col">
               <Text as="span" variant="small" className="text-foreground">
@@ -152,10 +152,12 @@ function HubBody({
               </Text>
             </span>
             <ChatCircleIcon
+              data-icon="inline-end"
               aria-hidden="true"
               className="size-4 text-muted-foreground"
             />
             <ArrowDownIcon
+              data-icon="inline-end"
               aria-hidden="true"
               className="size-4 text-muted-foreground transition-transform group-hover:translate-y-0.5"
             />
@@ -169,6 +171,7 @@ function HubBody({
           <Button asChild variant="ghost" className={CARD_CLASS}>
             <a href="/api/resume/download" download onClick={onClose}>
               <DownloadIcon
+                data-icon="inline-start"
                 aria-hidden="true"
                 className="size-4 shrink-0 text-foreground"
               />

@@ -327,7 +327,7 @@ export function ProjectsPanel({
           </TypographyMuted>
         </div>
         <Button size="sm" className="gap-1.5" onClick={openAdd}>
-          <PlusIcon className="size-3.5" aria-hidden="true" />
+          <PlusIcon data-icon="inline-start" className="size-3.5" aria-hidden="true" />
           Add Project
         </Button>
       </div>

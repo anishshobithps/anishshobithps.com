@@ -46,7 +46,11 @@ export function BlogPostNav({
     <>
       <Button variant="ghost" size="sm" asChild>
         <Link href="/blogs" aria-label="Back to all blog posts">
-          <ArrowLeftIcon className="size-3.5 shrink-0" aria-hidden="true" />
+          <ArrowLeftIcon
+            data-icon="inline-start"
+            className="size-3.5 shrink-0"
+            aria-hidden="true"
+          />
           <TypographySmall>Blog</TypographySmall>
         </Link>
       </Button>
