@@ -31,3 +31,13 @@ export function FloatingHubServer() {
     />
   );
 }
+
+export function FloatingHubFallback() {
+  return (
+    <div
+      aria-hidden="true"
+      style={{ position: "fixed", right: 16, bottom: 16, zIndex: 40 }}
+      className="size-12 animate-pulse rounded-full border border-border bg-background/90 shadow-lg print:hidden"
+    />
+  );
+}

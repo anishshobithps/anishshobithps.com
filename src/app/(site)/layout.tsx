@@ -3,7 +3,10 @@ import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MouseGlow } from "@/components/shared/mouse-glow";
-import { FloatingHubServer } from "@/components/shared/floating-hub-server";
+import {
+  FloatingHubServer,
+  FloatingHubFallback,
+} from "@/components/shared/floating-hub-server";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Suspense, ViewTransition } from "react";
 
@@ -30,7 +33,7 @@ export default function SiteLayout({
         <Footer />
       </PageLayout>
       <MouseGlow />
-      <Suspense fallback={null}>
+      <Suspense fallback={<FloatingHubFallback />}>
         <FloatingHubServer />
       </Suspense>
     </ClerkProvider>
