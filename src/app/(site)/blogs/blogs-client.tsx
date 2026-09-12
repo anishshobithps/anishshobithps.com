@@ -390,72 +390,68 @@ export function BlogsClient({
               {filtered.length} post{filtered.length !== 1 ? "s" : ""}
             </TypographyMuted>
             {totalPages > 1 && (
-              <nav aria-label="Pagination">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1)
-                            setParams({ page: currentPage - 1 });
-                        }}
-                        aria-label="Go to previous page"
-                        aria-disabled={currentPage <= 1}
-                        className={cn(
-                          "cursor-pointer",
-                          currentPage <= 1 && "pointer-events-none opacity-50",
-                        )}
-                      />
-                    </PaginationItem>
-                    {pageNumbers.map((p, i) =>
-                      p === "..." ? (
-                        <PaginationItem
-                          key={`ellipsis-${pageNumbers[i - 1] ?? "start"}`}
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage > 1)
+                          setParams({ page: currentPage - 1 });
+                      }}
+                      aria-label="Go to previous page"
+                      aria-disabled={currentPage <= 1}
+                      className={cn(
+                        "cursor-pointer",
+                        currentPage <= 1 && "pointer-events-none opacity-50",
+                      )}
+                    />
+                  </PaginationItem>
+                  {pageNumbers.map((p, i) =>
+                    p === "..." ? (
+                      <PaginationItem
+                        key={`ellipsis-${pageNumbers[i - 1] ?? "start"}`}
+                      >
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    ) : (
+                      <PaginationItem key={p}>
+                        <PaginationLink
+                          href="#"
+                          isActive={p === currentPage}
+                          aria-label={`Go to page ${p}`}
+                          aria-current={p === currentPage ? "page" : undefined}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setParams({ page: p as number });
+                          }}
+                          className="cursor-pointer"
                         >
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      ) : (
-                        <PaginationItem key={p}>
-                          <PaginationLink
-                            href="#"
-                            isActive={p === currentPage}
-                            aria-label={`Go to page ${p}`}
-                            aria-current={
-                              p === currentPage ? "page" : undefined
-                            }
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setParams({ page: p as number });
-                            }}
-                            className="cursor-pointer"
-                          >
-                            {p}
-                          </PaginationLink>
-                        </PaginationItem>
-                      ),
-                    )}
-                    <PaginationItem>
-                      <PaginationNext
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages)
-                            setParams({ page: currentPage + 1 });
-                        }}
-                        aria-label="Go to next page"
-                        aria-disabled={currentPage >= totalPages}
-                        className={cn(
-                          "cursor-pointer",
-                          currentPage >= totalPages &&
-                            "pointer-events-none opacity-50",
-                        )}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </nav>
+                          {p}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ),
+                  )}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages)
+                          setParams({ page: currentPage + 1 });
+                      }}
+                      aria-label="Go to next page"
+                      aria-disabled={currentPage >= totalPages}
+                      className={cn(
+                        "cursor-pointer",
+                        currentPage >= totalPages &&
+                          "pointer-events-none opacity-50",
+                      )}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             )}
           </div>
         </>

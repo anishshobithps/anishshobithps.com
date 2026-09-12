@@ -139,6 +139,7 @@ export function CommentsPanel({
         <div className="relative flex-1">
           <MagnifyingGlassIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
           <Input
+            aria-label="Search comments, names..."
             placeholder="Search comments, names..."
             value={q}
             onChange={(e) => setParams({ q: e.target.value })}

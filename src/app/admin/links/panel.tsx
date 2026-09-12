@@ -345,6 +345,7 @@ function LinkForm({
               </div>
               <FormControl>
                 <Switch
+                  aria-label="OpenGraph image"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={submitting}
@@ -387,6 +388,7 @@ function LinkForm({
               </div>
               <FormControl>
                 <Switch
+                  aria-label="Permanent redirect"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={submitting}
@@ -409,6 +411,7 @@ function LinkForm({
               </div>
               <FormControl>
                 <Switch
+                  aria-label="Enabled"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                   disabled={submitting}

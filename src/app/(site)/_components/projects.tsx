@@ -20,7 +20,13 @@ import { Suspense } from "react";
 import { getPublicProjects } from "@/lib/projects";
 
 export async function ProjectGrid() {
-  const projects = await getPublicProjects();
+  let projects: Awaited<ReturnType<typeof getPublicProjects>>;
+  try {
+    projects = await getPublicProjects();
+  } catch (error) {
+    console.error("Failed to load public projects:", error);
+    projects = [];
+  }
 
   if (projects.length === 0) {
     return (

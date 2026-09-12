@@ -11,7 +11,13 @@ import { CaretRightIcon } from "@/components/shared/icons";
 import Link from "next/link";
 
 export async function GuestbookTeaser() {
-  const entries = await getGuestbookPreview(15);
+  let entries: Awaited<ReturnType<typeof getGuestbookPreview>>;
+  try {
+    entries = await getGuestbookPreview(15);
+  } catch (error) {
+    console.error("Failed to load guestbook preview:", error);
+    entries = [];
+  }
 
   return (
     <Section aria-label="Guestbook preview">
