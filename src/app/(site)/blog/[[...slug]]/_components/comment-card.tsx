@@ -7,6 +7,7 @@ import {
   ArrowBendDownRightIcon,
   HeartIcon,
   PushPinSimpleIcon,
+  SpinnerIcon,
   TrashIcon,
 } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +24,7 @@ import {
 import { cn } from "@/lib/cn";
 import { timeAgo } from "@/lib/date";
 import { SignInButton } from "@clerk/nextjs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 const COMMENT_MAX_LENGTH = 1000;
 const MAX_DEPTH = 2;
@@ -44,10 +45,11 @@ export function CommentCard({
   isSignedIn: boolean;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  onReply: (parentId: number, body: string) => void;
+  onReply: (parentId: number, body: string) => void | Promise<void>;
   likePendingRef: React.RefObject<Set<number>>;
 }) {
   const [replying, setReplying] = useState(false);
+  const [isReplyPending, startReplyTransition] = useTransition();
   const replyRef = useRef<HTMLDivElement>(null);
 
   const isOptimistic = comment.id < 0;
@@ -62,7 +64,14 @@ export function CommentCard({
   }, [replying]);
 
   return (
-    <li className={cn("relative", isPinnedRoot && "bg-primary/3")}>
+    <li
+      className={cn(
+        "relative",
+        isPinnedRoot && "bg-primary/3",
+        isOptimistic && "opacity-70",
+      )}
+      aria-busy={isOptimistic || undefined}
+    >
       {isPinnedRoot && (
         <span
           aria-hidden="true"
@@ -84,11 +93,25 @@ export function CommentCard({
                   @{comment.user.username}
                 </TypographyMuted>
               )}
-              <TypographyMuted className="text-xs tabular-nums">
-                <time dateTime={comment.createdAt} suppressHydrationWarning>
-                  {timeAgo(comment.createdAt)}
-                </time>
-              </TypographyMuted>
+              {isOptimistic ? (
+                <TypographyMuted
+                  className="flex items-center gap-1 text-xs"
+                  aria-live="polite"
+                >
+                  <SpinnerIcon
+                    size={10}
+                    className="animate-spin"
+                    aria-hidden="true"
+                  />
+                  Sending…
+                </TypographyMuted>
+              ) : (
+                <TypographyMuted className="text-xs tabular-nums">
+                  <time dateTime={comment.createdAt} suppressHydrationWarning>
+                    {timeAgo(comment.createdAt)}
+                  </time>
+                </TypographyMuted>
+              )}
               {isPinnedRoot && (
                 <Badge
                   variant="secondary"
@@ -124,6 +147,7 @@ export function CommentCard({
                   className="gap-1.5"
                 >
                   <HeartIcon
+                    data-icon="inline-start"
                     size={14}
                     weight={comment.likedByMe ? "fill" : "duotone"}
                     aria-hidden="true"
@@ -143,11 +167,17 @@ export function CommentCard({
                         variant="outline"
                         size="sm"
                         onClick={() => setReplying((v) => !v)}
+                        disabled={isReplyPending}
                         aria-expanded={replying}
+                        aria-busy={isReplyPending}
                         aria-label="Reply to comment"
                         className="gap-1.5"
                       >
-                        <ArrowBendDownRightIcon size={14} aria-hidden="true" />
+                        <ArrowBendDownRightIcon
+                          data-icon="inline-start"
+                          size={14}
+                          aria-hidden="true"
+                        />
                         Reply
                         {comment.replies.length > 0 && !replying && (
                           <span className="tabular-nums opacity-60">
@@ -159,6 +189,7 @@ export function CommentCard({
                       <SignInButton mode="modal">
                         <Button variant="outline" size="sm" className="gap-1.5">
                           <ArrowBendDownRightIcon
+                            data-icon="inline-start"
                             size={14}
                             aria-hidden="true"
                           />
@@ -183,6 +214,7 @@ export function CommentCard({
                       className="gap-1.5 text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
                     >
                       <TrashIcon
+                        data-icon="inline-start"
                         size={14}
                         className="text-destructive"
                         aria-hidden="true"
@@ -195,7 +227,14 @@ export function CommentCard({
             </div>
 
             {replying && (
-              <div ref={replyRef} className="pt-3">
+              <div
+                ref={replyRef}
+                className={cn(
+                  "pt-3",
+                  isReplyPending && "pointer-events-none opacity-70",
+                )}
+                aria-busy={isReplyPending}
+              >
                 <Composer
                   maxLength={COMMENT_MAX_LENGTH}
                   placeholder={`Reply to ${comment.user.name}…`}
@@ -204,9 +243,12 @@ export function CommentCard({
                   rows={2}
                   autoFocus
                   maxHeight={240}
+                  disabled={isReplyPending}
                   onSubmit={(body) => {
-                    onReply(comment.id, body);
-                    setReplying(false);
+                    startReplyTransition(async () => {
+                      await onReply(comment.id, body);
+                      setReplying(false);
+                    });
                   }}
                   onCancel={() => setReplying(false)}
                 />

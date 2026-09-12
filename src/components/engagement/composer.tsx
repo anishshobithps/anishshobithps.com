@@ -1,6 +1,6 @@
 "use client";
 
-import { PaperPlaneTiltIcon } from "@/components/shared/icons";
+import { PaperPlaneTiltIcon, SpinnerIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { TypographyMuted } from "@/components/ui/typography";
@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 
 export interface ComposerProps {
   maxLength: number;
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string) => void | Promise<void>;
   onCancel?: () => void;
   placeholder?: string;
   submitLabel: string;
@@ -22,6 +22,7 @@ export interface ComposerProps {
   warnThreshold?: number;
   dangerThreshold?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function Composer({
@@ -38,10 +39,13 @@ export function Composer({
   warnThreshold = 100,
   dangerThreshold = 20,
   className,
+  disabled = false,
 }: ComposerProps) {
   const [value, setValue] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useAutoResizeTextarea(textareaRef, value, maxHeight);
+  const pending = disabled || submitting;
 
   useEffect(() => {
     if (autoFocus) textareaRef.current?.focus();
@@ -51,9 +55,14 @@ export function Composer({
   const remaining = maxLength - value.length;
 
   const submit = () => {
-    if (!trimmed) return;
-    onSubmit(trimmed);
+    if (!trimmed || pending) return;
+    const body = trimmed;
     setValue("");
+    const result = onSubmit(body);
+    if (result instanceof Promise) {
+      setSubmitting(true);
+      result.finally(() => setSubmitting(false));
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -75,6 +84,7 @@ export function Composer({
         placeholder={placeholder}
         aria-label={ariaLabel}
         aria-describedby={counterId}
+        disabled={pending}
         className="resize-none min-h-20 max-h-50"
         autoComplete="off"
       />
@@ -99,18 +109,33 @@ export function Composer({
         </div>
         <div className="flex gap-2">
           {onCancel && (
-            <Button variant="ghost" size="sm" onClick={onCancel}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onCancel}
+              disabled={pending}
+            >
               Cancel
             </Button>
           )}
           <Button
             size="sm"
             onClick={submit}
-            disabled={!trimmed}
+            disabled={!trimmed || pending}
+            aria-busy={pending}
             className="gap-1.5 font-semibold"
           >
-            <PaperPlaneTiltIcon size={14} aria-hidden="true" />
-            {submitLabel}
+            {pending ? (
+              <SpinnerIcon
+                data-icon="inline-start"
+                size={14}
+                className="animate-spin"
+                aria-hidden="true"
+              />
+            ) : (
+              <PaperPlaneTiltIcon data-icon="inline-start" size={14} aria-hidden="true" />
+            )}
+            {pending ? "Sending…" : submitLabel}
           </Button>
         </div>
       </div>

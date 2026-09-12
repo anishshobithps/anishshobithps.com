@@ -151,8 +151,8 @@ export function PostEngagement({
   };
 
   const handleCommentSubmit = useCallback(
-    (body: string, parentId?: number) => {
-      if (!user) return;
+    (body: string, parentId?: number): Promise<void> => {
+      if (!user) return Promise.resolve();
 
       const tempId = -Date.now();
       const tempComment: CommentWithMeta = {
@@ -175,14 +175,17 @@ export function PostEngagement({
 
       setBaseComments((prev) => patchAdd(prev, tempComment, parentId));
 
-      startTransition(async () => {
-        const result = await submitComment(slug, body, parentId);
-        if (result.success) {
-          setBaseComments((prev) => patchConfirm(prev, tempId, result.id));
-        } else {
-          setBaseComments((prev) => patchDelete(prev, tempId));
-          typedToast(classifyError(result.error), result.error);
-        }
+      return new Promise<void>((resolve) => {
+        startTransition(async () => {
+          const result = await submitComment(slug, body, parentId);
+          if (result.success) {
+            setBaseComments((prev) => patchConfirm(prev, tempId, result.id));
+          } else {
+            setBaseComments((prev) => patchDelete(prev, tempId));
+            typedToast(classifyError(result.error), result.error);
+          }
+          resolve();
+        });
       });
     },
     [user, slug],

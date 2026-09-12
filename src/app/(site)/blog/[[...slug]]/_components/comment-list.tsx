@@ -15,7 +15,7 @@ export interface CommentListProps {
   isSignedIn: boolean;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  onReply: (parentId: number, body: string) => void;
+  onReply: (parentId: number, body: string) => void | Promise<void>;
   likePendingRef: React.RefObject<Set<number>>;
 }
 
