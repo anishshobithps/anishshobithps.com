@@ -78,6 +78,13 @@
       "when": 1784055523584,
       "tag": "0010_strong_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789357525073,
+      "tag": "0011_overconfident_nehzno",
+      "breakpoints": true
     }
   ]
 }

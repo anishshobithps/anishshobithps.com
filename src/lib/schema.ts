@@ -9,6 +9,7 @@ import {
     text,
     integer,
     unique,
+    type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -96,7 +97,10 @@ export const blogComments = pgTable(
         postId: integer("post_id")
             .notNull()
             .references(() => blogPosts.id, { onDelete: "cascade", onUpdate: "cascade" }),
-        parentId: integer("parent_id"),
+        parentId: integer("parent_id").references(
+            (): AnyPgColumn => blogComments.id,
+            { onDelete: "cascade" },
+        ),
         clerkUserId: varchar("clerk_user_id", { length: 256 }).notNull(),
         body: text("body").notNull(),
         isPinned: boolean("is_pinned").default(false).notNull(),
