@@ -32,17 +32,9 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-// fumadocs-ui 16: <TOCItems> is a container that renders the thumb-track plus
-// its children — the caller maps the items into <TOCItem>. (Older versions
-// rendered the list internally.)
 function TOCList() {
   const items = useTOCItems();
   if (items.length === 0) return null;
-  // Retint fumadocs' `fd-primary` (a monochrome shadcn token) to the site's
-  // brand green for this subtree. --brand is the vivid fill/line green (same in
-  // both themes) so the active-section thumb reads as green in light mode too;
-  // the active item *text* is nudged back to the contrast-tuned --brand-text
-  // (AAA), since raw --brand is too light for legible small text on white.
   return (
     <TOCItems className="[--color-fd-primary:var(--brand)]">
       {items.map((item) => (

@@ -49,8 +49,6 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
         setMeasuredW(contentRight + PADDING - (CONTENT_LEFT - PADDING));
       };
       measure();
-      // Re-measure once the display font swaps in so the viewBox tracks the
-      // real glyph metrics instead of the fallback's.
       document.fonts?.ready.then(measure).catch(() => {});
     }, [wordmark]);
 

@@ -46,21 +46,13 @@ const repoCardVariants = cva(
 interface RepoCardProps
   extends Omit<React.ComponentProps<"a">, "children">,
     VariantProps<typeof repoCardVariants> {
-  /** GitHub username or organization. */
   owner: string
-  /** GitHub repository name. */
   repo: string
-  /** Show primary language with colored dot. @default true */
   showLanguage?: boolean
-  /** Show topic tags. @default true */
   showTopics?: boolean
-  /** Show license identifier. @default true */
   showLicense?: boolean
-  /** Show last updated date. @default true */
   showUpdated?: boolean
-  /** Maximum number of topic tags to display. @default 4 */
   maxTopics?: number
-  /** Pre-fetched repository data. When provided, skips the GitHub API call. */
   data?: GitHubRepoData
 }
 
@@ -92,7 +84,7 @@ async function RepoCard({
       data-slot="repo-card"
       data-archived={repoData.isArchived || undefined}
       data-fork={repoData.isFork || undefined}
-      aria-label={`${repoData.fullName} on GitHub — ${repoData.stars.toLocaleString("en-US")} stars`}
+      aria-label={`${repoData.fullName} on GitHub, ${repoData.stars.toLocaleString("en-US")} stars`}
       className={cn(repoCardVariants({ variant, size, className }))}
       {...props}
     >

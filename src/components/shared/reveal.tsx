@@ -18,8 +18,6 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
     const el = ref.current;
     if (!el) return;
 
-    // Already in view on mount (above the fold): show immediately with no entrance,
-    // which avoids a one-frame flash-out before the observer's first callback.
     const rect = el.getBoundingClientRect();
     if (rect.top < window.innerHeight && rect.bottom > 0) {
       setVisible(true);

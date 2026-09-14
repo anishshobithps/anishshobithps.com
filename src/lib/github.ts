@@ -1,36 +1,19 @@
 export interface GitHubRepoData {
-  /** Display name in `owner/repo` format. */
   fullName: string
-  /** Repository description. */
   description: string | null
-  /** Primary programming language (e.g. "TypeScript"). */
   language: string | null
-  /** Language color hex from GitHub (e.g. "#3178c6"). */
   languageColor: string | null
-  /** Number of stars. */
   stars: number
-  /** Number of forks. */
   forks: number
-  /** Number of open issues. */
   openIssues: number
-  /** SPDX license identifier (e.g. "MIT"). */
   license: string | null
-  /** Topic tags. */
   topics: string[]
-  /** ISO date of last push. */
   updatedAt: string | null
-  /** Whether the repo is a fork. */
   isFork: boolean
-  /** Whether the repo is archived. */
   isArchived: boolean
-  /** Homepage URL. */
   homepage: string | null
 }
 
-/**
- * GitHub language colors for common languages.
- * Fallback when the API doesn't provide a color.
- */
 const LANGUAGE_COLORS: Record<string, string> = {
   TypeScript: "#3178c6",
   JavaScript: "#f1e05a",
@@ -64,22 +47,10 @@ const LANGUAGE_COLORS: Record<string, string> = {
   MDX: "#fcb32c",
 }
 
-/**
- * Get the display color for a programming language.
- */
 export function getLanguageColor(language: string): string {
   return LANGUAGE_COLORS[language] ?? "#8b8b8b"
 }
 
-/**
- * Fetch extended metadata for a GitHub repository.
- *
- * - Uses the public GitHub REST API — no API key required.
- * - Optionally authenticates with `process.env.GITHUB_TOKEN`.
- * - Caches the result for 1 hour via Next.js ISR.
- *
- * Returns `null` if the request fails or the repo doesn't exist.
- */
 export async function fetchGitHubRepoData(
   owner: string,
   repo: string
@@ -122,9 +93,6 @@ export async function fetchGitHubRepoData(
   }
 }
 
-/**
- * Format a number for compact display.
- */
 export function formatCount(count: number): string {
   if (count >= 1_000_000) {
     const value = count / 1_000_000
