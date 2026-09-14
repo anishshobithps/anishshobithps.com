@@ -46,7 +46,7 @@ export function CommentList({
       {comments.length === 0 ? (
         <EngagementEmptyState
           title="Crickets. Loud ones."
-          description="Be the first to say something — good, bad, or completely off the wall."
+          description="Be the first to say something, good or bad or completely off the wall."
         >
           <EngagementNudge type="comment" />
         </EngagementEmptyState>

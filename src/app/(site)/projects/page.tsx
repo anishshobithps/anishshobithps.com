@@ -34,7 +34,7 @@ export default function ProjectsPage() {
       <Section variant="hero" aria-label="Projects header">
         <TypographyH1>Projects</TypographyH1>
         <TypographyLead>
-          Everything I actually shipped — and{" "}
+          Everything I actually shipped, plus{" "}
           <TypographyMark>a few things I started at midnight</TypographyMark>{" "}
           and never quite finished.
         </TypographyLead>

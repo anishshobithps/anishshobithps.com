@@ -57,7 +57,7 @@ export function ScrollToEngagement({ count }: { count: number }) {
           ?.scrollIntoView({ behavior: "smooth", block: "start" })
       }
       className="h-auto px-0 py-0 font-mono text-xs text-muted-foreground gap-1.5 hover:bg-transparent hover:text-foreground"
-      aria-label={`${count} comment${count !== 1 ? "s" : ""} — scroll to discussion`}
+      aria-label={`${count} comment${count !== 1 ? "s" : ""}, scroll to discussion`}
     >
       <ChatCircleIcon
         data-icon="inline-start"

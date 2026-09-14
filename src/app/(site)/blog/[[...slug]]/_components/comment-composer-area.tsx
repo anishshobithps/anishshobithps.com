@@ -117,8 +117,8 @@ export function CommentComposerArea({
             className="underline underline-offset-4 hover:text-foreground transition-colors"
           >
             leave a note in the guestbook
-          </Link>{" "}
-          — it&apos;s like a comments section but less chaotic.
+          </Link>
+          . It&apos;s like a comments section but less chaotic.
         </TypographyMuted>
       </div>
       <SignInButton mode="modal">

@@ -310,7 +310,7 @@ export function PostEngagement({
 
           {!moodLoading && reactionTotal === 0 && (
             <TypographyMuted className="text-center text-xs">
-              Nothing here yet — be the first to react.
+              Nothing here yet. Be the first to react.
             </TypographyMuted>
           )}
 

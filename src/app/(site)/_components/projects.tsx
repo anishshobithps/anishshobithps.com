@@ -148,7 +148,7 @@ export function BuiltThings() {
             href="https://github.com/anishshobithps"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Explore the Chaos — view all projects on GitHub"
+            aria-label="Explore the chaos, view all projects on GitHub"
           >
             <GithubLogoIcon
               data-icon="inline-start"

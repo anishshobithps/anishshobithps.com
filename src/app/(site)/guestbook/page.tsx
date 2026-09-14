@@ -19,7 +19,7 @@ import { Suspense } from "react";
 export const metadata: Metadata = buildMeta({
   title: "Guestbook",
   pageTitle: "Guestbook",
-  description: `Leave a message for ${siteConfig.name}. Sign in and say hello — a digital guestbook of everyone who stopped by.`,
+  description: `Leave a message for ${siteConfig.name}. Sign in and say hello in a digital guestbook of everyone who stopped by.`,
   path: "home / guestbook",
   canonicalPath: "/guestbook",
   type: "website",

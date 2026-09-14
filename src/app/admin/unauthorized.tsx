@@ -42,7 +42,7 @@ export function AdminUnauthorized() {
           <TypographyH1 className="text-3xl">Access Denied</TypographyH1>
           <TypographyMuted className="text-base leading-relaxed">
             This admin belongs to{" "}
-            <TypographyMark>one specific account</TypographyMark> — and it is
+            <TypographyMark>one specific account</TypographyMark>, and it is
             not yours.
           </TypographyMuted>
           <TypographyMuted className="font-mono text-xs text-muted-foreground/50">

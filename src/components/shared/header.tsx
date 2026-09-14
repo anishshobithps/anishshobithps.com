@@ -116,7 +116,7 @@ export function Header() {
 
         <Link
           href="/"
-          aria-label={`${siteConfig.name} — home`}
+          aria-label={`${siteConfig.name}, home`}
           className="cursor-pointer"
         >
           <Logo size={32} showWordmark aria-hidden="true" />

@@ -15,8 +15,8 @@ export function RulesIFollow() {
           I build with{" "}
           <TypographyMark>
             clarity, structure, and a bias toward automation
-          </TypographyMark>{" "}
-          — because software should feel simple, even when the logic behind it
+          </TypographyMark>
+          , because software should feel simple even when the logic behind it
           isn&apos;t.
         </TypographyLead>
       </div>
@@ -40,7 +40,7 @@ const rules = [
   {
     title: "If It's Repetitive, Automate It",
     description:
-      "Manual repetition is usually a signal. Whether it's a CLI tool, a script, or a small utility — I'd rather build it once than repeat it twice.",
+      "Manual repetition is usually a signal. Whether it's a CLI tool, a script, or a small utility, I'd rather build it once than repeat it twice.",
   },
   {
     title: "Clarity Beats Cleverness",
@@ -55,6 +55,6 @@ const rules = [
   {
     title: "Simple on the Surface",
     description:
-      "Good software feels effortless to use. The complexity can exist — it just shouldn't leak into the interface.",
+      "Good software feels effortless to use. The complexity can exist. It just shouldn't leak into the interface.",
   },
 ];

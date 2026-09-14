@@ -28,7 +28,7 @@ export function Footer() {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-10">
           <div className="flex flex-col gap-4">
-            <Link href="/" aria-label={`${siteConfig.name} — home`}>
+            <Link href="/" aria-label={`${siteConfig.name}, home`}>
               <Logo size={32} showWordmark aria-hidden="true" />
             </Link>
             <TypographyMuted className="max-w-sm text-balance leading-relaxed">

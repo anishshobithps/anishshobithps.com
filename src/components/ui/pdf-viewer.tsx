@@ -387,7 +387,7 @@ export const PdfViewerDownload = ({ label }: { label?: string }) => {
     <Button size="sm" asChild className="sm:px-3 px-2">
       <a
         href={downloadHref}
-        aria-label={label ? `${label} — download as PDF` : "Download as PDF"}
+        aria-label={label ? `${label}, download as PDF` : "Download as PDF"}
       >
         <DownloadIcon className="size-4" aria-hidden="true" />
         <span className="hidden sm:inline" aria-hidden="true">

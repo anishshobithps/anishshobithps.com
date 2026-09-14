@@ -70,7 +70,7 @@ export default function BrandingPage() {
                 <TypographyP>
                   Body text. The part your eyes drift past while hunting for the
                   button. If you&apos;re reading this sentence, you&apos;re in
-                  the top 1% — or you just have too much free time.
+                  the top 1%, or you just have too much free time.
                 </TypographyP>
               ),
             },
@@ -163,7 +163,7 @@ export default function BrandingPage() {
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
             Typography is the reason your UI doesn&apos;t look like a ransom
-            note. <TypographyMark>Hierarchy matters</TypographyMark> — and so
+            note. <TypographyMark>Hierarchy matters</TypographyMark>, and so
             does not picking a random Google Font at 2am.
           </TypographyLead>
         </div>
@@ -197,7 +197,7 @@ export default function BrandingPage() {
 
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
-            From 16&times;16 favicon to full-bleed billboard — the logo survives
+            From 16&times;16 favicon to full-bleed billboard, the logo survives
             it all. <TypographyMark>Unlike my confidence</TypographyMark> before
             a code review.
           </TypographyLead>
@@ -212,7 +212,7 @@ export default function BrandingPage() {
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
             The thumbnail that decides whether someone clicks or keeps
-            scrolling. <TypographyMark>No pressure</TypographyMark> — just your
+            scrolling. <TypographyMark>No pressure</TypographyMark>, just your
             entire first impression on the internet.
           </TypographyLead>
         </div>

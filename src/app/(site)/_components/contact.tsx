@@ -46,7 +46,7 @@ export function Contact() {
                 <Button asChild size="lg" className="font-semibold">
                   <Link
                     href={`mailto:${siteConfig.email}`}
-                    aria-label="Say Hello — send an email"
+                    aria-label="Say hello, send an email"
                   >
                     <EnvelopeIcon
                       data-icon="inline-start"

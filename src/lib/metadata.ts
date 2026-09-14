@@ -85,7 +85,7 @@ export function buildMeta(
                 "application/rss+xml": [
                     {
                         url: `${siteConfig.baseUrl}/feed.xml`,
-                        title: `${siteConfig.name} — Blog`,
+                        title: `${siteConfig.name} · Blog`,
                     },
                 ],
             },

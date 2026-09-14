@@ -67,7 +67,7 @@ export function Hero() {
           <TypographyLead>
             I build{" "}
             <TypographyMark>interfaces and tooling</TypographyMark>, the
-            occasional bot, and questionable automation scripts — mostly so I
+            occasional bot, and questionable automation scripts, mostly so I
             don&apos;t have to repeat myself.
           </TypographyLead>
 

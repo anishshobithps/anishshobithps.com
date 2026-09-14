@@ -314,7 +314,7 @@ export function ProjectsPanel() {
             </EmptyMedia>
             <EmptyTitle>No projects yet</EmptyTitle>
             <EmptyDescription>
-              Add your first one — the top of the list shows first on the site.
+              Add your first one. Whatever sits at the top of the list shows first on the site.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>

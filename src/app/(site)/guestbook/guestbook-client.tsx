@@ -339,7 +339,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
                 </TypographySmall>
                 <TypographyMuted className="text-sm text-pretty wrap-break-word">
                   Say hi, share a thought, or just let me know you were here.
-                  Sign in — it only takes a second.
+                  Sign in, it only takes a second.
                 </TypographyMuted>
               </div>
               <SignInButton
@@ -416,7 +416,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
                       {isFetchingNextPage
                         ? "Loading…"
                         : loadMoreFailed
-                          ? "Couldn’t load — retry"
+                          ? "Couldn't load, retry"
                           : "Load more"}
                     </Button>
                   </div>
