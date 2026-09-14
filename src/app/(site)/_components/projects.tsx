@@ -33,7 +33,7 @@ export async function ProjectGrid() {
   if (projects.length === 0) {
     return (
       <TypographyMuted className="py-12 text-center font-mono text-sm">
-        // nothing shipped yet. check back soon.
+        {"// nothing shipped yet. check back soon."}
       </TypographyMuted>
     );
   }
@@ -137,7 +137,7 @@ export function BuiltThings() {
       </Suspense>
       <Reveal className="mt-16 flex flex-col items-center gap-6 text-center">
         <TypographyLead className="max-w-2xl">
-          There's more{" "}
+          There’s more{" "}
           <TypographyMark>
             experiments, half-built tools, and questionable decisions
           </TypographyMark>{" "}

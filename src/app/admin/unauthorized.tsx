@@ -46,7 +46,7 @@ export function AdminUnauthorized() {
             not yours.
           </TypographyMuted>
           <TypographyMuted className="font-mono text-xs text-muted-foreground/50">
-            // try being the owner next time.
+            {"// try being the owner next time."}
           </TypographyMuted>
         </div>
 

@@ -29,9 +29,9 @@ export function Contact() {
               </TypographyH2>
 
               <TypographyLead>
-                If you're working on something ambitious and need a frontend
+                If you’re working on something ambitious and need a frontend
                 engineer who prefers{" "}
-                <TypographyMark>clarity over chaos</TypographyMark>, we'll
+                <TypographyMark>clarity over chaos</TypographyMark>, we’ll
                 probably get along.
               </TypographyLead>
 

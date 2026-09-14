@@ -46,7 +46,7 @@ export default function NotFound() {
             </TypographyP>
             <TypographyMuted>
               I spent weeks on this site and you landed on the{" "}
-              <TypographyMark>one page that doesn't exist</TypographyMark>.
+              <TypographyMark>one page that doesn’t exist</TypographyMark>.
               Respect the effort.
             </TypographyMuted>
           </div>
