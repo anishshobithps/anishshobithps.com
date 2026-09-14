@@ -40,7 +40,18 @@ async function getAccessToken(): Promise<string> {
         }),
     });
 
-    const json = (await res.json()) as { access_token: string };
+    const json = (await res.json()) as {
+        access_token?: string;
+        error?: string;
+        error_description?: string;
+    };
+
+    if (!res.ok || !json.access_token) {
+        throw new Error(
+            `Spotify token refresh failed (${res.status}): ${json.error ?? "unknown"}${json.error_description ? ` - ${json.error_description}` : ""}`,
+        );
+    }
+
     return json.access_token;
 }
 
@@ -87,7 +98,8 @@ export const getNowPlaying = unstable_cache(
                 albumArt: data.item.album.images[0]?.url ?? null,
                 songUrl: data.item.external_urls.spotify,
             };
-        } catch {
+        } catch (error) {
+            console.error("[spotify] now-playing lookup failed:", error);
             return { isPlaying: false, title: null, artist: null, albumArt: null, songUrl: null };
         }
     },
