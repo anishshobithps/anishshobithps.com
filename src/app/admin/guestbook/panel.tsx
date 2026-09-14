@@ -1,14 +1,20 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { getAllAdminGuestbookEntries } from "@/app/admin/actions";
+import { useActionMutation } from "@/hooks/use-action-mutation";
+import { queryKeys } from "@/lib/query-keys";
 import { useQueryStates, parseAsString, parseAsBoolean } from "nuqs";
 import NextImage from "next/image";
-import { toast } from "sonner";
 import {
   deleteGuestbookEntry,
   togglePinEntry,
-  type GuestbookEntryWithMeta,
 } from "@/app/(site)/guestbook/actions";
 import { Button } from "@/components/ui/button";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@/components/ui/button-group";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,69 +34,75 @@ import {
   PushPinSimpleSlashIcon,
   HeartIcon,
   MagnifyingGlassIcon,
+  ChatCircleIcon,
 } from "@/components/shared/icons";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { TypographySmall, TypographyMuted } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
 import { cn } from "@/lib/cn";
-import { useState } from "react";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),
   pinned: parseAsBoolean.withDefault(false),
 };
 
-export function GuestbookPanel({
-  entries: initial,
-}: {
-  entries: GuestbookEntryWithMeta[];
-}) {
-  const [entries, setEntries] = useState(initial);
-  const [pendingId, setPendingId] = useState<number | null>(null);
+export function GuestbookPanel() {
+  const { data: entries = [] } = useQuery({
+    queryKey: queryKeys.admin.guestbook,
+    queryFn: getAllAdminGuestbookEntries,
+  });
   const [{ q, pinned }, setParams] = useQueryStates(searchParsers, {
     shallow: true,
   });
 
-  async function handleDelete(id: number) {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await deleteGuestbookEntry(id);
-      if (result.success) {
-        setEntries((prev) => prev.filter((e) => e.id !== id));
-        toast.success("Entry deleted.");
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPendingId(null);
-    }
+  const remove = useActionMutation({
+    action: (id: number) => deleteGuestbookEntry(id),
+    successMessage: "Entry deleted.",
+    invalidate: [queryKeys.admin.guestbook],
+  });
+
+  const pin = useActionMutation({
+    action: ({ id }: { id: number; currentlyPinned: boolean }) =>
+      togglePinEntry(id),
+    successMessage: ({ currentlyPinned }) =>
+      currentlyPinned ? "Entry unpinned." : "Entry pinned.",
+    invalidate: [queryKeys.admin.guestbook],
+  });
+
+  const pendingId = remove.isPending
+    ? remove.variables
+    : pin.isPending
+      ? pin.variables.id
+      : null;
+
+  function handleDelete(id: number) {
+    if (pendingId === null) remove.mutate(id);
   }
 
-  async function handlePin(id: number, currentlyPinned: boolean) {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await togglePinEntry(id);
-      if (result.success) {
-        setEntries((prev) =>
-          prev.map((e) =>
-            e.id === id ? { ...e, isPinned: !currentlyPinned } : e,
-          ),
-        );
-        toast.success(currentlyPinned ? "Entry unpinned." : "Entry pinned.");
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPendingId(null);
-    }
+  function handlePin(id: number, currentlyPinned: boolean) {
+    if (pendingId === null) pin.mutate({ id, currentlyPinned });
   }
 
   if (entries.length === 0) {
     return (
-      <TypographyMuted className="py-6 text-center">
-        No guestbook entries yet.
-      </TypographyMuted>
+      <Empty className="border">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ChatCircleIcon aria-hidden="true" />
+          </EmptyMedia>
+          <EmptyTitle>Nothing here yet</EmptyTitle>
+          <EmptyDescription>
+            Guestbook entries show up here once visitors start signing it.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
@@ -113,8 +125,9 @@ export function GuestbookPanel({
         <div className="relative flex-1">
           <MagnifyingGlassIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
           <Input
-            aria-label="Search entries, names..."
-            placeholder="Search entries, names..."
+            autoComplete="off"
+            aria-label="Search entries, names…"
+            placeholder="Search entries, names…"
             value={q}
             onChange={(e) => setParams({ q: e.target.value })}
             className="pl-8 h-8 text-sm"
@@ -135,10 +148,33 @@ export function GuestbookPanel({
         </Button>
       </div>
 
+      <TypographyMuted role="status" aria-live="polite" className="sr-only">
+        {pendingId !== null
+          ? "Updating entry…"
+          : `${filtered.length} entr${filtered.length === 1 ? "y" : "ies"} shown.`}
+      </TypographyMuted>
+
       {filtered.length === 0 ? (
-        <TypographyMuted className="py-6 text-center">
-          No entries match your filters.
-        </TypographyMuted>
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <MagnifyingGlassIcon aria-hidden="true" />
+            </EmptyMedia>
+            <EmptyTitle>No entries match your filters</EmptyTitle>
+            <EmptyDescription>
+              Try a different search term, or drop the pinned-only filter.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setParams({ q: "", pinned: false })}
+            >
+              Clear filters
+            </Button>
+          </EmptyContent>
+        </Empty>
       ) : (
         <div className="flex flex-col divide-y divide-border border rounded-lg overflow-hidden">
           {filtered.map((entry) => (
@@ -202,9 +238,9 @@ export function GuestbookPanel({
                 </TypographyMuted>
               </div>
 
-              <div className="flex items-center gap-1 shrink-0">
+              <ButtonGroup className="shrink-0">
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   size="icon-sm"
                   disabled={pendingId === entry.id}
                   onClick={() => handlePin(entry.id, entry.isPinned)}
@@ -216,10 +252,11 @@ export function GuestbookPanel({
                     <PushPinSimpleIcon className="size-4" />
                   )}
                 </Button>
+                <ButtonGroupSeparator />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
-                      variant="ghost"
+                      variant="secondary"
                       size="icon-sm"
                       disabled={pendingId !== null}
                       aria-label={`Delete entry by ${entry.user.name}`}
@@ -250,7 +287,7 @@ export function GuestbookPanel({
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              </div>
+              </ButtonGroup>
             </div>
           ))}
         </div>

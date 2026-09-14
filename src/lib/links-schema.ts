@@ -1,29 +1,33 @@
 import { z } from "zod";
+import { RESERVED_SEGMENTS } from "@/lib/reserved-segments";
 import { slugify } from "@/lib/text";
 
-export const RESERVED_SEGMENTS = new Set<string>([
-  "admin",
-  "api",
-  "og",
-  "blog",
-  "blogs",
-  "branding",
-  "guestbook",
-  "llms",
-  "privacy-policy",
-  "projects",
-  "resume",
-  "sitemap",
-  "robots",
-  "icon",
-  "apple-icon",
-  "stats",
-  "_next",
-  "favicon-dark",
-  "favicon-light",
-]);
 
 const SEGMENT_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+export const LINK_LIMITS = {
+  tag: 64,
+  slug: 128,
+  target: 2048,
+  title: 256,
+  description: 600,
+  ogImage: 2048,
+  aliases: 24,
+} as const;
+
+const MESSAGES = {
+  targetRequired: "Target URL is required.",
+  targetTooLong: "Target URL is too long.",
+  targetInvalid: "Enter a valid http(s):// or mailto: URL.",
+  ogImageInvalid: "OG image must be a valid URL.",
+  tagTooLong: `Tag is too long (max ${LINK_LIMITS.tag}).`,
+  tagFormat: "Tag must be lowercase letters, numbers, and dashes.",
+  tagReserved: "That tag is reserved by an existing page.",
+  slugTooLong: `Slug is too long (max ${LINK_LIMITS.slug}).`,
+  slugFormat: "Slug must be lowercase letters, numbers, and dashes.",
+  slugReserved: "That path is reserved by an existing page.",
+  slugRequired: "Slug is required.",
+} as const;
 
 export function isHttpUrl(value: string): boolean {
   try {
@@ -53,39 +57,38 @@ export function hasPreview(link: {
   return Boolean(link.title || link.description || link.ogEnabled);
 }
 
+const targetField = z
+  .string()
+  .trim()
+  .min(1, MESSAGES.targetRequired)
+  .max(LINK_LIMITS.target, MESSAGES.targetTooLong)
+  .refine(isValidTarget, { message: MESSAGES.targetInvalid });
+
+const isBlankOrHttpUrl = (value: string) =>
+  value.trim() === "" || isHttpUrl(value.trim());
+
 const tagField = z
   .string()
-  .transform((v) => slugify(v))
-  .refine((v) => v.length <= 64, { message: "Tag is too long (max 64)." })
+  .transform(slugify)
+  .refine((v) => v.length <= LINK_LIMITS.tag, { message: MESSAGES.tagTooLong })
   .refine((v) => v === "" || SEGMENT_RE.test(v), {
-    message: "Tag must be lowercase letters, numbers, and dashes.",
+    message: MESSAGES.tagFormat,
   })
-  .refine((v) => !RESERVED_SEGMENTS.has(v), {
-    message: "That tag is reserved by an existing page.",
-  });
+  .refine((v) => !RESERVED_SEGMENTS.has(v), { message: MESSAGES.tagReserved });
 
 const slugField = z
   .string()
-  .transform((v) => slugify(v))
-  .refine((v) => v.length <= 128, { message: "Slug is too long (max 128)." })
-  .refine((v) => SEGMENT_RE.test(v), {
-    message: "Slug must be lowercase letters, numbers, and dashes.",
-  });
+  .transform(slugify)
+  .refine((v) => v.length <= LINK_LIMITS.slug, {
+    message: MESSAGES.slugTooLong,
+  })
+  .refine((v) => SEGMENT_RE.test(v), { message: MESSAGES.slugFormat });
 
 export const slugPairSchema = z
   .object({ tag: tagField, slug: slugField })
   .refine((p) => !(p.tag === "" && RESERVED_SEGMENTS.has(p.slug)), {
-    message: "That path is reserved by an existing page.",
+    message: MESSAGES.slugReserved,
     path: ["slug"],
-  });
-
-const targetField = z
-  .string()
-  .trim()
-  .min(1, "Target URL is required.")
-  .max(2048, "Target URL is too long.")
-  .refine(isValidTarget, {
-    message: "Enter a valid http(s):// or mailto: URL.",
   });
 
 const optionalText = (max: number) =>
@@ -95,36 +98,33 @@ const optionalText = (max: number) =>
     .max(max, `Must be ${max} characters or fewer.`)
     .transform((v) => (v === "" ? null : v));
 
-const ogImageField = z
-  .string()
-  .trim()
-  .max(2048)
-  .refine((v) => v === "" || isHttpUrl(v), {
-    message: "OG image must be a valid URL.",
-  })
-  .transform((v) => (v === "" ? null : v));
-
 export const linkInputSchema = z
   .object({
     target: targetField,
-    title: optionalText(256),
-    description: optionalText(600),
+    title: optionalText(LINK_LIMITS.title),
+    description: optionalText(LINK_LIMITS.description),
     ogEnabled: z.boolean(),
-    ogImage: ogImageField,
+    ogImage: z
+      .string()
+      .trim()
+      .max(LINK_LIMITS.ogImage)
+      .refine(isBlankOrHttpUrl, { message: MESSAGES.ogImageInvalid })
+      .transform((v) => (v === "" ? null : v)),
     permanent: z.boolean(),
     enabled: z.boolean(),
     primary: slugPairSchema,
-    aliases: z.array(slugPairSchema).max(24, "Too many aliases (max 24)."),
+    aliases: z
+      .array(slugPairSchema)
+      .max(LINK_LIMITS.aliases, `Too many aliases (max ${LINK_LIMITS.aliases}).`),
   })
   .superRefine((val, ctx) => {
-    const all = [val.primary, ...val.aliases];
     const seen = new Set<string>();
-    all.forEach((pair, i) => {
-      const key = `${pair.tag}/${pair.slug}`;
+    [val.primary, ...val.aliases].forEach((pair, i) => {
+      const key = formatPath(pair);
       if (seen.has(key)) {
         ctx.addIssue({
           code: "custom",
-          message: `Duplicate path /${formatPath(pair)} in this link.`,
+          message: `Duplicate path /${key} in this link.`,
           path: i === 0 ? ["primary"] : ["aliases", i - 1],
         });
       }
@@ -132,32 +132,30 @@ export const linkInputSchema = z
     });
   });
 
-export type LinkInput = z.infer<typeof linkInputSchema>;
-
 export const linkFormSchema = z.object({
-  target: z
+  target: targetField,
+  title: z
     .string()
-    .trim()
-    .min(1, "Target URL is required.")
-    .max(2048, "Target URL is too long.")
-    .refine(isValidTarget, {
-      message: "Enter a valid http(s):// or mailto: URL.",
-    }),
-  title: z.string().max(256, "Must be 256 characters or fewer."),
-  description: z.string().max(600, "Must be 600 characters or fewer."),
+    .max(LINK_LIMITS.title, `Must be ${LINK_LIMITS.title} characters or fewer.`),
+  description: z
+    .string()
+    .max(
+      LINK_LIMITS.description,
+      `Must be ${LINK_LIMITS.description} characters or fewer.`,
+    ),
   ogEnabled: z.boolean(),
   ogImage: z
     .string()
-    .refine((v) => v.trim() === "" || isHttpUrl(v.trim()), {
-      message: "OG image must be a valid URL.",
-    }),
+    .refine(isBlankOrHttpUrl, { message: MESSAGES.ogImageInvalid }),
   permanent: z.boolean(),
   enabled: z.boolean(),
   primary: z.object({
     tag: z.string(),
-    slug: z.string().min(1, "Slug is required."),
+    slug: z.string().min(1, MESSAGES.slugRequired),
   }),
   aliases: z.array(z.object({ tag: z.string(), slug: z.string() })),
 });
+
+export type LinkInput = z.infer<typeof linkInputSchema>;
 
 export type LinkFormValues = z.infer<typeof linkFormSchema>;

@@ -1,21 +1,29 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useState } from "react";
+import {
+  useForm,
+  useFieldArray,
+  useWatch,
+  type Control,
+} from "react-hook-form";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import {
   createLink,
   updateLink,
   toggleLinkEnabled,
   deleteLink,
+  getAdminLinks,
   type AdminLink,
 } from "@/app/admin/links/actions";
+import { useQuery } from "@tanstack/react-query";
+import { useActionMutation } from "@/hooks/use-action-mutation";
+import { queryKeys } from "@/lib/query-keys";
 import {
   formatPath,
   linkFormSchema,
   type LinkFormValues,
+  type SlugPair,
 } from "@/lib/links-schema";
 import { slugify } from "@/lib/text";
 import { siteConfig } from "@/lib/config";
@@ -29,6 +37,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -60,6 +72,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
+  type ColumnDef,
+} from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import {
   PencilIcon,
@@ -67,9 +87,54 @@ import {
   PlusIcon,
   ImageIcon,
   ArrowSquareOutIcon,
+  CaretUpDownIcon,
+  LinkIcon,
 } from "@/components/shared/icons";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { cn } from "@/lib/cn";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+
+const linkTableFeatures = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+});
+
+const linkColumns: ColumnDef<typeof linkTableFeatures, AdminLink>[] = [
+  {
+    id: "path",
+    header: "Path",
+    accessorFn: (link) => formatPath(link.primary),
+  },
+  {
+    id: "target",
+    header: "Target",
+    accessorKey: "target",
+    enableSorting: false,
+  },
+  { id: "clicks", header: "Clicks", accessorKey: "clicks" },
+  {
+    id: "enabled",
+    header: "Enabled",
+    accessorKey: "enabled",
+    enableSorting: false,
+  },
+  { id: "actions", header: "Actions", enableSorting: false },
+];
+
+const HEAD_CLASS: Record<string, string> = {
+  target: "hidden md:table-cell",
+  clicks: "w-16 text-right",
+  enabled: "w-20 text-center",
+  actions: "w-20 text-right",
+};
 
 const emptyValues: LinkFormValues = {
   target: "",
@@ -97,11 +162,134 @@ function toFormValues(link: AdminLink): LinkFormValues {
   };
 }
 
-function pathLabel(pair: { tag: string; slug: string }): string {
-  const slug = pair.slug.trim();
+function pathLabel(pair: SlugPair): string {
   const tag = pair.tag.trim();
-  if (!slug) return "…";
-  return tag ? `${tag}/${slug}` : slug;
+  const slug = pair.slug.trim();
+  return slug ? formatPath({ tag, slug }) : "…";
+}
+
+type PathFieldName = "primary" | `aliases.${number}`;
+
+function SlugPairFields({
+  control,
+  name,
+  tagLabel,
+  slugLabel,
+  preview,
+  disabled,
+  showSlugMessage = false,
+  onRemove,
+}: {
+  control: Control<LinkFormValues>;
+  name: PathFieldName;
+  tagLabel: string;
+  slugLabel: string;
+  preview: SlugPair;
+  disabled: boolean;
+  showSlugMessage?: boolean;
+  onRemove?: () => void;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-start gap-2">
+        <FormField
+          control={control}
+          name={`${name}.tag`}
+          render={({ field }) => (
+            <FormItem className="w-36">
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  {...field}
+                  onChange={(e) => field.onChange(slugify(e.target.value))}
+                  placeholder="tag"
+                  aria-label={tagLabel}
+                  className="font-mono text-sm"
+                  disabled={disabled}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <TypographyMuted className="self-center font-mono text-sm">
+          /
+        </TypographyMuted>
+        <FormField
+          control={control}
+          name={`${name}.slug`}
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  {...field}
+                  onChange={(e) => field.onChange(slugify(e.target.value))}
+                  placeholder="short-url"
+                  aria-label={slugLabel}
+                  className="font-mono text-sm"
+                  disabled={disabled}
+                />
+              </FormControl>
+              {showSlugMessage && <FormMessage />}
+            </FormItem>
+          )}
+        />
+        {onRemove && (
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="size-9 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+            onClick={onRemove}
+            disabled={disabled}
+            aria-label="Remove alias"
+          >
+            <TrashIcon className="size-4" />
+          </Button>
+        )}
+      </div>
+      <TypographyMuted className="font-mono text-[11px]">
+        {siteConfig.domain}/{pathLabel(preview)}
+      </TypographyMuted>
+    </div>
+  );
+}
+
+function SwitchField({
+  control,
+  name,
+  label,
+  description,
+  disabled,
+}: {
+  control: Control<LinkFormValues>;
+  name: "ogEnabled" | "permanent" | "enabled";
+  label: string;
+  description: string;
+  disabled: boolean;
+}) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+          <div className="space-y-0.5 pr-3">
+            <FormLabel>{label}</FormLabel>
+            <FormDescription>{description}</FormDescription>
+          </div>
+          <FormControl>
+            <Switch
+              aria-label={label}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              disabled={disabled}
+            />
+          </FormControl>
+        </FormItem>
+      )}
+    />
+  );
 }
 
 function LinkForm({
@@ -124,7 +312,9 @@ function LinkForm({
     control: form.control,
     name: "aliases",
   });
-  const values = form.watch();
+  const primary = useWatch({ control: form.control, name: "primary" });
+  const aliases = useWatch({ control: form.control, name: "aliases" });
+  const ogEnabled = useWatch({ control: form.control, name: "ogEnabled" });
 
   return (
     <Form {...form}>
@@ -140,6 +330,7 @@ function LinkForm({
               <FormLabel>Target URL</FormLabel>
               <FormControl>
                 <Input
+                  autoComplete="off"
                   {...field}
                   placeholder="https://… or mailto:you@example.com"
                   disabled={submitting}
@@ -155,51 +346,15 @@ function LinkForm({
 
         <div className="space-y-1.5">
           <Label>Primary path</Label>
-          <div className="flex items-start gap-2">
-            <FormField
-              control={form.control}
-              name="primary.tag"
-              render={({ field }) => (
-                <FormItem className="w-36">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => field.onChange(slugify(e.target.value))}
-                      placeholder="tag"
-                      aria-label="Tag (optional)"
-                      className="font-mono text-sm"
-                      disabled={submitting}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <TypographyMuted className="self-center font-mono text-sm">
-              /
-            </TypographyMuted>
-            <FormField
-              control={form.control}
-              name="primary.slug"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => field.onChange(slugify(e.target.value))}
-                      placeholder="short-url"
-                      aria-label="Slug (required)"
-                      className="font-mono text-sm"
-                      disabled={submitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <TypographyMuted className="font-mono text-[11px]">
-            {siteConfig.domain}/{pathLabel(values.primary)}
-          </TypographyMuted>
+          <SlugPairFields
+            control={form.control}
+            name="primary"
+            tagLabel="Tag (optional)"
+            slugLabel="Slug (required)"
+            preview={primary}
+            disabled={submitting}
+            showSlugMessage
+          />
         </div>
 
         <div className="space-y-2">
@@ -210,7 +365,7 @@ function LinkForm({
               variant="outline"
               size="sm"
               className="gap-1.5"
-              onClick={() => append({ tag: values.primary.tag, slug: "" })}
+              onClick={() => append({ tag: primary.tag, slug: "" })}
               disabled={submitting}
             >
               <PlusIcon data-icon="inline-start" className="size-3.5" aria-hidden="true" />
@@ -224,68 +379,16 @@ function LinkForm({
           ) : (
             <div className="flex flex-col gap-3">
               {fields.map((row, i) => (
-                <div key={row.id} className="space-y-1.5">
-                  <div className="flex items-start gap-2">
-                    <FormField
-                      control={form.control}
-                      name={`aliases.${i}.tag`}
-                      render={({ field }) => (
-                        <FormItem className="w-36">
-                          <FormControl>
-                            <Input
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(slugify(e.target.value))
-                              }
-                              placeholder="tag"
-                              aria-label="Alias tag"
-                              className="font-mono text-sm"
-                              disabled={submitting}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <TypographyMuted className="self-center font-mono text-sm">
-                      /
-                    </TypographyMuted>
-                    <FormField
-                      control={form.control}
-                      name={`aliases.${i}.slug`}
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormControl>
-                            <Input
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(slugify(e.target.value))
-                              }
-                              placeholder="short-url"
-                              aria-label="Alias slug"
-                              className="font-mono text-sm"
-                              disabled={submitting}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="size-9 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => remove(i)}
-                      disabled={submitting}
-                      aria-label="Remove alias"
-                    >
-                      <TrashIcon className="size-4" />
-                    </Button>
-                  </div>
-                  <TypographyMuted className="font-mono text-[11px]">
-                    {siteConfig.domain}/
-                    {pathLabel(values.aliases[i] ?? { tag: "", slug: "" })}
-                  </TypographyMuted>
-                </div>
+                <SlugPairFields
+                  key={row.id}
+                  control={form.control}
+                  name={`aliases.${i}`}
+                  tagLabel="Alias tag"
+                  slugLabel="Alias slug"
+                  preview={aliases[i] ?? { tag: "", slug: "" }}
+                  disabled={submitting}
+                  onRemove={() => remove(i)}
+                />
               ))}
             </div>
           )}
@@ -301,6 +404,7 @@ function LinkForm({
               <FormLabel>Preview title</FormLabel>
               <FormControl>
                 <Input
+                  autoComplete="off"
                   {...field}
                   placeholder="Shown when the link is shared"
                   disabled={submitting}
@@ -331,31 +435,15 @@ function LinkForm({
           )}
         />
 
-        <FormField
+        <SwitchField
           control={form.control}
           name="ogEnabled"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5 pr-3">
-                <FormLabel>OpenGraph image</FormLabel>
-                <FormDescription>
-                  Attach a social preview image (auto-generated if no URL
-                  below).
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  aria-label="OpenGraph image"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={submitting}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          label="OpenGraph image"
+          description="Attach a social preview image (auto-generated if no URL below)."
+          disabled={submitting}
         />
 
-        {values.ogEnabled && (
+        {ogEnabled && (
           <FormField
             control={form.control}
             name="ogImage"
@@ -364,6 +452,7 @@ function LinkForm({
                 <FormLabel>Custom OG image URL</FormLabel>
                 <FormControl>
                   <Input
+                    autoComplete="off"
                     {...field}
                     placeholder="https://… (blank = auto-generate)"
                     disabled={submitting}
@@ -375,50 +464,20 @@ function LinkForm({
           />
         )}
 
-        <FormField
+        <SwitchField
           control={form.control}
           name="permanent"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5 pr-3">
-                <FormLabel>Permanent redirect</FormLabel>
-                <FormDescription>
-                  308 instead of 307. Only applies to links without a preview.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  aria-label="Permanent redirect"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={submitting}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          label="Permanent redirect"
+          description="308 instead of 307. Only applies to links without a preview."
+          disabled={submitting}
         />
 
-        <FormField
+        <SwitchField
           control={form.control}
           name="enabled"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-              <div className="space-y-0.5 pr-3">
-                <FormLabel>Enabled</FormLabel>
-                <FormDescription>
-                  Disabled links resolve to a 404.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  aria-label="Enabled"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  disabled={submitting}
-                />
-              </FormControl>
-            </FormItem>
-          )}
+          label="Enabled"
+          description="Disabled links resolve to a 404."
+          disabled={submitting}
         />
 
         <DialogFooter>
@@ -439,69 +498,72 @@ function LinkForm({
   );
 }
 
-export function LinksPanel({ links }: { links: AdminLink[] }) {
-  const router = useRouter();
-  const [pendingId, setPendingId] = useState<number | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<AdminLink | null>(null);
-  const [isPending, startTransition] = useTransition();
+export function LinksPanel() {
+  const { data: links = [] } = useQuery({
+    queryKey: queryKeys.admin.links,
+    queryFn: getAdminLinks,
+  });
+
+  const table = useTable({
+    key: "admin-links",
+    features: linkTableFeatures,
+    columns: linkColumns,
+    data: links,
+  });
+  const [dialog, setDialog] = useState<{
+    open: boolean;
+    target: AdminLink | null;
+  }>({ open: false, target: null });
+  const dialogOpen = dialog.open;
+  const editTarget = dialog.target;
 
   function openAdd() {
-    setEditTarget(null);
-    setDialogOpen(true);
+    setDialog({ open: true, target: null });
   }
 
   function openEdit(link: AdminLink) {
-    setEditTarget(link);
-    setDialogOpen(true);
+    setDialog({ open: true, target: link });
   }
 
-  function handleSubmit(values: LinkFormValues) {
-    const raw = {
-      ...values,
-      aliases: values.aliases.filter((a) => a.slug.trim() !== ""),
-    };
-    startTransition(async () => {
-      const result = editTarget
-        ? await updateLink(editTarget.id, raw)
-        : await createLink(raw);
-      if (result.success) {
-        toast.success(editTarget ? "Link updated." : "Link created.");
-        setDialogOpen(false);
-        router.refresh();
-      } else {
-        toast.error(result.error);
-      }
-    });
-  }
+  const save = useActionMutation({
+    action: (values: LinkFormValues) => {
+      const raw = {
+        ...values,
+        aliases: values.aliases.filter((a) => a.slug.trim() !== ""),
+      };
+      return editTarget ? updateLink(editTarget.id, raw) : createLink(raw);
+    },
+    successMessage: () => (editTarget ? "Link updated." : "Link created."),
+    invalidate: [queryKeys.admin.links],
+    onDone: () => setDialog((prev) => ({ ...prev, open: false })),
+  });
 
-  async function handleToggle(id: number) {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await toggleLinkEnabled(id);
-      if (result.success) router.refresh();
-      else toast.error(result.error);
-    } finally {
-      setPendingId(null);
-    }
-  }
+  const toggle = useActionMutation({
+    action: (id: number) => toggleLinkEnabled(id),
+    invalidate: [queryKeys.admin.links],
+  });
 
-  async function handleDelete(id: number) {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await deleteLink(id);
-      if (result.success) {
-        toast.success("Link deleted.");
-        router.refresh();
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPendingId(null);
-    }
-  }
+  const remove = useActionMutation({
+    action: (id: number) => deleteLink(id),
+    successMessage: "Link deleted.",
+    invalidate: [queryKeys.admin.links],
+  });
+
+  const pendingId = toggle.isPending
+    ? toggle.variables
+    : remove.isPending
+      ? remove.variables
+      : null;
+
+  const handleSubmit = (values: LinkFormValues) => save.mutate(values);
+
+  const handleToggle = (id: number) => {
+    if (pendingId === null) toggle.mutate(id);
+  };
+
+  const handleDelete = (id: number) => {
+    if (pendingId === null) remove.mutate(id);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -510,7 +572,11 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
           <TypographySmall className="font-semibold">
             Links
           </TypographySmall>
-          <TypographyMuted className="text-xs">
+          <TypographyMuted
+            role="status"
+            aria-live="polite"
+            className="text-xs"
+          >
             {links.filter((l) => l.enabled).length} of {links.length} enabled
             &middot; redirect any {siteConfig.domain}/path to a target
           </TypographyMuted>
@@ -522,23 +588,73 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
       </div>
 
       {links.length === 0 ? (
-        <TypographyMuted className="py-8 text-center">
-          No short links yet. Add your first one.
-        </TypographyMuted>
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <LinkIcon aria-hidden="true" />
+            </EmptyMedia>
+            <EmptyTitle>No short links yet</EmptyTitle>
+            <EmptyDescription>
+              Add one to redirect any {siteConfig.domain}/path to a target URL.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button size="sm" className="gap-1.5" onClick={openAdd}>
+              <PlusIcon
+                data-icon="inline-start"
+                className="size-3.5"
+                aria-hidden="true"
+              />
+              Add Link
+            </Button>
+          </EmptyContent>
+        </Empty>
       ) : (
         <div className="rounded-lg border overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Path</TableHead>
-                <TableHead className="hidden md:table-cell">Target</TableHead>
-                <TableHead className="w-16 text-right">Clicks</TableHead>
-                <TableHead className="w-20 text-center">Enabled</TableHead>
-                <TableHead className="w-20 text-right">Actions</TableHead>
-              </TableRow>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    const label = String(header.column.columnDef.header);
+                    const sortable = header.column.getCanSort();
+                    const direction = header.column.getIsSorted();
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className={HEAD_CLASS[header.id]}
+                        aria-sort={
+                          direction === "asc"
+                            ? "ascending"
+                            : direction === "desc"
+                              ? "descending"
+                              : undefined
+                        }
+                      >
+                        {sortable ? (
+                          <button
+                            type="button"
+                            onClick={header.column.getToggleSortingHandler()}
+                            className="inline-flex items-center gap-1 hover:text-foreground"
+                          >
+                            {label}
+                            <CaretUpDownIcon
+                              className="size-3 opacity-60"
+                              aria-hidden="true"
+                            />
+                          </button>
+                        ) : (
+                          label
+                        )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
             </TableHeader>
             <TableBody>
-              {links.map((link) => {
+              {table.getRowModel().rows.map((row) => {
+                const link = row.original;
                 const isRowPending = pendingId === link.id;
                 const primaryPath = formatPath(link.primary);
                 return (
@@ -633,9 +749,9 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
                     </TableCell>
 
                     <TableCell className="text-right py-3">
-                      <div className="flex items-center justify-end gap-1">
+                      <ButtonGroup className="justify-end">
                         <Button
-                          variant="ghost"
+                          variant="secondary"
                           size="icon"
                           className="size-7"
                           onClick={() => openEdit(link)}
@@ -643,10 +759,11 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
                         >
                           <PencilIcon className="size-3.5" />
                         </Button>
+                        <ButtonGroupSeparator />
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                              variant="ghost"
+                              variant="secondary"
                               size="icon"
                               className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
                               disabled={isRowPending}
@@ -676,7 +793,7 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
-                      </div>
+                      </ButtonGroup>
                     </TableCell>
                   </TableRow>
                 );
@@ -686,7 +803,7 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
         </div>
       )}
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} onOpenChange={(open) => setDialog((prev) => ({ ...prev, open }))}>
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editTarget ? "Edit Link" : "Add Link"}</DialogTitle>
@@ -700,8 +817,8 @@ export function LinksPanel({ links }: { links: AdminLink[] }) {
             key={editTarget?.id ?? "new"}
             defaultValues={editTarget ? toFormValues(editTarget) : emptyValues}
             onSubmit={handleSubmit}
-            onCancel={() => setDialogOpen(false)}
-            submitting={isPending}
+            onCancel={() => setDialog((prev) => ({ ...prev, open: false }))}
+            submitting={save.isPending}
           />
         </DialogContent>
       </Dialog>

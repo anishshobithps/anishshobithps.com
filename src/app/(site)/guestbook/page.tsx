@@ -1,4 +1,7 @@
 import { getGuestbookEntries } from "@/app/(site)/guestbook/actions";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getQueryClient } from "@/lib/get-query-client";
+import { queryKeys } from "@/lib/query-keys";
 import { GuestbookClient } from "@/app/(site)/guestbook/guestbook-client";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -23,14 +26,17 @@ export const metadata: Metadata = buildMeta({
 });
 
 async function GuestbookFeed({ currentUserId }: { currentUserId: string | null }) {
-  const { entries, total, hasMore } = await getGuestbookEntries();
+  const queryClient = getQueryClient();
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: queryKeys.guestbook,
+    queryFn: ({ pageParam }) => getGuestbookEntries({ offset: pageParam }),
+    initialPageParam: 0,
+  });
+
   return (
-    <GuestbookClient
-      initialEntries={entries}
-      currentUserId={currentUserId}
-      total={total}
-      initialHasMore={hasMore}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <GuestbookClient currentUserId={currentUserId} />
+    </HydrationBoundary>
   );
 }
 

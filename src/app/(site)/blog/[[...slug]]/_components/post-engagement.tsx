@@ -16,18 +16,17 @@ import {
   MoodPicker,
 } from "@/app/(site)/blog/[[...slug]]/_components/mood-picker";
 import { Card } from "@/components/layouts/page";
-import { SectionLabel } from "@/components/ui/typography";
+import { SectionLabel, TypographyMuted } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
 import { classifyError, typedToast } from "@/lib/toast";
 import { useClerk, useUser } from "@clerk/nextjs";
 import {
-  startTransition,
-  useCallback,
-  useEffect,
-  useOptimistic,
-  useRef,
-  useState,
-} from "react";
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 function patchLike(
@@ -92,6 +91,17 @@ function findComment(
   }
 }
 
+const EMPTY_MOOD: MoodState = { value: "", counts: {} };
+
+function applyMood(state: MoodState, next: MoodId | ""): MoodState {
+  const counts = { ...state.counts };
+  if (state.value) {
+    counts[state.value] = Math.max(0, (counts[state.value] ?? 0) - 1);
+  }
+  if (next) counts[next] = (counts[next] ?? 0) + 1;
+  return { value: next, counts };
+}
+
 interface PostEngagementProps {
   slug: string;
   initialComments: CommentWithMeta[];
@@ -106,53 +116,111 @@ export function PostEngagement({
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
 
-  const [moodState, setMoodState] = useState<MoodState>({
-    value: "",
-    counts: {},
-  });
-  const [moodLoading, setMoodLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const reactionsKey = useMemo(() => queryKeys.reactions(slug), [slug]);
 
-  const [moodOptimistic, addMoodOptimistic] = useOptimistic<
-    MoodState,
-    { newMood: MoodId | ""; prevMood: MoodId | "" }
-  >(moodState, (state, { newMood, prevMood }) => {
-    const nextCounts = { ...state.counts };
-    if (prevMood)
-      nextCounts[prevMood] = Math.max(0, (nextCounts[prevMood] ?? 0) - 1);
-    if (newMood) nextCounts[newMood] = (nextCounts[newMood] ?? 0) + 1;
-    return { value: newMood, counts: nextCounts };
+  const { data: moodState = EMPTY_MOOD, isPending: moodLoading } = useQuery({
+    queryKey: reactionsKey,
+    queryFn: async (): Promise<MoodState> => {
+      const { counts, userMood } = await getReactions(slug);
+      return { value: userMood ?? "", counts };
+    },
+  });
+
+  const { mutate: selectMood } = useMutation({
+    mutationFn: (mood: MoodId | "") => submitReaction(slug, mood || null),
+    onMutate: async (mood) => {
+      await queryClient.cancelQueries({ queryKey: reactionsKey });
+      const previous = queryClient.getQueryData<MoodState>(reactionsKey);
+      queryClient.setQueryData<MoodState>(reactionsKey, (old) =>
+        applyMood(old ?? EMPTY_MOOD, mood),
+      );
+      return { previous };
+    },
+    onError: (_error, _mood, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(reactionsKey, context.previous);
+      }
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: reactionsKey }),
   });
 
   const [baseComments, setBaseComments] = useState<CommentWithMeta[]>(
     () => initialComments,
   );
-  const likePending = useRef<Set<number>>(new Set());
+  const likeGuard = useRef<Set<number>>(new Set());
+  const [pendingLikes, setPendingLikes] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
 
   const comments = baseComments;
 
-  useEffect(() => {
-    getReactions(slug)
-      .then(({ counts, userMood }) => {
-        setMoodState({ value: userMood ?? "", counts });
-      })
-      .finally(() => setMoodLoading(false));
-  }, [slug]);
+  const reactionTotal = useMemo(
+    () =>
+      Object.values(moodState.counts).reduce(
+        (sum, count) => sum + (count ?? 0),
+        0,
+      ),
+    [moodState.counts],
+  );
 
   const handleMoodSelect = (id: MoodId) => {
-    const prevMood = moodOptimistic.value;
-    const newMood: MoodId | "" = prevMood === id ? "" : id;
-
-    startTransition(async () => {
-      addMoodOptimistic({ newMood, prevMood });
-      await submitReaction(slug, newMood || null);
-      const { counts, userMood } = await getReactions(slug);
-      setMoodState({ value: userMood ?? "", counts });
-    });
+    selectMood(moodState.value === id ? "" : id);
   };
 
+  const postComment = useMutation({
+    mutationFn: async ({
+      body,
+      parentId,
+    }: {
+      body: string;
+      parentId?: number;
+      tempId: number;
+    }) => {
+      const result = await submitComment(slug, body, parentId);
+      if (!result.success) throw new Error(result.error);
+      return result.id;
+    },
+    onSuccess: (id, { tempId }) =>
+      setBaseComments((prev) => patchConfirm(prev, tempId, id)),
+    onError: (error, { tempId }) => {
+      setBaseComments((prev) => patchDelete(prev, tempId));
+      typedToast(classifyError(error.message), error.message);
+    },
+  });
+
+  const removeComment = useMutation({
+    mutationFn: async (id: number) => {
+      const result = await deleteComment(id);
+      if (!result.success) throw new Error(result.error);
+    },
+    onMutate: (id) => setBaseComments((prev) => patchDelete(prev, id)),
+    onError: (error) =>
+      typedToast(classifyError(error.message), error.message),
+  });
+
+  const likeComment = useMutation({
+    mutationFn: async ({ id }: { id: number; liked: boolean }) => {
+      const result = await toggleCommentLike(id);
+      if (!result.success) throw new Error(result.error);
+    },
+    onError: (error, { id, liked }) => {
+      setBaseComments((prev) => patchLike(prev, id, !liked));
+      typedToast(classifyError(error.message), error.message);
+    },
+    onSettled: (_data, _error, { id }) => {
+      likeGuard.current.delete(id);
+      setPendingLikes((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    },
+  });
+
   const handleCommentSubmit = useCallback(
-    (body: string, parentId?: number): Promise<void> => {
-      if (!user) return Promise.resolve();
+    (body: string, parentId?: number): Promise<boolean> => {
+      if (!user) return Promise.resolve(false);
 
       const tempId = -Date.now();
       const tempComment: CommentWithMeta = {
@@ -175,38 +243,23 @@ export function PostEngagement({
 
       setBaseComments((prev) => patchAdd(prev, tempComment, parentId));
 
-      return new Promise<void>((resolve) => {
-        startTransition(async () => {
-          const result = await submitComment(slug, body, parentId);
-          if (result.success) {
-            setBaseComments((prev) => patchConfirm(prev, tempId, result.id));
-          } else {
-            setBaseComments((prev) => patchDelete(prev, tempId));
-            typedToast(classifyError(result.error), result.error);
-          }
-          resolve();
-        });
-      });
+      return postComment
+        .mutateAsync({ body, parentId, tempId })
+        .then(() => true)
+        .catch(() => false);
     },
-    [user, slug],
+    [user, slug, postComment],
   );
 
   const handleCommentDelete = useCallback((id: number) => {
     toast("Delete this comment?", {
       action: {
         label: "Delete",
-        onClick: () => {
-          setBaseComments((prev) => patchDelete(prev, id));
-          startTransition(async () => {
-            const result = await deleteComment(id);
-            if (!result.success)
-              typedToast(classifyError(result.error), result.error);
-          });
-        },
+        onClick: () => removeComment.mutate(id),
       },
       cancel: { label: "Keep", onClick: () => {} },
     });
-  }, []);
+  }, [removeComment]);
 
   const handleCommentLike = useCallback(
     (id: number) => {
@@ -214,26 +267,21 @@ export function PostEngagement({
         typedToast("info", "Sign in to like comments.");
         return;
       }
-      if (id < 0 || likePending.current.has(id)) return;
+      if (id < 0 || likeGuard.current.has(id)) return;
 
       const comment = findComment(baseComments, id);
       if (!comment) return;
       const liked = !comment.likedByMe;
 
-      likePending.current.add(id);
+      likeGuard.current.add(id);
+      setPendingLikes((prev) => new Set(prev).add(id));
 
       setBaseComments((prev) => patchLike(prev, id, liked));
-      startTransition(async () => {
-        const result = await toggleCommentLike(id);
-        likePending.current.delete(id);
-        if (!result.success) {
-          setBaseComments((prev) => patchLike(prev, id, !liked));
-          typedToast(classifyError(result.error), result.error);
-        }
-      });
+      likeComment.mutate({ id, liked });
     },
-    [currentUserId, baseComments],
+    [currentUserId, baseComments, likeComment],
   );
+
 
   const totalComments = comments.reduce(
     (acc, c) => acc + 1 + c.replies.length,
@@ -255,10 +303,16 @@ export function PostEngagement({
       <Card>
         <div className="space-y-8">
           <MoodPicker
-            moodOptimistic={moodOptimistic}
+            moodOptimistic={moodState}
             moodLoading={moodLoading}
             onSelect={handleMoodSelect}
           />
+
+          {!moodLoading && reactionTotal === 0 && (
+            <TypographyMuted className="text-center text-xs">
+              Nothing here yet — be the first to react.
+            </TypographyMuted>
+          )}
 
           <div className="h-px bg-border/40" aria-hidden="true" />
 
@@ -281,7 +335,7 @@ export function PostEngagement({
         onLike={handleCommentLike}
         onDelete={handleCommentDelete}
         onReply={(parentId, body) => handleCommentSubmit(body, parentId)}
-        likePendingRef={likePending}
+        pendingLikes={pendingLikes}
       />
     </div>
   );

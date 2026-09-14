@@ -1,5 +1,6 @@
 import { CommandMenu } from "@/components/shared/command-menu";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
+import { QueryProvider } from "@/components/shared/query-provider";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -91,6 +92,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           disableTransitionOnChange
         >
           <NuqsAdapter>
+            <QueryProvider>
             <TooltipProvider>
               <PhosphorProvider>
                 <ThemeHotkey />
@@ -99,6 +101,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Toaster />
               </PhosphorProvider>
             </TooltipProvider>
+            </QueryProvider>
           </NuqsAdapter>
         </ThemeProvider>
       </body>

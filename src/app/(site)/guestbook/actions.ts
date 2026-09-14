@@ -4,6 +4,7 @@ import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users
 import { db } from "@/lib/db";
 import { guestbookEntries, guestbookLikes } from "@/lib/schema";
 import { resolvePagination } from "@/lib/pagination";
+import { safeQuery } from "@/lib/safe-query";
 import { sanitizeText, ValidationError, validateLength } from "@/lib/text";
 import { auth } from "@clerk/nextjs/server";
 import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
@@ -32,6 +33,16 @@ export interface GetEntriesResult {
 }
 
 export async function getGuestbookEntries(
+    options: { limit?: number; offset?: number } = {},
+): Promise<GetEntriesResult> {
+    return safeQuery("getGuestbookEntries", () => loadGuestbookEntries(options), {
+        entries: [],
+        total: 0,
+        hasMore: false,
+    });
+}
+
+async function loadGuestbookEntries(
     { limit, offset }: { limit?: number; offset?: number } = {},
 ): Promise<GetEntriesResult> {
     const { userId } = await auth();
@@ -104,6 +115,10 @@ export interface GuestbookPreviewEntry {
 }
 
 export async function getGuestbookPreview(limit = 15): Promise<GuestbookPreviewEntry[]> {
+    return safeQuery("getGuestbookPreview", () => loadGuestbookPreview(limit), []);
+}
+
+async function loadGuestbookPreview(limit: number): Promise<GuestbookPreviewEntry[]> {
     const pool = await db
         .select({
             id: guestbookEntries.id,

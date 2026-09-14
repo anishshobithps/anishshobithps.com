@@ -2,13 +2,17 @@
 
 import { db } from "@/lib/db";
 import { links, linkSlugs } from "@/lib/schema";
+import { adminMutation } from "@/lib/admin-action";
+import type { ActionResult } from "@/lib/action-result";
 import { assertAdmin } from "@/lib/assert-admin";
 import { findSlugConflicts } from "@/lib/links";
 import {
   formatPath,
   linkInputSchema,
+  type LinkInput,
   type SlugPair,
 } from "@/lib/links-schema";
+import { safeQuery } from "@/lib/safe-query";
 import { desc, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -27,179 +31,159 @@ export type AdminLink = {
   createdAt: string;
 };
 
-type Result = { success: boolean; error?: string };
+type ParsedInput =
+  | { ok: true; data: LinkInput; pairs: SlugPair[] }
+  | { ok: false; message: string };
+
+function parseInput(raw: unknown): ParsedInput {
+  const parsed = linkInputSchema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      message: parsed.error.issues[0]?.message ?? "Invalid input.",
+    };
+  }
+  return {
+    ok: true,
+    data: parsed.data,
+    pairs: [parsed.data.primary, ...parsed.data.aliases],
+  };
+}
+
+function revalidateLinks() {
+  revalidatePath("/admin/links");
+}
+
+function linkColumns(data: LinkInput) {
+  return {
+    target: data.target,
+    title: data.title,
+    description: data.description,
+    ogEnabled: data.ogEnabled,
+    ogImage: data.ogImage,
+    permanent: data.permanent,
+    enabled: data.enabled,
+  };
+}
+
+function slugRows(linkId: number, pairs: SlugPair[]) {
+  return pairs.map((pair, index) => ({
+    linkId,
+    tag: pair.tag,
+    slug: pair.slug,
+    isPrimary: index === 0,
+  }));
+}
+
+async function takenPath(
+  pairs: SlugPair[],
+  excludeLinkId?: number,
+): Promise<string | null> {
+  const [conflict] = await findSlugConflicts(pairs, excludeLinkId);
+  return conflict ? formatPath(conflict) : null;
+}
 
 export async function getAdminLinks(): Promise<AdminLink[]> {
   await assertAdmin();
-  const rows = await db
-    .select()
-    .from(links)
-    .orderBy(desc(links.createdAt), desc(links.id));
-  if (rows.length === 0) return [];
+  return safeQuery(
+    "getAdminLinks",
+    async () => {
+      const rows = await db
+        .select()
+        .from(links)
+        .orderBy(desc(links.createdAt), desc(links.id));
+      if (rows.length === 0) return [];
 
-  const slugRows = await db
-    .select()
-    .from(linkSlugs)
-    .where(
-      inArray(
-        linkSlugs.linkId,
-        rows.map((r) => r.id),
-      ),
-    );
+      const slugs = await db
+        .select()
+        .from(linkSlugs)
+        .where(
+          inArray(
+            linkSlugs.linkId,
+            rows.map((row) => row.id),
+          ),
+        );
 
-  const byLink = new Map<number, typeof slugRows>();
-  for (const s of slugRows) {
-    const arr = byLink.get(s.linkId) ?? [];
-    arr.push(s);
-    byLink.set(s.linkId, arr);
-  }
+      const byLink = new Map<number, typeof slugs>();
+      for (const slug of slugs) {
+        const group = byLink.get(slug.linkId);
+        if (group) group.push(slug);
+        else byLink.set(slug.linkId, [slug]);
+      }
 
-  return rows.map((r) => {
-    const slugs = byLink.get(r.id) ?? [];
-    const primary = slugs.find((s) => s.isPrimary) ?? slugs[0];
-    const aliases = slugs.filter((s) => s !== primary);
-    return {
-      id: r.id,
-      target: r.target,
-      title: r.title,
-      description: r.description,
-      ogEnabled: r.ogEnabled,
-      ogImage: r.ogImage,
-      permanent: r.permanent,
-      enabled: r.enabled,
-      clicks: r.clicks,
-      primary: primary
-        ? { tag: primary.tag, slug: primary.slug }
-        : { tag: "", slug: "" },
-      aliases: aliases.map((a) => ({ tag: a.tag, slug: a.slug })),
-      createdAt: r.createdAt.toISOString(),
-    };
-  });
+      return rows.map((row) => {
+        const group = byLink.get(row.id) ?? [];
+        const primary = group.find((s) => s.isPrimary) ?? group[0];
+        return {
+          id: row.id,
+          target: row.target,
+          title: row.title,
+          description: row.description,
+          ogEnabled: row.ogEnabled,
+          ogImage: row.ogImage,
+          permanent: row.permanent,
+          enabled: row.enabled,
+          clicks: row.clicks,
+          primary: primary
+            ? { tag: primary.tag, slug: primary.slug }
+            : { tag: "", slug: "" },
+          aliases: group
+            .filter((s) => s !== primary)
+            .map((s) => ({ tag: s.tag, slug: s.slug })),
+          createdAt: row.createdAt.toISOString(),
+        };
+      });
+    },
+    [],
+  );
 }
 
-export async function createLink(raw: unknown): Promise<Result> {
-  try {
-    await assertAdmin();
-    const parsed = linkInputSchema.safeParse(raw);
-    if (!parsed.success) {
-      return {
-        success: false,
-        error: parsed.error.issues[0]?.message ?? "Invalid input.",
-      };
-    }
-    const data = parsed.data;
-    const pairs = [data.primary, ...data.aliases];
+export async function createLink(raw: unknown): Promise<ActionResult> {
+  return adminMutation("create link", async () => {
+    const parsed = parseInput(raw);
+    if (!parsed.ok) return parsed.message;
 
-    const conflicts = await findSlugConflicts(pairs);
-    if (conflicts.length > 0) {
-      return {
-        success: false,
-        error: `The path /${formatPath(conflicts[0]!)} is already taken.`,
-      };
-    }
+    const taken = await takenPath(parsed.pairs);
+    if (taken) return `The path /${taken} is already taken.`;
 
     const [row] = await db
       .insert(links)
-      .values({
-        target: data.target,
-        title: data.title,
-        description: data.description,
-        ogEnabled: data.ogEnabled,
-        ogImage: data.ogImage,
-        permanent: data.permanent,
-        enabled: data.enabled,
-      })
+      .values(linkColumns(parsed.data))
       .returning({ id: links.id });
 
-    await db.insert(linkSlugs).values(
-      pairs.map((p, i) => ({
-        linkId: row!.id,
-        tag: p.tag,
-        slug: p.slug,
-        isPrimary: i === 0,
-      })),
-    );
-
-    revalidatePath("/admin/links");
-    return { success: true };
-  } catch {
-    return { success: false, error: "Failed to create link." };
-  }
+    await db.insert(linkSlugs).values(slugRows(row!.id, parsed.pairs));
+  }, revalidateLinks);
 }
 
-export async function updateLink(id: number, raw: unknown): Promise<Result> {
-  try {
-    await assertAdmin();
-    const parsed = linkInputSchema.safeParse(raw);
-    if (!parsed.success) {
-      return {
-        success: false,
-        error: parsed.error.issues[0]?.message ?? "Invalid input.",
-      };
-    }
-    const data = parsed.data;
-    const pairs = [data.primary, ...data.aliases];
+export async function updateLink(id: number, raw: unknown): Promise<ActionResult> {
+  return adminMutation("update link", async () => {
+    const parsed = parseInput(raw);
+    if (!parsed.ok) return parsed.message;
 
-    const conflicts = await findSlugConflicts(pairs, id);
-    if (conflicts.length > 0) {
-      return {
-        success: false,
-        error: `The path /${formatPath(conflicts[0]!)} is already taken.`,
-      };
-    }
+    const taken = await takenPath(parsed.pairs, id);
+    if (taken) return `The path /${taken} is already taken.`;
 
     await db
       .update(links)
-      .set({
-        target: data.target,
-        title: data.title,
-        description: data.description,
-        ogEnabled: data.ogEnabled,
-        ogImage: data.ogImage,
-        permanent: data.permanent,
-        enabled: data.enabled,
-        updatedAt: new Date(),
-      })
+      .set({ ...linkColumns(parsed.data), updatedAt: new Date() })
       .where(eq(links.id, id));
 
     await db.delete(linkSlugs).where(eq(linkSlugs.linkId, id));
-    await db.insert(linkSlugs).values(
-      pairs.map((p, i) => ({
-        linkId: id,
-        tag: p.tag,
-        slug: p.slug,
-        isPrimary: i === 0,
-      })),
-    );
-
-    revalidatePath("/admin/links");
-    return { success: true };
-  } catch {
-    return { success: false, error: "Failed to update link." };
-  }
+    await db.insert(linkSlugs).values(slugRows(id, parsed.pairs));
+  }, revalidateLinks);
 }
 
-export async function toggleLinkEnabled(id: number): Promise<Result> {
-  try {
-    await assertAdmin();
+export async function toggleLinkEnabled(id: number): Promise<ActionResult> {
+  return adminMutation("toggle link", async () => {
     await db
       .update(links)
       .set({ enabled: sql`NOT ${links.enabled}`, updatedAt: new Date() })
       .where(eq(links.id, id));
-    revalidatePath("/admin/links");
-    return { success: true };
-  } catch {
-    return { success: false, error: "Failed to toggle link." };
-  }
+  }, revalidateLinks);
 }
 
-export async function deleteLink(id: number): Promise<Result> {
-  try {
-    await assertAdmin();
+export async function deleteLink(id: number): Promise<ActionResult> {
+  return adminMutation("delete link", async () => {
     await db.delete(links).where(eq(links.id, id));
-    revalidatePath("/admin/links");
-    return { success: true };
-  } catch {
-    return { success: false, error: "Failed to delete link." };
-  }
+  }, revalidateLinks);
 }

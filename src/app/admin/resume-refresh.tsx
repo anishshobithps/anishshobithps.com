@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner";
 import { refreshResume } from "@/app/admin/actions";
+import { useActionMutation } from "@/hooks/use-action-mutation";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowClockwiseIcon,
   FileTextIcon,
-  SpinnerIcon,
 } from "@/components/shared/icons";
 import {
   TypographySmall,
@@ -15,21 +14,13 @@ import {
 } from "@/components/ui/typography";
 
 export function ResumeRefresh() {
-  const [pending, setPending] = useState(false);
+  const { mutate: refresh, isPending: pending } = useActionMutation({
+    action: refreshResume,
+    successMessage: "Resume cache cleared. Latest PDF will load on /resume.",
+  });
 
-  async function handleRefresh() {
-    if (pending) return;
-    setPending(true);
-    try {
-      const result = await refreshResume();
-      if (result.success) {
-        toast.success("Resume cache cleared. Latest PDF will load on /resume.");
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPending(false);
-    }
+  function handleRefresh() {
+    if (!pending) refresh(undefined);
   }
 
   return (
@@ -46,6 +37,9 @@ export function ResumeRefresh() {
           </TypographyMuted>
         </div>
       </div>
+      <TypographyMuted role="status" aria-live="polite" className="sr-only">
+        {pending ? "Refreshing the resume cache…" : ""}
+      </TypographyMuted>
       <Button
         variant="outline"
         size="sm"
@@ -54,7 +48,7 @@ export function ResumeRefresh() {
         className="shrink-0 gap-1.5"
       >
         {pending ? (
-          <SpinnerIcon data-icon="inline-start" className="size-4 animate-spin" />
+          <Spinner data-icon="inline-start" className="size-4" />
         ) : (
           <ArrowClockwiseIcon data-icon="inline-start" className="size-4" />
         )}

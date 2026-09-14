@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useActionMutation } from "@/hooks/use-action-mutation";
+import { queryKeys } from "@/lib/query-keys";
 import {
   createProject,
+  getAdminProjects,
+  type ProjectInput,
   updateProject,
   toggleProjectEnabled,
   deleteProject,
@@ -11,6 +15,10 @@ import {
   type ProjectRow,
 } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,7 +48,16 @@ import {
   PencilIcon,
   TrashIcon,
   PlusIcon,
+  FolderOpenIcon,
 } from "@/components/shared/icons";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import {
   Table,
   TableBody,
@@ -100,6 +117,7 @@ function ProjectForm({
           Title
         </Label>
         <Input
+          autoComplete="off"
           id="pf-title"
           value={form.title}
           onChange={set("title")}
@@ -129,6 +147,7 @@ function ProjectForm({
           </span>
         </Label>
         <Input
+          autoComplete="off"
           id="pf-highlights"
           value={form.highlights}
           onChange={set("highlights")}
@@ -144,10 +163,11 @@ function ProjectForm({
           </span>
         </Label>
         <Input
+          autoComplete="off"
           id="pf-github"
           value={form.github}
           onChange={set("github")}
-          placeholder="https://github.com/..."
+          placeholder="https://github.com/…"
           type="url"
           disabled={submitting}
         />
@@ -160,10 +180,11 @@ function ProjectForm({
           </span>
         </Label>
         <Input
+          autoComplete="off"
           id="pf-live"
           value={form.live}
           onChange={set("live")}
-          placeholder="https://..."
+          placeholder="https://…"
           type="url"
           disabled={submitting}
         />
@@ -186,130 +207,79 @@ function ProjectForm({
   );
 }
 
-export function ProjectsPanel({
-  projects: initial,
-}: {
-  projects: ProjectRow[];
-}) {
-  const [projects, setProjects] = useState<ProjectRow[]>(initial);
-  const [pendingId, setPendingId] = useState<number | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<ProjectRow | null>(null);
-  const [isPending, startTransition] = useTransition();
+export function ProjectsPanel() {
+  const { data: projects = [] } = useQuery({
+    queryKey: queryKeys.admin.projects,
+    queryFn: getAdminProjects,
+  });
+  const [dialog, setDialog] = useState<{
+    open: boolean;
+    target: ProjectRow | null;
+  }>({ open: false, target: null });
+  const dialogOpen = dialog.open;
+  const editTarget = dialog.target;
+
+  const save = useActionMutation({
+    action: (data: ProjectInput) =>
+      editTarget ? updateProject(editTarget.id, data) : createProject(data),
+    successMessage: () => (editTarget ? "Project updated." : "Project created."),
+    invalidate: [queryKeys.admin.projects],
+    onDone: () => setDialog((prev) => ({ ...prev, open: false })),
+  });
+
+  const toggle = useActionMutation({
+    action: (id: number) => toggleProjectEnabled(id),
+    invalidate: [queryKeys.admin.projects],
+  });
+
+  const remove = useActionMutation({
+    action: (id: number) => deleteProject(id),
+    successMessage: "Project deleted.",
+    invalidate: [queryKeys.admin.projects],
+  });
+
+  const move = useActionMutation({
+    action: ({ id, direction }: { id: number; direction: "up" | "down" }) =>
+      moveProject(id, direction),
+    invalidate: [queryKeys.admin.projects],
+  });
+
+  const pendingId = toggle.isPending
+    ? toggle.variables
+    : remove.isPending
+      ? remove.variables
+      : move.isPending
+        ? move.variables.id
+        : null;
 
   function openAdd() {
-    setEditTarget(null);
-    setDialogOpen(true);
+    setDialog({ open: true, target: null });
   }
 
   function openEdit(project: ProjectRow) {
-    setEditTarget(project);
-    setDialogOpen(true);
+    setDialog({ open: true, target: project });
   }
 
-  async function handleFormSubmit(form: FormData) {
-    const data = {
+  function handleFormSubmit(form: FormData) {
+    save.mutate({
       title: form.title.trim(),
       description: form.description.trim(),
       highlights: parseHighlights(form.highlights),
       live: form.live.trim() || null,
       github: form.github.trim() || null,
-    };
-
-    startTransition(async () => {
-      if (editTarget) {
-        const result = await updateProject(editTarget.id, data);
-        if (result.success) {
-          setProjects((prev) =>
-            prev.map((p) => (p.id === editTarget.id ? { ...p, ...data } : p)),
-          );
-          toast.success("Project updated.");
-          setDialogOpen(false);
-        } else {
-          toast.error(result.error);
-        }
-      } else {
-        const result = await createProject(data);
-        if (result.success) {
-          const fakeId = Date.now();
-          const maxOrder = Math.max(...projects.map((p) => p.sortOrder), -1);
-          setProjects((prev) => [
-            ...prev,
-            { id: fakeId, ...data, enabled: true, sortOrder: maxOrder + 1 },
-          ]);
-          toast.success("Project created.");
-          setDialogOpen(false);
-        } else {
-          toast.error(result.error);
-        }
-      }
     });
   }
 
-  async function handleToggle(id: number, current: boolean) {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await toggleProjectEnabled(id);
-      if (result.success) {
-        setProjects((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, enabled: !current } : p)),
-        );
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPendingId(null);
-    }
+  function handleToggle(id: number) {
+    if (pendingId === null) toggle.mutate(id);
   }
 
-  async function handleDelete(id: number) {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await deleteProject(id);
-      if (result.success) {
-        setProjects((prev) => prev.filter((p) => p.id !== id));
-        toast.success("Project deleted.");
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPendingId(null);
-    }
+  function handleDelete(id: number) {
+    if (pendingId === null) remove.mutate(id);
   }
 
-  async function handleMove(id: number, direction: "up" | "down") {
-    if (pendingId !== null) return;
-    setPendingId(id);
-    try {
-      const result = await moveProject(id, direction);
-      if (result.success) {
-        setProjects((prev) => {
-          const sorted = [...prev].sort(
-            (a, b) => a.sortOrder - b.sortOrder || a.id - b.id,
-          );
-          const idx = sorted.findIndex((p) => p.id === id);
-          const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-          if (swapIdx < 0 || swapIdx >= sorted.length) return prev;
-          const a = sorted[idx]!;
-          const b = sorted[swapIdx]!;
-          const newA = a.sortOrder;
-          const newB = b.sortOrder;
-          return prev.map((p) =>
-            p.id === a.id
-              ? { ...p, sortOrder: newB }
-              : p.id === b.id
-                ? { ...p, sortOrder: newA }
-                : p,
-          );
-        });
-      } else {
-        toast.error(result.error);
-      }
-    } finally {
-      setPendingId(null);
-    }
+  function handleMove(id: number, direction: "up" | "down") {
+    if (pendingId === null) move.mutate({ id, direction });
   }
 
   const sorted = [...projects].sort(
@@ -321,7 +291,11 @@ export function ProjectsPanel({
       <div className="flex items-center justify-between">
         <div>
           <TypographySmall className="font-semibold">Projects</TypographySmall>
-          <TypographyMuted className="text-xs">
+          <TypographyMuted
+            role="status"
+            aria-live="polite"
+            className="text-xs"
+          >
             {projects.filter((p) => p.enabled).length} of {projects.length}{" "}
             visible &middot; top = first on site
           </TypographyMuted>
@@ -333,9 +307,27 @@ export function ProjectsPanel({
       </div>
 
       {sorted.length === 0 ? (
-        <TypographyMuted className="py-8 text-center">
-          No projects yet. Add your first one.
-        </TypographyMuted>
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FolderOpenIcon aria-hidden="true" />
+            </EmptyMedia>
+            <EmptyTitle>No projects yet</EmptyTitle>
+            <EmptyDescription>
+              Add your first one — the top of the list shows first on the site.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button size="sm" className="gap-1.5" onClick={openAdd}>
+              <PlusIcon
+                data-icon="inline-start"
+                className="size-3.5"
+                aria-hidden="true"
+              />
+              Add Project
+            </Button>
+          </EmptyContent>
+        </Empty>
       ) : (
         <div className="rounded-lg border overflow-hidden">
           <Table>
@@ -364,9 +356,12 @@ export function ProjectsPanel({
                     )}
                   >
                     <TableCell className="py-2 align-middle">
-                      <div className="flex flex-col gap-0.5 items-center">
+                      <ButtonGroup
+                        orientation="vertical"
+                        aria-label="Reorder project"
+                      >
                         <Button
-                          variant="ghost"
+                          variant="secondary"
                           size="icon"
                           className="size-6"
                           onClick={() => handleMove(project.id, "up")}
@@ -375,8 +370,9 @@ export function ProjectsPanel({
                         >
                           <ArrowUpIcon className="size-3" />
                         </Button>
+                        <ButtonGroupSeparator orientation="horizontal" />
                         <Button
-                          variant="ghost"
+                          variant="secondary"
                           size="icon"
                           className="size-6"
                           onClick={() => handleMove(project.id, "down")}
@@ -385,7 +381,7 @@ export function ProjectsPanel({
                         >
                           <ArrowDownIcon className="size-3" />
                         </Button>
-                      </div>
+                      </ButtonGroup>
                     </TableCell>
 
                     <TableCell className="py-3">
@@ -431,7 +427,7 @@ export function ProjectsPanel({
                       <Switch
                         checked={project.enabled}
                         onCheckedChange={() =>
-                          handleToggle(project.id, project.enabled)
+                          handleToggle(project.id)
                         }
                         disabled={isRowPending}
                         aria-label={
@@ -441,9 +437,9 @@ export function ProjectsPanel({
                     </TableCell>
 
                     <TableCell className="text-right py-3">
-                      <div className="flex items-center justify-end gap-1">
+                      <ButtonGroup className="justify-end">
                         <Button
-                          variant="ghost"
+                          variant="secondary"
                           size="icon"
                           className="size-7"
                           onClick={() => openEdit(project)}
@@ -451,10 +447,11 @@ export function ProjectsPanel({
                         >
                           <PencilIcon className="size-3.5" />
                         </Button>
+                        <ButtonGroupSeparator />
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                              variant="ghost"
+                              variant="secondary"
                               size="icon"
                               className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
                               disabled={isRowPending}
@@ -484,7 +481,7 @@ export function ProjectsPanel({
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
-                      </div>
+                      </ButtonGroup>
                     </TableCell>
                   </TableRow>
                 );
@@ -494,7 +491,7 @@ export function ProjectsPanel({
         </div>
       )}
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} onOpenChange={(open) => setDialog((prev) => ({ ...prev, open }))}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>
@@ -519,8 +516,8 @@ export function ProjectsPanel({
                 : emptyForm
             }
             onSubmit={handleFormSubmit}
-            onCancel={() => setDialogOpen(false)}
-            submitting={isPending}
+            onCancel={() => setDialog((prev) => ({ ...prev, open: false }))}
+            submitting={save.isPending}
           />
         </DialogContent>
       </Dialog>

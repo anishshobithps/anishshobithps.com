@@ -5,6 +5,7 @@ import {
   getGuestbookEntries,
   submitGuestbookEntry,
   toggleLike,
+  type GetEntriesResult,
   type GuestbookEntryWithMeta,
 } from "@/app/(site)/guestbook/actions";
 import { GuestbookEntry } from "@/app/(site)/guestbook/guestbook-entry";
@@ -22,36 +23,150 @@ import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
 import { toastError } from "@/lib/toast";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
-import { startTransition, useCallback, useRef, useState } from "react";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+  type InfiniteData,
+} from "@tanstack/react-query";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const MAX_MESSAGE_LENGTH = 280;
+const GUESTBOOK_KEY = ["guestbook"] as const;
 
-interface GuestbookClientProps {
-  initialEntries: GuestbookEntryWithMeta[];
-  currentUserId: string | null;
-  total: number;
-  initialHasMore: boolean;
+type GuestbookPages = InfiniteData<GetEntriesResult>;
+
+function sortEntries(
+  entries: GuestbookEntryWithMeta[],
+): GuestbookEntryWithMeta[] {
+  return [
+    ...entries.filter((entry) => entry.isPinned),
+    ...entries.filter((entry) => !entry.isPinned),
+  ];
 }
 
-export function GuestbookClient({
-  initialEntries,
-  currentUserId,
-  total,
-  initialHasMore,
-}: GuestbookClientProps) {
+interface GuestbookClientProps {
+  currentUserId: string | null;
+}
+
+export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
 
-  const [entries, setEntries] = useState(initialEntries);
-  const [count, setCount] = useState(total);
-  const [hasMore, setHasMore] = useState(initialHasMore);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const likePending = useRef<Set<number>>(new Set());
+  const queryClient = useQueryClient();
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError: loadMoreFailed,
+  } = useInfiniteQuery({
+    queryKey: GUESTBOOK_KEY,
+    queryFn: ({ pageParam }) => getGuestbookEntries({ offset: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.hasMore
+        ? allPages.reduce((seen, page) => seen + page.entries.length, 0)
+        : undefined,
+  });
+
+  const entries = useMemo(() => {
+    const seen = new Set<number>();
+    return (data?.pages ?? [])
+      .flatMap((page) => page.entries)
+      .filter((entry) => !seen.has(entry.id) && seen.add(entry.id));
+  }, [data]);
+
+  const count = data?.pages.at(-1)?.total ?? 0;
+  const hasMore = hasNextPage;
+
+  const setPages = useCallback(
+    (update: (pages: GetEntriesResult[]) => GetEntriesResult[]) =>
+      queryClient.setQueryData<GuestbookPages>(GUESTBOOK_KEY, (old) =>
+        old ? { ...old, pages: update(old.pages) } : old,
+      ),
+    [queryClient],
+  );
+
+  const patchEntries = useCallback(
+    (update: (entries: GuestbookEntryWithMeta[]) => GuestbookEntryWithMeta[]) =>
+      setPages((pages) =>
+        pages.map((page) => ({ ...page, entries: update(page.entries) })),
+      ),
+    [setPages],
+  );
+
+  const bumpTotal = useCallback(
+    (delta: number) =>
+      setPages((pages) =>
+        pages.map((page) => ({
+          ...page,
+          total: Math.max(0, page.total + delta),
+        })),
+      ),
+    [setPages],
+  );
+
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const likeGuard = useRef<Set<number>>(new Set());
+  const [pendingLikes, setPendingLikes] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
+
+  const submitEntry = useMutation({
+    mutationFn: async ({ message }: { message: string; tempId: number }) => {
+      const result = await submitGuestbookEntry(message);
+      if (!result.success) throw new Error(result.error);
+      return result.id;
+    },
+    onSuccess: (id, { tempId }) =>
+      patchEntries((list) =>
+        list.map((entry) => (entry.id === tempId ? { ...entry, id } : entry)),
+      ),
+    onError: (error, { tempId }) => {
+      patchEntries((list) => list.filter((entry) => entry.id !== tempId));
+      bumpTotal(-1);
+      toastError(error.message);
+    },
+  });
+
+  const likeEntry = useMutation({
+    mutationFn: async ({ id }: { id: number; liked: boolean }) => {
+      const result = await toggleLike(id);
+      if (!result.success) throw new Error(result.error);
+    },
+    onError: (error, { id, liked }) => {
+      patchEntries((list) =>
+        list.map((entry) =>
+          entry.id === id
+            ? {
+                ...entry,
+                likedByMe: !liked,
+                likeCount: liked
+                  ? Math.max(0, entry.likeCount - 1)
+                  : entry.likeCount + 1,
+              }
+            : entry,
+        ),
+      );
+      toastError(error.message);
+    },
+    onSettled: (_data, _error, { id }) => {
+      likeGuard.current.delete(id);
+      setPendingLikes((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    },
+  });
 
   const handleSubmit = useCallback(
-    (message: string) => {
-      if (!user) return;
+    (message: string): Promise<boolean> => {
+      if (!user) return Promise.resolve(false);
 
       const tempId = -Date.now();
       const tempEntry: GuestbookEntryWithMeta = {
@@ -69,27 +184,21 @@ export function GuestbookClient({
         },
       };
 
-      setEntries((prev) => {
-        const pinned = prev.filter((e) => e.isPinned);
-        const rest = prev.filter((e) => !e.isPinned);
-        return [...pinned, tempEntry, ...rest];
-      });
-      setCount((c) => c + 1);
+      setPages((pages) =>
+        pages.map((page, index) =>
+          index === 0
+            ? { ...page, entries: sortEntries([tempEntry, ...page.entries]) }
+            : page,
+        ),
+      );
+      bumpTotal(1);
 
-      startTransition(async () => {
-        const result = await submitGuestbookEntry(message);
-        if (result.success) {
-          setEntries((prev) =>
-            prev.map((e) => (e.id === tempId ? { ...e, id: result.id } : e)),
-          );
-        } else {
-          setEntries((prev) => prev.filter((e) => e.id !== tempId));
-          setCount((c) => Math.max(0, c - 1));
-          toastError(result.error);
-        }
-      });
+      return submitEntry
+        .mutateAsync({ message, tempId })
+        .then(() => true)
+        .catch(() => false);
     },
-    [user],
+    [user, setPages, bumpTotal, submitEntry],
   );
 
   const handleLike = useCallback(
@@ -98,15 +207,16 @@ export function GuestbookClient({
         toast.info("Sign in to like messages.");
         return;
       }
-      if (id < 0 || likePending.current.has(id)) return;
+      if (id < 0 || likeGuard.current.has(id)) return;
 
       const entry = entries.find((e) => e.id === id);
       if (!entry) return;
       const liked = !entry.likedByMe;
 
-      likePending.current.add(id);
-      setEntries((prev) =>
-        prev.map((e) =>
+      likeGuard.current.add(id);
+      setPendingLikes((prev) => new Set(prev).add(id));
+      patchEntries((list) =>
+        list.map((e) =>
           e.id === id
             ? {
                 ...e,
@@ -117,63 +227,60 @@ export function GuestbookClient({
         ),
       );
 
-      startTransition(async () => {
-        const result = await toggleLike(id);
-        likePending.current.delete(id);
-        if (!result.success) {
-          setEntries((prev) =>
-            prev.map((e) =>
-              e.id === id
-                ? {
-                    ...e,
-                    likedByMe: !liked,
-                    likeCount: liked
-                      ? Math.max(0, e.likeCount - 1)
-                      : e.likeCount + 1,
-                  }
-                : e,
-            ),
-          );
-          toastError(result.error);
-        }
-      });
+      likeEntry.mutate({ id, liked });
     },
-    [currentUserId, entries],
+    [currentUserId, entries, patchEntries, likeEntry],
   );
+
+  const removeEntry = useMutation({
+    mutationFn: async (id: number) => {
+      const result = await deleteGuestbookEntry(id);
+      if (!result.success) throw new Error(result.error);
+    },
+    onMutate: (id) => {
+      const removed = entries.find((entry) => entry.id === id);
+      patchEntries((list) => list.filter((entry) => entry.id !== id));
+      bumpTotal(-1);
+      return { removed };
+    },
+    onError: (error, _id, context) => {
+      if (context?.removed) {
+        setPages((pages) =>
+          pages.map((page, index) =>
+            index === 0
+              ? {
+                  ...page,
+                  entries: sortEntries([context.removed!, ...page.entries]),
+                }
+              : page,
+          ),
+        );
+        bumpTotal(1);
+      }
+      toastError(error.message);
+    },
+  });
 
   const handleDelete = useCallback((id: number) => {
     toast("Delete this message?", {
       action: {
         label: "Delete",
-        onClick: () => {
-          setEntries((prev) => prev.filter((e) => e.id !== id));
-          setCount((c) => Math.max(0, c - 1));
-          startTransition(async () => {
-            const result = await deleteGuestbookEntry(id);
-            if (!result.success) toastError(result.error);
-          });
-        },
+        onClick: () => removeEntry.mutate(id),
       },
       cancel: { label: "Keep", onClick: () => {} },
     });
-  }, []);
+  }, [removeEntry]);
 
-  const handleLoadMore = useCallback(async () => {
-    setLoadingMore(true);
-    try {
-      const result = await getGuestbookEntries({ offset: entries.length });
-      setEntries((prev) => {
-        const seen = new Set(prev.map((e) => e.id));
-        return [...prev, ...result.entries.filter((e) => !seen.has(e.id))];
-      });
-      setHasMore(result.hasMore);
-      setCount(result.total);
-    } catch {
-      toast.error("Couldn't load more messages.");
-    } finally {
-      setLoadingMore(false);
-    }
-  }, [entries.length]);
+  const entryVirtualizer = useVirtualizer({
+    count: entries.length,
+    getScrollElement: () => viewportRef.current,
+    estimateSize: () => 132,
+    overscan: 8,
+  });
+
+  const handleLoadMore = useCallback(() => {
+    void fetchNextPage();
+  }, [fetchNextPage]);
 
   return (
     <div className="w-full space-y-6">
@@ -265,23 +372,36 @@ export function GuestbookClient({
               <EngagementNudge type="guestbook" />
             </EngagementEmptyState>
           ) : (
-            <ScrollArea className="max-h-[60vh]">
+            <ScrollArea className="max-h-[60vh]" viewportRef={viewportRef}>
               <div className="max-h-[60vh]">
                 <ul
                   role="list"
                   aria-label="Guestbook messages"
-                  className="divide-y divide-border"
+                  className="relative"
+                  style={{ height: entryVirtualizer.getTotalSize() }}
                 >
-                  {entries.map((entry) => (
-                    <GuestbookEntry
-                      key={entry.id}
-                      entry={entry}
-                      currentUserId={currentUserId}
-                      onLike={handleLike}
-                      onDelete={handleDelete}
-                      likePendingRef={likePending}
-                    />
-                  ))}
+                  {entryVirtualizer.getVirtualItems().map((row) => {
+                    const entry = entries[row.index]!;
+                    return (
+                      <GuestbookEntry
+                        key={entry.id}
+                        ref={entryVirtualizer.measureElement}
+                        data-index={row.index}
+                        className="border-b border-border"
+                        style={{
+                          position: "absolute",
+                          insetInline: 0,
+                          top: 0,
+                          transform: `translateY(${row.start}px)`,
+                        }}
+                        entry={entry}
+                        currentUserId={currentUserId}
+                        onLike={handleLike}
+                        onDelete={handleDelete}
+                        pendingLikes={pendingLikes}
+                      />
+                    );
+                  })}
                 </ul>
 
                 {hasMore && (
@@ -290,10 +410,14 @@ export function GuestbookClient({
                       variant="outline"
                       size="sm"
                       onClick={handleLoadMore}
-                      disabled={loadingMore}
-                      aria-busy={loadingMore}
+                      disabled={isFetchingNextPage}
+                      aria-busy={isFetchingNextPage}
                     >
-                      {loadingMore ? "Loading…" : "Load more"}
+                      {isFetchingNextPage
+                        ? "Loading…"
+                        : loadMoreFailed
+                          ? "Couldn’t load — retry"
+                          : "Load more"}
                     </Button>
                   </div>
                 )}

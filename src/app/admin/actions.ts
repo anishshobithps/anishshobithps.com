@@ -11,9 +11,13 @@ import {
     guestbookLikes,
     projects,
 } from "@/lib/schema";
+import { adminMutation } from "@/lib/admin-action";
+import type { ActionResult } from "@/lib/action-result";
 import { assertAdmin } from "@/lib/assert-admin";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
 import { PROJECTS_CACHE_TAG } from "@/lib/projects";
+import { safeQuery } from "@/lib/safe-query";
+import { projectInputSchema, type ProjectInput } from "@/lib/projects-schema";
 import { RESUME_CACHE_TAG } from "@/lib/resume";
 import { asc, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath, updateTag } from "next/cache";
@@ -31,8 +35,19 @@ export interface AdminCommentRow {
     user: CommentUser;
 }
 
+const EMPTY_STATS = {
+    guestbook: { total: 0, active: 0 },
+    comments: { total: 0, active: 0 },
+    reads: 0,
+    reactions: 0,
+};
+
 export async function getAdminStats() {
     await assertAdmin();
+    return safeQuery("getAdminStats", loadAdminStats, EMPTY_STATS);
+}
+
+async function loadAdminStats() {
     const [
         [guestbookTotal],
         [guestbookActive],
@@ -57,18 +72,18 @@ export async function getAdminStats() {
     };
 }
 
-export async function refreshResume(): Promise<{ success: boolean; error?: string }> {
-    try {
-        await assertAdmin();
+export async function refreshResume(): Promise<ActionResult> {
+    return adminMutation("refresh resume", async () => {
         updateTag(RESUME_CACHE_TAG);
-        return { success: true };
-    } catch {
-        return { success: false, error: "Failed to refresh resume." };
-    }
+    });
 }
 
 export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithMeta[]> {
     await assertAdmin();
+    return safeQuery("getAllAdminGuestbookEntries", loadAdminGuestbookEntries, []);
+}
+
+async function loadAdminGuestbookEntries(): Promise<GuestbookEntryWithMeta[]> {
     const rows = await db
         .select({
             id: guestbookEntries.id,
@@ -101,6 +116,10 @@ export async function getAllAdminGuestbookEntries(): Promise<GuestbookEntryWithM
 
 export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
     await assertAdmin();
+    return safeQuery("getAllAdminComments", loadAdminComments, []);
+}
+
+async function loadAdminComments(): Promise<AdminCommentRow[]> {
     const rows = await db
         .select({
             id: blogComments.id,
@@ -135,6 +154,15 @@ export async function getAllAdminComments(): Promise<AdminCommentRow[]> {
     }));
 }
 
+export type { ProjectInput };
+
+function revalidateProjects() {
+    revalidatePath("/projects");
+    revalidatePath("/");
+    revalidatePath("/admin/projects");
+    updateTag(PROJECTS_CACHE_TAG);
+}
+
 export type ProjectRow = {
     id: number;
     title: string;
@@ -148,6 +176,10 @@ export type ProjectRow = {
 
 export async function getAdminProjects(): Promise<ProjectRow[]> {
     await assertAdmin();
+    return safeQuery("getAdminProjects", loadAdminProjects, []);
+}
+
+async function loadAdminProjects(): Promise<ProjectRow[]> {
     return db
         .select({
             id: projects.id,
@@ -163,110 +195,74 @@ export async function getAdminProjects(): Promise<ProjectRow[]> {
         .orderBy(asc(projects.sortOrder), asc(projects.id));
 }
 
-export async function createProject(data: {
-    title: string;
-    description: string;
-    highlights: string[];
-    live: string | null;
-    github: string | null;
-}): Promise<{ success: boolean; error?: string }> {
-    try {
-        await assertAdmin();
+export async function createProject(raw: unknown): Promise<ActionResult> {
+    return adminMutation("create project", async () => {
+        const parsed = projectInputSchema.safeParse(raw);
+        if (!parsed.success) {
+            return parsed.error.issues[0]?.message ?? "Invalid project input.";
+        }
+
         const [last] = await db
             .select({ max: sql<number>`coalesce(max(${projects.sortOrder}), -1)` })
             .from(projects);
         await db.insert(projects).values({
-            ...data,
+            ...parsed.data,
             sortOrder: (last?.max ?? -1) + 1,
             enabled: true,
         });
-        revalidatePath("/projects");
-        revalidatePath("/");
-        revalidatePath("/admin/projects");
-        updateTag(PROJECTS_CACHE_TAG);
-        return { success: true };
-    } catch {
-        return { success: false, error: "Failed to create project." };
-    }
+    }, revalidateProjects);
 }
 
 export async function updateProject(
     id: number,
-    data: {
-        title: string;
-        description: string;
-        highlights: string[];
-        live: string | null;
-        github: string | null;
-    },
-): Promise<{ success: boolean; error?: string }> {
-    try {
-        await assertAdmin();
+    raw: unknown,
+): Promise<ActionResult> {
+    return adminMutation("update project", async () => {
+        const parsed = projectInputSchema.safeParse(raw);
+        if (!parsed.success) {
+            return parsed.error.issues[0]?.message ?? "Invalid project input.";
+        }
+
         await db
             .update(projects)
-            .set({ ...data, updatedAt: new Date() })
+            .set({ ...parsed.data, updatedAt: new Date() })
             .where(eq(projects.id, id));
-        revalidatePath("/projects");
-        revalidatePath("/");
-        revalidatePath("/admin/projects");
-        updateTag(PROJECTS_CACHE_TAG);
-        return { success: true };
-    } catch {
-        return { success: false, error: "Failed to update project." };
-    }
+    }, revalidateProjects);
 }
 
-export async function toggleProjectEnabled(
-    id: number,
-): Promise<{ success: boolean; error?: string }> {
-    try {
-        await assertAdmin();
+export async function toggleProjectEnabled(id: number): Promise<ActionResult> {
+    return adminMutation("toggle project visibility", async () => {
         await db
             .update(projects)
             .set({ enabled: sql`NOT ${projects.enabled}`, updatedAt: new Date() })
             .where(eq(projects.id, id));
-        revalidatePath("/projects");
-        revalidatePath("/");
-        revalidatePath("/admin/projects");
-        updateTag(PROJECTS_CACHE_TAG);
-        return { success: true };
-    } catch {
-        return { success: false, error: "Failed to toggle project visibility." };
-    }
+    }, revalidateProjects);
 }
 
-export async function deleteProject(
-    id: number,
-): Promise<{ success: boolean; error?: string }> {
-    try {
-        await assertAdmin();
+export async function deleteProject(id: number): Promise<ActionResult> {
+    return adminMutation("delete project", async () => {
         await db.delete(projects).where(eq(projects.id, id));
-        revalidatePath("/projects");
-        revalidatePath("/");
-        revalidatePath("/admin/projects");
-        updateTag(PROJECTS_CACHE_TAG);
-        return { success: true };
-    } catch {
-        return { success: false, error: "Failed to delete project." };
-    }
+    }, revalidateProjects);
 }
 
 export async function moveProject(
     id: number,
     direction: "up" | "down",
-): Promise<{ success: boolean; error?: string }> {
-    try {
-        await assertAdmin();
+): Promise<ActionResult> {
+    return adminMutation("reorder projects", async () => {
         const all = await db
             .select({ id: projects.id, sortOrder: projects.sortOrder })
             .from(projects)
             .orderBy(asc(projects.sortOrder), asc(projects.id));
-        const idx = all.findIndex((p) => p.id === id);
-        if (idx === -1) return { success: false, error: "Project not found." };
-        const swapIdx = direction === "up" ? idx - 1 : idx + 1;
-        if (swapIdx < 0 || swapIdx >= all.length) return { success: true };
-        const current = all[idx]!;
-        const swap = all[swapIdx]!;
+
+        const index = all.findIndex((p) => p.id === id);
+        if (index === -1) return "Project not found.";
+
+        const swapIndex = direction === "up" ? index - 1 : index + 1;
+        if (swapIndex < 0 || swapIndex >= all.length) return;
+
+        const current = all[index]!;
+        const swap = all[swapIndex]!;
         await db
             .update(projects)
             .set({ sortOrder: swap.sortOrder, updatedAt: new Date() })
@@ -275,12 +271,5 @@ export async function moveProject(
             .update(projects)
             .set({ sortOrder: current.sortOrder, updatedAt: new Date() })
             .where(eq(projects.id, swap.id));
-        revalidatePath("/projects");
-        revalidatePath("/");
-        revalidatePath("/admin/projects");
-        updateTag(PROJECTS_CACHE_TAG);
-        return { success: true };
-    } catch {
-        return { success: false, error: "Failed to reorder projects." };
-    }
+    }, revalidateProjects);
 }

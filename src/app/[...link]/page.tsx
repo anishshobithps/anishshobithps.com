@@ -1,7 +1,8 @@
 import { recordClick, resolveLink } from "@/lib/links";
-import { hasPreview } from "@/lib/links-schema";
+import { hasPreview, type SlugPair } from "@/lib/links-schema";
 import { buildOGUrl } from "@/lib/metadata";
 import { siteConfig } from "@/lib/config";
+import { escapeInlineScript } from "@/lib/inline-script";
 import { Text, TypographyMuted } from "@/components/ui/typography";
 import type { Metadata, Route } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
@@ -9,46 +10,48 @@ import { after } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-type PageParams = { link: string[] };
+type PageProps = { params: Promise<{ link: string[] }> };
 
-function parsePath(segments: string[]): { tag: string; slug: string } | null {
+function parsePath(segments: string[]): SlugPair | null {
   if (segments.length === 1) return { tag: "", slug: segments[0]! };
   if (segments.length === 2) return { tag: segments[0]!, slug: segments[1]! };
   return null;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<PageParams>;
-}): Promise<Metadata> {
+async function resolveFromParams({ params }: PageProps) {
   const { link } = await params;
-  const parsed = parsePath(link);
-  if (!parsed) return {};
+  const path = parsePath(link);
+  return path ? resolveLink(path.tag, path.slug) : null;
+}
 
-  const resolved = await resolveLink(parsed.tag, parsed.slug);
-  if (!resolved || !hasPreview(resolved)) return {};
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const link = await resolveFromParams(props);
+  if (!link || !hasPreview(link)) return {};
 
-  const title = resolved.title ?? siteConfig.name;
-  const description = resolved.description ?? undefined;
+  const title = link.title ?? siteConfig.name;
+  const description = link.description ?? undefined;
   const image =
-    resolved.ogImage ??
-    (resolved.ogEnabled
+    link.ogImage ??
+    (link.ogEnabled
       ? buildOGUrl({
           title,
-          description: resolved.description ?? "",
+          description: link.description ?? "",
           path: "link",
         })
       : undefined);
-  const images = image
-    ? [{ url: image, width: 1200, height: 630, alt: title }]
-    : undefined;
 
   return {
     title,
     description,
     robots: { index: false, follow: false },
-    openGraph: { title, description, type: "website", images },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: image
+        ? [{ url: image, width: 1200, height: 630, alt: title }]
+        : undefined,
+    },
     twitter: {
       card: "summary_large_image",
       title,
@@ -58,24 +61,16 @@ export async function generateMetadata({
   };
 }
 
-export default async function LinkResolverPage({
-  params,
-}: {
-  params: Promise<PageParams>;
-}) {
-  const { link } = await params;
-  const parsed = parsePath(link);
-  if (!parsed) notFound();
+export default async function LinkResolverPage(props: PageProps) {
+  const link = await resolveFromParams(props);
+  if (!link) notFound();
 
-  const resolved = await resolveLink(parsed.tag, parsed.slug);
-  if (!resolved) notFound();
+  after(() => recordClick(link.id));
 
-  after(() => recordClick(resolved.id));
+  const { target } = link;
 
-  const { target } = resolved;
-
-  if (!hasPreview(resolved)) {
-    if (resolved.permanent) permanentRedirect(target as Route);
+  if (!hasPreview(link)) {
+    if (link.permanent) permanentRedirect(target as Route);
     redirect(target as Route);
   }
 
@@ -83,7 +78,7 @@ export default async function LinkResolverPage({
     <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-3 px-6 text-center">
       <script
         dangerouslySetInnerHTML={{
-          __html: `window.location.replace(${JSON.stringify(target)});`,
+          __html: `window.location.replace(${escapeInlineScript(JSON.stringify(target))});`,
         }}
       />
       <TypographyMuted>Redirecting you to</TypographyMuted>

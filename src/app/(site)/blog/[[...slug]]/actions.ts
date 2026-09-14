@@ -3,6 +3,7 @@
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@/lib/db";
 import { getClientIp, hashIp } from "@/lib/ip";
+import { safeQuery } from "@/lib/safe-query";
 import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
 import { source } from "@/lib/source";
 import { sanitizeText, ValidationError, validateLength } from "@/lib/text";
@@ -73,12 +74,20 @@ async function getOrCreatePost(slug: string): Promise<number | null> {
 }
 
 export async function trackRead(slug: string): Promise<void> {
+    return safeQuery("trackRead", () => recordRead(slug), undefined);
+}
+
+async function recordRead(slug: string): Promise<void> {
     const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
     if (postId === null) return;
     await db.insert(blogReads).values({ postId, ipHash }).onConflictDoNothing();
 }
 
 export async function getBlogReadsCount(slug: string): Promise<number> {
+    return safeQuery("getBlogReadsCount", () => loadBlogReadsCount(slug), 0);
+}
+
+async function loadBlogReadsCount(slug: string): Promise<number> {
     const postId = await getPostIdBySlug(slug);
 
     if (postId === null) return 0;
@@ -92,6 +101,13 @@ export async function getBlogReadsCount(slug: string): Promise<number> {
 }
 
 export async function getReactions(slug: string): Promise<ReactionsData> {
+    return safeQuery("getReactions", () => loadReactions(slug), {
+        counts: {},
+        userMood: null,
+    });
+}
+
+async function loadReactions(slug: string): Promise<ReactionsData> {
     const [ipHash, postId] = await Promise.all([
         getIpHash(),
         getPostIdBySlug(slug),
@@ -130,6 +146,10 @@ export async function getReactions(slug: string): Promise<ReactionsData> {
 }
 
 export async function submitReaction(slug: string, mood: MoodId | null): Promise<void> {
+    return safeQuery("submitReaction", () => recordReaction(slug, mood), undefined);
+}
+
+async function recordReaction(slug: string, mood: MoodId | null): Promise<void> {
     if (mood !== null && !isValidMood(mood)) {
         throw new Error(`Invalid mood: ${mood}`);
     }
@@ -177,6 +197,10 @@ export interface GetCommentsResult {
 }
 
 export async function getCommentCount(slug: string): Promise<number> {
+    return safeQuery("getCommentCount", () => loadCommentCount(slug), 0);
+}
+
+async function loadCommentCount(slug: string): Promise<number> {
     const postId = await getPostIdBySlug(slug);
 
     if (postId === null) return 0;
@@ -190,6 +214,13 @@ export async function getCommentCount(slug: string): Promise<number> {
 }
 
 export async function getComments(slug: string): Promise<GetCommentsResult> {
+    return safeQuery("getComments", () => loadComments(slug), {
+        comments: [],
+        total: 0,
+    });
+}
+
+async function loadComments(slug: string): Promise<GetCommentsResult> {
     const { userId } = await auth();
 
     const postId = await getPostIdBySlug(slug);
@@ -273,9 +304,31 @@ export async function submitComment(
         const postId = await getOrCreatePost(slug);
         if (postId === null) return { success: false, error: "Post not found." };
 
+        let resolvedParentId: number | null = null;
+        if (parentId !== undefined && parentId !== null) {
+            if (!Number.isInteger(parentId)) {
+                return { success: false, error: "Invalid parent comment." };
+            }
+
+            const [parent] = await db
+                .select({ id: blogComments.id })
+                .from(blogComments)
+                .where(
+                    and(
+                        eq(blogComments.id, parentId),
+                        eq(blogComments.postId, postId),
+                        eq(blogComments.isDeleted, false),
+                    ),
+                )
+                .limit(1);
+
+            if (!parent) return { success: false, error: "Parent comment not found." };
+            resolvedParentId = parent.id;
+        }
+
         const [inserted] = await db
             .insert(blogComments)
-            .values({ postId, clerkUserId: userId, body: trimmed, parentId: parentId ?? null })
+            .values({ postId, clerkUserId: userId, body: trimmed, parentId: resolvedParentId })
             .returning({ id: blogComments.id });
 
         revalidatePath(`/blog/${slug}`);
