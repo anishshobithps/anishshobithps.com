@@ -1,6 +1,7 @@
 export const siteConfig = {
     name: "Anish Shobith P S",
     domain: "anishshobithps.com",
+    shortLinkDomain: process.env.NEXT_PUBLIC_SHORTLINK_DOMAIN ?? null,
     role: "Software Developer",
     email: "anish.shobith19@gmail.com",
     description:
