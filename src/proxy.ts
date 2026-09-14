@@ -9,8 +9,22 @@ import { RESERVED_SEGMENTS } from "@/lib/reserved-segments";
 
 const withClerk = clerkMiddleware();
 
+function configuredShortLinkHost(): string | null {
+    const raw =
+        process.env.SHORTLINK_DOMAIN ?? process.env.NEXT_PUBLIC_SHORTLINK_DOMAIN;
+    if (!raw) return null;
+    const host = raw
+        .trim()
+        .toLowerCase()
+        .replace(/^[a-z]+:\/\//, "")
+        .replace(/\/.*$/, "")
+        .split(":")[0]
+        ?.replace(/^www\./, "");
+    return host || null;
+}
+
 function isShortLinkHost(request: NextRequest): boolean {
-    const configured = siteConfig.shortLinkDomain?.toLowerCase();
+    const configured = configuredShortLinkHost();
     if (!configured) return false;
     const host = request.headers.get("host")?.split(":")[0]?.toLowerCase();
     return host === configured || host === `www.${configured}`;
@@ -38,9 +52,7 @@ export default function proxy(request: NextRequest, event: NextFetchEvent) {
 
 export const config = {
     matcher: [
-        // Skip Next.js internals and all static files, unless found in search params
         '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-        // Always run for API routes
         '/(api|trpc)(.*)',
     ],
 }
