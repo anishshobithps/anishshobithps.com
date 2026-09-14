@@ -1,5 +1,5 @@
 /** @type {import('knip').KnipConfig} */
-export default {
+const config = {
   ignore: [
     // fumadocs config — loaded by the fumadocs CLI at build time
     "source.config.ts",
@@ -26,3 +26,5 @@ export default {
     "media-chrome",
   ],
 };
+
+export default config;
