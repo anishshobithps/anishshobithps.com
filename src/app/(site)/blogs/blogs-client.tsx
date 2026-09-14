@@ -53,7 +53,7 @@ import {
   parseAsString,
   useQueryStates,
 } from "nuqs";
-import { useMemo, ViewTransition } from "react";
+import { useDeferredValue, useMemo, ViewTransition } from "react";
 import type { Route } from "next";
 import { postTransitionName } from "@/lib/view-transition";
 
@@ -84,10 +84,13 @@ export function BlogsClient({
   const [params, setParams] = useQueryStates(searchParsers);
   const { q, tags, page, per } = params;
 
+  const deferredQuery = useDeferredValue(q);
+  const isFiltering = q !== deferredQuery;
+
   const filtered = useMemo(() => {
     let result = posts;
-    if (q.trim()) {
-      const lower = q.toLowerCase();
+    if (deferredQuery.trim()) {
+      const lower = deferredQuery.toLowerCase();
       result = result.filter(
         (p) =>
           p.title.toLowerCase().includes(lower) ||
@@ -99,7 +102,7 @@ export function BlogsClient({
       result = result.filter((p) => tags.every((t) => p.tags?.includes(t)));
     }
     return result;
-  }, [posts, q, tags]);
+  }, [posts, deferredQuery, tags]);
 
   const totalPages = useMemo(
     () => Math.max(1, Math.ceil(filtered.length / per)),
@@ -129,11 +132,12 @@ export function BlogsClient({
         className="flex flex-wrap sm:flex-nowrap sm:justify-end gap-3 pb-6"
       >
         <div className="w-full sm:w-auto sm:flex-1 min-w-0">
-          <InputGroup>
+          <InputGroup data-pending={isFiltering || undefined}>
             <InputGroupAddon align="inline-start">
               <MagnifyingGlassIcon aria-hidden="true" />
             </InputGroupAddon>
             <InputGroupInput
+              autoComplete="off"
               placeholder="Search posts…"
               value={q}
               aria-label="Search blog posts"
@@ -167,7 +171,11 @@ export function BlogsClient({
                     }
                     className="cursor-pointer gap-1.5 shrink-0 justify-start font-semibold"
                   >
-                    <TagIcon className="size-4" aria-hidden="true" />
+                    <TagIcon
+                  data-icon="inline-start"
+                  className="size-4"
+                  aria-hidden="true"
+                />
 
                     <span className="text-left">Tags</span>
                     {tags.length > 0 && (
@@ -185,7 +193,7 @@ export function BlogsClient({
                     <TypographySmall>Filter by tag</TypographySmall>
                     {tags.length > 0 && (
                       <Button
-                        variant="ghost"
+                        variant="secondary"
                         size="xs"
                         onClick={() => setParams({ tags: [], page: 1 })}
                         className="cursor-pointer h-auto px-1 py-0"
@@ -265,7 +273,7 @@ export function BlogsClient({
           {tags.map((tag) => (
             <li key={tag}>
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="xs"
                 onClick={() =>
                   setParams({ tags: tags.filter((t) => t !== tag), page: 1 })
@@ -298,14 +306,14 @@ export function BlogsClient({
               <>
                 <TypographyMuted>No posts published yet.</TypographyMuted>
                 <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
-                  // check back soon.
+                  {"// check back soon."}
                 </TypographyMuted>
               </>
             ) : (
               <>
                 <TypographyMuted>Nothing matched that search.</TypographyMuted>
                 <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
-                  // try different terms or clear the filters.
+                  {"// try different terms or clear the filters."}
                 </TypographyMuted>
               </>
             )}
@@ -338,7 +346,7 @@ export function BlogsClient({
                           </TypographyMuted>
                         )}
                         <CaretRightIcon
-                          className="size-3.5 text-muted-foreground/50 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
+                          className="size-3.5 text-muted-foreground/50 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,transform] duration-200"
                           aria-hidden="true"
                         />
                       </div>

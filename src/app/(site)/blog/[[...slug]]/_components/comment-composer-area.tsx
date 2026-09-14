@@ -1,7 +1,10 @@
 "use client";
 
 import { Avatar } from "@/components/engagement/avatar";
-import { Composer } from "@/components/engagement/composer";
+import {
+  Composer,
+  type ComposerSubmitHandler,
+} from "@/components/engagement/composer";
 import { PencilIcon, SignInIcon, SignOutIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +36,7 @@ export interface CommentComposerAreaProps {
     | null
     | undefined;
   userName: string | null;
-  onSubmit: (body: string) => void;
+  onSubmit: ComposerSubmitHandler;
   onSignOut: () => void;
 }
 

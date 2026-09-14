@@ -2,7 +2,6 @@ import {
   BookOpenIcon,
   ChatCircleIcon,
   EyeIcon,
-  GearIcon,
   HeartIcon,
 } from "@/components/shared/icons";
 import {

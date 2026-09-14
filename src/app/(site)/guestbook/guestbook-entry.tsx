@@ -26,17 +26,18 @@ export const GuestbookEntry = memo(function GuestbookEntry({
   currentUserId,
   onLike,
   onDelete,
-  likePendingRef,
+  pendingLikes,
+  ...liProps
 }: {
   entry: GuestbookEntryWithMeta;
   currentUserId: string | null;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  likePendingRef: React.RefObject<Set<number>>;
-}) {
+  pendingLikes: ReadonlySet<number>;
+} & React.ComponentProps<"li">) {
   const canDelete = currentUserId === entry.user.id;
   const isOptimistic = entry.id < 0;
-  const isLikePending = likePendingRef.current?.has(entry.id) ?? false;
+  const isLikePending = pendingLikes.has(entry.id);
 
   const [expanded, setExpanded] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
@@ -56,10 +57,12 @@ export const GuestbookEntry = memo(function GuestbookEntry({
 
   return (
     <li
+      {...liProps}
       className={cn(
         "relative px-3 py-3 sm:px-5 sm:py-4",
         "transition-colors duration-150 hover:bg-muted/30",
         entry.isPinned && "bg-primary/3",
+        liProps.className,
       )}
     >
       {entry.isPinned && (
@@ -101,7 +104,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
 
           {(isClamped || expanded) && (
             <Button
-              variant="ghost"
+              variant="link"
               size="sm"
               onClick={() => setExpanded((v) => !v)}
               aria-expanded={expanded}

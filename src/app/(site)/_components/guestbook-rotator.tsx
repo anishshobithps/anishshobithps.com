@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { GuestbookPreviewEntry } from "@/app/(site)/guestbook/actions";
+import { PauseIcon, PlayIcon } from "@/components/shared/icons";
+import { Button } from "@/components/ui/button";
 import { TypographyMuted } from "@/components/ui/typography";
 import { formatShortDate } from "@/lib/date";
 
@@ -67,7 +69,8 @@ export function GuestbookRotator({
 }: {
   entries: GuestbookPreviewEntry[];
 }) {
-  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [stopped, setStopped] = useState(false);
 
   if (entries.length === 0) {
     return (
@@ -82,31 +85,54 @@ export function GuestbookRotator({
 
   const copies = entries.length < 5 ? 4 : 2;
   const track = Array.from({ length: copies }, () => entries).flat();
-  // Duration scales with entry count so speed stays consistent (~50px/s at w-56=224px)
   const duration = `${Math.round((entries.length * 224) / 50)}s`;
 
   return (
     <div className="mb-8 -mx-6 sm:-mx-8 lg:-mx-10">
-      <div
-        className="overflow-hidden motion-reduce:hidden"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-        }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
+      <div className="motion-reduce:hidden">
         <div
-          className="flex gap-3 w-max px-3"
+          className="overflow-hidden"
           style={{
-            animation: `marquee ${duration} linear infinite`,
-            animationPlayState: paused ? "paused" : "running",
+            maskImage:
+              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
           }}
-          aria-hidden="true"
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          {track.map((entry, i) => (
-            <EntryCard key={i} entry={entry} />
-          ))}
+          <div
+            className="flex gap-3 w-max px-3"
+            style={{
+              animation: `marquee ${duration} linear infinite`,
+              animationPlayState: hovered || stopped ? "paused" : "running",
+            }}
+            aria-hidden="true"
+          >
+            {track.map((entry, i) => (
+              <EntryCard key={i} entry={entry} />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end px-6 pt-2 sm:px-8 lg:px-10">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setStopped((prev) => !prev)}
+            aria-label={
+              stopped
+                ? "Resume scrolling guestbook entries"
+                : "Pause scrolling guestbook entries"
+            }
+            className="h-7 gap-1.5 px-2 text-muted-foreground/70 hover:text-foreground"
+          >
+            {stopped ? (
+              <PlayIcon data-icon="inline-start" size={12} aria-hidden="true" />
+            ) : (
+              <PauseIcon data-icon="inline-start" size={12} aria-hidden="true" />
+            )}
+            <span className="text-xs">{stopped ? "Resume" : "Pause"}</span>
+          </Button>
         </div>
       </div>
 

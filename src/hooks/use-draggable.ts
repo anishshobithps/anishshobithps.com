@@ -48,6 +48,7 @@ export function useDraggable(storageKey: string, size: number) {
       y: window.innerHeight - size - MARGIN,
     };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPosition(clampToViewport(stored ?? fallback, size));
 
     const onResize = () =>
@@ -111,10 +112,12 @@ export function useDraggable(storageKey: string, size: number) {
     [storageKey],
   );
 
+  const wasDragged = useCallback(() => moved.current, []);
+
   return {
     position,
     dragging,
-    moved,
+    wasDragged,
     handlers: {
       onPointerDown,
       onPointerMove,

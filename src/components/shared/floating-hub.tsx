@@ -131,7 +131,7 @@ function HubBody({
           <HubLabel>This post</HubLabel>
           <Button
             type="button"
-            variant="ghost"
+            variant="secondary"
             onClick={() => {
               onClose();
               engagement.scrollToEngagement();
@@ -168,7 +168,7 @@ function HubBody({
       {isResume && (
         <section className="flex flex-col gap-2">
           <HubLabel>Resume</HubLabel>
-          <Button asChild variant="ghost" className={CARD_CLASS}>
+          <Button asChild variant="secondary" className={CARD_CLASS}>
             <a href="/api/resume/download" download onClick={onClose}>
               <DownloadIcon
                 data-icon="inline-start"
@@ -203,16 +203,16 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [boundary, setBoundary] = useState<Element | null>(null);
   const fabRef = useRef<HTMLButtonElement>(null);
-  const { position, dragging, moved, handlers } = useDraggable(
+  const { position, dragging, wasDragged, handlers } = useDraggable(
     "floating-hub:position",
     FAB_SIZE,
   );
 
   const toggle = useCallback(() => {
-    if (moved.current) return;
+    if (wasDragged()) return;
     setBoundary(document.getElementById("main-content"));
     setOpen((prev) => !prev);
-  }, [moved]);
+  }, [wasDragged]);
 
   if (!position) return null;
 
@@ -220,7 +220,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
     <Button
       ref={fabRef}
       type="button"
-      variant="ghost"
+      variant="secondary"
       size="icon"
       aria-label={open ? "Close quick menu" : "Open quick menu"}
       aria-haspopup="dialog"

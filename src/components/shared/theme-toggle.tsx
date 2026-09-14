@@ -1,34 +1,21 @@
 "use client";
 
-import { cva } from "class-variance-authority";
-import { SunIcon, MoonIcon, MonitorIcon } from "@/components/shared/icons";
+import { MonitorIcon, MoonIcon, SunIcon } from "@/components/shared/icons";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/cn";
 import { useTheme } from "next-themes";
 import {
-  ComponentProps,
   useSyncExternalStore,
+  type ComponentProps,
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import { flushSync } from "react-dom";
-import { cn } from "@/lib/cn";
-import { Button } from "@/components/ui/button";
 
-const itemVariants = cva(
-  "size-6.5 p-1.5 transition-colors hover:bg-transparent",
-  {
-    variants: {
-      active: {
-        true: "bg-foreground/10 text-foreground hover:bg-foreground/10",
-        false: "bg-transparent text-foreground/40",
-      },
-    },
-  },
-);
-
-const full = [
-  ["light", SunIcon, "Switch to light theme"] as const,
-  ["dark", MoonIcon, "Switch to dark theme"] as const,
-  ["system", MonitorIcon, "Use system theme"] as const,
-];
+const themes = [
+  ["light", SunIcon, "Switch to light theme"],
+  ["dark", MoonIcon, "Switch to dark theme"],
+  ["system", MonitorIcon, "Use system theme"],
+] as const;
 
 function applyTheme(
   setTheme: (theme: string) => void,
@@ -40,12 +27,14 @@ function applyTheme(
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
-  if (prefersReducedMotion || typeof document.startViewTransition !== "function") {
+  if (
+    prefersReducedMotion ||
+    typeof document.startViewTransition !== "function"
+  ) {
     setTheme(key);
     return;
   }
 
-  // Keyboard activation reports (0, 0) — fall back to the button's centre.
   let x = event.clientX;
   let y = event.clientY;
   if (x === 0 && y === 0) {
@@ -61,8 +50,6 @@ function applyTheme(
 
   root.dataset.themeTransition = "";
   const transition = document.startViewTransition(() => {
-    // flushSync guarantees next-themes has applied the new class to <html>
-    // before the transition snapshots the "new" state.
     flushSync(() => setTheme(key));
   });
 
@@ -89,7 +76,12 @@ function applyTheme(
   });
 }
 
-export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
+type ThemeToggleProps = Omit<
+  ComponentProps<"div">,
+  "defaultValue" | "dir" | "onChange"
+>;
+
+export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
   const { setTheme, theme } = useTheme();
   const mounted = useSyncExternalStore(
     () => () => {},
@@ -97,35 +89,27 @@ export function ThemeToggle({ className, ...props }: ComponentProps<"div">) {
     () => false,
   );
 
-  const value = mounted ? theme : null;
-
   return (
-    <div
-      role="group"
+    <ToggleGroup
+      type="single"
+      value={mounted ? (theme ?? "") : ""}
+      spacing={0.5}
       aria-label="Theme selection"
-      className={cn(
-        "inline-flex items-center rounded-full border p-1 *:rounded-full",
-        className,
-      )}
       data-theme-toggle=""
+      className={cn("rounded-full border p-1", className)}
       {...props}
     >
-      {full.map(([key, Icon, label]) => (
-        <Button
+      {themes.map(([key, Icon, label]) => (
+        <ToggleGroupItem
           key={key}
-          variant="ghost"
-          size="icon-sm"
+          value={key}
           aria-label={label}
-          aria-pressed={value === key}
-          className={cn(
-            itemVariants({ active: value === key }),
-            "cursor-pointer",
-          )}
           onClick={(event) => applyTheme(setTheme, key, event)}
+          className="size-6.5 min-w-0 cursor-pointer rounded-full p-0 text-foreground/40 hover:bg-transparent hover:text-foreground data-[state=on]:bg-foreground/10 data-[state=on]:text-foreground"
         >
           <Icon weight="fill" className="size-3.5" aria-hidden="true" />
-        </Button>
+        </ToggleGroupItem>
       ))}
-    </div>
+    </ToggleGroup>
   );
 }

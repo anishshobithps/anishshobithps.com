@@ -28,6 +28,7 @@ export const PageLayout = forwardRef<
     {children}
   </div>
 ));
+PageLayout.displayName = "PageLayout";
 
 export const Content = forwardRef<HTMLElement, ComponentPropsWithRef<"main">>(
   ({ className, ...props }, ref) => (
@@ -76,8 +77,8 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
     >
       <DecorIcon position="top-left" pageBorder />
       <DecorIcon position="top-right" pageBorder />
-      <DecorIcon position="bottom-left" pageBorder />
-      <DecorIcon position="bottom-right" pageBorder />
+      <DecorIcon position="bottom-left" alignY="outer" pageBorder />
+      <DecorIcon position="bottom-right" alignY="outer" pageBorder />
       {variant === "nav" && <FullWidthDivider position="top" />}
       {variant === "nav" ? (
         <>
@@ -124,10 +125,10 @@ export function Card({
       className={cn("@container relative border p-6 @lg:p-8", className)}
       {...props}
     >
-      <DecorIcon position="top-left" />
-      <DecorIcon position="top-right" />
-      <DecorIcon position="bottom-left" />
-      <DecorIcon position="bottom-right" />
+      <DecorIcon position="top-left" alignX="outer" alignY="outer" />
+      <DecorIcon position="top-right" alignX="outer" alignY="outer" />
+      <DecorIcon position="bottom-left" alignX="outer" alignY="outer" />
+      <DecorIcon position="bottom-right" alignX="outer" alignY="outer" />
       {children}
     </div>
   );

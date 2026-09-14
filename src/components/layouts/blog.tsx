@@ -108,7 +108,7 @@ function ProgressCircle({
         strokeDashoffset={circumference - progress}
         strokeLinecap="round"
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        className="transition-all duration-300 ease-out"
+        className="transition-[stroke-dashoffset] duration-300 ease-out"
       />
       {normalized > 0 && normalized < max && (
         <circle
@@ -116,7 +116,7 @@ function ProgressCircle({
           cy={tipY}
           r={strokeWidth * 0.85}
           fill="currentColor"
-          className="transition-all duration-300 ease-out"
+          className="transition-[cx,cy] duration-300 ease-out"
         />
       )}
     </svg>
@@ -191,8 +191,8 @@ export function MobileTOC() {
         <FullWidthDivider position="top" />
         <DecorIcon position="top-left" pageBorder />
         <DecorIcon position="top-right" pageBorder />
-        <DecorIcon position="bottom-left" pageBorder />
-        <DecorIcon position="bottom-right" pageBorder />
+        <DecorIcon position="bottom-left" alignY="outer" pageBorder />
+        <DecorIcon position="bottom-right" alignY="outer" pageBorder />
         <Collapsible open={open} onOpenChange={setOpen}>
           <header
             className={cn(
@@ -271,8 +271,8 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
           <article className="prose min-w-0">{children}</article>
           <aside className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
-            <DecorIcon position="top-left" />
-            <DecorIcon position="bottom-left" />
+            <DecorIcon position="top-left" alignX="outer" />
+            <DecorIcon position="bottom-left" alignX="outer" />
             <div className="pl-8 sticky top-20 flex flex-col gap-6">
               <div>
                 <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">

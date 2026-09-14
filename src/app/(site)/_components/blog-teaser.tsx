@@ -44,7 +44,7 @@ export function BlogTeaser() {
               <span className="font-medium text-foreground flex items-center gap-2 min-w-0">
                 <span className="truncate">{post.data.title}</span>
                 <CaretRightIcon
-                  className="size-3.5 text-muted-foreground/50 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
+                  className="size-3.5 text-muted-foreground/50 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,transform] duration-200"
                   aria-hidden="true"
                 />
               </span>

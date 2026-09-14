@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -27,7 +27,15 @@ import {
   SunIcon,
   XLogoIcon,
 } from "@/components/shared/icons";
+import {
+  getCommandMenuOpen,
+  getCommandMenuServerSnapshot,
+  setCommandMenuOpen,
+  subscribeCommandMenu,
+  toggleCommandMenu,
+} from "@/lib/command-menu-store";
 import { siteConfig } from "@/lib/config";
+import { useIsMac } from "@/hooks/use-is-mac";
 
 const NAV_ICONS = {
   "/projects": BriefcaseIcon,
@@ -51,9 +59,15 @@ function isEditableTarget(target: EventTarget | null): boolean {
 }
 
 export function CommandMenu() {
-  const [open, setOpen] = useState(false);
+  const open = useSyncExternalStore(
+    subscribeCommandMenu,
+    getCommandMenuOpen,
+    getCommandMenuServerSnapshot,
+  );
   const router = useRouter();
   const { setTheme } = useTheme();
+  const isMac = useIsMac();
+  const themeShortcut = isMac ? "⇧⌘D" : "Ctrl+Shift+D";
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -62,7 +76,7 @@ export function CommandMenu() {
       if (!isCmdOrCtrlK || isEditableTarget(event.target)) return;
 
       event.preventDefault();
-      setOpen((prev) => !prev);
+      toggleCommandMenu();
     }
 
     window.addEventListener("keydown", onKeyDown);
@@ -70,18 +84,18 @@ export function CommandMenu() {
   }, []);
 
   const runCommand = useCallback((action: () => void) => {
-    setOpen(false);
+    setCommandMenuOpen(false);
     action();
   }, []);
 
   return (
     <CommandDialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={setCommandMenuOpen}
       title="Command menu"
       description="Jump to a page or run a quick action."
     >
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder="Type a command or search…" />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
 
@@ -112,10 +126,12 @@ export function CommandMenu() {
           >
             <SunIcon aria-hidden="true" />
             Switch to light theme
+            <CommandShortcut translate="no">{themeShortcut}</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => runCommand(() => setTheme("dark"))}>
             <MoonIcon aria-hidden="true" />
             Switch to dark theme
+            <CommandShortcut translate="no">{themeShortcut}</CommandShortcut>
           </CommandItem>
           <CommandItem
             onSelect={() =>

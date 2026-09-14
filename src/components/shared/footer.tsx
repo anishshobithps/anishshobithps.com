@@ -99,7 +99,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div aria-hidden="true">
+        <div className="relative" aria-hidden="true">
           <FullWidthDivider position="bottom" />
         </div>
 

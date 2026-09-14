@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import {
-  PaginationContent,
-  PaginationItem,
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { TypographySmall } from "@/components/ui/typography";
 import {
   ArrowLeftIcon,
@@ -44,7 +43,7 @@ export function BlogPostNav({
 
   return (
     <>
-      <Button variant="ghost" size="sm" asChild>
+      <Button variant="outline" size="sm" asChild>
         <Link href="/blogs" aria-label="Back to all blog posts">
           <ArrowLeftIcon
             data-icon="inline-start"
@@ -56,83 +55,79 @@ export function BlogPostNav({
       </Button>
 
       <div
-        className="flex items-center gap-0.5"
+        className="flex items-center gap-2"
         role="toolbar"
         aria-label="Post actions"
       >
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={handleCopy}
-          aria-label="Copy link to this post"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <LinkIcon className="size-4" aria-hidden="true" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          asChild
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <a
-            href={xUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Share "${title}" on X (opens in new tab)`}
+        <div className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={handleCopy}
+            aria-label="Copy link to this post"
+            className="text-muted-foreground hover:text-foreground"
           >
-            <XLogoIcon className="size-4" aria-hidden="true" />
-          </a>
-        </Button>
+            <LinkIcon className="size-4" aria-hidden="true" />
+          </Button>
 
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          asChild
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Share "${title}" on LinkedIn (opens in new tab)`}
+          <Button
+            variant="outline"
+            size="icon-sm"
+            asChild
+            className="text-muted-foreground hover:text-foreground"
           >
-            <LinkedinLogoIcon className="size-4" aria-hidden="true" />
-          </a>
-        </Button>
+            <a
+              href={xUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Share "${title}" on X (opens in new tab)`}
+            >
+              <XLogoIcon className="size-4" aria-hidden="true" />
+            </a>
+          </Button>
 
-        <div className="mx-1 h-4 w-px bg-border shrink-0" aria-hidden="true" />
+          <Button
+            variant="outline"
+            size="icon-sm"
+            asChild
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <a
+              href={linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Share "${title}" on LinkedIn (opens in new tab)`}
+            >
+              <LinkedinLogoIcon className="size-4" aria-hidden="true" />
+            </a>
+          </Button>
+        </div>
 
         <nav aria-label="Post navigation">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                href={(prevPost?.url ?? "#") as Route}
-                aria-label={
-                  prevPost
-                    ? `Previous post: ${prevPost.title}`
-                    : "No previous post"
-                }
-                aria-disabled={!prevPost}
-                className={
-                  !prevPost ? "pointer-events-none opacity-30" : undefined
-                }
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                href={(nextPost?.url ?? "#") as Route}
-                aria-label={
-                  nextPost ? `Next post: ${nextPost.title}` : "No next post"
-                }
-                aria-disabled={!nextPost}
-                className={
-                  !nextPost ? "pointer-events-none opacity-30" : undefined
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
+          <ButtonGroup>
+            <PaginationPrevious
+              href={(prevPost?.url ?? "#") as Route}
+              aria-label={
+                prevPost
+                  ? `Previous post: ${prevPost.title}`
+                  : "No previous post"
+              }
+              aria-disabled={!prevPost}
+              className={
+                !prevPost ? "pointer-events-none opacity-30" : undefined
+              }
+            />
+            <PaginationNext
+              href={(nextPost?.url ?? "#") as Route}
+              aria-label={
+                nextPost ? `Next post: ${nextPost.title}` : "No next post"
+              }
+              aria-disabled={!nextPost}
+              className={
+                !nextPost ? "pointer-events-none opacity-30" : undefined
+              }
+            />
+          </ButtonGroup>
         </nav>
       </div>
     </>

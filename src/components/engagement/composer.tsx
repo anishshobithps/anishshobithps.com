@@ -1,6 +1,7 @@
 "use client";
 
-import { PaperPlaneTiltIcon, SpinnerIcon } from "@/components/shared/icons";
+import { PaperPlaneTiltIcon } from "@/components/shared/icons";
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { TypographyMuted } from "@/components/ui/typography";
@@ -8,9 +9,15 @@ import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@/lib/cn";
 import { useEffect, useRef, useState } from "react";
 
+type ComposerSubmitResult = void | boolean;
+
+export type ComposerSubmitHandler = (
+  value: string,
+) => ComposerSubmitResult | Promise<ComposerSubmitResult>;
+
 export interface ComposerProps {
   maxLength: number;
-  onSubmit: (value: string) => void | Promise<void>;
+  onSubmit: ComposerSubmitHandler;
   onCancel?: () => void;
   placeholder?: string;
   submitLabel: string;
@@ -48,21 +55,52 @@ export function Composer({
   const pending = disabled || submitting;
 
   useEffect(() => {
-    if (autoFocus) textareaRef.current?.focus();
+    if (!autoFocus) return;
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    textareaRef.current?.focus();
   }, [autoFocus]);
 
   const trimmed = value.trim();
   const remaining = maxLength - value.length;
 
+  const restoreDraft = (body: string) => {
+    setValue(body);
+    requestAnimationFrame(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+    });
+  };
+
   const submit = () => {
     if (!trimmed || pending) return;
     const body = trimmed;
     setValue("");
-    const result = onSubmit(body);
-    if (result instanceof Promise) {
-      setSubmitting(true);
-      result.finally(() => setSubmitting(false));
+
+    let result: ComposerSubmitResult | Promise<ComposerSubmitResult>;
+    try {
+      result = onSubmit(body);
+    } catch {
+      restoreDraft(body);
+      return;
     }
+
+    if (result === false) {
+      restoreDraft(body);
+      return;
+    }
+
+    if (!(result instanceof Promise)) return;
+
+    setSubmitting(true);
+    result
+      .then((ok) => ok !== false)
+      .catch(() => false)
+      .then((ok) => {
+        setSubmitting(false);
+        if (!ok) restoreDraft(body);
+      });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -110,7 +148,7 @@ export function Composer({
         <div className="flex gap-2">
           {onCancel && (
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={onCancel}
               disabled={pending}
@@ -126,10 +164,9 @@ export function Composer({
             className="gap-1.5 font-semibold"
           >
             {pending ? (
-              <SpinnerIcon
+              <Spinner
                 data-icon="inline-start"
-                size={14}
-                className="animate-spin"
+                className="size-3.5"
                 aria-hidden="true"
               />
             ) : (

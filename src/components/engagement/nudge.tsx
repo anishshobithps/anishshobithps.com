@@ -2,7 +2,7 @@
 
 import { TypographyMuted } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const POOLS = {
   mood: [
@@ -38,6 +38,21 @@ const POOLS = {
 
 export type NudgeType = keyof typeof POOLS;
 
+const picked = new Map<NudgeType, string>();
+
+function pickLine(type: NudgeType): string {
+  const cached = picked.get(type);
+  if (cached) return cached;
+  const pool = POOLS[type];
+  const line = pool[Math.floor(Math.random() * pool.length)]!;
+  picked.set(type, line);
+  return line;
+}
+
+function subscribeToNothing() {
+  return () => {};
+}
+
 export function EngagementNudge({
   type,
   className,
@@ -45,12 +60,11 @@ export function EngagementNudge({
   type: NudgeType;
   className?: string;
 }) {
-  const [line, setLine] = useState<string | null>(null);
-
-  useEffect(() => {
-    const pool = POOLS[type];
-    setLine(pool[Math.floor(Math.random() * pool.length)]);
-  }, [type]);
+  const line = useSyncExternalStore(
+    subscribeToNothing,
+    () => pickLine(type),
+    () => null,
+  );
 
   if (!line) return null;
 

@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useReducer,
   useState,
   Children,
   type HTMLAttributes,
@@ -16,6 +17,10 @@ import { Slot } from "radix-ui";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
 
 import { Button } from "@/components/ui/button";
+import {
+  ButtonGroup,
+  ButtonGroupText,
+} from "@/components/ui/button-group";
 import { cn } from "@/lib/cn";
 import {
   CaretLeftIcon,
@@ -42,12 +47,48 @@ interface PdfContextValue {
   downloadHref: string;
   numPages: number | null;
   currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  goToPage: (page: number) => void;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   reload: () => void;
   containerWidth: number;
   loading: boolean;
+}
+
+type DocState = {
+  numPages: number | null;
+  currentPage: number;
+  docKey: number;
+  loading: boolean;
+};
+
+type DocAction =
+  | { type: "reload" }
+  | { type: "loaded"; numPages: number }
+  | { type: "load-failed" }
+  | { type: "go-to-page"; page: number };
+
+const initialDocState: DocState = {
+  numPages: null,
+  currentPage: 1,
+  docKey: 0,
+  loading: true,
+};
+
+function docReducer(state: DocState, action: DocAction): DocState {
+  switch (action.type) {
+    case "reload":
+      return { ...initialDocState, docKey: state.docKey + 1 };
+    case "loaded":
+      return { ...state, numPages: action.numPages, loading: false };
+    case "load-failed":
+      return { ...state, loading: false };
+    case "go-to-page":
+      return {
+        ...state,
+        currentPage: Math.min(Math.max(action.page, 1), state.numPages ?? 1),
+      };
+  }
 }
 
 const PdfContext = createContext<PdfContextValue | null>(null);
@@ -67,11 +108,9 @@ interface PdfViewerProps extends HTMLAttributes<HTMLDivElement> {
 
 export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
   ({ file, downloadHref, children, loader, className, ...props }, ref) => {
-    const [numPages, setNumPages] = useState<number | null>(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [doc, dispatch] = useReducer(docReducer, initialDocState);
+    const { numPages, currentPage, docKey, loading } = doc;
     const [zoom, setZoom] = useState(1);
-    const [docKey, setDocKey] = useState(0);
-    const [loading, setLoading] = useState(true);
 
     const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
     const [containerWidth, setContainerWidth] = useState(0);
@@ -94,12 +133,11 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
 
     useResizeObserver(containerRef, {}, onResize);
 
-    const reload = () => {
-      setCurrentPage(1);
-      setNumPages(null);
-      setLoading(true);
-      setDocKey((k) => k + 1);
-    };
+    const reload = useCallback(() => dispatch({ type: "reload" }), []);
+    const goToPage = useCallback(
+      (page: number) => dispatch({ type: "go-to-page", page }),
+      [],
+    );
 
     const pageWidth = containerWidth > 0 ? Math.min(containerWidth, 900) : null;
 
@@ -115,7 +153,7 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
           downloadHref: downloadHref ?? file,
           numPages,
           currentPage,
-          setCurrentPage,
+          goToPage,
           zoom,
           setZoom,
           reload,
@@ -142,11 +180,10 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
                 key={docKey}
                 file={file}
                 loading={null}
-                onLoadSuccess={({ numPages }) => {
-                  setNumPages(numPages);
-                  setLoading(false);
-                }}
-                onLoadError={() => setLoading(false)}
+                onLoadSuccess={({ numPages }) =>
+                  dispatch({ type: "loaded", numPages })
+                }
+                onLoadError={() => dispatch({ type: "load-failed" })}
                 className="flex flex-col items-center gap-4 py-4"
               >
                 {Array.from({ length: numPages ?? 0 }, (_, i) => (
@@ -246,41 +283,37 @@ export const PdfViewerControls = ({
 );
 
 export const PdfViewerPagination = () => {
-  const { currentPage, setCurrentPage, numPages } = usePdf();
+  const { currentPage, goToPage, numPages } = usePdf();
   if (!numPages || numPages <= 1) return null;
 
   return (
-    <div
-      className="flex items-center gap-1"
-      role="group"
-      aria-label="Page navigation"
-    >
+    <ButtonGroup aria-label="Page navigation">
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         aria-label="Previous page"
-        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+        onClick={() => goToPage(currentPage - 1)}
       >
         <CaretLeftIcon className="size-4" aria-hidden="true" />
       </Button>
 
-      <span
-        className="font-mono text-xs"
+      <ButtonGroupText
+        className="px-2.5 font-mono text-xs"
         aria-live="polite"
         aria-label={`Page ${currentPage} of ${numPages}`}
       >
         {currentPage}/{numPages}
-      </span>
+      </ButtonGroupText>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         aria-label="Next page"
-        onClick={() => setCurrentPage((p) => Math.min(p + 1, numPages!))}
+        onClick={() => goToPage(currentPage + 1)}
       >
         <CaretRightIcon className="size-4" aria-hidden="true" />
       </Button>
-    </div>
+    </ButtonGroup>
   );
 };
 
@@ -288,13 +321,9 @@ export const PdfViewerZoom = () => {
   const { zoom, setZoom } = usePdf();
 
   return (
-    <div
-      className="flex items-center gap-1"
-      role="group"
-      aria-label="Zoom controls"
-    >
+    <ButtonGroup aria-label="Zoom controls">
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         aria-label="Zoom out"
         onClick={() => setZoom((z) => Math.max(+(z - 0.1).toFixed(1), 0.5))}
@@ -302,23 +331,23 @@ export const PdfViewerZoom = () => {
         <MagnifyingGlassMinusIcon className="size-4" aria-hidden="true" />
       </Button>
 
-      <span
-        className="w-10 text-center font-mono text-xs"
+      <ButtonGroupText
+        className="justify-center px-2.5 font-mono text-xs tabular-nums"
         aria-live="polite"
         aria-label={`Zoom: ${Math.round(zoom * 100)}%`}
       >
         {Math.round(zoom * 100)}%
-      </span>
+      </ButtonGroupText>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         aria-label="Zoom in"
         onClick={() => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3))}
       >
         <MagnifyingGlassPlusIcon className="size-4" aria-hidden="true" />
       </Button>
-    </div>
+    </ButtonGroup>
   );
 };
 
@@ -326,7 +355,7 @@ export const PdfViewerReload = () => {
   const { reload } = usePdf();
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="icon"
       onClick={reload}
       aria-label="Reload PDF"
@@ -339,7 +368,7 @@ export const PdfViewerReload = () => {
 export const PdfViewerOpen = () => {
   const { file } = usePdf();
   return (
-    <Button variant="ghost" size="icon" asChild>
+    <Button variant="outline" size="icon" asChild>
       <a
         href={file}
         target="_blank"

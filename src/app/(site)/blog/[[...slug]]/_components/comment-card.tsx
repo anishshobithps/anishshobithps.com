@@ -7,7 +7,6 @@ import {
   ArrowBendDownRightIcon,
   HeartIcon,
   PushPinSimpleIcon,
-  SpinnerIcon,
   TrashIcon,
 } from "@/components/shared/icons";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +20,7 @@ import {
   TypographyMuted,
   TypographySmall,
 } from "@/components/ui/typography";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { timeAgo } from "@/lib/date";
 import { SignInButton } from "@clerk/nextjs";
@@ -28,6 +28,51 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 const COMMENT_MAX_LENGTH = 1000;
 const MAX_DEPTH = 2;
+
+function LikeButton({
+  count,
+  liked,
+  pending,
+  onToggle,
+}: {
+  count: number;
+  liked: boolean;
+  pending: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <Button
+      variant={liked ? "default" : "outline"}
+      size="sm"
+      onClick={onToggle}
+      disabled={pending}
+      aria-pressed={liked}
+      aria-busy={pending}
+      aria-label={liked ? `Unlike (${count})` : `Like (${count})`}
+      className="gap-1.5"
+    >
+      {pending ? (
+        <Spinner
+          data-icon="inline-start"
+          className="size-3.5"
+          aria-hidden="true"
+        />
+      ) : (
+        <HeartIcon
+          data-icon="inline-start"
+          size={14}
+          weight={liked ? "fill" : "duotone"}
+          aria-hidden="true"
+        />
+      )}
+      {count > 0 ? (
+        <span className="tabular-nums">{count}</span>
+      ) : (
+        <span className="hidden sm:inline">Like</span>
+      )}
+    </Button>
+  );
+}
 
 export function CommentCard({
   comment,
@@ -37,7 +82,8 @@ export function CommentCard({
   onLike,
   onDelete,
   onReply,
-  likePendingRef,
+  pendingLikes,
+  ...liProps
 }: {
   comment: CommentWithMeta;
   currentUserId: string | null;
@@ -45,15 +91,15 @@ export function CommentCard({
   isSignedIn: boolean;
   onLike: (id: number) => void;
   onDelete: (id: number) => void;
-  onReply: (parentId: number, body: string) => void | Promise<void>;
-  likePendingRef: React.RefObject<Set<number>>;
-}) {
+  onReply: (parentId: number, body: string) => Promise<boolean>;
+  pendingLikes: ReadonlySet<number>;
+} & React.ComponentProps<"li">) {
   const [replying, setReplying] = useState(false);
-  const [isReplyPending, startReplyTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const replyRef = useRef<HTMLDivElement>(null);
 
   const isOptimistic = comment.id < 0;
-  const isLikePending = likePendingRef.current?.has(comment.id) ?? false;
+  const isLikePending = pendingLikes.has(comment.id);
   const canDelete = currentUserId === comment.user.id;
   const isPinnedRoot = comment.isPinned && depth === 0;
 
@@ -65,10 +111,12 @@ export function CommentCard({
 
   return (
     <li
+      {...liProps}
       className={cn(
         "relative",
         isPinnedRoot && "bg-primary/3",
         isOptimistic && "opacity-70",
+        liProps.className,
       )}
       aria-busy={isOptimistic || undefined}
     >
@@ -98,11 +146,7 @@ export function CommentCard({
                   className="flex items-center gap-1 text-xs"
                   aria-live="polite"
                 >
-                  <SpinnerIcon
-                    size={10}
-                    className="animate-spin"
-                    aria-hidden="true"
-                  />
+                  <Spinner className="size-2.5" aria-hidden="true" />
                   Sending…
                 </TypographyMuted>
               ) : (
@@ -133,31 +177,12 @@ export function CommentCard({
 
             <div className="pt-0.5">
               <ButtonGroup>
-                <Button
-                  variant={comment.likedByMe ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => !isOptimistic && onLike(comment.id)}
-                  disabled={isOptimistic || isLikePending}
-                  aria-pressed={comment.likedByMe}
-                  aria-label={
-                    comment.likedByMe
-                      ? `Unlike (${comment.likeCount})`
-                      : `Like (${comment.likeCount})`
-                  }
-                  className="gap-1.5"
-                >
-                  <HeartIcon
-                    data-icon="inline-start"
-                    size={14}
-                    weight={comment.likedByMe ? "fill" : "duotone"}
-                    aria-hidden="true"
-                  />
-                  {comment.likeCount > 0 ? (
-                    <span className="tabular-nums">{comment.likeCount}</span>
-                  ) : (
-                    <span className="hidden sm:inline">Like</span>
-                  )}
-                </Button>
+                <LikeButton
+                  count={comment.likeCount}
+                  liked={comment.likedByMe}
+                  pending={isOptimistic || isLikePending}
+                  onToggle={() => onLike(comment.id)}
+                />
 
                 {depth < MAX_DEPTH && !isOptimistic && (
                   <>
@@ -167,9 +192,9 @@ export function CommentCard({
                         variant="outline"
                         size="sm"
                         onClick={() => setReplying((v) => !v)}
-                        disabled={isReplyPending}
+                        disabled={isPending}
                         aria-expanded={replying}
-                        aria-busy={isReplyPending}
+                        aria-busy={isPending}
                         aria-label="Reply to comment"
                         className="gap-1.5"
                       >
@@ -231,9 +256,9 @@ export function CommentCard({
                 ref={replyRef}
                 className={cn(
                   "pt-3",
-                  isReplyPending && "pointer-events-none opacity-70",
+                  isPending && "pointer-events-none opacity-70",
                 )}
-                aria-busy={isReplyPending}
+                aria-busy={isPending}
               >
                 <Composer
                   maxLength={COMMENT_MAX_LENGTH}
@@ -243,13 +268,16 @@ export function CommentCard({
                   rows={2}
                   autoFocus
                   maxHeight={240}
-                  disabled={isReplyPending}
-                  onSubmit={(body) => {
-                    startReplyTransition(async () => {
-                      await onReply(comment.id, body);
-                      setReplying(false);
-                    });
-                  }}
+                  disabled={isPending}
+                  onSubmit={(body) =>
+                    new Promise<boolean>((resolve) => {
+                      startTransition(async () => {
+                        const ok = await onReply(comment.id, body);
+                        if (ok) setReplying(false);
+                        resolve(ok);
+                      });
+                    })
+                  }
                   onCancel={() => setReplying(false)}
                 />
               </div>
@@ -274,7 +302,7 @@ export function CommentCard({
               onLike={onLike}
               onDelete={onDelete}
               onReply={onReply}
-              likePendingRef={likePendingRef}
+              pendingLikes={pendingLikes}
             />
           ))}
         </ul>

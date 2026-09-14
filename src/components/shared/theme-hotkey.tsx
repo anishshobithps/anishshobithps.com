@@ -3,12 +3,13 @@
 import { useCallback, useEffect } from "react";
 import { useTheme } from "next-themes";
 
-const EDITABLE_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
-
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
-  if (EDITABLE_TAGS.has(target.tagName)) return true;
-  return target.isContentEditable;
+  if (target.isContentEditable) return true;
+  if (target.closest("[contenteditable='true']")) return true;
+
+  const tagName = target.tagName;
+  return tagName === "INPUT" || tagName === "TEXTAREA" || tagName === "SELECT";
 }
 
 export function ThemeHotkey() {
@@ -23,20 +24,16 @@ export function ThemeHotkey() {
     function onKeyDown(event: KeyboardEvent) {
       if (isEditableTarget(event.target)) return;
 
-      const isPlainD = event.code === "KeyD" && !event.altKey;
-      const isCmdOrCtrlShiftD =
-        event.code === "KeyD" && event.shiftKey && !event.altKey;
+      const isThemeShortcut =
+        event.code === "KeyD" &&
+        event.shiftKey &&
+        !event.altKey &&
+        (event.metaKey || event.ctrlKey);
 
-      if (isPlainD && !event.metaKey && !event.ctrlKey) {
-        event.preventDefault();
-        toggle();
-        return;
-      }
+      if (!isThemeShortcut) return;
 
-      if (isCmdOrCtrlShiftD && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        toggle();
-      }
+      event.preventDefault();
+      toggle();
     }
 
     document.addEventListener("keydown", onKeyDown);

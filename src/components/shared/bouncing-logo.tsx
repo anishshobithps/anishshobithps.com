@@ -13,7 +13,6 @@ type Instance = {
   vy: number;
   rotation: number;
   vr: number;
-  el: HTMLDivElement | null;
 };
 
 function makeInstances(count: number): Instance[] {
@@ -24,7 +23,6 @@ function makeInstances(count: number): Instance[] {
     vy: (Math.random() < 0.5 ? 1 : -1) * (0.8 + Math.random() * 0.8),
     rotation: Math.random() * 360,
     vr: (Math.random() - 0.5) * 0.5,
-    el: null,
   }));
 }
 
@@ -39,28 +37,31 @@ export function BouncingLogos({
   opacity = "opacity-[0.06]",
   containerRef,
 }: BouncingLogosProps) {
-  const instancesRef = useRef<Instance[]>([]);
+  const elsRef = useRef<(HTMLDivElement | null)[]>([]);
   const rafRef = useRef<number>(0);
-
-  if (instancesRef.current.length === 0 && typeof window !== "undefined") {
-    instancesRef.current = makeInstances(count);
-  }
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    for (const inst of instancesRef.current) {
-      if (inst.el) {
-        inst.el.style.transform = `translate3d(${inst.x}px, ${inst.y}px, 0) rotate(${inst.rotation}deg)`;
-      }
-    }
+    const instances = makeInstances(count);
+
+    const paint = () => {
+      instances.forEach((inst, i) => {
+        const el = elsRef.current[i];
+        if (el) {
+          el.style.transform = `translate3d(${inst.x}px, ${inst.y}px, 0) rotate(${inst.rotation}deg)`;
+        }
+      });
+    };
+
+    paint();
 
     const tick = () => {
       const maxX = container.clientWidth - LOGO_W;
       const maxY = container.clientHeight - LOGO_SIZE;
 
-      for (const inst of instancesRef.current) {
+      for (const inst of instances) {
         inst.x += inst.vx;
         inst.y += inst.vy;
         inst.rotation += inst.vr;
@@ -81,18 +82,15 @@ export function BouncingLogos({
           inst.y = maxY;
           inst.vy = -Math.abs(inst.vy);
         }
-
-        if (inst.el) {
-          inst.el.style.transform = `translate3d(${inst.x}px, ${inst.y}px, 0) rotate(${inst.rotation}deg)`;
-        }
       }
 
+      paint();
       rafRef.current = requestAnimationFrame(tick);
     };
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [containerRef]);
+  }, [containerRef, count]);
 
   return (
     <div role="presentation" aria-hidden="true">
@@ -100,12 +98,7 @@ export function BouncingLogos({
         <div
           key={i}
           ref={(el) => {
-            const inst = instancesRef.current[i];
-            if (!inst) return;
-            inst.el = el;
-            if (el) {
-              el.style.transform = `translate3d(${inst.x}px, ${inst.y}px, 0) rotate(${inst.rotation}deg)`;
-            }
+            elsRef.current[i] = el;
           }}
           className={`pointer-events-none absolute ${opacity}`}
           style={{ top: 0, left: 0 }}

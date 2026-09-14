@@ -51,7 +51,9 @@
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.625rem;
+  --header-height: 3.5rem;
   --background: oklch(1 0.005 155);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0.005 155);
@@ -92,12 +94,14 @@
   --glow: oklch(0.58 0.14 155 / 0.1);
   --selection-bg: oklch(0.82 0.155 155);
   --selection-fg: oklch(0.112 0.008 155);
+  --tap-highlight: oklch(0.58 0.14 155 / 0.14);
   --z-rail: 20;
   --z-header: 50;
   --z-skip-link: 60;
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
@@ -133,6 +137,7 @@
   --scrollbar-border: oklch(0.141 0.005 285.823);
   --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
+  --tap-highlight: oklch(0.72 0.15 155 / 0.2);
   --color-available: oklch(0.78 0.19 142);
   --brand-text: oklch(0.72 0.15 155);
 }
@@ -176,6 +181,40 @@
     cursor:
       url("/cursors/pointer.cur") 6 6,
       pointer !important;
+  }
+
+  *:where(
+    a,
+    button,
+    summary,
+    label,
+    select,
+    [role="button"],
+    [role="checkbox"],
+    [role="menuitem"],
+    [role="menuitemcheckbox"],
+    [role="menuitemradio"],
+    [role="option"],
+    [role="radio"],
+    [role="switch"],
+    [role="tab"]
+  ) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: var(--tap-highlight);
+  }
+
+  :where(
+    [data-slot="alert-dialog-content"],
+    [data-slot="command-list"],
+    [data-slot="dialog-content"],
+    [data-slot="drawer-content"],
+    [data-slot="dropdown-menu-content"],
+    [data-slot="popover-content"],
+    [data-slot="scroll-area-viewport"],
+    [data-slot="select-content"],
+    [data-slot="sheet-content"]
+  ) {
+    overscroll-behavior: contain;
   }
 
   @keyframes show-top-mask {
@@ -263,9 +302,25 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 1.5rem);
+}
+
+@supports (scrollbar-gutter: stable) {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   ::before,
   ::after {
@@ -273,6 +328,7 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

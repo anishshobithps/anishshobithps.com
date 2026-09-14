@@ -49,7 +49,7 @@ export function EndOfPost({ commentCount, className }: EndOfPostProps) {
 export function ScrollToEngagement({ count }: { count: number }) {
   return (
     <Button
-      variant="ghost"
+      variant="link"
       size="sm"
       onClick={() =>
         document

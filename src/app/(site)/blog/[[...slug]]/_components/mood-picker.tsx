@@ -91,7 +91,7 @@ export function MoodPicker({
           What did you think?
         </TypographyMuted>
         <span
-          className="font-mono text-sm text-muted-foreground/35 select-none transition-all duration-150"
+          className="font-mono text-sm text-muted-foreground/35 select-none transition-colors duration-150"
           aria-hidden="true"
         >
           {moodLoading ? "( · ‿ · )" : face}

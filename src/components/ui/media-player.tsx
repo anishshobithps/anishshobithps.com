@@ -13,7 +13,6 @@ import {
   PlayIcon,
   RepeatIcon,
   RewindIcon,
-  SpinnerIcon,
   SpeakerHighIcon,
   SpeakerLowIcon,
   SpeakerSlashIcon,
@@ -42,6 +41,8 @@ import { cn } from "@/lib/cn";
 import { useLazyRef } from "@/hooks/use-lazy-ref";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Kbd } from "@/components/ui/kbd";
+import { Spinner } from "@/components/ui/spinner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -813,6 +814,8 @@ function MediaPlayerVideo(props: MediaPlayerVideoProps) {
       aria-describedby={context.descriptionId}
       aria-labelledby={context.labelId}
       data-slot="media-player-video"
+      playsInline
+      preload="metadata"
       {...videoProps}
       id={context.mediaId}
       ref={composedRef}
@@ -940,7 +943,7 @@ function MediaPlayerLoading(props: MediaPlayerLoadingProps) {
       )}
     >
       {children ?? (
-        <SpinnerIcon className="size-20 animate-spin stroke-[.0938rem] text-primary" />
+        <Spinner className="size-20 stroke-[.0938rem] text-primary" />
       )}
     </LoadingPrimitive>
   );
@@ -1092,7 +1095,7 @@ function MediaPlayerError(props: MediaPlayerErrorProps) {
               disabled={actionState.retryPending}
             >
               {actionState.retryPending ? (
-                <SpinnerIcon className="animate-spin" />
+                <Spinner />
               ) : (
                 <ArrowCounterClockwiseIcon />
               )}
@@ -1105,7 +1108,7 @@ function MediaPlayerError(props: MediaPlayerErrorProps) {
               disabled={actionState.reloadPending}
             >
               {actionState.reloadPending ? (
-                <SpinnerIcon className="animate-spin" />
+                <Spinner />
               ) : (
                 <ArrowCounterClockwiseIcon />
               )}
@@ -1249,7 +1252,7 @@ function MediaPlayerPlay(props: React.ComponentProps<typeof Button>) {
         data-state={mediaPaused ? "off" : "on"}
         disabled={isDisabled}
         {...playButtonProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn(
           "size-8 [&_svg:not([class*='fill-'])]:fill-current",
@@ -1313,7 +1316,7 @@ function MediaPlayerSeekBackward(props: MediaPlayerSeekBackwardProps) {
         data-slot="media-player-seek-backward"
         disabled={isDisabled}
         {...seekBackwardProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onSeekBackward}
@@ -1379,7 +1382,7 @@ function MediaPlayerSeekForward(props: MediaPlayerSeekForwardProps) {
         data-slot="media-player-seek-forward"
         disabled={isDisabled}
         {...seekForwardProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onSeekForward}
@@ -2251,7 +2254,7 @@ function MediaPlayerVolume(props: MediaPlayerVolumeProps) {
           aria-pressed={mediaMuted}
           data-slot="media-player-volume-trigger"
           data-state={mediaMuted ? "on" : "off"}
-          variant="ghost"
+          variant="outline"
           size="icon"
           className="size-8"
           disabled={isDisabled}
@@ -2434,7 +2437,7 @@ function MediaPlayerPlaybackSpeed(props: MediaPlayerPlaybackSpeedProps) {
             aria-controls={context.mediaId}
             disabled={isDisabled}
             {...playbackSpeedProps}
-            variant="ghost"
+            variant="outline"
             size="icon"
             className={cn("h-8 w-16 aria-expanded:bg-accent/50", className)}
           >
@@ -2521,7 +2524,7 @@ function MediaPlayerLoop(props: MediaPlayerLoopProps) {
         data-state={isLooping ? "on" : "off"}
         disabled={isDisabled}
         {...loopProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onLoopToggle}
@@ -2577,7 +2580,7 @@ function MediaPlayerFullscreen(props: MediaPlayerFullscreenProps) {
         data-state={isFullscreen ? "on" : "off"}
         disabled={isDisabled}
         {...fullscreenProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onFullscreen}
@@ -2651,7 +2654,7 @@ function MediaPlayerPiP(props: MediaPlayerPiPProps) {
         data-state={isPictureInPicture ? "on" : "off"}
         disabled={isDisabled}
         {...pipButtonProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onPictureInPicture}
@@ -2704,7 +2707,7 @@ function MediaPlayerCaptions(props: React.ComponentProps<typeof Button>) {
         data-state={isSubtitlesActive ? "on" : "off"}
         disabled={isDisabled}
         {...captionsProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onCaptionsToggle}
@@ -2753,7 +2756,7 @@ function MediaPlayerDownload(props: React.ComponentProps<typeof Button>) {
         data-slot="media-player-download"
         disabled={isDisabled}
         {...downloadProps}
-        variant="ghost"
+        variant="outline"
         size="icon"
         className={cn("size-8", className)}
         onClick={onDownload}
@@ -2889,7 +2892,7 @@ function MediaPlayerSettings(props: MediaPlayerSettingsProps) {
             data-slot="media-player-settings"
             disabled={isDisabled}
             {...settingsProps}
-            variant="ghost"
+            variant="outline"
             size="icon"
             className={cn("size-8 aria-expanded:bg-accent/50", className)}
           >
@@ -3064,32 +3067,26 @@ function MediaPlayerTooltip(props: MediaPlayerTooltipProps) {
       <TooltipContent
         container={context.portalContainer}
         sideOffset={tooltipSideOffset}
-        className="flex items-center gap-2 border bg-popover px-2 py-1 font-medium text-popover-foreground data-[side=top]:mb-3.5 [&>span]:hidden"
+        className="flex items-center gap-2 px-2 py-1 font-medium data-[side=top]:mb-3.5 [&>span]:hidden"
       >
         <p>{tooltip}</p>
         {Array.isArray(shortcut) ? (
           <div className="flex items-center gap-1">
             {shortcut.map((shortcutKey) => (
-              <kbd
-                key={shortcutKey}
-                className="select-none rounded border bg-secondary px-1.5 py-0.5 font-mono text-[11.2px] text-foreground shadow-xs"
-              >
+              <Kbd key={shortcutKey} className="font-mono">
                 <abbr title={shortcutKey} className="no-underline">
                   {shortcutKey}
                 </abbr>
-              </kbd>
+              </Kbd>
             ))}
           </div>
         ) : (
           shortcut && (
-            <kbd
-              key={shortcut}
-              className="select-none rounded border bg-secondary px-1.5 py-px font-mono text-[11.2px] text-foreground shadow-xs"
-            >
+            <Kbd key={shortcut} className="font-mono">
               <abbr title={shortcut} className="no-underline">
                 {shortcut}
               </abbr>
-            </kbd>
+            </Kbd>
           )
         )}
       </TooltipContent>

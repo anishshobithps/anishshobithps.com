@@ -189,4 +189,3 @@ async function RepoCard({
 }
 
 export { RepoCard, repoCardVariants }
-export type { RepoCardProps, GitHubRepoData }

@@ -133,6 +133,7 @@ export function BrandingOGPreview() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <InputGroup>
               <InputGroupInput
+                autoComplete="off"
                 value={titleInput}
                 onChange={(e) => dispatch({ titleInput: e.target.value })}
                 placeholder="Title"
@@ -144,6 +145,7 @@ export function BrandingOGPreview() {
             </InputGroup>
             <InputGroup>
               <InputGroupInput
+                autoComplete="off"
                 value={descriptionInput}
                 onChange={(e) => dispatch({ descriptionInput: e.target.value })}
                 placeholder="Description"
@@ -155,6 +157,7 @@ export function BrandingOGPreview() {
             </InputGroup>
             <InputGroup>
               <InputGroupInput
+                autoComplete="off"
                 value={nameInput}
                 onChange={(e) => dispatch({ nameInput: e.target.value })}
                 placeholder="Name"
@@ -166,6 +169,7 @@ export function BrandingOGPreview() {
             </InputGroup>
             <InputGroup>
               <InputGroupInput
+                autoComplete="off"
                 value={roleInput}
                 onChange={(e) => dispatch({ roleInput: e.target.value })}
                 placeholder="Role"
@@ -177,6 +181,7 @@ export function BrandingOGPreview() {
             </InputGroup>
             <InputGroup>
               <InputGroupInput
+                autoComplete="off"
                 value={domainInput}
                 onChange={(e) => dispatch({ domainInput: e.target.value })}
                 placeholder="Domain"
@@ -188,6 +193,7 @@ export function BrandingOGPreview() {
             </InputGroup>
             <InputGroup>
               <InputGroupInput
+                autoComplete="off"
                 value={tagsInput}
                 onChange={(e) => dispatch({ tagsInput: e.target.value })}
                 placeholder="tag1, tag2, ..."
