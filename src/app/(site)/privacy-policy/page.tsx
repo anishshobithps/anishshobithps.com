@@ -17,13 +17,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = buildMeta({
   title: "Privacy Policy",
   pageTitle: "Privacy Policy",
-  description: `How ${siteConfig.name}'s website handles your data — what's collected, why, and how it's stored. Short version: not much, and nothing creepy.`,
+  description: `How ${siteConfig.name}'s website handles your data: what's collected, why, and how it's stored. Short version: not much, and nothing creepy.`,
   path: "home / privacy-policy",
   canonicalPath: "/privacy-policy",
   type: "website",
 });
 
-const LAST_UPDATED = "March 7, 2026";
+const LAST_UPDATED = "September 14, 2026";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
       <JsonLd
         type="webpage"
         title="Privacy Policy"
-        description={`Privacy policy for ${siteConfig.domain} — data collected, stored, and why.`}
+        description={`Privacy policy for ${siteConfig.domain}: what is collected, where it is stored, and why.`}
         canonicalUrl={`${siteConfig.baseUrl}/privacy-policy`}
       />
 
@@ -60,8 +60,8 @@ export default function PrivacyPolicyPage() {
             <TypographyMark>blog comments section</TypographyMark>, both of
             which require signing in via <TypographyMark>Clerk</TypographyMark>{" "}
             (GitHub, Google, or Discord) to leave a message, post a comment, or
-            like an entry. Everything else — blog posts, projects, resume — is
-            fully public and requires no account.
+            like an entry. Everything else, including blog posts, projects, and
+            the resume, is fully public and requires no account.
           </TypographyP>
         </div>
       </Section>
@@ -78,8 +78,8 @@ export default function PrivacyPolicyPage() {
               is{" "}
               <TypographyMark>
                 one-way (SHA-256 with a server-side salt)
-              </TypographyMark>{" "}
-              — your actual IP is <TypographyMark>never stored</TypographyMark>{" "}
+              </TypographyMark>
+              . Your actual IP is <TypographyMark>never stored</TypographyMark>{" "}
               and cannot be reverse-engineered from it.
             </TypographyP>
           </div>
@@ -89,9 +89,20 @@ export default function PrivacyPolicyPage() {
               If you click one of the reaction buttons on a blog post, your
               choice (one of: <em>Not for me, Meh, Liked it, Loved it</em>) is
               stored with the same hashed IP + post slug pair. Reactions are{" "}
-              <TypographyMark>fully voluntary</TypographyMark> — if you
+              <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t click anything,{" "}
               <TypographyMark>nothing is stored</TypographyMark>.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <TypographyH2 className="border-b border-border pb-2">Short link clicks</TypographyH2>
+            <TypographyP>
+              Following a short link (any{" "}
+              <TypographyMark>{siteConfig.domain}/&lt;slug&gt;</TypographyMark>{" "}
+              that redirects somewhere else) adds one to a counter on that
+              link. No IP address, hash, account, or per-click timestamp is
+              recorded, so the number says how many times a link was followed
+              and <TypographyMark>nothing about who followed it</TypographyMark>.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -107,9 +118,9 @@ export default function PrivacyPolicyPage() {
               <TypographyMark>
                 name, username, and profile picture
               </TypographyMark>{" "}
-              are fetched live from Clerk when rendering the guestbook — they
-              are not stored in our database. Both actions are{" "}
-              <TypographyMark>fully voluntary</TypographyMark> — if you
+              are fetched live from Clerk when rendering the guestbook, not
+              stored in our database. Both actions are{" "}
+              <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t sign in, nothing is stored.
             </TypographyP>
           </div>
@@ -124,25 +135,25 @@ export default function PrivacyPolicyPage() {
               </TypographyMark>
               . If you like a comment, your Clerk user ID and the comment ID are
               stored. Deleted comments are{" "}
-              <TypographyMark>soft-deleted</TypographyMark> — the text is hidden
-              but the record is retained for referential integrity; deletion
-              requests are honoured on request (see Your rights below). Your{" "}
+              <TypographyMark>soft-deleted</TypographyMark>: the text is hidden
+              but the record is retained for referential integrity. Full deletion
+              is honoured on request (see Your rights below). Your{" "}
               <TypographyMark>
                 name, username, and profile picture
               </TypographyMark>{" "}
-              are fetched live from Clerk when rendering comments — they are not
-              stored in our database. Both actions are{" "}
-              <TypographyMark>fully voluntary</TypographyMark> — if you
+              are fetched live from Clerk when rendering comments, not stored
+              in our database. Both actions are{" "}
+              <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t sign in, nothing is stored.
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH3>What is NOT collected</TypographyH3>
+            <TypographyH3>What is not collected</TypographyH3>
             <TypographyP>
-              No browser fingerprinting. No tracking pixels.{" "}
-              <TypographyMark>No third-party ad networks.</TypographyMark> No
+              There is no browser fingerprinting, no tracking pixels, and{" "}
+              <TypographyMark>no third-party ad networks</TypographyMark>. No
               email addresses or passwords are stored in this site&apos;s own
-              database — authentication is fully delegated to{" "}
+              database, because authentication is fully delegated to{" "}
               <TypographyMark>Clerk</TypographyMark> (see Third-party services
               below). If you never sign in to the guestbook or comments, no
               personally identifiable information about you is stored anywhere
@@ -166,7 +177,7 @@ export default function PrivacyPolicyPage() {
             >
               Neon
             </a>
-            . These records contain no personal information — only post slugs,
+            . These records contain no personal information, only post slugs,
             IP hashes, moods, and timestamps.
           </TypographyP>
           <TypographyP>
@@ -174,7 +185,7 @@ export default function PrivacyPolicyPage() {
             stored in the same Neon PostgreSQL database. These records contain
             your <TypographyMark>Clerk user ID</TypographyMark>, message/comment
             text, post slug, and timestamps. Your Clerk user ID is an opaque
-            identifier assigned by Clerk — it is not your email, name, or any
+            identifier assigned by Clerk, not your email, name, or any other
             human-readable detail. Your profile information (name, username,
             avatar) is stored and managed by{" "}
             <a
@@ -203,7 +214,7 @@ export default function PrivacyPolicyPage() {
             >
               Umami Analytics
             </a>{" "}
-            — a <TypographyMark>privacy-focused, open-source</TypographyMark>{" "}
+            , a <TypographyMark>privacy-focused, open-source</TypographyMark>{" "}
             analytics tool hosted on{" "}
             <a
               href="https://umami.is/docs/cloud"
@@ -216,8 +227,11 @@ export default function PrivacyPolicyPage() {
             . Umami does <TypographyMark>not use cookies</TypographyMark>, does
             not collect personal data, and complies with{" "}
             <TypographyMark>GDPR, CCPA, and PECR</TypographyMark>. Only
-            anonymized, aggregated page view data is recorded — no IP addresses,
-            no fingerprinting, no cross-site tracking.
+            anonymized, aggregated page view data is recorded, with no IP
+            addresses, no fingerprinting, and no cross-site tracking. The
+            script and the events it sends are{" "}
+            <TypographyMark>proxied through this domain</TypographyMark>, so
+            your browser never connects to Umami directly.
           </TypographyP>
         </div>
       </Section>
@@ -240,7 +254,7 @@ export default function PrivacyPolicyPage() {
               </a>
               . This is a{" "}
               <TypographyMark>read-only, server-side</TypographyMark> call using
-              my own account credentials — no data about you is sent to Spotify.
+              my own account credentials, and no data about you is sent to Spotify.
               The currently playing track is cached for{" "}
               <TypographyMark>60 seconds</TypographyMark> on the server; no
               Spotify data is stored in the database.
@@ -276,24 +290,38 @@ export default function PrivacyPolicyPage() {
               . This site only stores the opaque Clerk user ID in its own
               database. Clerk uses{" "}
               <TypographyMark>session cookies</TypographyMark> to maintain your
-              signed-in state — these are set only when you sign in to the
+              signed-in state. These are set only when you sign in to the
               guestbook or the blog comments section.
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <TypographyH2 className="border-b border-border pb-2">Google Fonts &amp; GitHub</TypographyH2>
+            <TypographyH2 className="border-b border-border pb-2">Cloudinary</TypographyH2>
             <TypographyP>
-              This site uses Google Fonts (loaded via CSS, subject to{" "}
+              Video in blog posts streams directly from{" "}
               <a
-                href="https://policies.google.com/privacy"
+                href="https://cloudinary.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-external"
               >
-                Google&apos;s Privacy Policy
+                Cloudinary
               </a>
-              ). The resume is fetched from a GitHub Releases URL. Neither
-              integration passes any data about you back to this site.
+              . Playing one connects your browser to Cloudinary, which sees
+              your <TypographyMark>IP address and user agent</TypographyMark>{" "}
+              the way any site you visit does. Images are handled differently:
+              they are optimised and served from this domain, so viewing a post
+              involves no third party until you press play.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <TypographyH2 className="border-b border-border pb-2">Fonts &amp; GitHub</TypographyH2>
+            <TypographyP>
+              Fonts are <TypographyMark>self-hosted</TypographyMark>. They are
+              downloaded at build time and served from this domain, so your
+              browser never contacts Google to render this page. The resume is
+              fetched from GitHub Releases by the server and passed through{" "}
+              <TypographyMark>/api/resume</TypographyMark>, so GitHub never
+              sees your request either.
             </TypographyP>
           </div>
         </div>
@@ -305,8 +333,8 @@ export default function PrivacyPolicyPage() {
           <TypographyP>
             If you have never signed in to the guestbook or comments, the only
             data stored is an{" "}
-            <TypographyMark>irreversible IP hash</TypographyMark> — there is no
-            practical way to identify or retrieve those records.
+            <TypographyMark>irreversible IP hash</TypographyMark>, and there is
+            no practical way to identify or retrieve those records.
           </TypographyP>
           <TypographyP>
             If you have signed in and left a guestbook message, posted a
@@ -334,7 +362,7 @@ export default function PrivacyPolicyPage() {
             If anything meaningful changes (like adding analytics), this page
             will be updated and the{" "}
             <TypographyMark>&ldquo;Last updated&rdquo;</TypographyMark> date
-            will reflect it. No surprise privacy pivots here.
+            will reflect it.
           </TypographyP>
         </div>
       </Section>

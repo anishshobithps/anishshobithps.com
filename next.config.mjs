@@ -26,11 +26,6 @@ const config = {
       },
       {
         protocol: "https",
-        hostname: "i.scdn.co",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
         hostname: "res.cloudinary.com",
         pathname: "/**",
       },
@@ -94,8 +89,8 @@ const config = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com http://localhost:8400",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' data: https://fonts.gstatic.com",
+              "style-src 'self' 'unsafe-inline'",
+              "font-src 'self' data:",
               "img-src 'self' data: blob: https:",
               "connect-src 'self' blob: https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com https: http://localhost:8400",
               "media-src 'self' https://res.cloudinary.com",
