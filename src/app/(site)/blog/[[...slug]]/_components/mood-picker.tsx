@@ -4,16 +4,15 @@ import type {
   MoodId,
   ReactionCounts,
 } from "@/app/(site)/blog/[[...slug]]/actions";
-import { EngagementNudge } from "@/components/engagement/nudge";
+import { ReactionMascot } from "@/components/engagement/doodles";
 import {
-  CheckIcon,
   HeartIcon,
   SmileyMehIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
-import { TypographyMuted } from "@/components/ui/typography";
+import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import { useState } from "react";
 
@@ -22,7 +21,7 @@ export interface MoodState {
   counts: ReactionCounts;
 }
 
-export const MOODS = [
+const MOODS = [
   {
     id: "terrible" as MoodId,
     label: "Not for me",
@@ -61,14 +60,6 @@ export const MOODS = [
   },
 ] as const;
 
-const MOOD_FACES: Record<MoodId | "", string> = {
-  "": "( ¬‿¬ )",
-  terrible: "(╯°□°）╯",
-  bad: "( ._. )",
-  good: "( ᵔ◡ᵔ )",
-  amazing: "( ﾉ◕ᴗ◕)ﾉ",
-};
-
 export interface MoodPickerProps {
   moodOptimistic: MoodState;
   moodLoading: boolean;
@@ -82,24 +73,23 @@ export function MoodPicker({
 }: MoodPickerProps) {
   const [hoveredMood, setHoveredMood] = useState<MoodId | null>(null);
   const displayMood = hoveredMood ?? moodOptimistic.value;
-  const face = MOOD_FACES[displayMood];
+  const total = Object.values(moodOptimistic.counts).reduce(
+    (sum, count) => sum + (count ?? 0),
+    0,
+  );
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-col items-center gap-1.5">
-        <TypographyMuted className="text-xs font-semibold uppercase tracking-widest text-center">
-          What did you think?
-        </TypographyMuted>
-        <span
-          className="font-mono text-sm text-muted-foreground/35 select-none transition-colors duration-150"
-          aria-hidden="true"
-        >
-          {moodLoading ? "( · ‿ · )" : face}
-        </span>
-        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full border border-border/40">
-          <CheckIcon size={9} aria-hidden="true" />
-          No account needed
-        </span>
+    <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <ReactionMascot mood={moodLoading ? "" : displayMood} />
+        <div className="space-y-1.5">
+          <TypographySmall as="p" className="font-semibold">
+            What did you think?
+          </TypographySmall>
+          <TypographyMuted className="text-xs">
+            One tap. No account needed.
+          </TypographyMuted>
+        </div>
       </div>
       <fieldset
         aria-label="Rate this post"
@@ -137,7 +127,13 @@ export function MoodPicker({
           },
         )}
       </fieldset>
-      <EngagementNudge type="mood" />
+      {!moodLoading && (
+        <TypographyMuted className="text-xs tabular-nums">
+          {total === 0
+            ? "Nobody's voted yet. Be the first."
+            : `${total} ${total === 1 ? "reaction" : "reactions"} so far`}
+        </TypographyMuted>
+      )}
     </div>
   );
 }

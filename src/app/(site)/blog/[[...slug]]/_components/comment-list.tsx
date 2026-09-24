@@ -2,6 +2,7 @@
 
 import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
 import { CommentCard } from "@/app/(site)/blog/[[...slug]]/_components/comment-card";
+import { CricketDoodle } from "@/components/engagement/doodles";
 import { EngagementEmptyState } from "@/components/engagement/empty-state";
 import { EngagementNudge } from "@/components/engagement/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
@@ -46,6 +47,7 @@ export function CommentList({
       {comments.length === 0 ? (
         <PanelRow>
           <EngagementEmptyState
+            art={<CricketDoodle />}
             title="Crickets. Loud ones."
             description="Be the first to say something, good or bad or completely off the wall."
           >

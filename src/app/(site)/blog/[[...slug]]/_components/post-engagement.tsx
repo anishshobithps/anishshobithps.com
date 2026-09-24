@@ -16,15 +16,11 @@ import {
   MoodPicker,
 } from "@/app/(site)/blog/[[...slug]]/_components/mood-picker";
 import { Panel, PanelRow } from "@/components/layouts/page";
-import { SectionLabel, TypographyMuted } from "@/components/ui/typography";
+import { SectionLabel } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
 import { classifyError, typedToast } from "@/lib/toast";
 import { useClerk, useUser } from "@clerk/nextjs";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -155,15 +151,6 @@ export function PostEngagement({
 
   const comments = baseComments;
 
-  const reactionTotal = useMemo(
-    () =>
-      Object.values(moodState.counts).reduce(
-        (sum, count) => sum + (count ?? 0),
-        0,
-      ),
-    [moodState.counts],
-  );
-
   const handleMoodSelect = (id: MoodId) => {
     selectMood(moodState.value === id ? "" : id);
   };
@@ -195,8 +182,7 @@ export function PostEngagement({
       if (!result.success) throw new Error(result.error);
     },
     onMutate: (id) => setBaseComments((prev) => patchDelete(prev, id)),
-    onError: (error) =>
-      typedToast(classifyError(error.message), error.message),
+    onError: (error) => typedToast(classifyError(error.message), error.message),
   });
 
   const likeComment = useMutation({
@@ -251,16 +237,19 @@ export function PostEngagement({
     [user, slug, postComment],
   );
 
-  const handleCommentDelete = useCallback((id: number) => {
-    toast("Delete this comment?", {
-      action: {
-        label: "Delete",
-        onClick: () => removeComment.mutate(id),
-      },
-      cancel: { label: "Keep", onClick: () => {} },
-      duration: Infinity,
-    });
-  }, [removeComment]);
+  const handleCommentDelete = useCallback(
+    (id: number) => {
+      toast("Delete this comment?", {
+        action: {
+          label: "Delete",
+          onClick: () => removeComment.mutate(id),
+        },
+        cancel: { label: "Keep", onClick: () => {} },
+        duration: Infinity,
+      });
+    },
+    [removeComment],
+  );
 
   const handleCommentLike = useCallback(
     (id: number) => {
@@ -283,7 +272,6 @@ export function PostEngagement({
     [currentUserId, baseComments, likeComment],
   );
 
-
   const totalComments = comments.reduce(
     (acc, c) => acc + 1 + c.replies.length,
     0,
@@ -300,18 +288,12 @@ export function PostEngagement({
         </SectionLabel>
       </PanelRow>
 
-      <PanelRow className="space-y-3 py-8">
+      <PanelRow className="py-8">
         <MoodPicker
           moodOptimistic={moodState}
           moodLoading={moodLoading}
           onSelect={handleMoodSelect}
         />
-
-        {!moodLoading && reactionTotal === 0 && (
-          <TypographyMuted className="text-center text-xs">
-            Nothing here yet. Be the first to react.
-          </TypographyMuted>
-        )}
       </PanelRow>
 
       <PanelRow className="py-6">

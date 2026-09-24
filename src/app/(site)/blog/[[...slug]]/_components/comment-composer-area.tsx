@@ -5,12 +5,9 @@ import {
   Composer,
   type ComposerSubmitHandler,
 } from "@/components/engagement/composer";
-import { PencilIcon, SignInIcon, SignOutIcon } from "@/components/shared/icons";
+import { TypingBubble } from "@/components/engagement/doodles";
+import { SignInIcon, SignOutIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-} from "@/components/ui/button-group";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
@@ -67,30 +64,19 @@ export function CommentComposerArea({
               </span>
             </TypographyMuted>
           </div>
-          <ButtonGroup>
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="gap-1.5 text-xs"
-            >
-              <Link href="/guestbook">
-                <PencilIcon data-icon="inline-start" size={13} aria-hidden="true" />
-                <span className="sr-only sm:not-sr-only">Checkout Guestbook!!</span>
-              </Link>
-            </Button>
-            <ButtonGroupSeparator />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onSignOut}
-              className="gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-              aria-label="Sign out"
-            >
-              <SignOutIcon data-icon="inline-start" size={13} aria-hidden="true" />
-              <span className="hidden sm:inline">Sign out</span>
-            </Button>
-          </ButtonGroup>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onSignOut}
+            className="shrink-0 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+          >
+            <SignOutIcon
+              data-icon="inline-start"
+              size={13}
+              aria-hidden="true"
+            />
+            Sign out
+          </Button>
         </div>
         <Composer
           maxLength={COMMENT_MAX_LENGTH}
@@ -106,20 +92,23 @@ export function CommentComposerArea({
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <div className="space-y-0.5">
-        <TypographySmall className="font-semibold">
-          Got something to say?
-        </TypographySmall>
-        <TypographyMuted className="text-xs">
-          Sign in to comment. Also consider{" "}
-          <Link
-            href="/guestbook"
-            className="underline underline-offset-4 hover:text-foreground transition-colors"
-          >
-            leave a note in the guestbook
-          </Link>
-          . It&apos;s like a comments section but less chaotic.
-        </TypographyMuted>
+      <div className="flex items-start gap-3">
+        <TypingBubble />
+        <div className="space-y-0.5">
+          <TypographySmall className="font-semibold">
+            Got something to say?
+          </TypographySmall>
+          <TypographyMuted className="text-xs">
+            Sign in to comment. Also consider{" "}
+            <Link
+              href="/guestbook"
+              className="underline underline-offset-4 hover:text-foreground transition-colors"
+            >
+              leaving a note in the guestbook
+            </Link>
+            . It&apos;s like a comments section but less chaotic.
+          </TypographyMuted>
+        </div>
       </div>
       <SignInButton mode="modal">
         <Button size="sm" className="gap-1.5 shrink-0">

@@ -64,6 +64,12 @@ export function Composer({
 
   const trimmed = value.trim();
   const remaining = maxLength - value.length;
+  const counterTone =
+    remaining <= dangerThreshold
+      ? "text-destructive"
+      : remaining <= warnThreshold
+        ? "text-amber-700 dark:text-amber-500"
+        : "text-muted-foreground";
 
   const restoreDraft = (body: string) => {
     setValue(body);
@@ -146,23 +152,16 @@ export function Composer({
         </TypographyMuted>
       )}
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5">
-          <span
-            id={counterId}
-            aria-label={`${remaining} of ${maxLength} characters remaining`}
-            className={cn(
-              "text-sm font-medium tabular-nums transition-colors duration-150",
-              remaining <= dangerThreshold
-                ? "text-destructive"
-                : remaining <= warnThreshold
-                  ? "text-amber-700 dark:text-amber-500"
-                  : "text-muted-foreground",
-            )}
-          >
-            {remaining}
-          </span>
-          <TypographyMuted className="text-xs">/ {maxLength}</TypographyMuted>
-        </div>
+        <TypographyMuted
+          id={counterId}
+          className={cn(
+            "text-xs tabular-nums transition-colors duration-150",
+            counterTone,
+          )}
+        >
+          {value.length} / {maxLength}
+          <span className="sr-only"> characters</span>
+        </TypographyMuted>
         <div className="flex gap-2">
           {onCancel && (
             <Button
@@ -188,7 +187,11 @@ export function Composer({
                 aria-hidden="true"
               />
             ) : (
-              <PaperPlaneTiltIcon data-icon="inline-start" size={14} aria-hidden="true" />
+              <PaperPlaneTiltIcon
+                data-icon="inline-start"
+                size={14}
+                aria-hidden="true"
+              />
             )}
             {submitLabel}
           </Button>
