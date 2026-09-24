@@ -35,7 +35,7 @@ export const Avatar = memo(function Avatar({
       >
         <NextImage
           src={imageUrl}
-          alt={name}
+          alt=""
           fill
           sizes="36px"
           unoptimized
@@ -47,7 +47,7 @@ export const Avatar = memo(function Avatar({
 
   return (
     <div
-      aria-label={name}
+      aria-hidden="true"
       className={cn(
         size,
         "shrink-0 rounded-full ring-1 ring-border bg-muted",

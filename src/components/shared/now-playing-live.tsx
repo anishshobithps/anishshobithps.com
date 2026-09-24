@@ -14,11 +14,9 @@ export function NowPlayingLive() {
   });
 
   return (
-    <div
-      className="flex items-center gap-1.5 max-w-[280px] min-w-0"
-      aria-label="Spotify status"
-    >
+    <div className="flex items-center gap-1.5 max-w-[280px] min-w-0">
       <svg
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         width="32"
         height="32"
@@ -34,7 +32,10 @@ export function NowPlayingLive() {
           not listening to anything
         </TypographyMuted>
       ) : (
-        <TypographyMuted className="font-mono truncate">
+        <TypographyMuted
+          className="font-mono truncate"
+          title={`${data.title} by ${data.artist}`}
+        >
           {data.isPlaying ? "listening to" : "last listened to"}{" "}
           <a
             href={data.songUrl}

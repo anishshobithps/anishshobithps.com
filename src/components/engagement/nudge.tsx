@@ -70,10 +70,7 @@ export function EngagementNudge({
 
   return (
     <TypographyMuted
-      className={cn(
-        "text-center text-[10px] text-muted-foreground/40 font-mono",
-        className,
-      )}
+      className={cn("text-center text-xs font-mono", className)}
       aria-hidden="true"
     >
       {`// ${line}`}

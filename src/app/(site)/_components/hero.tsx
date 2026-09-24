@@ -44,7 +44,6 @@ export function Hero() {
                 <Badge
                   variant="outline"
                   className="inline-flex items-center gap-1.5 px-3 py-1 text-xs border-(--brand)/30 text-(--brand-text) bg-(--brand)/8"
-                  aria-label="Currently available for hire"
                 >
                   <CircleIcon
                     className="size-2 fill-(--color-available) text-(--color-available) animate-pulse"
@@ -57,7 +56,7 @@ export function Hero() {
             )}
             <TypographyH1>{siteConfig.name}</TypographyH1>
             <div className="flex flex-wrap items-center gap-3">
-              <TypographyMuted aria-label={`Role: ${siteConfig.role}`}>
+              <TypographyMuted>
                 {siteConfig.role}
               </TypographyMuted>
               <LocationTag />

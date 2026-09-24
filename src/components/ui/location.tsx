@@ -86,7 +86,7 @@ export function LocationTag({
         </span>
 
         <span
-          className="col-start-1 row-start-1 flex items-baseline gap-1.5 self-center whitespace-nowrap text-sm font-medium transition-[transform,opacity] duration-500"
+          className="col-start-1 row-start-1 flex items-baseline gap-1.5 self-center whitespace-nowrap text-sm font-medium tabular-nums transition-[transform,opacity] duration-500"
           style={{
             transform: isActive ? "translateY(0)" : "translateY(120%)",
             opacity: isActive ? 1 : 0,
@@ -94,7 +94,7 @@ export function LocationTag({
         >
           {time.current || `${city}, ${country}`}
           {time.offset && (
-            <span className="text-xs font-normal text-muted-foreground">
+            <span className="text-xs font-normal text-muted-foreground tabular-nums">
               · {time.offset}
             </span>
           )}

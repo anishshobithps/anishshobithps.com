@@ -24,7 +24,7 @@ export function EndOfPost({ commentCount, className }: EndOfPostProps) {
           <TypographySmall className="text-foreground">
             That&apos;s the end. What did you think?
           </TypographySmall>
-          <TypographyMuted className="text-[11px] text-muted-foreground/50 font-mono">
+          <TypographyMuted className="text-xs font-mono">
             {commentCount > 0
               ? `// ${commentCount} ${commentCount === 1 ? "person has" : "people have"} already said something.`
               : "// no reactions yet. you could be the first."}

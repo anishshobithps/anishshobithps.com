@@ -28,36 +28,36 @@ export const MOODS = [
     label: "Not for me",
     icon: ThumbsDownIcon,
     activeClassName:
-      "border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/15 hover:text-red-400",
+      "border-red-500/40 bg-red-500/10 text-red-700 hover:bg-red-500/15 hover:text-red-700 dark:text-red-400 dark:hover:text-red-400",
     inactiveClassName:
-      "hover:border-red-500/20 hover:bg-red-500/5 hover:text-red-400",
+      "hover:border-red-500/20 hover:bg-red-500/5 hover:text-red-700 dark:hover:text-red-400",
   },
   {
     id: "bad" as MoodId,
     label: "Meh",
     icon: SmileyMehIcon,
     activeClassName:
-      "border-orange-500/40 bg-orange-500/10 text-orange-400 hover:bg-orange-500/15 hover:text-orange-400",
+      "border-orange-500/40 bg-orange-500/10 text-orange-800 hover:bg-orange-500/15 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-400",
     inactiveClassName:
-      "hover:border-orange-500/20 hover:bg-orange-500/5 hover:text-orange-400",
+      "hover:border-orange-500/20 hover:bg-orange-500/5 hover:text-orange-800 dark:hover:text-orange-400",
   },
   {
     id: "good" as MoodId,
     label: "Liked it",
     icon: ThumbsUpIcon,
     activeClassName:
-      "border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/15 hover:text-blue-400",
+      "border-blue-500/40 bg-blue-500/10 text-blue-700 hover:bg-blue-500/15 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-400",
     inactiveClassName:
-      "hover:border-blue-500/20 hover:bg-blue-500/5 hover:text-blue-400",
+      "hover:border-blue-500/20 hover:bg-blue-500/5 hover:text-blue-700 dark:hover:text-blue-400",
   },
   {
     id: "amazing" as MoodId,
     label: "Loved it",
     icon: HeartIcon,
     activeClassName:
-      "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15 hover:text-emerald-400",
+      "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-400",
     inactiveClassName:
-      "hover:border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-400",
+      "hover:border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-700 dark:hover:text-emerald-400",
   },
 ] as const;
 
@@ -85,7 +85,7 @@ export function MoodPicker({
   const face = MOOD_FACES[displayMood];
 
   return (
-    <div className="space-y-3" aria-label="What did you think?">
+    <div className="space-y-3">
       <div className="flex flex-col items-center gap-1.5">
         <TypographyMuted className="text-xs font-semibold uppercase tracking-widest text-center">
           What did you think?
@@ -96,7 +96,7 @@ export function MoodPicker({
         >
           {moodLoading ? "( · ‿ · )" : face}
         </span>
-        <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground/60 bg-muted/50 px-2 py-0.5 rounded-full border border-border/40">
+        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full border border-border/40">
           <CheckIcon size={9} aria-hidden="true" />
           No account needed
         </span>

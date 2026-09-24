@@ -105,7 +105,7 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
           value={key}
           aria-label={label}
           onClick={(event) => applyTheme(setTheme, key, event)}
-          className="size-6.5 min-w-0 cursor-pointer rounded-full p-0 text-foreground/40 hover:bg-transparent hover:text-foreground data-[state=on]:bg-foreground/10 data-[state=on]:text-foreground"
+          className="size-6.5 min-w-0 cursor-pointer rounded-full p-0 text-muted-foreground hover:bg-transparent hover:text-foreground data-[state=on]:bg-foreground/10 data-[state=on]:text-foreground"
         >
           <Icon weight="fill" className="size-3.5" aria-hidden="true" />
         </ToggleGroupItem>

@@ -231,7 +231,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
         "size-12 touch-none rounded-full border border-border bg-background/90 shadow-lg backdrop-blur-md transition-[transform,box-shadow,border-color] select-none hover:bg-background/90",
         dragging
           ? "scale-105 cursor-grabbing shadow-xl"
-          : "cursor-grab hover:-translate-y-0.5 hover:shadow-xl active:scale-95",
+          : "cursor-grab hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.96]",
         open && "border-foreground/30",
       )}
     >

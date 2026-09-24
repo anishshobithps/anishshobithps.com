@@ -17,6 +17,10 @@ import {
 import { toast } from "sonner";
 import type { Route } from "next";
 
+function preventNavigation(event: React.MouseEvent) {
+  event.preventDefault();
+}
+
 interface BlogPostNavProps {
   pageUrl: string;
   title: string;
@@ -113,6 +117,7 @@ export function BlogPostNav({
                   : "No previous post"
               }
               aria-disabled={!prevPost}
+              onClick={prevPost ? undefined : preventNavigation}
               className={
                 !prevPost ? "pointer-events-none opacity-30" : undefined
               }
@@ -123,6 +128,7 @@ export function BlogPostNav({
                 nextPost ? `Next post: ${nextPost.title}` : "No next post"
               }
               aria-disabled={!nextPost}
+              onClick={nextPost ? undefined : preventNavigation}
               className={
                 !nextPost ? "pointer-events-none opacity-30" : undefined
               }
