@@ -92,11 +92,8 @@ export default function ResumePage() {
           </PdfViewerToolbar>
 
           <PdfViewerFooter>
-            <TypographyMuted
-              className="font-mono text-[11px] tracking-wide"
-              aria-label="File metadata: ETag, Last-Modified, Content-Length"
-            >
-              ETag · Last-Modified · Content-Length
+            <TypographyMuted className="font-mono text-[11px] tracking-wide">
+              Served with ETag, Last-Modified and Content-Length
             </TypographyMuted>
           </PdfViewerFooter>
         </PdfViewer>

@@ -348,7 +348,7 @@ export function ProjectsPanel() {
             className="text-xs"
           >
             {projects.filter((p) => p.enabled).length} of {projects.length}{" "}
-            visible &middot; top = first on site
+            visible, in the order they appear on the site
           </TypographyMuted>
         </div>
         <Button size="sm" className="gap-1.5" onClick={openAdd}>

@@ -24,7 +24,7 @@ function AlertCover() {
         Cloud
       </IsoFaceText>
       <IsoLabel p={p} at={[-4.9, -8.1, 1.2]} dy={-9} size={7}>
-        Datacenter IP · 403
+        403 for cloud IPs
       </IsoLabel>
 
       <IsoBox p={p} at={[-7.2, 4.8, 0]} size={[2.4, 2.4, 4.2]} />
@@ -33,7 +33,7 @@ function AlertCover() {
         API
       </IsoFaceText>
       <IsoLabel p={p} at={[-4.8, 7.2, 0]} dy={12} size={7}>
-        Public · no auth
+        Public, no auth
       </IsoLabel>
 
       <IsoFlow p={p} points={[[-1.9, 1.9, 2.3], [-4.6, 4.6, 2.3]]} />
@@ -42,7 +42,7 @@ function AlertCover() {
       </IsoLabel>
       <IsoFlow p={p} points={[[-4.6, 4.6, 0.9], [-1.9, 1.9, 0.9]]} />
       <IsoLabel p={p} at={[-3.25, 3.25, 0.9]} dy={8} size={7}>
-        200 · JSON
+        Returns JSON
       </IsoLabel>
 
       <IsoLift lift={-4} delay={60}>
@@ -67,7 +67,7 @@ function AlertCover() {
         <IsoDots p={p} at={[4.5, -7.5, 2.2]} size={[3, 3]} step={0.38} shape="circle" lit={0.35} seed={7} />
         <IsoRipple p={p} center={[6, -6, 2.2]} radius={1.5} />
         <IsoLabel p={p} at={[6, -6, 2.2]} dy={-26} size={7} tone="accent">
-          Discord · @role
+          Pings @role
         </IsoLabel>
       </IsoLift>
     </>

@@ -36,7 +36,7 @@ export function LayersCover() {
         <IsoFaceText p={p} plane="top" at={[0, 2.2, 0.22]} size={7} tone="muted">
           Resume.pdf
         </IsoFaceText>
-        {tag(0.11, "01", "Page · text")}
+        {tag(0.11, "01", "Page text")}
       </IsoLift>
 
       {corners.map(([x, y]) => (
@@ -49,7 +49,7 @@ export function LayersCover() {
           XMP
         </IsoFaceText>
         <IsoFaceText p={p} plane="top" at={[0, 1.4, gap + 0.22]} size={6} tone="muted">
-          DC · IPTC · PRISM
+          DC, IPTC, PRISM
         </IsoFaceText>
         {tag(gap + 0.11, "02", "XML metadata")}
       </IsoLift>

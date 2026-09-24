@@ -35,6 +35,7 @@ const geistPixel = Geist_Pixel({
   subsets: ["latin"],
   display: "swap",
   axes: ["ELSH"],
+  adjustFontFallback: false,
   variable: "--font-geist-pixel",
 });
 
@@ -46,8 +47,8 @@ const firaCode = Fira_Code({
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} · ${siteConfig.role}`,
-    template: `%s · ${siteConfig.name}`,
+    default: `${siteConfig.name} – ${siteConfig.role}`,
+    template: `%s – ${siteConfig.name}`,
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.baseUrl),

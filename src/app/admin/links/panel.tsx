@@ -577,8 +577,8 @@ export function LinksPanel() {
             aria-live="polite"
             className="text-xs"
           >
-            {links.filter((l) => l.enabled).length} of {links.length} enabled
-            &middot; redirect any {siteConfig.domain}/path to a target
+            {links.filter((l) => l.enabled).length} of {links.length} enabled,
+            each redirecting {siteConfig.domain}/path to a target
           </TypographyMuted>
         </div>
         <Button size="sm" className="gap-1.5" onClick={openAdd}>

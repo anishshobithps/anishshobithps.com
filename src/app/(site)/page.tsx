@@ -11,14 +11,19 @@ import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-export const metadata: Metadata = buildMeta({
-  title: siteConfig.name,
-  pageTitle: `${siteConfig.name} - ${siteConfig.role}`,
-  description: siteConfig.description,
-  path: "home",
-  canonicalPath: "/",
-  type: "profile",
-});
+const homeTitle = `${siteConfig.name} – ${siteConfig.role}`;
+
+export const metadata: Metadata = {
+  ...buildMeta({
+    title: siteConfig.name,
+    pageTitle: homeTitle,
+    description: siteConfig.description,
+    path: "home",
+    canonicalPath: "/",
+    type: "profile",
+  }),
+  title: { absolute: homeTitle },
+};
 
 export default function Page() {
   return (
