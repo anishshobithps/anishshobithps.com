@@ -1,6 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useForm, type Control } from "react-hook-form";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { z } from "zod";
+import { isHttpUrl } from "@/lib/links-schema";
+import { projectInputSchema } from "@/lib/projects-schema";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useActionMutation } from "@/hooks/use-action-mutation";
 import { queryKeys } from "@/lib/query-keys";
@@ -20,7 +34,6 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -70,13 +83,22 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 
-type FormData = {
-  title: string;
-  description: string;
-  highlights: string;
-  live: string;
-  github: string;
-};
+const optionalUrlField = z
+  .string()
+  .trim()
+  .refine((value) => value === "" || isHttpUrl(value), {
+    message: "Enter a valid http(s):// URL.",
+  });
+
+const projectFormSchema = z.object({
+  title: projectInputSchema.shape.title,
+  description: projectInputSchema.shape.description,
+  highlights: z.string(),
+  live: optionalUrlField,
+  github: optionalUrlField,
+});
+
+type FormData = z.input<typeof projectFormSchema>;
 
 const emptyForm: FormData = {
   title: "",
@@ -93,6 +115,73 @@ function parseHighlights(raw: string): string[] {
     .filter(Boolean);
 }
 
+const textFields = [
+  {
+    name: "title",
+    label: "Title",
+    placeholder: "Project name",
+  },
+  {
+    name: "highlights",
+    label: "Tech highlights",
+    hint: "(comma-separated)",
+    placeholder: "TypeScript, React, Bun",
+  },
+  {
+    name: "github",
+    label: "GitHub URL",
+    hint: "(optional)",
+    placeholder: "https://github.com/…",
+    type: "url",
+  },
+  {
+    name: "live",
+    label: "Live URL",
+    hint: "(optional)",
+    placeholder: "https://…",
+    type: "url",
+  },
+] as const;
+
+function ProjectTextField({
+  control,
+  field: spec,
+  disabled,
+}: {
+  control: Control<FormData>;
+  field: (typeof textFields)[number];
+  disabled: boolean;
+}) {
+  return (
+    <FormField
+      control={control}
+      name={spec.name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>
+            {spec.label}
+            {"hint" in spec && (
+              <span className="text-xs font-normal text-muted-foreground">
+                {spec.hint}
+              </span>
+            )}
+          </FormLabel>
+          <FormControl>
+            <Input
+              autoComplete="off"
+              {...field}
+              placeholder={spec.placeholder}
+              type={"type" in spec ? spec.type : "text"}
+              disabled={disabled}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
 function ProjectForm({
   initial,
   onSubmit,
@@ -104,106 +193,68 @@ function ProjectForm({
   onCancel: () => void;
   submitting: boolean;
 }) {
-  const [form, setForm] = useState<FormData>(initial);
-  const set =
-    (k: keyof FormData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setForm((prev) => ({ ...prev, [k]: e.target.value }));
+  const form = useForm<FormData>({
+    resolver: standardSchemaResolver(projectFormSchema),
+    defaultValues: initial,
+    mode: "onSubmit",
+  });
+  const [titleField, ...restFields] = textFields;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="pf-title">
-          Title
-        </Label>
-        <Input
-          autoComplete="off"
-          id="pf-title"
-          value={form.title}
-          onChange={set("title")}
-          placeholder="Project name"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+        noValidate
+      >
+        <ProjectTextField
+          control={form.control}
+          field={titleField}
           disabled={submitting}
         />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="pf-description">
-          Description
-        </Label>
-        <Textarea
-          id="pf-description"
-          value={form.description}
-          onChange={set("description")}
-          placeholder="What does it do?"
-          rows={3}
-          className="resize-none"
-          disabled={submitting}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder="What does it do?"
+                  rows={3}
+                  className="resize-none"
+                  disabled={submitting}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="pf-highlights">
-          Tech highlights
-          <span className="text-xs font-normal text-muted-foreground">
-            (comma-separated)
-          </span>
-        </Label>
-        <Input
-          autoComplete="off"
-          id="pf-highlights"
-          value={form.highlights}
-          onChange={set("highlights")}
-          placeholder="TypeScript, React, Bun"
-          disabled={submitting}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="pf-github">
-          GitHub URL
-          <span className="text-xs font-normal text-muted-foreground">
-            (optional)
-          </span>
-        </Label>
-        <Input
-          autoComplete="off"
-          id="pf-github"
-          value={form.github}
-          onChange={set("github")}
-          placeholder="https://github.com/…"
-          type="url"
-          disabled={submitting}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="pf-live">
-          Live URL
-          <span className="text-xs font-normal text-muted-foreground">
-            (optional)
-          </span>
-        </Label>
-        <Input
-          autoComplete="off"
-          id="pf-live"
-          value={form.live}
-          onChange={set("live")}
-          placeholder="https://…"
-          type="url"
-          disabled={submitting}
-        />
-      </div>
-      <DialogFooter>
-        <Button variant="outline" onClick={onCancel} disabled={submitting}>
-          Cancel
-        </Button>
-        <Button
-          onClick={() => onSubmit(form)}
-          disabled={
-            submitting || !form.title.trim() || !form.description.trim()
-          }
-          aria-busy={submitting}
-        >
-          {submitting ? "Saving…" : "Save"}
-        </Button>
-      </DialogFooter>
-    </div>
+        {restFields.map((spec) => (
+          <ProjectTextField
+            key={spec.name}
+            control={form.control}
+            field={spec}
+            disabled={submitting}
+          />
+        ))}
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={submitting}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={submitting} aria-busy={submitting}>
+            {submitting && <Spinner data-icon="inline-start" aria-hidden="true" />}
+            Save
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
   );
 }
 
