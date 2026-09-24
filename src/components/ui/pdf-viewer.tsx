@@ -173,7 +173,10 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
 
           <div
             ref={setContainerRef}
-            className="relative flex-1 overflow-auto bg-muted/10"
+            tabIndex={0}
+            role="region"
+            aria-label="Document pages"
+            className="relative flex-1 overflow-auto bg-muted/10 outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-ring/50"
           >
             {workerReady && pageWidth && (
               <Document

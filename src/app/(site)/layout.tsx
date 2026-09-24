@@ -29,7 +29,8 @@ export default function SiteLayout({
         <Header />
         <Content
           id="main-content"
-          className="scroll-smooth pt-[calc(3.5rem+1px)]"
+          tabIndex={-1}
+          className="scroll-smooth pt-[calc(3.5rem+1px)] outline-none"
         >
           <ViewTransition>{children}</ViewTransition>
         </Content>

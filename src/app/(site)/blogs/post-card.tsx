@@ -84,9 +84,9 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           featured && "justify-center gap-4 md:p-8",
         )}
       >
-        {date && (
-          <TypographyMuted aria-hidden="true" className="font-mono text-xs oldstyle-nums">
-            {date}
+        {date && post.date && (
+          <TypographyMuted asChild className="font-mono text-xs oldstyle-nums">
+            <time dateTime={post.date}>{date}</time>
           </TypographyMuted>
         )}
         <ViewTransition name={postTransitionName(post.url)}>

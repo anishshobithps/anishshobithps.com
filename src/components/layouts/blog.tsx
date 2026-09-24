@@ -114,7 +114,7 @@ function ProgressCircle({
   );
 }
 
-export function MobileTOC() {
+function MobileTOC() {
   const items = useTOCItems();
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
@@ -187,7 +187,6 @@ export function MobileTOC() {
             )}
           >
             <CollapsibleTrigger
-              aria-label={open ? "Hide table of contents" : "Show table of contents"}
               className="flex w-full h-10 items-center text-sm gap-2.5 px-gutter cursor-pointer"
             >
               <ProgressCircle
@@ -198,6 +197,7 @@ export function MobileTOC() {
                   selected !== -1 && "text-(--brand)",
                 )}
               />
+              <span className="sr-only">Table of contents, </span>
               <span
                 className={cn(
                   "flex-1 truncate text-start",
@@ -208,10 +208,12 @@ export function MobileTOC() {
               </span>
               <span className="shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
                 {selected !== -1 ? selected + 1 : 0}
-                <span className="mx-0.5">/</span>
+                <span className="mx-0.5" aria-hidden="true">/</span>
+                <span className="sr-only"> of </span>
                 {items.length}
               </span>
               <CaretDownIcon
+                aria-hidden="true"
                 className={cn(
                   "size-4 shrink-0 text-muted-foreground transition-transform",
                   open && "rotate-180",
@@ -255,11 +257,14 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
       <Section variant="article">
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
           <article className="prose min-w-0">{children}</article>
-          <aside className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
+          <nav
+            aria-label="Table of contents"
+            className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12"
+          >
             <div className="pl-8 sticky top-20 flex flex-col gap-6">
               <div>
                 <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <TextAlignLeftIcon className="size-3.5 shrink-0" />
+                  <TextAlignLeftIcon className="size-3.5 shrink-0" aria-hidden="true" />
                   On this page
                 </TypographySmall>
 
@@ -268,7 +273,7 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
                 </TOCScrollArea>
               </div>
             </div>
-          </aside>
+          </nav>
         </div>
       </Section>
     </TOCProvider>

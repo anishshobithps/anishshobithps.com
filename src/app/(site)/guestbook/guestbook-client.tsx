@@ -289,10 +289,11 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
       <PanelRow className="@container py-8">
         {!isLoaded ? (
           <div
+            role="status"
             className="h-12 animate-pulse bg-muted rounded"
-            aria-busy="true"
-            aria-label="Loading…"
-          />
+          >
+            <span className="sr-only">Loading…</span>
+          </div>
         ) : isSignedIn ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-3">

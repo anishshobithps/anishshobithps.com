@@ -22,6 +22,7 @@ function preventNavigation(event: React.MouseEvent) {
 }
 
 interface BlogPostNavProps {
+  label?: string;
   pageUrl: string;
   title: string;
   prevPost?: { url: string; title: string } | null;
@@ -29,6 +30,7 @@ interface BlogPostNavProps {
 }
 
 export function BlogPostNav({
+  label = "Post navigation",
   pageUrl,
   title,
   prevPost,
@@ -58,11 +60,7 @@ export function BlogPostNav({
         </Link>
       </Button>
 
-      <div
-        className="flex items-center gap-2"
-        role="toolbar"
-        aria-label="Post actions"
-      >
+      <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <Button
             variant="outline"
@@ -107,7 +105,7 @@ export function BlogPostNav({
           </Button>
         </div>
 
-        <nav aria-label="Post navigation">
+        <nav aria-label={label}>
           <ButtonGroup>
             <PaginationPrevious
               href={(prevPost?.url ?? "#") as Route}

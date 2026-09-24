@@ -93,7 +93,7 @@ export function BrandingOGPreview() {
     <div className="border rounded-xl overflow-hidden">
       <div
         className="flex flex-col gap-4 px-4 py-3 border-b bg-muted/20"
-        role="toolbar"
+        role="group"
         aria-label="OG image preview controls"
       >
         <div className="flex items-center gap-2">
@@ -102,14 +102,8 @@ export function BrandingOGPreview() {
             <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
             <span className="w-2.5 h-2.5 rounded-full bg-green-400/50" />
           </div>
-          <div
-            className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden"
-            aria-label={`Preview URL: ${domain}/home / branding`}
-          >
-            <TypographyMuted
-              className="font-mono text-[10px] truncate leading-none"
-              aria-hidden="true"
-            >
+          <div className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden">
+            <TypographyMuted className="font-mono text-[10px] truncate leading-none">
               {domain}/home / branding
             </TypographyMuted>
           </div>

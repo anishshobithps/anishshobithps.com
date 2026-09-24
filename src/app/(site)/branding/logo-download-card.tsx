@@ -109,6 +109,7 @@ export function LogoDownloadCard({
 
   return (
     <div
+      role="group"
       className="flex flex-col gap-3 w-full"
       aria-label={`${label} logo variant`}
     >
@@ -132,17 +133,14 @@ export function LogoDownloadCard({
         <Logo ref={svgRef} size={48} aria-hidden="true" {...logoProps} />
       </div>
 
-      <div
-        className="flex items-center gap-2"
-        aria-label={`Download ${label} logo`}
-      >
+      <div className="flex items-center gap-2">
         <Select
           value={String(size)}
           onValueChange={(v) => setSize(Number(v) as DownloadSize)}
         >
           <SelectTrigger
             className="h-8 w-24 shrink-0 text-xs"
-            aria-label={`Select download size, currently ${size}px`}
+            aria-label="Download size"
           >
             <SelectValue />
           </SelectTrigger>

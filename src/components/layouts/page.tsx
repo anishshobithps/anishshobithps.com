@@ -158,7 +158,7 @@ export function Panel({ className, ...props }: ComponentPropsWithRef<"div">) {
   );
 }
 
-export const panelRow =
+const panelRow =
   "rounded-panel bg-background px-gutter first:rounded-t-none last:rounded-b-none";
 
 export function PanelRow({

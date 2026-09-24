@@ -30,7 +30,7 @@ export default function BrandingPage() {
   return (
     <>
       <Section aria-label="Brand System">
-        <SectionHeader>Brand System</SectionHeader>
+        <SectionHeader as="p">Brand System</SectionHeader>
         <HeroWithArt art={<PageArt name="branding" />}>
           <TypographyH1>Brand Infrastructure</TypographyH1>
           <TypographyLead>
@@ -50,19 +50,19 @@ export default function BrandingPage() {
           {[
             {
               title: "Heading One",
-              component: <TypographyH1>I Shipped It</TypographyH1>,
+              component: <TypographyH1 as="p">I Shipped It</TypographyH1>,
             },
             {
               title: "Heading Two",
-              component: <TypographyH2>It Worked Locally</TypographyH2>,
+              component: <TypographyH2 as="p">It Worked Locally</TypographyH2>,
             },
             {
               title: "Heading Three",
-              component: <TypographyH3>Something&apos;s On Fire</TypographyH3>,
+              component: <TypographyH3 as="p">Something&apos;s On Fire</TypographyH3>,
             },
             {
               title: "Heading Four",
-              component: <TypographyH4>Blame The Cache</TypographyH4>,
+              component: <TypographyH4 as="p">Blame The Cache</TypographyH4>,
             },
             {
               title: "Paragraph",

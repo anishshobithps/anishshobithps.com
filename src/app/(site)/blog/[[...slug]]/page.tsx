@@ -108,7 +108,7 @@ export default async function Page(props: {
           { name: page.data.title, url: postUrl },
         ]}
       />
-      <Section variant="nav" aria-label="Post navigation">
+      <Section variant="nav">
         <BlogPostNav
           pageUrl={postUrl}
           title={page.data.title}
@@ -123,10 +123,7 @@ export default async function Page(props: {
             <TypographyH1>{page.data.title}</TypographyH1>
           </ViewTransition>
 
-          <div
-            className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
-            aria-label="Post metadata"
-          >
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2">
             <address className="not-italic contents">
               <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
                 <Link
@@ -139,11 +136,9 @@ export default async function Page(props: {
               </TypographyMuted>
             </address>
             {page.data.date && (
-              <TypographyMuted
-                className="font-mono text-xs flex items-center gap-1.5"
-                aria-label={`Published on ${formatLongDate(page.data.date)}`}
-              >
+              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
                 <CalendarIcon className="size-3.5 shrink-0" aria-hidden="true" />
+                <span className="sr-only">Published </span>
 
                 <time dateTime={toISOString(page.data.date)}>
                   {formatLongDate(page.data.date)}
@@ -151,10 +146,7 @@ export default async function Page(props: {
               </TypographyMuted>
             )}
             {page.data.lastModified && (
-              <TypographyMuted
-                className="font-mono text-xs flex items-center gap-1.5"
-                aria-label={`Last updated ${formatShortDate(page.data.lastModified)}`}
-              >
+              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
                 <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
                 Updated{" "}
                 <time dateTime={toISOString(page.data.lastModified)}>
@@ -163,18 +155,12 @@ export default async function Page(props: {
               </TypographyMuted>
             )}
             {readingTime && (
-              <TypographyMuted
-                className="font-mono text-xs flex items-center gap-1.5"
-                aria-label={`Reading time: ${readingTime.text}`}
-              >
+              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
                 <ClockIcon className="size-3.5 shrink-0" aria-hidden="true" />
                 {readingTime.text}
               </TypographyMuted>
             )}
-            <TypographyMuted
-              className="font-mono tabular-nums text-xs flex items-center gap-1.5"
-              aria-label={`${reads} ${reads === 1 ? "read" : "reads"}`}
-            >
+            <TypographyMuted className="font-mono tabular-nums text-xs flex items-center gap-1.5">
               <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
               {reads} {reads === 1 ? "read" : "reads"}
             </TypographyMuted>
@@ -227,8 +213,9 @@ export default async function Page(props: {
         </Suspense>
       </Section>
 
-      <Section variant="nav" aria-label="Post navigation">
+      <Section variant="nav">
         <BlogPostNav
+          label="More posts"
           pageUrl={postUrl}
           title={page.data.title}
           prevPost={prevPost}

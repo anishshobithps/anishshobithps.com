@@ -23,7 +23,7 @@ const headingVariants = cva(
 type HeadingProps = HTMLAttributes<HTMLHeadingElement> &
   VariantProps<typeof headingVariants> &
   AsChildProps & {
-    as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "div";
   };
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
@@ -244,14 +244,14 @@ SectionLabel.displayName = "SectionLabel";
 export function SectionHeader({
   children,
   className,
-}: HTMLAttributes<HTMLDivElement>) {
+  as: Tag = "h2",
+}: HTMLAttributes<HTMLDivElement> & { as?: "h2" | "p" }) {
   return (
-    <div
-      className={cn("flex items-center gap-3 mb-10", className)}
-      aria-hidden="true"
-    >
-      <SectionLabel>{children}</SectionLabel>
-      <div className="flex-1 h-px bg-border/40" />
+    <div className={cn("flex items-center gap-3 mb-10", className)}>
+      <SectionLabel asChild aria-hidden={undefined}>
+        <Tag>{children}</Tag>
+      </SectionLabel>
+      <div aria-hidden="true" className="flex-1 h-px bg-border/40" />
     </div>
   );
 }
