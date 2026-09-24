@@ -36,7 +36,7 @@ function NavPin({ className }: { className?: string }) {
       viewBox="0 0 16 16"
       aria-hidden="true"
       className={cn(
-        "nav-pin pointer-events-none size-4 overflow-visible",
+        "pointer-events-none size-4 origin-[3px_14px] animate-pin-drop overflow-visible",
         className,
       )}
     >
@@ -152,7 +152,7 @@ export function Header() {
                       <NavigationMenuLink
                         href={link.href}
                         data-current={active || undefined}
-                        className="nav-note relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-[color,background-color,rotate] data-current:-rotate-2 data-current:bg-(--brand)/10 data-current:font-medium data-current:text-foreground data-current:ring-1 data-current:ring-(--brand)/35 data-current:hover:rotate-0 data-current:hover:bg-(--brand)/15"
+                        className="relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-[color,background-color,rotate] data-current:-rotate-2 data-current:bg-(--brand)/10 data-current:font-medium data-current:text-foreground data-current:ring-1 data-current:ring-(--brand)/35 data-current:hover:rotate-0 data-current:hover:bg-(--brand)/15 data-current:animate-note-swing"
                         aria-current={
                           pathname === link.href
                             ? "page"

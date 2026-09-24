@@ -145,7 +145,7 @@ export function BuiltThings() {
       <Suspense fallback={<ProjectsSkeleton count={4} />}>
         <ProjectGrid headingLevel="h3" />
       </Suspense>
-      <Reveal className="iso-trigger mt-16 flex flex-col items-center gap-6 text-center">
+      <Reveal className="group/iso mt-16 flex flex-col items-center gap-6 text-center">
         <IsoStage className="w-full max-w-xl">
           <GitChaos />
         </IsoStage>

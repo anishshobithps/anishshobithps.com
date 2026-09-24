@@ -5,6 +5,7 @@ import { LogoMascot } from "@/components/shared/logo-mascot";
 import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+import { gitDraw, gitPop } from "@/components/diagrams/classes";
 import { cn } from "@/lib/cn";
 import type { CSSProperties } from "react";
 
@@ -26,16 +27,19 @@ function FinishLine() {
           fill="none"
           strokeWidth="1.5"
           strokeLinecap="round"
-          className="git-draw stroke-border"
+          className={cn(gitDraw, "stroke-border")}
           style={delay(100)}
         />
       </svg>
       <div
-        className="git-pop absolute right-1 bottom-1.5 flex origin-bottom items-end gap-0.5"
+        className={cn(
+          gitPop,
+          "absolute right-1 bottom-1.5 flex origin-bottom items-end gap-0.5",
+        )}
         style={delay(900)}
       >
         <svg viewBox="0 0 16 30" className="h-7.5 w-4 overflow-visible">
-          <g className="hub-flag hub-flag-done">
+          <g className="[transform-box:fill-box] origin-bottom-left animate-flag-wave">
             <path
               d="M3 29 V3"
               strokeWidth="1.4"

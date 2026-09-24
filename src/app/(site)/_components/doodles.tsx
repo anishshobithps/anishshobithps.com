@@ -1,4 +1,6 @@
 import { SectionLabel } from "@/components/ui/typography";
+import { gitDraw, nudgeDraw } from "@/components/diagrams/classes";
+import { cn } from "@/lib/cn";
 import type { CSSProperties } from "react";
 
 function delay(ms: number) {
@@ -22,7 +24,7 @@ export function PhotoCallout() {
         <path
           d="M26 6 C14 6, 5 14, 4 35 M0.5 29 L4 35 L8.5 29.5"
           pathLength={1}
-          className="nudge-draw stroke-(--brand)"
+          className={cn(nudgeDraw, "stroke-(--brand)")}
           style={delay(900)}
           {...stroke}
         />
@@ -51,7 +53,7 @@ export function IceCreamNote() {
         <circle cx="6" cy="6" r="0.7" className="fill-foreground/70" />
         <circle cx="9.6" cy="5" r="0.7" className="fill-foreground/70" />
         <circle cx="8.6" cy="9" r="0.7" className="fill-foreground/70" />
-        <circle cx="10.6" cy="15.6" r="0.75" className="doodle-drip fill-(--brand)" />
+        <circle cx="10.6" cy="15.6" r="0.75" className="[transform-box:fill-box] animate-doodle-drip fill-(--brand)" />
       </svg>
       <SectionLabel pixel asChild aria-hidden={undefined}>
         <span>runs on ice cream</span>
@@ -70,7 +72,7 @@ export function SocialsNudge() {
         <path
           d="M20 26 C10 24, 5 16, 5 3 M1.5 8.5 L5 3 L9 8"
           pathLength={1}
-          className="git-draw stroke-(--brand)"
+          className={cn(gitDraw, "stroke-(--brand)")}
           style={{ "--git-delay": "500ms" } as CSSProperties}
           {...stroke}
         />

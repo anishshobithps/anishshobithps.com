@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/cn";
 import { type ComponentProps, useEffect, useRef } from "react";
 
 interface IsoStageProps extends ComponentProps<"div"> {
@@ -16,7 +15,7 @@ export function IsoStage({ ambient = false, className, ...props }: IsoStageProps
     if (!window.matchMedia("(hover: none)").matches) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => el.toggleAttribute("data-active", entry.isIntersecting),
+      ([entry]) => el.toggleAttribute("data-iso-active", entry.isIntersecting),
       { threshold: ambient ? 0.2 : 0.6 },
     );
 
@@ -27,8 +26,8 @@ export function IsoStage({ ambient = false, className, ...props }: IsoStageProps
   return (
     <div
       ref={ref}
-      data-ambient={ambient || undefined}
-      className={cn("iso iso-stage", className)}
+      data-iso-ambient={ambient || undefined}
+      className={className}
       {...props}
     />
   );

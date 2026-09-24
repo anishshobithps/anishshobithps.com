@@ -103,7 +103,7 @@ function DragTip() {
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray="2 2.5"
-          className="mascot-drag stroke-(--brand)"
+          className="animate-mascot-march stroke-(--brand)"
         />
       </svg>
       <Text as="p" variant="muted" className="text-xs">
@@ -321,7 +321,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
       {...handlers}
       onClick={toggle}
       className={cn(
-        "fab size-12 touch-none rounded-full border border-border bg-background/90 shadow-lg backdrop-blur-md transition-[transform,box-shadow,border-color] select-none hover:bg-background/90",
+        "group/fab size-12 touch-none rounded-full border border-border bg-background/90 shadow-lg backdrop-blur-md transition-[transform,box-shadow,border-color] select-none hover:bg-background/90",
         dragging
           ? "scale-105 cursor-grabbing shadow-xl"
           : "cursor-grab hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.96]",

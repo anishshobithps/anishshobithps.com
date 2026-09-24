@@ -525,795 +525,367 @@ html[data-theme-transition]::view-transition-new(root) {
   }
 }
 
-@layer components {
-  .iso {
-    --iso-stroke: color-mix(in oklab, var(--foreground) 45%, transparent);
-    --iso-top: color-mix(in oklab, var(--foreground) 6%, var(--background));
-    --iso-left: color-mix(in oklab, var(--foreground) 3%, var(--background));
-    --iso-right: var(--background);
-    --iso-dot: color-mix(in oklab, var(--foreground) 28%, transparent);
-  }
+@theme inline {
+  --animate-iso-march: iso-march 0.9s linear infinite;
+  --animate-iso-twinkle: iso-twinkle 3s ease-in-out infinite;
+  --animate-iso-ripple: iso-ripple 1.8s ease-out infinite;
+  --animate-iso-float: iso-float 5s ease-in-out infinite;
+  --animate-iso-print: iso-print 3.6s ease-out infinite;
+  --animate-iso-shadow: iso-shadow 5s ease-in-out infinite;
+  --animate-nudge-draw: nudge-draw 1.2s cubic-bezier(0.6, 0, 0.2, 1) var(--nudge-delay, 0ms) forwards;
+  --animate-nudge-draw-loop: nudge-draw-loop 3.2s ease-in-out infinite;
+  --animate-nudge-pop: nudge-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) var(--nudge-delay, 0ms) forwards;
+  --animate-nudge-pop-loop: nudge-pop-loop 3.2s ease-in-out infinite;
+  --animate-nudge-type: nudge-type 0.45s ease-out var(--nudge-delay, 0ms) forwards;
+  --animate-nudge-type-loop: nudge-type-loop 3.2s ease-out calc(var(--i, 0) * 180ms) infinite;
+  --animate-nudge-blink: nudge-blink 1s steps(1) infinite;
+  --animate-git-draw: nudge-draw 0.9s cubic-bezier(0.6, 0, 0.2, 1) var(--git-delay, 0ms) forwards;
+  --animate-git-pop: nudge-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) var(--git-delay, 0ms) forwards;
+  --animate-git-fade: git-fade 0.6s ease-out var(--git-delay, 0ms) forwards;
+  --animate-neon-sway: neon-sway 4s ease-in-out infinite;
+  --animate-neon-swing: neon-swing 0.9s ease-in-out infinite;
+  --animate-neon-flicker: neon-flicker 1.4s steps(1) 0.6s both;
+  --animate-plank-nudge: plank-nudge 5s ease-in-out 2s infinite;
+  --animate-pin-bounce: pin-bounce 1.6s ease-in-out infinite;
+  --animate-doodle-drip: doodle-drip 3.2s ease-in 1.2s infinite both;
+  --animate-mascot-blink: mascot-blink 4.8s ease-in-out infinite;
+  --animate-mascot-wave: mascot-wave 2.6s ease-in-out 0.4s infinite;
+  --animate-mascot-march: mascot-march 1.2s linear infinite;
+  --animate-flag-wave: hub-flag-wave 1.4s ease-in-out infinite;
+  --animate-chirp: chirp 1.6s ease-out infinite;
+  --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
+  --animate-pin-drop: nav-pin-drop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.15s backwards;
+  --animate-note-swing: nav-note-swing 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) 0.3s backwards;
 
-  .iso [data-tone="accent"] {
-    --iso-stroke: var(--brand);
-    --iso-top: color-mix(in oklab, var(--brand) 16%, var(--background));
-    --iso-left: color-mix(in oklab, var(--brand) 8%, var(--background));
-    --iso-right: color-mix(in oklab, var(--brand) 4%, var(--background));
-  }
-
-  .iso [data-tone="ghost"] {
-    --iso-stroke: color-mix(in oklab, var(--foreground) 28%, transparent);
-    --iso-top: transparent;
-    --iso-left: transparent;
-    --iso-right: transparent;
-  }
-
-  .iso-canvas {
-    background-image: radial-gradient(
-      color-mix(in oklab, var(--foreground) 9%, transparent) 1px,
-      transparent 1px
-    );
-    background-size: 16px 16px;
-    background-position: center;
-  }
-
-  .iso-face {
-    stroke: var(--iso-stroke);
-    stroke-width: 1;
-    stroke-linejoin: round;
-  }
-
-  .iso-face-top {
-    fill: var(--iso-top);
-  }
-
-  .iso-face-left {
-    fill: var(--iso-left);
-  }
-
-  .iso-face-right {
-    fill: var(--iso-right);
-  }
-
-  [data-tone="ghost"] > .iso-face,
-  .iso-plate {
-    stroke-dasharray: 3 3;
-  }
-
-  .iso-plate {
-    fill: color-mix(in oklab, var(--foreground) 2%, transparent);
-    stroke: color-mix(in oklab, var(--foreground) 25%, transparent);
-  }
-
-  .iso-flow,
-  .iso-arrow,
-  .iso-guide {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .iso-flow {
-    stroke: var(--iso-stroke);
-    stroke-width: 1.25;
-    stroke-dasharray: 1 5;
-    animation: iso-march 0.9s linear infinite paused;
-  }
-
-  .iso-arrow {
-    stroke: var(--iso-stroke);
-    stroke-width: 1.25;
-  }
-
-  .iso-guide {
-    stroke: color-mix(in oklab, var(--foreground) 20%, transparent);
-    stroke-width: 1;
-    stroke-dasharray: 2 4;
-  }
-
-  .iso-dot {
-    fill: var(--iso-dot);
-  }
-
-  .iso-dot-lit {
-    fill: var(--brand);
-    animation: iso-twinkle 3s ease-in-out infinite paused;
-  }
-
-  .iso-ripple {
-    fill: none;
-    stroke: var(--brand);
-    stroke-width: 1;
-    opacity: 0;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  .iso-shadow {
-    fill: color-mix(in oklab, var(--foreground) 9%, transparent);
-    transform-box: fill-box;
-    transform-origin: center;
-    transition: scale 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  .iso-print {
-    fill: color-mix(in oklab, var(--foreground) 35%, transparent);
-  }
-
-  .iso-print[data-tone="accent"] {
-    fill: var(--brand);
-  }
-
-  .iso-print[data-tone="ghost"] {
-    fill: color-mix(in oklab, var(--foreground) 16%, transparent);
-  }
-
-  .iso-lift {
-    transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
-    transition-delay: var(--delay, 0ms);
-  }
-
-  .iso-stage[data-active] :is(.iso-flow, .iso-dot-lit) {
-    animation-play-state: running;
-  }
-
-  .iso-stage[data-active] .iso-ripple {
-    animation: iso-ripple 1.8s ease-out infinite;
-  }
-
-  .iso-stage[data-active] .iso-lift {
-    transform: translateY(var(--lift));
-  }
-
-  .iso-stage[data-ambient][data-active] .iso-lift {
-    animation: iso-float 5s ease-in-out infinite;
-    animation-delay: calc(var(--delay, 0ms) * 4);
-  }
-
-  .iso-stage[data-active] .iso-shadow {
-    scale: 0.75;
-  }
-
-  .iso-stage[data-active] .iso-print {
-    animation: iso-print 3.6s ease-out infinite;
-    animation-delay: calc(var(--i, 0) * 180ms);
-  }
-
-  .iso-stage[data-ambient][data-active] .iso-shadow {
-    animation: iso-shadow 5s ease-in-out infinite;
-  }
-
-  .iso-text,
-  .iso-label {
-    @apply font-pixel;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .iso-text {
-    fill: color-mix(in oklab, var(--foreground) 75%, transparent);
-  }
-
-  .iso-label {
-    fill: var(--muted-foreground);
-  }
-
-  :is(.iso-text, .iso-label)[data-tone="accent"] {
-    fill: var(--brand-text);
-  }
-
-  .iso-text[data-tone="muted"] {
-    fill: var(--muted-foreground);
-  }
-
-  .iso-label[data-tone="default"] {
-    fill: var(--foreground);
-  }
-
-  .iso-leader {
-    fill: none;
-    stroke: color-mix(in oklab, var(--foreground) 25%, transparent);
-    stroke-width: 1;
-  }
-
-  .iso-node {
-    fill: var(--background);
-    stroke: var(--iso-stroke);
-  }
-
-  .hero-art-grid {
-    mask-image: radial-gradient(closest-side, black 55%, transparent);
-  }
-
-  @media (hover: hover) {
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage :is(.iso-flow, .iso-dot-lit) {
-      animation-play-state: running;
+  @keyframes chirp {
+    0%,
+    100% {
+      opacity: 0;
     }
 
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage .iso-ripple {
-      animation: iso-ripple 1.8s ease-out infinite;
-    }
-
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage .iso-lift {
-      transform: translateY(var(--lift));
-    }
-
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage[data-ambient] .iso-lift {
-      animation: iso-float 5s ease-in-out infinite;
-      animation-delay: calc(var(--delay, 0ms) * 4);
-    }
-
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage .iso-shadow {
-      scale: 0.75;
-    }
-
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage .iso-print {
-      animation: iso-print 3.6s ease-out infinite;
-      animation-delay: calc(var(--i, 0) * 180ms);
-    }
-
-    .iso-trigger:is(:hover, :focus-visible) .iso-stage[data-ambient] .iso-shadow {
-      animation: iso-shadow 5s ease-in-out infinite;
-    }
-  }
-}
-
-@layer components {
-  .nudge-draw {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: nudge-draw 1.2s cubic-bezier(0.6, 0, 0.2, 1) var(--nudge-delay, 0ms) forwards;
-  }
-
-  .nudge-pop,
-  .nudge-type {
-    transform-box: fill-box;
-  }
-
-  .nudge-pop {
-    transform-origin: center;
-    scale: 0;
-    animation: nudge-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) var(--nudge-delay, 0ms) forwards;
-  }
-
-  .nudge-type {
-    transform-origin: left center;
-    scale: 0 1;
-    animation: nudge-type 0.45s ease-out var(--nudge-delay, 0ms) forwards;
-  }
-
-  .nudge-blink {
-    animation: nudge-blink 1s steps(1) infinite;
-  }
-
-  .nudge-ribbon {
-    transition: translate 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  .iso-stage[data-active] .nudge-draw {
-    animation: nudge-draw-loop 3.2s ease-in-out infinite;
-  }
-
-  .iso-stage[data-active] .nudge-pop {
-    animation: nudge-pop-loop 3.2s ease-in-out infinite;
-  }
-
-  .iso-stage[data-active] .nudge-type {
-    animation: nudge-type-loop 3.2s ease-out calc(var(--i, 0) * 180ms) infinite;
-  }
-
-  .iso-stage[data-active] .nudge-ribbon {
-    translate: 0 4px;
-  }
-
-  @media (hover: hover) {
-    .nudge-card:is(:hover, :focus-visible) .nudge-draw {
-      animation: nudge-draw-loop 3.2s ease-in-out infinite;
-    }
-
-    .nudge-card:is(:hover, :focus-visible) .nudge-pop {
-      animation: nudge-pop-loop 3.2s ease-in-out infinite;
-    }
-
-    .nudge-card:is(:hover, :focus-visible) .nudge-type {
-      animation: nudge-type-loop 3.2s ease-out calc(var(--i, 0) * 180ms) infinite;
-    }
-
-    .nudge-card:is(:hover, :focus-visible) .nudge-ribbon {
-      translate: 0 4px;
-    }
-  }
-}
-
-@layer components {
-  .git-draw {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: nudge-draw 0.9s cubic-bezier(0.6, 0, 0.2, 1) var(--git-delay, 0ms) forwards paused;
-  }
-
-  .git-pop {
-    transform-box: fill-box;
-    transform-origin: center;
-    scale: 0;
-    animation: nudge-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) var(--git-delay, 0ms) forwards paused;
-  }
-
-  .git-fade {
-    opacity: 0;
-    animation: git-fade 0.6s ease-out var(--git-delay, 0ms) forwards paused;
-  }
-
-  [data-revealed] :is(.git-draw, .git-pop, .git-fade) {
-    animation-play-state: running;
-  }
-}
-
-@layer components {
-  .neon-swing {
-    transform-box: view-box;
-    transform-origin: 22px 2.5px;
-    animation: neon-sway 4s ease-in-out infinite;
-  }
-
-  .neon-glow {
-    filter: drop-shadow(0 0 3px var(--color-available));
-    animation: neon-flicker 1.4s steps(1) 0.6s both;
-  }
-
-  .neon-trigger:is(:hover, :focus-visible) .neon-swing {
-    animation: neon-swing 0.9s ease-in-out infinite;
-  }
-
-  .plank-nudge {
-    animation: plank-nudge 5s ease-in-out 2s infinite;
-  }
-
-  .plank-nudge:is(:hover, :focus-visible) {
-    animation: none;
-  }
-
-  .pin-bounce {
-    animation: pin-bounce 1.6s ease-in-out infinite;
-  }
-
-  .mascot-eye {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: mascot-blink 4.8s ease-in-out infinite;
-  }
-
-  .mascot-eyes {
-    transition: translate 200ms ease-out;
-  }
-
-  @media (hover: hover) {
-    .fab:hover .mascot-eyes {
-      translate: 0 -3px;
-    }
-  }
-
-  .mascot-arm {
-    transform-box: view-box;
-    transform-origin: 44px 42px;
-    animation: mascot-wave 2.6s ease-in-out 0.4s infinite;
-  }
-
-  .mascot-drag {
-    animation: mascot-march 1.2s linear infinite;
-  }
-
-  .hub-heart {
-    transform-box: fill-box;
-    transform-origin: center;
-    opacity: 0;
-    transition:
-      opacity 200ms ease-out,
-      translate 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  @media (hover: hover) {
-    .group:hover .hub-heart {
+    20%,
+    45% {
       opacity: 1;
-      translate: 1px -4px;
     }
   }
 
-  .hub-flag {
-    transform-box: fill-box;
-    transform-origin: left bottom;
-  }
-
-  .hub-flag-done {
-    animation: hub-flag-wave 1.4s ease-in-out infinite;
-  }
-
-  .mood-mouth {
-    transition:
-      d 220ms cubic-bezier(0.2, 0, 0, 1),
-      fill 200ms ease-out;
-  }
-
-  .chirp {
-    animation: chirp 1.6s ease-out infinite;
-  }
-
-  .typing-dot {
-    animation: typing-dot 1.2s ease-in-out infinite;
-  }
-
-  .nav-pin {
-    transform-origin: 3px 14px;
-    animation: nav-pin-drop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.15s backwards;
-  }
-
-  .nav-note[data-current] {
-    animation: nav-note-swing 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) 0.3s backwards;
-  }
-
-  .doodle-drip {
-    transform-box: fill-box;
-    animation: doodle-drip 3.2s ease-in 1.2s infinite both;
-  }
-}
-
-@keyframes neon-sway {
-  0%,
-  100% {
-    rotate: -2deg;
-  }
-
-  50% {
-    rotate: 2deg;
-  }
-}
-
-@keyframes neon-swing {
-  0%,
-  100% {
-    rotate: -9deg;
-  }
-
-  50% {
-    rotate: 9deg;
-  }
-}
-
-@keyframes neon-flicker {
-  0%,
-  12%,
-  30% {
-    opacity: 0.15;
-  }
-
-  8%,
-  22%,
-  40%,
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes plank-nudge {
-  0%,
-  84%,
-  100% {
-    rotate: var(--tilt);
-  }
-
-  88% {
-    rotate: calc(var(--tilt) + 5deg);
-  }
-
-  92% {
-    rotate: calc(var(--tilt) - 4deg);
-  }
+  @keyframes doodle-drip {
+    0%,
+    45% {
+      translate: 0 0;
+      opacity: 0;
+    }
 
-  96% {
-    rotate: calc(var(--tilt) + 2deg);
-  }
-}
+    55% {
+      opacity: 1;
+    }
 
-@keyframes pin-bounce {
-  0%,
-  100% {
-    translate: 0 0;
+    95%,
+    100% {
+      translate: 0 6px;
+      opacity: 0;
+    }
   }
 
-  50% {
-    translate: 0 -4px;
+  @keyframes git-fade {
+    to {
+      opacity: 1;
+    }
   }
-}
 
-@keyframes mascot-blink {
-  0%,
-  90%,
-  100% {
-    scale: 1 1;
-  }
+  @keyframes hub-flag-wave {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
 
-  94% {
-    scale: 1 0.12;
+    50% {
+      rotate: -8deg;
+    }
   }
-}
 
-@keyframes mascot-wave {
-  0%,
-  50%,
-  100% {
-    rotate: 0deg;
-  }
+  @keyframes iso-float {
+    0%,
+    100% {
+      translate: 0 0;
+    }
 
-  10%,
-  30% {
-    rotate: -20deg;
+    50% {
+      translate: 0 var(--lift);
+    }
   }
 
-  20%,
-  40% {
-    rotate: 12deg;
+  @keyframes iso-march {
+    to {
+      stroke-dashoffset: -12;
+    }
   }
-}
 
-@keyframes mascot-march {
-  to {
-    stroke-dashoffset: -9;
-  }
-}
+  @keyframes iso-print {
+    0% {
+      opacity: 0;
+    }
 
-@keyframes hub-flag-wave {
-  0%,
-  100% {
-    rotate: 0deg;
-  }
+    8%,
+    70% {
+      opacity: 1;
+    }
 
-  50% {
-    rotate: -8deg;
+    100% {
+      opacity: 0;
+    }
   }
-}
 
-@keyframes chirp {
-  0%,
-  100% {
-    opacity: 0;
-  }
+  @keyframes iso-ripple {
+    from {
+      opacity: 0.7;
+      transform: scale(1);
+    }
 
-  20%,
-  45% {
-    opacity: 1;
+    to {
+      opacity: 0;
+      transform: scale(2.2);
+    }
   }
-}
 
-@keyframes typing-dot {
-  0%,
-  60%,
-  100% {
-    translate: 0 0;
-    opacity: 0.45;
+  @keyframes iso-shadow {
+    0%,
+    100% {
+      scale: 1;
+      opacity: 1;
+    }
+
+    50% {
+      scale: 0.75;
+      opacity: 0.55;
+    }
   }
 
-  30% {
-    translate: 0 -2.5px;
-    opacity: 1;
-  }
-}
+  @keyframes iso-twinkle {
+    0%,
+    100% {
+      opacity: 0.2;
+    }
 
-@keyframes nav-pin-drop {
-  from {
-    translate: 5px -12px;
-    scale: 1.5;
-    opacity: 0;
+    50% {
+      opacity: 1;
+    }
   }
 
-  60% {
-    opacity: 1;
-  }
-}
+  @keyframes mascot-blink {
+    0%,
+    90%,
+    100% {
+      scale: 1 1;
+    }
 
-@keyframes nav-note-swing {
-  from {
-    rotate: 0deg;
+    94% {
+      scale: 1 0.12;
+    }
   }
 
-  55% {
-    rotate: -5deg;
+  @keyframes mascot-march {
+    to {
+      stroke-dashoffset: -9;
+    }
   }
-}
 
-@keyframes doodle-drip {
-  0%,
-  45% {
-    translate: 0 0;
-    opacity: 0;
-  }
+  @keyframes mascot-wave {
+    0%,
+    50%,
+    100% {
+      rotate: 0deg;
+    }
 
-  55% {
-    opacity: 1;
-  }
+    10%,
+    30% {
+      rotate: -20deg;
+    }
 
-  95%,
-  100% {
-    translate: 0 6px;
-    opacity: 0;
+    20%,
+    40% {
+      rotate: 12deg;
+    }
   }
-}
 
-@keyframes git-fade {
-  to {
-    opacity: 1;
-  }
-}
+  @keyframes nav-note-swing {
+    from {
+      rotate: 0deg;
+    }
 
-@keyframes nudge-draw {
-  to {
-    stroke-dashoffset: 0;
+    55% {
+      rotate: -5deg;
+    }
   }
-}
 
-@keyframes nudge-draw-loop {
-  0% {
-    stroke-dashoffset: 1;
-    opacity: 1;
-  }
+  @keyframes nav-pin-drop {
+    from {
+      translate: 5px -12px;
+      scale: 1.5;
+      opacity: 0;
+    }
 
-  45%,
-  85% {
-    stroke-dashoffset: 0;
-    opacity: 1;
+    60% {
+      opacity: 1;
+    }
   }
 
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-  }
-}
+  @keyframes neon-flicker {
+    0%,
+    12%,
+    30% {
+      opacity: 0.15;
+    }
 
-@keyframes nudge-pop {
-  to {
-    scale: 1;
+    8%,
+    22%,
+    40%,
+    100% {
+      opacity: 1;
+    }
   }
-}
 
-@keyframes nudge-pop-loop {
-  0%,
-  45% {
-    scale: 0;
-  }
+  @keyframes neon-sway {
+    0%,
+    100% {
+      rotate: -2deg;
+    }
 
-  55% {
-    scale: 1.25;
+    50% {
+      rotate: 2deg;
+    }
   }
 
-  62%,
-  88% {
-    scale: 1;
-  }
+  @keyframes neon-swing {
+    0%,
+    100% {
+      rotate: -9deg;
+    }
 
-  100% {
-    scale: 0;
+    50% {
+      rotate: 9deg;
+    }
   }
-}
 
-@keyframes nudge-type {
-  to {
-    scale: 1 1;
+  @keyframes nudge-blink {
+    50% {
+      opacity: 0;
+    }
   }
-}
 
-@keyframes nudge-type-loop {
-  0% {
-    scale: 0 1;
+  @keyframes nudge-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
   }
 
-  25%,
-  85% {
-    scale: 1 1;
-  }
+  @keyframes nudge-draw-loop {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 1;
+    }
 
-  100% {
-    scale: 0 1;
-  }
-}
+    45%,
+    85% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
 
-@keyframes nudge-blink {
-  50% {
-    opacity: 0;
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0;
+    }
   }
-}
 
-@keyframes iso-march {
-  to {
-    stroke-dashoffset: -12;
+  @keyframes nudge-pop {
+    to {
+      scale: 1;
+    }
   }
-}
 
-@keyframes iso-twinkle {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
+  @keyframes nudge-pop-loop {
+    0%,
+    45% {
+      scale: 0;
+    }
 
-  50% {
-    opacity: 1;
-  }
-}
+    55% {
+      scale: 1.25;
+    }
 
-@keyframes iso-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
+    62%,
+    88% {
+      scale: 1;
+    }
 
-  50% {
-    transform: translateY(var(--lift));
+    100% {
+      scale: 0;
+    }
   }
-}
 
-@keyframes iso-print {
-  0% {
-    opacity: 0;
+  @keyframes nudge-type {
+    to {
+      scale: 1 1;
+    }
   }
 
-  8%,
-  70% {
-    opacity: 1;
-  }
+  @keyframes nudge-type-loop {
+    0% {
+      scale: 0 1;
+    }
 
-  100% {
-    opacity: 0;
-  }
-}
+    25%,
+    85% {
+      scale: 1 1;
+    }
 
-@keyframes iso-shadow {
-  0%,
-  100% {
-    scale: 1;
-    opacity: 1;
+    100% {
+      scale: 0 1;
+    }
   }
 
-  50% {
-    scale: 0.75;
-    opacity: 0.55;
-  }
-}
+  @keyframes pin-bounce {
+    0%,
+    100% {
+      translate: 0 0;
+    }
 
-@keyframes iso-ripple {
-  from {
-    opacity: 0.7;
-    transform: scale(1);
+    50% {
+      translate: 0 -4px;
+    }
   }
 
-  to {
-    opacity: 0;
-    transform: scale(2.2);
-  }
-}
+  @keyframes plank-nudge {
+    0%,
+    84%,
+    100% {
+      rotate: var(--tilt);
+    }
 
-@media (prefers-reduced-motion: reduce) {
-  :is(.nudge-draw, .nudge-pop, .nudge-type, .nudge-blink, .git-draw, .git-pop, .git-fade) {
-    animation: none !important;
-    stroke-dashoffset: 0;
-    scale: 1;
-    opacity: 1;
-  }
+    88% {
+      rotate: calc(var(--tilt) + 5deg);
+    }
 
-  .nudge-ribbon,
-  .mood-mouth {
-    transition: none;
-  }
+    92% {
+      rotate: calc(var(--tilt) - 4deg);
+    }
 
-  :is(.neon-swing, .neon-glow, .plank-nudge, .pin-bounce, .doodle-drip, .nav-pin, .nav-note, .mascot-eye, .mascot-arm, .mascot-drag, .hub-flag-done, .chirp, .typing-dot) {
-    animation: none !important;
+    96% {
+      rotate: calc(var(--tilt) + 2deg);
+    }
   }
 
-  .iso-stage :is(.iso-flow, .iso-dot-lit, .iso-ripple, .iso-print) {
-    animation: none !important;
-  }
+  @keyframes typing-dot {
+    0%,
+    60%,
+    100% {
+      translate: 0 0;
+      opacity: 0.45;
+    }
 
-  .iso-stage :is(.iso-lift, .iso-shadow) {
-    transition: none;
-    transform: none !important;
-    scale: none !important;
-    animation: none !important;
+    30% {
+      translate: 0 -2.5px;
+      opacity: 1;
+    }
   }
 }

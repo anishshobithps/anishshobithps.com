@@ -68,7 +68,7 @@ export function ReadingProgress() {
           strokeDasharray={`${progress} 1`}
           className="stroke-(--brand) transition-[stroke-dasharray] duration-300"
         />
-        <g className={cn("hub-flag", done && "hub-flag-done")}>
+        <g className={cn("[transform-box:fill-box] origin-bottom-left", done && "animate-flag-wave")}>
           <path
             d="M186 15 V2"
             strokeWidth="1.3"
@@ -135,7 +135,7 @@ export function CommentBubble({ count }: { count: number | null }) {
       )}
       <path
         d="M24 5.5 l-2.6 -2.4 a1.5 1.5 0 0 1 2.6 -1.9 a1.5 1.5 0 0 1 2.6 1.9 z"
-        className="hub-heart fill-rose-500"
+        className="[transform-box:fill-box] origin-center fill-rose-500 opacity-0 transition-[opacity,translate] duration-300 ease-out group-hover:translate-x-px group-hover:-translate-y-1 group-hover:opacity-100"
       />
     </svg>
   );

@@ -1,5 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import {
+  isoPlay,
+  isoRipple,
+  isoTwinkle,
+  isoType,
+} from "@/components/diagrams/classes";
 
 export type Vec3 = readonly [number, number, number];
 type Vec2 = readonly [number, number];
@@ -32,6 +38,65 @@ function toPoints(p: Projector, list: Vec3[]) {
     .join(" ");
 }
 
+const TONES: Record<
+  Tone,
+  { stroke: string; top: string; left: string; right: string }
+> = {
+  default: {
+    stroke: "stroke-foreground/45",
+    top: "fill-[color-mix(in_oklab,var(--foreground)_6%,var(--background))]",
+    left: "fill-[color-mix(in_oklab,var(--foreground)_3%,var(--background))]",
+    right: "fill-background",
+  },
+  accent: {
+    stroke: "stroke-(--brand)",
+    top: "fill-[color-mix(in_oklab,var(--brand)_16%,var(--background))]",
+    left: "fill-[color-mix(in_oklab,var(--brand)_8%,var(--background))]",
+    right: "fill-[color-mix(in_oklab,var(--brand)_4%,var(--background))]",
+  },
+  ghost: {
+    stroke: "stroke-foreground/28 [stroke-dasharray:3_3]",
+    top: "fill-transparent",
+    left: "fill-transparent",
+    right: "fill-transparent",
+  },
+};
+
+function face(tone: Tone, side: "top" | "left" | "right") {
+  return cn("stroke-1 [stroke-linejoin:round]", TONES[tone].stroke, TONES[tone][side]);
+}
+
+const LINE = "fill-none [stroke-linecap:round] [stroke-linejoin:round]";
+const GUIDE = cn(LINE, "stroke-foreground/20 stroke-1 [stroke-dasharray:2_4]");
+const DOT = "fill-foreground/28";
+
+const TEXT_TONES = {
+  default: "fill-foreground/75",
+  muted: "fill-muted-foreground",
+  accent: "fill-(--brand-text)",
+} as const;
+
+const LABEL_TONES = {
+  default: "fill-foreground",
+  muted: "fill-muted-foreground",
+  accent: "fill-(--brand-text)",
+} as const;
+
+const ACTIVE_LIFT =
+  "transition-transform duration-600 ease-[cubic-bezier(0.2,0.8,0.2,1)] delay-(--delay) in-data-iso-active:translate-y-(--lift) group-hover/iso:translate-y-(--lift) group-focus-visible/iso:translate-y-(--lift) in-data-iso-ambient:in-data-iso-active:animate-iso-float in-data-iso-ambient:group-hover/iso:animate-iso-float in-data-iso-ambient:group-focus-visible/iso:animate-iso-float";
+
+const SHADOW =
+  "fill-foreground/9 [transform-box:fill-box] origin-center transition-[scale] duration-600 ease-[cubic-bezier(0.2,0.8,0.2,1)] in-data-iso-active:scale-75 group-hover/iso:scale-75 group-focus-visible/iso:scale-75 in-data-iso-ambient:in-data-iso-active:animate-iso-shadow in-data-iso-ambient:group-hover/iso:animate-iso-shadow in-data-iso-ambient:group-focus-visible/iso:animate-iso-shadow";
+
+const PRINT =
+  "in-data-iso-active:animate-iso-print group-hover/iso:animate-iso-print group-focus-visible/iso:animate-iso-print";
+
+const PRINT_TONES = {
+  default: "fill-foreground/35",
+  accent: "fill-(--brand)",
+  ghost: "fill-foreground/16",
+} as const;
+
 function ellipseRadii(p: Projector, radius: number): Vec2 {
   return [Math.SQRT2 * COS * radius * p.scale, (radius / Math.SQRT2) * p.scale];
 }
@@ -46,9 +111,9 @@ interface IsoBoxProps {
 export function IsoBox({ p, at: [x, y, z], size: [w, d, h], tone = "default" }: IsoBoxProps) {
   const t = z + h;
   return (
-    <g data-tone={tone}>
+    <g>
       <polygon
-        className="iso-face iso-face-left"
+        className={face(tone, "left")}
         points={toPoints(p, [
           [x, y + d, z],
           [x + w, y + d, z],
@@ -57,7 +122,7 @@ export function IsoBox({ p, at: [x, y, z], size: [w, d, h], tone = "default" }: 
         ])}
       />
       <polygon
-        className="iso-face iso-face-right"
+        className={face(tone, "right")}
         points={toPoints(p, [
           [x + w, y, z],
           [x + w, y + d, z],
@@ -66,7 +131,7 @@ export function IsoBox({ p, at: [x, y, z], size: [w, d, h], tone = "default" }: 
         ])}
       />
       <polygon
-        className="iso-face iso-face-top"
+        className={face(tone, "top")}
         points={toPoints(p, [
           [x, y, t],
           [x + w, y, t],
@@ -98,9 +163,9 @@ export function IsoCylinder({
   const [tx, ty] = project(p, [cx, cy, cz + height]);
   const side = `M${bx - rx},${ty} L${bx - rx},${by} A${rx},${ry} 0 0 0 ${bx + rx},${by} L${bx + rx},${ty} Z`;
   return (
-    <g data-tone={tone}>
-      <path className="iso-face iso-face-right" d={side} />
-      <ellipse className="iso-face iso-face-top" cx={tx} cy={ty} rx={rx} ry={ry} />
+    <g>
+      <path className={face(tone, "right")} d={side} />
+      <ellipse className={face(tone, "top")} cx={tx} cy={ty} rx={rx} ry={ry} />
     </g>
   );
 }
@@ -128,19 +193,17 @@ export function IsoCone({ p, tip: [x, y, z], radius, height }: IsoConeProps) {
   ];
   return (
     <g>
-      <g data-tone="default">
-        <path className="iso-face iso-face-left" d={side} />
-        <path className="iso-guide" d={waffle} />
-      </g>
-      <g data-tone="accent">
-        <circle className="iso-face iso-face-top" cx={sx} cy={sy} r={r} />
+      <path className={face("default", "left")} d={side} />
+      <path className={GUIDE} d={waffle} />
+      <g>
+        <circle className={face("accent", "top")} cx={sx} cy={sy} r={r} />
         <path
-          className="iso-face iso-face-top"
+          className={face("accent", "top")}
           d={`M${sx + r * 0.35},${sy + r * 0.9} q${r * 0.12},${r * 0.55} 0,${r * 0.7} q${-r * 0.12},${-r * 0.15} 0,${-r * 0.7}`}
         />
       </g>
       {chips.map(([dx, dy]) => (
-        <circle key={`${dx}${dy}`} className="iso-dot" cx={sx + dx * r} cy={sy + dy * r} r={1} />
+        <circle key={`${dx}${dy}`} className={DOT} cx={sx + dx * r} cy={sy + dy * r} r={1} />
       ))}
     </g>
   );
@@ -160,7 +223,7 @@ export function IsoRipple({ p, center, radius }: IsoRippleProps) {
       {[0, 1].map((i) => (
         <ellipse
           key={i}
-          className="iso-ripple"
+          className={isoRipple}
           style={{ animationDelay: `${i * 0.9}s` }}
           cx={cx}
           cy={cy}
@@ -181,7 +244,7 @@ interface IsoShadowProps {
 export function IsoShadow({ p, center, radius }: IsoShadowProps) {
   const [rx, ry] = ellipseRadii(p, radius);
   const [cx, cy] = project(p, center);
-  return <ellipse className="iso-shadow" cx={cx} cy={cy} rx={rx} ry={ry} />;
+  return <ellipse className={SHADOW} cx={cx} cy={cy} rx={rx} ry={ry} />;
 }
 
 interface IsoPrintProps {
@@ -200,9 +263,8 @@ export function IsoPrint({ p, center, toward, radius, index, tone = "default" }:
   const size = radius * p.scale;
   return (
     <ellipse
-      className="iso-print"
-      data-tone={tone}
-      style={{ "--i": index } as CSSProperties}
+      className={cn(PRINT_TONES[tone], PRINT)}
+      style={{ animationDelay: `${index * 180}ms` }}
       rx={(size * 1.5).toFixed(2)}
       ry={(size * 0.75).toFixed(2)}
       transform={`translate(${cx.toFixed(2)} ${cy.toFixed(2)}) rotate(${angle.toFixed(2)})`}
@@ -221,10 +283,18 @@ export function IsoFlow({ p, points, tone = "default" }: IsoFlowProps) {
   const [px, py] = project(p, points[points.length - 2]);
   const angle = (Math.atan2(ey - py, ex - px) * 180) / Math.PI;
   return (
-    <g data-tone={tone}>
-      <polyline className="iso-flow" points={toPoints(p, points)} />
+    <g>
+      <polyline
+        className={cn(
+          LINE,
+          TONES[tone].stroke,
+          "[stroke-width:1.25] [stroke-dasharray:1_5] animate-iso-march",
+          isoPlay,
+        )}
+        points={toPoints(p, points)}
+      />
       <path
-        className="iso-arrow"
+        className={cn(LINE, TONES[tone].stroke, "[stroke-width:1.25]")}
         d="M-6,-3.5 L0,0 L-6,3.5"
         transform={`translate(${ex.toFixed(2)} ${ey.toFixed(2)}) rotate(${angle.toFixed(2)})`}
       />
@@ -241,7 +311,7 @@ interface IsoPlateProps {
 export function IsoPlate({ p, at: [x, y, z], size: [w, d] }: IsoPlateProps) {
   return (
     <polygon
-      className="iso-plate"
+      className="fill-foreground/2 stroke-foreground/25 [stroke-dasharray:3_3]"
       points={toPoints(p, [
         [x, y, z],
         [x + w, y, z],
@@ -297,7 +367,7 @@ export function IsoDots({
       {dots.map(({ cx, cy, on, delay }) => (
         <circle
           key={`${cx.toFixed(1)}-${cy.toFixed(1)}`}
-          className={cn("iso-dot", on && "iso-dot-lit")}
+          className={on ? isoTwinkle : DOT}
           style={on ? { animationDelay: `-${delay.toFixed(2)}s` } : undefined}
           cx={cx.toFixed(2)}
           cy={cy.toFixed(2)}
@@ -317,7 +387,7 @@ interface IsoGuideProps {
 export function IsoGuide({ p, from, to }: IsoGuideProps) {
   const [x1, y1] = project(p, from);
   const [x2, y2] = project(p, to);
-  return <line className="iso-guide" x1={x1} y1={y1} x2={x2} y2={y2} />;
+  return <line className={GUIDE} x1={x1} y1={y1} x2={x2} y2={y2} />;
 }
 
 interface IsoLiftProps {
@@ -329,8 +399,14 @@ interface IsoLiftProps {
 export function IsoLift({ lift, delay = 0, children }: IsoLiftProps) {
   return (
     <g
-      className="iso-lift"
-      style={{ "--lift": `${lift}px`, "--delay": `${delay}ms` } as CSSProperties}
+      className={ACTIVE_LIFT}
+      style={
+        {
+          "--lift": `${lift}px`,
+          "--delay": `${delay}ms`,
+          animationDelay: `${delay * 4}ms`,
+        } as CSSProperties
+      }
     >
       {children}
     </g>
@@ -345,9 +421,10 @@ interface IsoPathProps {
 
 export function IsoPath({ p, points, tone = "default" }: IsoPathProps) {
   return (
-    <g data-tone={tone}>
-      <polyline className="iso-arrow" points={toPoints(p, points)} />
-    </g>
+    <polyline
+      className={cn(LINE, TONES[tone].stroke, "[stroke-width:1.25]")}
+      points={toPoints(p, points)}
+    />
   );
 }
 
@@ -382,9 +459,7 @@ export function IsoFaceText({
   const [x, y] = project(p, at);
   return (
     <text
-      className="iso-text"
-      data-tone={tone}
-      style={keepCase ? { textTransform: "none" } : undefined}
+      className={cn(isoType, TEXT_TONES[tone], keepCase && "normal-case")}
       transform={`matrix(${a} ${b} ${c} ${d} ${x.toFixed(2)} ${y.toFixed(2)})`}
       fontSize={size}
       textAnchor="middle"
@@ -424,13 +499,23 @@ export function IsoLabel({
     <g>
       {leader && (
         <>
-          <line className="iso-leader" x1={x} y1={y} x2={x + dx} y2={y + dy} />
-          <circle className="iso-node" cx={x} cy={y} r={1.6} />
+          <line
+            className="fill-none stroke-foreground/25 stroke-1"
+            x1={x}
+            y1={y}
+            x2={x + dx}
+            y2={y + dy}
+          />
+          <circle
+            className="fill-background stroke-foreground/45"
+            cx={x}
+            cy={y}
+            r={1.6}
+          />
         </>
       )}
       <text
-        className="iso-label"
-        data-tone={tone}
+        className={cn(isoType, LABEL_TONES[tone])}
         x={x + dx + pad}
         y={y + dy}
         fontSize={size}

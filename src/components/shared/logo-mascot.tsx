@@ -37,7 +37,7 @@ function MascotEyeShapes({ eyes }: { eyes: MascotEyes }) {
       {[18, 35].map((x) => (
         <rect
           key={x}
-          className="mascot-eye"
+          className="[transform-box:fill-box] origin-center animate-mascot-blink"
           x={x}
           y={flat ? 37.5 : 36}
           width="11"
@@ -58,7 +58,7 @@ export function MascotFigure({
   return (
     <>
       <polygon points={MASCOT_POINTS} fill="currentColor" />
-      <g className="mascot-eyes">
+      <g className="transition-[translate] duration-200 ease-out group-hover/fab:-translate-y-[3px]">
         <MascotEyeShapes eyes={eyes} />
       </g>
       {mouth && (
@@ -68,7 +68,7 @@ export function MascotFigure({
           strokeWidth="2.2"
           strokeLinecap="round"
           className={cn(
-            "mood-mouth",
+            "transition-[d,fill] duration-200 ease-[cubic-bezier(0.2,0,0,1)]",
             mouthFilled ? "fill-(--brand)" : "fill-transparent",
           )}
         />
@@ -101,7 +101,7 @@ export function LogoMascot({
       className={cn("mascot shrink-0 overflow-visible", className)}
     >
       {waving && (
-        <g className="mascot-arm">
+        <g className="[transform-box:view-box] origin-[44px_42px] animate-mascot-wave">
           <path
             d="M44 42 L53 31"
             stroke="currentColor"

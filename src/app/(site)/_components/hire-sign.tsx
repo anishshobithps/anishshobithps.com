@@ -2,6 +2,7 @@
 
 import { ArrowRightIcon } from "@/components/shared/icons";
 import { cn } from "@/lib/cn";
+import { isoType } from "@/components/diagrams/classes";
 import { useEffect, useState } from "react";
 
 const PHRASES = [
@@ -15,14 +16,14 @@ function NeonSign() {
   return (
     <svg viewBox="0 0 44 30" aria-hidden="true" className="h-7.5 w-11 shrink-0 overflow-visible">
       <circle cx="22" cy="2.5" r="1.6" className="fill-muted-foreground" />
-      <g className="neon-swing">
+      <g className="[transform-box:view-box] origin-[22px_2.5px] animate-neon-sway group-hover:animate-neon-swing group-focus-visible:animate-neon-swing">
         <path
           d="M22 2.5 L9 11 M22 2.5 L35 11"
           fill="none"
           strokeWidth="0.8"
           className="stroke-muted-foreground"
         />
-        <g className="neon-glow">
+        <g className="drop-shadow-[0_0_3px_var(--color-available)] animate-neon-flicker">
           <rect
             x="3"
             y="11"
@@ -39,7 +40,7 @@ function NeonSign() {
             fontSize="9"
             textAnchor="middle"
             dominantBaseline="central"
-            className="iso-label fill-(--color-available)"
+            className={`${isoType} fill-(--color-available)`}
           >
             Open
           </text>
@@ -62,7 +63,7 @@ export function HireSign() {
     <a
       href="#contact"
       aria-label="Available for hire, jump to contact"
-      className="neon-trigger group inline-flex items-center gap-2.5 rounded-full border border-(--brand)/30 bg-(--brand)/8 py-1 pr-3 pl-1.5 text-xs font-medium text-(--brand-text) transition-colors hover:bg-(--brand)/15"
+      className="group inline-flex items-center gap-2.5 rounded-full border border-(--brand)/30 bg-(--brand)/8 py-1 pr-3 pl-1.5 text-xs font-medium text-(--brand-text) transition-colors hover:bg-(--brand)/15"
     >
       <NeonSign />
       <span aria-hidden="true" className="grid overflow-hidden">

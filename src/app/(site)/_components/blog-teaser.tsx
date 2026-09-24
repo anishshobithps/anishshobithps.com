@@ -30,7 +30,7 @@ export function BlogTeaser() {
   return (
     <Section aria-label="Recent writing">
       <TypographyH2 className="sr-only">Recent writing</TypographyH2>
-      <Reveal className="iso-trigger">
+      <Reveal className="group/iso">
         <div className="mb-8 grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_24rem]">
           <div className="flex min-w-0 flex-col items-start gap-6">
             <TypographyLead className="max-w-2xl">

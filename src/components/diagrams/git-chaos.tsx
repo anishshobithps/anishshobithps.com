@@ -1,5 +1,14 @@
 import type { CSSProperties } from "react";
 import { hash } from "./iso";
+import { cn } from "@/lib/cn";
+import {
+  gitDraw,
+  gitFade,
+  gitPop,
+  isoRipple,
+  isoTwinkle,
+  isoType,
+} from "@/components/diagrams/classes";
 
 const COLS = 42;
 const ROWS = 7;
@@ -87,7 +96,7 @@ export function GitChaos() {
         </mask>
       </defs>
 
-      <g mask="url(#git-chaos-mask)" className="git-fade" style={delay(0)}>
+      <g mask="url(#git-chaos-mask)" className={gitFade} style={delay(0)}>
         {cells.map(({ x, y, level, twinkle, delay: d }) => (
           <rect
             key={`${x}-${y}`}
@@ -96,7 +105,7 @@ export function GitChaos() {
             width={CELL}
             height={CELL}
             rx="2"
-            className={twinkle ? "iso-dot-lit" : LEVEL_CLASS[level]}
+            className={twinkle ? isoTwinkle : LEVEL_CLASS[level]}
             style={twinkle ? { animationDelay: `-${d.toFixed(2)}s` } : undefined}
           />
         ))}
@@ -108,7 +117,7 @@ export function GitChaos() {
         fill="none"
         strokeWidth="2"
         strokeLinecap="round"
-        className="git-draw stroke-foreground/40"
+        className={cn(gitDraw, "stroke-foreground/40")}
         style={delay(0)}
       />
       {branches.map(({ d, delay: ms, accent }) => (
@@ -119,7 +128,10 @@ export function GitChaos() {
           fill="none"
           strokeWidth="2"
           strokeLinecap="round"
-          className={`git-draw ${accent ? "stroke-(--brand)" : "stroke-foreground/30"}`}
+          className={cn(
+            gitDraw,
+            accent ? "stroke-(--brand)" : "stroke-foreground/30",
+          )}
           style={delay(ms)}
         />
       ))}
@@ -129,7 +141,7 @@ export function GitChaos() {
         strokeWidth="2"
         strokeDasharray="3 4"
         strokeLinecap="round"
-        className="git-fade stroke-foreground/30"
+        className={cn(gitFade, "stroke-foreground/30")}
         style={delay(1300)}
       />
 
@@ -140,17 +152,17 @@ export function GitChaos() {
           cy={y}
           r="5"
           strokeWidth="2"
-          className="git-pop fill-background stroke-foreground/55"
+          className={cn(gitPop, "fill-background stroke-foreground/55")}
           style={delay(ms)}
         />
       ))}
 
-      <circle cx="530" cy="75" r="7" className="iso-ripple" />
+      <circle cx="530" cy="75" r="7" className={isoRipple} />
       <circle
         cx="530"
         cy="75"
         r="7"
-        className="git-pop fill-(--brand)"
+        className={cn(gitPop, "fill-(--brand)")}
         style={delay(1600)}
       />
 
@@ -162,8 +174,11 @@ export function GitChaos() {
           fontSize="10"
           textAnchor={x > 500 ? "middle" : "start"}
           dominantBaseline="central"
-          data-tone={accent ? "accent" : "muted"}
-          className="iso-label git-fade"
+          className={cn(
+            isoType,
+            gitFade,
+            accent ? "fill-(--brand-text)" : "fill-muted-foreground",
+          )}
           style={delay(ms)}
         >
           {text}

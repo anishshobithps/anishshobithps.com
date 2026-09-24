@@ -6,6 +6,7 @@ import {
   TypographyMuted,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
+import { isoType } from "@/components/diagrams/classes";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -34,7 +35,7 @@ function plankClass({ index, accent }: Omit<PlankProps, "children">) {
       ? "left-[calc(50%-6px)] origin-left pr-6 pl-5 [clip-path:polygon(0_0,calc(100%-14px)_0,100%_50%,calc(100%-14px)_100%,0_100%)] hover:translate-x-1.5"
       : "right-[calc(50%-6px)] origin-right pr-5 pl-6 text-right [clip-path:polygon(14px_0,100%_0,100%_100%,14px_100%,0_50%)] hover:-translate-x-1.5",
     accent
-      ? "plank-nudge bg-(--brand) text-neutral-950 hover:bg-(--brand)/90"
+      ? "animate-plank-nudge hover:animate-none focus-visible:animate-none bg-(--brand) text-neutral-950 hover:bg-(--brand)/90"
       : "bg-secondary text-foreground hover:bg-muted",
   );
 }
@@ -74,14 +75,14 @@ function Signpost() {
       <path d="M131 14 L144 4 L157 14 Z" className="fill-muted-foreground/60" />
       <rect x="138" y="14" width="12" height="214" rx="2" className="fill-muted stroke-foreground/20" />
       <path d="M142 30 V210 M146 60 V190" strokeWidth="0.8" className="stroke-foreground/10" />
-      <g className="pin-bounce">
+      <g className="animate-pin-bounce">
         <path
           d="M232 222 c-6 -7 -9 -11 -9 -15 a9 9 0 0 1 18 0 c0 4 -3 8 -9 15 z"
           className="fill-(--brand)"
         />
         <circle cx="232" cy="207" r="3" className="fill-background" />
       </g>
-      <text x="232" y="242" fontSize="8" textAnchor="middle" className="iso-label">
+      <text x="232" y="242" fontSize="8" textAnchor="middle" className={`${isoType} fill-muted-foreground`}>
         you are here
       </text>
     </svg>

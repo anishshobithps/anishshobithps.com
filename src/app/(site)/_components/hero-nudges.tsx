@@ -1,9 +1,25 @@
 import { IsoStage } from "@/components/diagrams/iso-stage";
+import { isoCanvas, nudgeDraw } from "@/components/diagrams/classes";
+import { cn } from "@/lib/cn";
 import { ArrowRightIcon } from "@/components/shared/icons";
 import { SectionLabel, TypographySmall } from "@/components/ui/typography";
 import type { Route } from "next";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
+
+const DRAW_LOOP = cn(
+  nudgeDraw,
+  "in-data-iso-active:animate-nudge-draw-loop group-hover/nudge:animate-nudge-draw-loop group-focus-visible/nudge:animate-nudge-draw-loop",
+);
+
+const POP_LOOP =
+  "[transform-box:fill-box] origin-center scale-0 animate-nudge-pop in-data-iso-active:animate-nudge-pop-loop group-hover/nudge:animate-nudge-pop-loop group-focus-visible/nudge:animate-nudge-pop-loop motion-reduce:scale-100";
+
+const TYPE_LOOP =
+  "[transform-box:fill-box] origin-left scale-x-0 animate-nudge-type in-data-iso-active:animate-nudge-type-loop group-hover/nudge:animate-nudge-type-loop group-focus-visible/nudge:animate-nudge-type-loop motion-reduce:scale-x-100";
+
+const RIBBON =
+  "transition-[translate] duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] in-data-iso-active:translate-y-1 group-hover/nudge:translate-y-1 group-focus-visible/nudge:translate-y-1";
 
 function delay(ms: number) {
   return { "--nudge-delay": `${ms}ms` } as CSSProperties;
@@ -34,12 +50,12 @@ function GuestbookArt() {
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="nudge-draw stroke-(--brand)"
+        className={cn(DRAW_LOOP, "stroke-(--brand)")}
         style={delay(900)}
       />
       <path
         d="M88 34 l-6.5 -6.2 a3.8 3.8 0 0 1 6.5 -4.8 a3.8 3.8 0 0 1 6.5 4.8 z"
-        className="nudge-pop fill-(--brand)"
+        className={cn(POP_LOOP, "fill-(--brand)")}
         style={delay(2000)}
       />
     </svg>
@@ -79,14 +95,14 @@ function BlogArt() {
           width={w}
           height="3"
           rx="1.5"
-          className="nudge-type fill-foreground/20"
+          className={cn(TYPE_LOOP, "fill-foreground/20")}
           style={{ ...delay(900 + i * 220), "--i": i } as CSSProperties}
         />
       ))}
-      <rect x="61" y="54" width="1.6" height="7" className="nudge-blink fill-(--brand)" />
+      <rect x="61" y="54" width="1.6" height="7" className="animate-nudge-blink fill-(--brand)" />
       <path
         d="M70 8 V24 L74.5 20 L79 24 V8"
-        className="nudge-ribbon fill-(--brand)/80"
+        className={cn(RIBBON, "fill-(--brand)/80")}
       />
     </svg>
   );
@@ -103,9 +119,9 @@ function Nudge({ href, label, art, children }: NudgeProps) {
   return (
     <Link
       href={href as Route}
-      className="nudge-card group/nudge flex items-center gap-3 rounded-md border bg-background/70 p-2 pr-4 transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
+      className="group/nudge flex items-center gap-3 rounded-md border bg-background/70 p-2 pr-4 transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
     >
-      <IsoStage className="iso-canvas h-16 w-24 shrink-0 rounded-sm">{art}</IsoStage>
+      <IsoStage className={cn(isoCanvas, "h-16 w-24 shrink-0 rounded-sm")}>{art}</IsoStage>
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <SectionLabel pixel aria-hidden={undefined}>
           {label}
@@ -144,7 +160,7 @@ export function HeroNudges({ latest }: HeroNudgesProps) {
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="nudge-draw stroke-(--brand)"
+            className={cn(nudgeDraw, "stroke-(--brand)")}
             style={delay(1400)}
           />
         </svg>

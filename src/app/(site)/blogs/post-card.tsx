@@ -1,4 +1,5 @@
 import { IsoStage } from "@/components/diagrams/iso-stage";
+import { isoCanvas } from "@/components/diagrams/classes";
 import { ArrowRightIcon } from "@/components/shared/icons";
 import {
   Heading,
@@ -60,13 +61,14 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     <Link
       href={post.url as Route}
       className={cn(
-        "iso-trigger group/post grid h-full outline-none transition-colors duration-300 hover:bg-surface-hover focus-visible:bg-surface-hover",
+        "group/iso group/post grid h-full outline-none transition-colors duration-300 hover:bg-surface-hover focus-visible:bg-surface-hover",
         featured ? "md:grid-cols-[3fr_2fr]" : "grid-rows-[auto_1fr]",
       )}
     >
       <IsoStage
         className={cn(
-          "iso-canvas relative aspect-video border-b border-line",
+          isoCanvas,
+          "relative aspect-video border-b border-line",
           featured && "md:aspect-auto md:min-h-80 md:border-r md:border-b-0",
         )}
       >

@@ -41,10 +41,11 @@ export function CricketDoodle() {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <path d="M24 15 Q28 11 32 15" className="chirp stroke-(--brand)" />
+        <path d="M24 15 Q28 11 32 15" className="animate-chirp stroke-(--brand)" />
         <path
           d="M20.5 11 Q28 4 35.5 11"
-          className="chirp stroke-(--brand) [animation-delay:200ms]"
+          className="animate-chirp stroke-(--brand)"
+          style={{ animationDelay: "200ms" }}
         />
         <path
           d="M47 19 Q52 8 60 6 M45 19 Q47 9 53 4"
@@ -101,7 +102,7 @@ export function TypingBubble() {
           cx={cx}
           cy="13"
           r="2"
-          className="typing-dot fill-(--brand)"
+          className="animate-typing-dot fill-(--brand)"
           style={{ animationDelay: `${i * 160}ms` }}
         />
       ))}
