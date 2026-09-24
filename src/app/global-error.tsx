@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useReducedMotion } from "motion/react";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -10,8 +11,20 @@ interface GlobalErrorProps {
 
 export default function GlobalError({ reset }: GlobalErrorProps) {
   const [showLogo, setShowLogo] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const noiseRef = useRef<SVGSVGElement>(null);
+  const digitsRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    if (!reduceMotion) return;
+    for (const svg of [noiseRef.current, digitsRef.current]) {
+      svg?.pauseAnimations();
+      svg?.setCurrentTime(0);
+    }
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion) return;
     let timeout: ReturnType<typeof setTimeout>;
 
     const schedule = () => {
@@ -28,7 +41,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
 
     schedule();
     return () => clearTimeout(timeout);
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -49,6 +62,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
         }}
       >
         <svg
+          ref={noiseRef}
           aria-hidden="true"
           style={{
             position: "fixed",
@@ -160,7 +174,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
           />
         </svg>
 
-        <div
+        <main
           style={{
             position: "relative",
             zIndex: 1,
@@ -171,12 +185,14 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
           }}
         >
           <svg
+            ref={digitsRef}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 232 96"
             width="232"
             height="96"
             fill="none"
-            aria-label="500"
+            role="img"
+            aria-label="Error 500"
           >
             <defs>
               <style>{`
@@ -263,7 +279,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
           <div
             style={{ textAlign: "center", fontSize: "13px", lineHeight: "1.6" }}
           >
-            <p
+            <h1
               style={{
                 margin: "0 0 4px",
                 fontSize: "16px",
@@ -272,7 +288,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               }}
             >
               Well… that escalated quickly.
-            </p>
+            </h1>
             <p style={{ margin: 0, opacity: 0.5 }}>
               The entire layout collapsed. Not ideal.
             </p>
@@ -316,7 +332,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               Go Home
             </Link>
           </div>
-        </div>
+        </main>
       </body>
     </html>
   );

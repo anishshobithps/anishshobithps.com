@@ -7,7 +7,7 @@ import {
   ArrowCounterClockwiseIcon,
 } from "@/components/shared/icons";
 import {
-  TypographyP,
+  Text,
   TypographyMuted,
   TypographyMark,
 } from "@/components/ui/typography";
@@ -21,24 +21,18 @@ interface ErrorProps {
 }
 
 export default function ErrorPage({ reset }: ErrorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
 
   return (
-    <div
+    <main
       ref={containerRef}
-      role="main"
-      aria-label="Error page"
       className="relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden"
     >
       <div aria-hidden="true">
         <BouncingLogos containerRef={containerRef} />
       </div>
 
-      <Empty
-        className="z-10 backdrop-blur-sm"
-        role="alert"
-        aria-live="assertive"
-      >
+      <Empty className="z-10 backdrop-blur-sm" role="alert">
         <EmptyHeader>
           <FlickerText
             chars={["5", "0", "0"]}
@@ -48,9 +42,9 @@ export default function ErrorPage({ reset }: ErrorProps) {
           />
 
           <div className="space-y-2 text-center">
-            <TypographyP className="text-lg font-semibold tracking-tight">
+            <Text as="h1" variant="none" className="text-lg font-semibold tracking-tight">
               The code tripped
-            </TypographyP>
+            </Text>
             <TypographyMuted>
               Something <TypographyMark>internally panicked</TypographyMark>, we
               can act like this never happened.
@@ -81,6 +75,6 @@ export default function ErrorPage({ reset }: ErrorProps) {
           </nav>
         </EmptyContent>
       </Empty>
-    </div>
+    </main>
   );
 }

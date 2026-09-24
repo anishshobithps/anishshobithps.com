@@ -29,7 +29,7 @@ function makeInstances(count: number): Instance[] {
 interface BouncingLogosProps {
   count?: number;
   opacity?: string;
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLElement | null>;
 }
 
 export function BouncingLogos({
