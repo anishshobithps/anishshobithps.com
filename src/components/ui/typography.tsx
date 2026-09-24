@@ -219,10 +219,11 @@ export const TypographyMark = forwardRef<HTMLElement, MarkProps>(
 );
 TypographyMark.displayName = "TypographyMark";
 
-type SectionLabelProps = HTMLAttributes<HTMLParagraphElement> & AsChildProps;
+type SectionLabelProps = HTMLAttributes<HTMLParagraphElement> &
+  AsChildProps & { pixel?: boolean };
 
 export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
-  ({ className, asChild = false, ...props }, ref) => {
+  ({ className, asChild = false, pixel = false, ...props }, ref) => {
     const Tag = asChild ? Slot.Root : "p";
     return (
       <Tag
@@ -230,6 +231,7 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
         aria-hidden="true"
         className={cn(
           "text-sm font-mono font-medium tracking-widest text-muted-foreground uppercase",
+          pixel && "font-pixel text-[11px]",
           className,
         )}
         {...props}

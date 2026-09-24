@@ -1,5 +1,5 @@
-"use client";
-
+import { PageArt } from "@/components/diagrams/page-art";
+import { HeroWithArt } from "@/components/layouts/hero-art";
 import {
   Section,
   Card,
@@ -31,7 +31,7 @@ export default function BrandingPage() {
     <>
       <Section aria-label="Brand System">
         <SectionHeader>Brand System</SectionHeader>
-        <div className="max-w-3xl space-y-6">
+        <HeroWithArt art={<PageArt name="branding" />}>
           <TypographyH1>Brand Infrastructure</TypographyH1>
           <TypographyLead>
             A unified system of identity components built so I never have to
@@ -41,7 +41,7 @@ export default function BrandingPage() {
             </TypographyMark>{" "}
             again.
           </TypographyLead>
-        </div>
+        </HeroWithArt>
       </Section>
 
       <Section aria-label="Typography">

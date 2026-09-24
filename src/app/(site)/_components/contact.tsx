@@ -1,3 +1,5 @@
+import { ArtStage } from "@/components/layouts/hero-art";
+import { PageArt } from "@/components/diagrams/page-art";
 import Link from "next/link";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import { Section } from "@/components/layouts/page";
@@ -21,8 +23,8 @@ export function Contact() {
   return (
     <Section aria-label="Contact" id="contact">
       <Reveal className="w-full max-w-5xl">
-        <div className="@container">
-          <div className="space-y-8">
+        <div className="iso-trigger @container grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_18rem] lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <div className="min-w-0 space-y-8">
             <div className="space-y-4 max-w-2xl">
               <TypographyH2>
                 Got something worth building?
@@ -88,6 +90,9 @@ export function Contact() {
               </div>
             </nav>
           </div>
+          <ArtStage className="hidden aspect-[4/3] md:block">
+            <PageArt name="contact" />
+          </ArtStage>
         </div>
       </Reveal>
     </Section>

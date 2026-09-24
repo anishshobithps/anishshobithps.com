@@ -8,6 +8,7 @@ export {
   ArrowCounterClockwiseIcon,
   ArrowDownIcon,
   ArrowLeftIcon,
+  ArrowRightIcon,
   ArrowSquareOutIcon,
   ArrowsInSimpleIcon,
   ArrowsOutSimpleIcon,

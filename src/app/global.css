@@ -10,6 +10,8 @@
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-pixel: var(--font-geist-pixel), var(--font-geist-mono), ui-monospace, monospace;
+  --font-pixel--font-variation-settings: "ELSH" 25;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -266,6 +268,17 @@
   }
 }
 
+@utility hatch {
+  background-image: repeating-linear-gradient(
+    315deg,
+    var(--hatch-line) 0,
+    var(--hatch-line) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 10px 10px;
+}
+
 @utility section-gap {
   --section-gap: 2rem;
   margin-top: var(--section-gap);
@@ -280,14 +293,7 @@
     height: calc(var(--section-gap) + 2px);
     translate: -50% 0;
     border-block: 1px solid var(--line);
-    background-image: repeating-linear-gradient(
-      315deg,
-      var(--hatch-line) 0,
-      var(--hatch-line) 1px,
-      transparent 0,
-      transparent 50%
-    );
-    background-size: 10px 10px;
+    @apply hatch;
   }
 }
 
@@ -516,5 +522,245 @@ html[data-theme-transition]::view-transition-new(root) {
 @layer utilities {
   .link-external {
     @apply underline underline-offset-4 hover:text-foreground transition-colors;
+  }
+}
+
+@layer components {
+  .iso {
+    --iso-stroke: color-mix(in oklab, var(--foreground) 45%, transparent);
+    --iso-top: color-mix(in oklab, var(--foreground) 6%, var(--background));
+    --iso-left: color-mix(in oklab, var(--foreground) 3%, var(--background));
+    --iso-right: var(--background);
+    --iso-dot: color-mix(in oklab, var(--foreground) 28%, transparent);
+  }
+
+  .iso [data-tone="accent"] {
+    --iso-stroke: var(--brand);
+    --iso-top: color-mix(in oklab, var(--brand) 16%, var(--background));
+    --iso-left: color-mix(in oklab, var(--brand) 8%, var(--background));
+    --iso-right: color-mix(in oklab, var(--brand) 4%, var(--background));
+  }
+
+  .iso [data-tone="ghost"] {
+    --iso-stroke: color-mix(in oklab, var(--foreground) 28%, transparent);
+    --iso-top: transparent;
+    --iso-left: transparent;
+    --iso-right: transparent;
+  }
+
+  .iso-canvas {
+    background-image: radial-gradient(
+      color-mix(in oklab, var(--foreground) 9%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 16px 16px;
+    background-position: center;
+  }
+
+  .iso-face {
+    stroke: var(--iso-stroke);
+    stroke-width: 1;
+    stroke-linejoin: round;
+  }
+
+  .iso-face-top {
+    fill: var(--iso-top);
+  }
+
+  .iso-face-left {
+    fill: var(--iso-left);
+  }
+
+  .iso-face-right {
+    fill: var(--iso-right);
+  }
+
+  [data-tone="ghost"] > .iso-face,
+  .iso-plate {
+    stroke-dasharray: 3 3;
+  }
+
+  .iso-plate {
+    fill: color-mix(in oklab, var(--foreground) 2%, transparent);
+    stroke: color-mix(in oklab, var(--foreground) 25%, transparent);
+  }
+
+  .iso-flow,
+  .iso-arrow,
+  .iso-guide {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .iso-flow {
+    stroke: var(--iso-stroke);
+    stroke-width: 1.25;
+    stroke-dasharray: 1 5;
+    animation: iso-march 0.9s linear infinite paused;
+  }
+
+  .iso-arrow {
+    stroke: var(--iso-stroke);
+    stroke-width: 1.25;
+  }
+
+  .iso-guide {
+    stroke: color-mix(in oklab, var(--foreground) 20%, transparent);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+
+  .iso-dot {
+    fill: var(--iso-dot);
+  }
+
+  .iso-dot-lit {
+    fill: var(--brand);
+    animation: iso-twinkle 3s ease-in-out infinite paused;
+  }
+
+  .iso-ripple {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .iso-lift {
+    transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: var(--delay, 0ms);
+  }
+
+  .iso-stage[data-active] :is(.iso-flow, .iso-dot-lit) {
+    animation-play-state: running;
+  }
+
+  .iso-stage[data-active] .iso-ripple {
+    animation: iso-ripple 1.8s ease-out infinite;
+  }
+
+  .iso-stage[data-active] .iso-lift {
+    transform: translateY(var(--lift));
+  }
+
+  .iso-stage[data-ambient][data-active] .iso-lift {
+    animation: iso-float 5s ease-in-out infinite;
+    animation-delay: calc(var(--delay, 0ms) * 4);
+  }
+
+  .iso-text,
+  .iso-label {
+    @apply font-pixel;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .iso-text {
+    fill: color-mix(in oklab, var(--foreground) 75%, transparent);
+  }
+
+  .iso-label {
+    fill: var(--muted-foreground);
+  }
+
+  :is(.iso-text, .iso-label)[data-tone="accent"] {
+    fill: var(--brand-text);
+  }
+
+  .iso-text[data-tone="muted"] {
+    fill: var(--muted-foreground);
+  }
+
+  .iso-label[data-tone="default"] {
+    fill: var(--foreground);
+  }
+
+  .iso-leader {
+    fill: none;
+    stroke: color-mix(in oklab, var(--foreground) 25%, transparent);
+    stroke-width: 1;
+  }
+
+  .iso-node {
+    fill: var(--background);
+    stroke: var(--iso-stroke);
+  }
+
+  .hero-art-grid {
+    mask-image: radial-gradient(closest-side, black 55%, transparent);
+  }
+
+  @media (hover: hover) {
+    .iso-trigger:is(:hover, :focus-visible) .iso-stage :is(.iso-flow, .iso-dot-lit) {
+      animation-play-state: running;
+    }
+
+    .iso-trigger:is(:hover, :focus-visible) .iso-stage .iso-ripple {
+      animation: iso-ripple 1.8s ease-out infinite;
+    }
+
+    .iso-trigger:is(:hover, :focus-visible) .iso-stage .iso-lift {
+      transform: translateY(var(--lift));
+    }
+
+    .iso-trigger:is(:hover, :focus-visible) .iso-stage[data-ambient] .iso-lift {
+      animation: iso-float 5s ease-in-out infinite;
+      animation-delay: calc(var(--delay, 0ms) * 4);
+    }
+  }
+}
+
+@keyframes iso-march {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+@keyframes iso-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes iso-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(var(--lift));
+  }
+}
+
+@keyframes iso-ripple {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iso-stage :is(.iso-flow, .iso-dot-lit, .iso-ripple) {
+    animation: none !important;
+  }
+
+  .iso-stage .iso-lift {
+    transition: none;
+    transform: none !important;
+    animation: none !important;
   }
 }

@@ -1,3 +1,5 @@
+import { BlogCover } from "@/components/diagrams/blog-covers";
+import { HeroWithArt } from "@/components/layouts/hero-art";
 import {
   EndOfPost,
   ScrollToEngagement,
@@ -116,90 +118,92 @@ export default async function Page(props: {
       </Section>
 
       <Section variant="hero" aria-label="Post header">
-        <ViewTransition name={postTransitionName(page.url)}>
-          <TypographyH1>{page.data.title}</TypographyH1>
-        </ViewTransition>
+        <HeroWithArt art={<BlogCover slug={page.slugs.at(-1) ?? ""} zoom />}>
+          <ViewTransition name={postTransitionName(page.url)}>
+            <TypographyH1>{page.data.title}</TypographyH1>
+          </ViewTransition>
 
-        <div
-          className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
-          aria-label="Post metadata"
-        >
-          <address className="not-italic contents">
-            <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
-              <Link
-                href={siteConfig.baseUrl as Route}
-                className="hover:text-foreground transition-colors"
-                rel="author"
-              >
-                {siteConfig.name}
-              </Link>
-            </TypographyMuted>
-          </address>
-          {page.data.date && (
-            <TypographyMuted
-              className="font-mono text-xs flex items-center gap-1.5"
-              aria-label={`Published on ${formatLongDate(page.data.date)}`}
-            >
-              <CalendarIcon className="size-3.5 shrink-0" aria-hidden="true" />
-
-              <time dateTime={toISOString(page.data.date)}>
-                {formatLongDate(page.data.date)}
-              </time>
-            </TypographyMuted>
-          )}
-          {page.data.lastModified && (
-            <TypographyMuted
-              className="font-mono text-xs flex items-center gap-1.5"
-              aria-label={`Last updated ${formatShortDate(page.data.lastModified)}`}
-            >
-              <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
-              Updated{" "}
-              <time dateTime={toISOString(page.data.lastModified)}>
-                {formatShortDate(page.data.lastModified)}
-              </time>
-            </TypographyMuted>
-          )}
-          {readingTime && (
-            <TypographyMuted
-              className="font-mono text-xs flex items-center gap-1.5"
-              aria-label={`Reading time: ${readingTime.text}`}
-            >
-              <ClockIcon className="size-3.5 shrink-0" aria-hidden="true" />
-              {readingTime.text}
-            </TypographyMuted>
-          )}
-          <TypographyMuted
-            className="font-mono tabular-nums text-xs flex items-center gap-1.5"
-            aria-label={`${reads} ${reads === 1 ? "read" : "reads"}`}
+          <div
+            className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2"
+            aria-label="Post metadata"
           >
-            <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
-            {reads} {reads === 1 ? "read" : "reads"}
-          </TypographyMuted>
-          {commentCount > 0 && <ScrollToEngagement count={commentCount} />}
-        </div>
-
-        {page.data.description && (
-          <TypographyLead>{page.data.description}</TypographyLead>
-        )}
-
-        {page.data.tags && page.data.tags.length > 0 && (
-          <ul
-            role="list"
-            aria-label="Post tags"
-            className="flex flex-wrap gap-1.5"
-          >
-            {page.data.tags.map((tag) => (
-              <li key={tag}>
+            <address className="not-italic contents">
+              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
                 <Link
-                  href={`/blogs?tags=${encodeURIComponent(tag)}`}
-                  className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  href={siteConfig.baseUrl as Route}
+                  className="hover:text-foreground transition-colors"
+                  rel="author"
                 >
-                  {tag}
+                  {siteConfig.name}
                 </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+              </TypographyMuted>
+            </address>
+            {page.data.date && (
+              <TypographyMuted
+                className="font-mono text-xs flex items-center gap-1.5"
+                aria-label={`Published on ${formatLongDate(page.data.date)}`}
+              >
+                <CalendarIcon className="size-3.5 shrink-0" aria-hidden="true" />
+
+                <time dateTime={toISOString(page.data.date)}>
+                  {formatLongDate(page.data.date)}
+                </time>
+              </TypographyMuted>
+            )}
+            {page.data.lastModified && (
+              <TypographyMuted
+                className="font-mono text-xs flex items-center gap-1.5"
+                aria-label={`Last updated ${formatShortDate(page.data.lastModified)}`}
+              >
+                <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
+                Updated{" "}
+                <time dateTime={toISOString(page.data.lastModified)}>
+                  {formatShortDate(page.data.lastModified)}
+                </time>
+              </TypographyMuted>
+            )}
+            {readingTime && (
+              <TypographyMuted
+                className="font-mono text-xs flex items-center gap-1.5"
+                aria-label={`Reading time: ${readingTime.text}`}
+              >
+                <ClockIcon className="size-3.5 shrink-0" aria-hidden="true" />
+                {readingTime.text}
+              </TypographyMuted>
+            )}
+            <TypographyMuted
+              className="font-mono tabular-nums text-xs flex items-center gap-1.5"
+              aria-label={`${reads} ${reads === 1 ? "read" : "reads"}`}
+            >
+              <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
+              {reads} {reads === 1 ? "read" : "reads"}
+            </TypographyMuted>
+            {commentCount > 0 && <ScrollToEngagement count={commentCount} />}
+          </div>
+
+          {page.data.description && (
+            <TypographyLead>{page.data.description}</TypographyLead>
+          )}
+
+          {page.data.tags && page.data.tags.length > 0 && (
+            <ul
+              role="list"
+              aria-label="Post tags"
+              className="flex flex-wrap gap-1.5"
+            >
+              {page.data.tags.map((tag) => (
+                <li key={tag}>
+                  <Link
+                    href={`/blogs?tags=${encodeURIComponent(tag)}`}
+                    className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  >
+                    {tag}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </HeroWithArt>
       </Section>
 
       <BlogBody toc={page.data.toc}>

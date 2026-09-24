@@ -12,9 +12,11 @@ import {
   TypographyLead,
   TypographyMark,
   TypographyMuted,
+  SectionLabel,
 } from "@/components/ui/typography";
 import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
 import Link from "next/link";
+import { padIndex } from "@/lib/text";
 import type { Route } from "next";
 import { Suspense } from "react";
 import { getPublicProjects } from "@/lib/projects";
@@ -42,9 +44,12 @@ export async function ProjectGrid() {
     <CardGrid>
       {projects.map((project, index) => (
         <CardGridItem key={project.title}>
+          <SectionLabel pixel className="absolute top-4 right-4 @sm:top-6 @sm:right-6">
+            No.{padIndex(index + 1)}
+          </SectionLabel>
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
-              <TypographyH2 className="text-xl">
+              <TypographyH2 className="pr-14 text-xl">
                 {project.title}
               </TypographyH2>
               <TypographyMuted className="leading-relaxed">

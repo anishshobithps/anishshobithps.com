@@ -1,3 +1,5 @@
+import { PageArt } from "@/components/diagrams/page-art";
+import { HeroWithArt } from "@/components/layouts/hero-art";
 import { ProjectGrid } from "@/app/(site)/_components/projects";
 import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
 import { Section } from "@/components/layouts/page";
@@ -32,12 +34,14 @@ export default function ProjectsPage() {
         canonicalUrl={`${siteConfig.baseUrl}/projects`}
       />
       <Section variant="hero" aria-label="Projects header">
-        <TypographyH1>Projects</TypographyH1>
-        <TypographyLead>
-          Everything I actually shipped, plus{" "}
-          <TypographyMark>a few things I started at midnight</TypographyMark>{" "}
-          and never quite finished.
-        </TypographyLead>
+        <HeroWithArt art={<PageArt name="projects" />}>
+          <TypographyH1>Projects</TypographyH1>
+          <TypographyLead>
+            Everything I actually shipped, plus{" "}
+            <TypographyMark>a few things I started at midnight</TypographyMark>{" "}
+            and never quite finished.
+          </TypographyLead>
+        </HeroWithArt>
       </Section>
       <Section variant="flush" aria-label="Projects list">
         <Suspense fallback={<ProjectsSkeleton count={6} />}>

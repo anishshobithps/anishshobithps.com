@@ -7,7 +7,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { siteConfig } from "@/lib/config";
 import { ThemeProvider } from "next-themes";
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Fira_Code, Manrope } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Fira_Code,
+  Geist_Pixel,
+  Manrope,
+} from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
@@ -24,6 +29,13 @@ const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-manrope",
+});
+
+const geistPixel = Geist_Pixel({
+  subsets: ["latin"],
+  display: "swap",
+  axes: ["ELSH"],
+  variable: "--font-geist-pixel",
 });
 
 const firaCode = Fira_Code({
@@ -69,7 +81,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${bricolage.variable} ${manrope.variable} ${firaCode.variable} antialiased`}
+      className={`${bricolage.variable} ${manrope.variable} ${firaCode.variable} ${geistPixel.variable} antialiased`}
       suppressHydrationWarning
     >
       <head>

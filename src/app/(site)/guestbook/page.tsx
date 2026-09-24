@@ -1,3 +1,5 @@
+import { PageArt } from "@/components/diagrams/page-art";
+import { HeroWithArt } from "@/components/layouts/hero-art";
 import { getGuestbookEntries } from "@/app/(site)/guestbook/actions";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/lib/get-query-client";
@@ -62,10 +64,12 @@ export default async function GuestbookPage() {
       />
 
       <Section variant="hero" aria-label="Guestbook">
-        <TypographyH1>Guestbook</TypographyH1>
-        <TypographyLead>
-          You stopped by. <TypographyMark>Leave a mark.</TypographyMark>
-        </TypographyLead>
+        <HeroWithArt art={<PageArt name="guestbook" />}>
+          <TypographyH1>Guestbook</TypographyH1>
+          <TypographyLead>
+            You stopped by. <TypographyMark>Leave a mark.</TypographyMark>
+          </TypographyLead>
+        </HeroWithArt>
       </Section>
 
       <Section variant="flush" aria-label="Guestbook entries">

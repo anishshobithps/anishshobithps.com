@@ -5,7 +5,9 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
+  SectionLabel,
 } from "@/components/ui/typography";
+import { padIndex } from "@/lib/text";
 
 export function RulesIFollow() {
   return (
@@ -24,6 +26,9 @@ export function RulesIFollow() {
         {rules.map((item, index) => (
           <Reveal key={item.title} delay={index * 90}>
             <div className="space-y-2">
+              <SectionLabel pixel className="text-base text-(--brand-text)">
+                {padIndex(index + 1)}
+              </SectionLabel>
               <TypographyH3 className="text-xl">{item.title}</TypographyH3>
               <TypographyMuted className="leading-relaxed">
                 {item.description}

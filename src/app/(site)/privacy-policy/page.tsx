@@ -1,3 +1,5 @@
+import { PageArt } from "@/components/diagrams/page-art";
+import { HeroWithArt } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
@@ -36,17 +38,19 @@ export default function PrivacyPolicyPage() {
       />
 
       <Section variant="hero" aria-label="Privacy Policy">
-        <TypographyH1>Privacy Policy</TypographyH1>
-        <TypographyLead>
-          The short version:{" "}
-          <TypographyMark>
-            I collect very little, store it carefully, and never sell it.
-          </TypographyMark>{" "}
-          The long version follows.
-        </TypographyLead>
-        <TypographyMuted className="font-mono">
-          Last updated: {LAST_UPDATED}
-        </TypographyMuted>
+        <HeroWithArt art={<PageArt name="privacy" />}>
+          <TypographyH1>Privacy Policy</TypographyH1>
+          <TypographyLead>
+            The short version:{" "}
+            <TypographyMark>
+              I collect very little, store it carefully, and never sell it.
+            </TypographyMark>{" "}
+            The long version follows.
+          </TypographyLead>
+          <TypographyMuted className="font-mono">
+            Last updated: {LAST_UPDATED}
+          </TypographyMuted>
+        </HeroWithArt>
       </Section>
 
       <Section aria-label="What this site is">

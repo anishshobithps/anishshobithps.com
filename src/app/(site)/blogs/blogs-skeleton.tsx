@@ -1,8 +1,11 @@
 import { Divider } from "@/components/ui/divider";
-import { panelRow } from "@/components/layouts/page";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/cn";
+import { postGrid } from "./post-grid";
 
 export function BlogsSkeleton({ count }: { count: number }) {
+  const grid = postGrid(Array.from({ length: Math.max(count, 1) }), true);
+
   return (
     <div className="flex flex-col -mt-6" aria-hidden="true">
       <div className="flex flex-wrap sm:flex-nowrap sm:justify-end gap-3 pb-6">
@@ -15,23 +18,43 @@ export function BlogsSkeleton({ count }: { count: number }) {
 
       <Divider />
 
-      <div className="-mx-gutter flex flex-col gap-px bg-line">
-        {Array.from({ length: count }).map((_, index) => (
-          <div key={index} className={panelRow}>
-            <div className="flex flex-col gap-2 py-6">
-              <div className="flex items-baseline justify-between gap-4">
-                <Skeleton className="h-5 w-2/3" />
-                <Skeleton className="h-4 w-16 shrink-0" />
-              </div>
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-4/5" />
-              <div className="flex gap-1.5 mt-1">
-                <Skeleton className="h-5 w-16" />
-                <Skeleton className="h-5 w-20" />
-              </div>
+      <div className="-mx-gutter grid grid-cols-1 gap-px bg-line md:grid-cols-2">
+        {grid.cells.map((cell, index) => {
+          const featured = index === 0;
+          const filler = cell === "filler";
+          return (
+            <div
+              key={index}
+              className={cn(
+                "overflow-hidden bg-background",
+                featured && "md:col-span-2 md:grid md:grid-cols-[3fr_2fr]",
+                filler && "hidden md:block",
+                grid.corners(index),
+              )}
+            >
+              {!filler && (
+                <>
+                  <Skeleton
+                    className={cn(
+                      "aspect-video rounded-none",
+                      featured && "md:aspect-auto md:min-h-80",
+                    )}
+                  />
+                  <div className="flex flex-col justify-center gap-3 p-gutter">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-6 w-4/5" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/5" />
+                    <div className="flex gap-1.5 pt-2">
+                      <Skeleton className="h-5 w-16" />
+                      <Skeleton className="h-5 w-20" />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

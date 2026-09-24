@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/button-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Divider } from "@/components/ui/divider";
-import { panelRow } from "@/components/layouts/page";
 import { Label } from "@/components/ui/label";
 import {
   InputGroup,
@@ -39,23 +38,20 @@ import {
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { Reveal } from "@/components/shared/reveal";
 import { cn } from "@/lib/cn";
-import { formatShortDate } from "@/lib/date";
 import {
-  CaretRightIcon,
   MagnifyingGlassIcon,
   TagIcon,
   XIcon,
 } from "@/components/shared/icons";
-import Link from "next/link";
 import {
   parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   useQueryStates,
 } from "nuqs";
-import { useDeferredValue, useMemo, ViewTransition } from "react";
-import type { Route } from "next";
-import { postTransitionName } from "@/lib/view-transition";
+import { type ReactNode, useDeferredValue, useMemo } from "react";
+import { PostCard } from "./post-card";
+import { postGrid } from "./post-grid";
 
 export type BlogPost = {
   url: string;
@@ -63,6 +59,8 @@ export type BlogPost = {
   description?: string;
   date?: string;
   tags?: string[];
+  number: number;
+  cover: ReactNode;
 };
 
 const PER_PAGE_OPTIONS = [5, 10, 15, 20];
@@ -77,9 +75,11 @@ const searchParsers = {
 export function BlogsClient({
   posts,
   allTags,
+  filler,
 }: {
   posts: BlogPost[];
   allTags: string[];
+  filler: ReactNode;
 }) {
   const [params, setParams] = useQueryStates(searchParsers);
   const { q, tags, page, per } = params;
@@ -118,6 +118,12 @@ export function BlogsClient({
     () => filtered.slice((currentPage - 1) * per, currentPage * per),
     [filtered, currentPage, per],
   );
+
+  const featured =
+    currentPage === 1 && !deferredQuery.trim() && tags.length === 0
+      ? paginated[0]
+      : undefined;
+  const grid = postGrid(paginated, Boolean(featured));
 
   const pageNumbers = useMemo(
     () => buildPageNumbers(currentPage, totalPages),
@@ -320,62 +326,33 @@ export function BlogsClient({
           <ul
             role="list"
             aria-label="Blog posts"
-            className="-mx-gutter flex flex-col gap-px bg-line"
+            className="-mx-gutter grid grid-cols-1 gap-px bg-line md:grid-cols-2"
           >
-            {paginated.map((post, index) => {
-              const date = post.date ? formatShortDate(post.date) : undefined;
+            {grid.cells.map((cell, index) => {
+              const corners = grid.corners(index);
+              if (cell === "filler") {
+                return (
+                  <li
+                    key="filler"
+                    aria-hidden="true"
+                    className={cn("hidden overflow-hidden bg-background md:block", corners)}
+                  >
+                    {filler}
+                  </li>
+                );
+              }
+              const isFeatured = cell === featured;
               return (
                 <li
-                  key={post.url}
-                  className={panelRow}
+                  key={cell.url}
+                  className={cn(
+                    "overflow-hidden bg-background",
+                    isFeatured && "md:col-span-2",
+                    corners,
+                  )}
                 >
-                  <Reveal delay={Math.min(index, 6) * 55}>
-                  <Link
-                    href={post.url as Route}
-                    className="group relative flex flex-col gap-2 py-6 pl-0 cursor-pointer"
-                  >
-                    <div className="flex items-baseline justify-between gap-4">
-                      <ViewTransition name={postTransitionName(post.url)}>
-                        <TypographySmall className="text-base font-semibold text-foreground">
-                          {post.title}
-                        </TypographySmall>
-                      </ViewTransition>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {date && (
-                          <TypographyMuted
-                            aria-hidden="true"
-                            className="font-mono text-xs oldstyle-nums"
-                          >
-                            {date}
-                          </TypographyMuted>
-                        )}
-                        <CaretRightIcon
-                          className="size-3.5 text-muted-foreground/50 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,transform] duration-200"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-                    {post.description && (
-                      <TypographyMuted className="leading-relaxed">
-                        {post.description}
-                      </TypographyMuted>
-                    )}
-                    {post.tags && post.tags.length > 0 && (
-                      <ul
-                        role="list"
-                        aria-label="Tags"
-                        className="flex flex-wrap gap-1.5 mt-1"
-                      >
-                        {post.tags.map((tag) => (
-                          <li key={tag}>
-                            <TypographyMuted className="rounded-md bg-muted px-2 py-0.5 font-mono text-xs">
-                              {tag}
-                            </TypographyMuted>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </Link>
+                  <Reveal delay={Math.min(index, 6) * 55} className="h-full">
+                    <PostCard post={cell} featured={isFeatured} />
                   </Reveal>
                 </li>
               );

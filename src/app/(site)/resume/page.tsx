@@ -1,3 +1,5 @@
+import { PageArt } from "@/components/diagrams/page-art";
+import { HeroWithArt } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
 import {
   TypographyH1,
@@ -47,11 +49,13 @@ export default function ResumePage() {
       />
 
       <Section variant="hero" aria-label="Resume">
-        <TypographyH1>Resume</TypographyH1>
-        <TypographyLead>
-          Where I&apos;ve been, what I built, and{" "}
-          <TypographyMark>what I actually know</TypographyMark>, on one page.
-        </TypographyLead>
+        <HeroWithArt art={<PageArt name="resume" />}>
+          <TypographyH1>Resume</TypographyH1>
+          <TypographyLead>
+            Where I&apos;ve been, what I built, and{" "}
+            <TypographyMark>what I actually know</TypographyMark>, on one page.
+          </TypographyLead>
+        </HeroWithArt>
       </Section>
 
       <Section variant="article" aria-label="Resume document">
