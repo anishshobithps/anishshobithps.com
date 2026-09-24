@@ -1172,7 +1172,7 @@ function MediaPlayerVolumeIndicator(props: DivProps) {
             <div
               key={index}
               className={cn(
-                "w-1.5 rounded-full transition-all duration-150",
+                "w-1.5 rounded-full transition-[scale,background-color] duration-150",
                 index < activeBarCount && !mediaMuted
                   ? "scale-100 bg-foreground"
                   : "scale-90 bg-foreground/30",
