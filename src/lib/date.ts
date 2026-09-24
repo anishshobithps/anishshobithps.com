@@ -51,6 +51,16 @@ export function formatTimeInZone(timezone: string, date: Date = new Date()): str
     }).format(date);
 }
 
+export function getHourInZone(timezone: string, date: Date = new Date()): number {
+    return Number(
+        new Intl.DateTimeFormat("en-US", {
+            hour: "numeric",
+            hourCycle: "h23",
+            timeZone: timezone,
+        }).format(date),
+    );
+}
+
 export function getZoneOffsetHours(timezone: string, from: Date = new Date()): number {
     const parts = new Intl.DateTimeFormat("en-US", {
         timeZone: timezone,

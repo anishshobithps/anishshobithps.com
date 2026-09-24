@@ -74,7 +74,7 @@ export function GuestbookRotator({
 
   if (entries.length === 0) {
     return (
-      <div className="py-8 space-y-1 mb-8">
+      <div className="py-8 space-y-1">
         <TypographyMuted>Nobody here yet.</TypographyMuted>
         <TypographyMuted className="font-mono text-xs">
           {"// be the first."}
@@ -88,7 +88,7 @@ export function GuestbookRotator({
   const duration = `${Math.round((entries.length * 224) / 50)}s`;
 
   return (
-    <div className="mb-8 -mx-gutter">
+    <div className="-mx-gutter">
       <div className="motion-reduce:hidden">
         <div
           className="overflow-hidden"

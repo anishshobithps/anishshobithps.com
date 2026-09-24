@@ -1,6 +1,8 @@
 import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
 import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
 import { Reveal } from "@/components/shared/reveal";
+import { GitChaos } from "@/components/diagrams/git-chaos";
+import { IsoStage } from "@/components/diagrams/iso-stage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +10,7 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import {
+  Heading,
   TypographyH2,
   TypographyLead,
   TypographyMark,
@@ -22,7 +25,11 @@ import { Suspense } from "react";
 import { getPublicProjects } from "@/lib/projects";
 import { unstable_rethrow } from "next/navigation";
 
-export async function ProjectGrid() {
+export async function ProjectGrid({
+  headingLevel = "h2",
+}: {
+  headingLevel?: "h2" | "h3";
+}) {
   let projects: Awaited<ReturnType<typeof getPublicProjects>>;
   try {
     projects = await getPublicProjects();
@@ -49,9 +56,9 @@ export async function ProjectGrid() {
           </SectionLabel>
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
-              <TypographyH2 className="pr-14 text-xl">
+              <Heading as={headingLevel} level="h2" className="pr-14 text-xl">
                 {project.title}
-              </TypographyH2>
+              </Heading>
               <TypographyMuted className="leading-relaxed">
                 {project.description}
               </TypographyMuted>
@@ -123,6 +130,7 @@ export async function ProjectGrid() {
 export function BuiltThings() {
   return (
     <Section aria-label="Things I've Built">
+      <TypographyH2 className="sr-only">Things I&apos;ve built</TypographyH2>
       <Reveal>
         <div className="mb-12 max-w-3xl">
           <TypographyLead>
@@ -135,9 +143,12 @@ export function BuiltThings() {
         </div>
       </Reveal>
       <Suspense fallback={<ProjectsSkeleton count={4} />}>
-        <ProjectGrid />
+        <ProjectGrid headingLevel="h3" />
       </Suspense>
-      <Reveal className="mt-16 flex flex-col items-center gap-6 text-center">
+      <Reveal className="iso-trigger mt-16 flex flex-col items-center gap-6 text-center">
+        <IsoStage className="w-full max-w-xl">
+          <GitChaos />
+        </IsoStage>
         <TypographyLead className="max-w-2xl">
           There’s more{" "}
           <TypographyMark>

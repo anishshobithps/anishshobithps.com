@@ -2,8 +2,86 @@
 
 import { fetchNowPlaying } from "@/app/(site)/actions";
 import { TypographyMuted } from "@/components/ui/typography";
+import { cn } from "@/lib/cn";
 import { queryKeys } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
+
+function Turntable({ playing }: { playing: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 48 48"
+      className="size-9 shrink-0 overflow-visible"
+    >
+      <g
+        className={cn(
+          "origin-center [transform-box:fill-box]",
+          playing && "motion-safe:animate-[spin_1.8s_linear_infinite]",
+        )}
+      >
+        <circle cx="21" cy="25" r="19" className="fill-muted stroke-foreground/25" />
+        {[16, 13.5, 11].map((r) => (
+          <circle
+            key={r}
+            cx="21"
+            cy="25"
+            r={r}
+            fill="none"
+            strokeWidth="0.6"
+            className="stroke-foreground/15"
+          />
+        ))}
+        <circle
+          cx="21"
+          cy="25"
+          r="6.5"
+          className={cn(
+            "transition-[fill] duration-500",
+            playing ? "fill-(--brand)" : "fill-muted-foreground/40",
+          )}
+        />
+        <path
+          d="M23.25 21.1 A4.5 4.5 0 0 1 25.5 25"
+          fill="none"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          className="stroke-background/70"
+        />
+        <circle cx="21" cy="25" r="1.1" className="fill-background" />
+      </g>
+      <path
+        d="M5.84 16.25 A17.5 17.5 0 0 1 15.01 8.55 M36.16 33.75 A17.5 17.5 0 0 1 26.99 41.45"
+        fill="none"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        className="stroke-foreground/25"
+      />
+      <g
+        className={cn(
+          "origin-[41px_7px] [transform-box:view-box] motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+          !playing && "-rotate-14",
+        )}
+      >
+        <path
+          d="M41 7 L41 27 L36 33"
+          fill="none"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="stroke-foreground/60"
+        />
+        <path
+          d="M37.2 31.6 L34.6 34.7"
+          strokeWidth="3"
+          strokeLinecap="round"
+          className="stroke-foreground/70"
+        />
+      </g>
+      <circle cx="41" cy="7" r="3.2" className="fill-background stroke-foreground/45" />
+      <circle cx="41" cy="7" r="1" className="fill-foreground/45" />
+    </svg>
+  );
+}
 
 export function NowPlayingLive() {
   const { data } = useQuery({
@@ -15,25 +93,14 @@ export function NowPlayingLive() {
 
   return (
     <div className="flex items-center gap-1.5 max-w-[280px] min-w-0">
-      <svg
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        width="32"
-        height="32"
-        viewBox="0 0 256 256"
-      >
-        <path
-          fill="#1ED760"
-          d="M128 0C57.308 0 0 57.309 0 128c0 70.696 57.309 128 128 128c70.697 0 128-57.304 128-128C256 57.314 198.697.007 127.998.007zm58.699 184.614c-2.293 3.76-7.215 4.952-10.975 2.644c-30.053-18.357-67.885-22.515-112.44-12.335a7.98 7.98 0 0 1-9.552-6.007a7.97 7.97 0 0 1 6-9.553c48.76-11.14 90.583-6.344 124.323 14.276c3.76 2.308 4.952 7.215 2.644 10.975m15.667-34.853c-2.89 4.695-9.034 6.178-13.726 3.289c-34.406-21.148-86.853-27.273-127.548-14.92c-5.278 1.594-10.852-1.38-12.454-6.649c-1.59-5.278 1.386-10.842 6.655-12.446c46.485-14.106 104.275-7.273 143.787 17.007c4.692 2.89 6.175 9.034 3.286 13.72zm1.345-36.293C162.457 88.964 94.394 86.71 55.007 98.666c-6.325 1.918-13.014-1.653-14.93-7.978c-1.917-6.328 1.65-13.012 7.98-14.935C93.27 62.027 168.434 64.68 215.929 92.876c5.702 3.376 7.566 10.724 4.188 16.405c-3.362 5.69-10.73 7.565-16.4 4.187z"
-        />
-      </svg>
+      <Turntable playing={Boolean(data?.isPlaying)} />
       {!data?.title ? (
-        <TypographyMuted className="font-mono truncate">
+        <TypographyMuted className="font-mono truncate text-nowrap">
           not listening to anything
         </TypographyMuted>
       ) : (
         <TypographyMuted
-          className="font-mono truncate"
+          className="font-mono truncate text-nowrap"
           title={`${data.title} by ${data.artist}`}
         >
           {data.isPlaying ? "listening to" : "last listened to"}{" "}

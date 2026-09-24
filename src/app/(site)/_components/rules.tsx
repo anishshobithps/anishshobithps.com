@@ -1,6 +1,9 @@
 import { Section } from "@/components/layouts/page";
 import { Reveal } from "@/components/shared/reveal";
+import { ArtStage } from "@/components/layouts/hero-art";
+import { PageArt } from "@/components/diagrams/page-art";
 import {
+  TypographyH2,
   TypographyH3,
   TypographyLead,
   TypographyMuted,
@@ -12,8 +15,9 @@ import { padIndex } from "@/lib/text";
 export function RulesIFollow() {
   return (
     <Section aria-label="Rules I Follow">
-      <div className="max-w-3xl">
-        <TypographyLead>
+      <TypographyH2 className="sr-only">Rules I follow</TypographyH2>
+      <div className="iso-trigger grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_24rem]">
+        <TypographyLead className="max-w-3xl">
           I build with{" "}
           <TypographyMark>
             clarity, structure, and a bias toward automation
@@ -21,6 +25,9 @@ export function RulesIFollow() {
           , because software should feel simple even when the logic behind it
           isn&apos;t.
         </TypographyLead>
+        <ArtStage className="hidden aspect-video md:block">
+          <PageArt name="principles" />
+        </ArtStage>
       </div>
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
         {rules.map((item, index) => (

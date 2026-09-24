@@ -1,14 +1,17 @@
 import { source } from "@/lib/source";
 import { Section } from "@/components/layouts/page";
 import {
+  TypographyH2,
   TypographyLead,
   TypographyMark,
   TypographyMuted,
 } from "@/components/ui/typography";
 import { Reveal } from "@/components/shared/reveal";
+import { ArtStage } from "@/components/layouts/hero-art";
+import { PageArt } from "@/components/diagrams/page-art";
 import { Button } from "@/components/ui/button";
 import { CaretRightIcon } from "@/components/shared/icons";
-import { formatShortDate } from "@/lib/date";
+import { formatShortDate, toISOString } from "@/lib/date";
 import Link from "next/link";
 import type { Route } from "next";
 
@@ -26,15 +29,31 @@ export function BlogTeaser() {
 
   return (
     <Section aria-label="Recent writing">
-      <Reveal>
-        <div className="mb-4 max-w-2xl">
-          <TypographyLead>
-            <TypographyMark>Code, breakdowns</TypographyMark>, and the
-            occasional 3am adventure.
-          </TypographyLead>
+      <TypographyH2 className="sr-only">Recent writing</TypographyH2>
+      <Reveal className="iso-trigger">
+        <div className="mb-8 grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_24rem]">
+          <div className="flex min-w-0 flex-col items-start gap-6">
+            <TypographyLead className="max-w-2xl">
+              <TypographyMark>Code, breakdowns</TypographyMark>, and the
+              occasional 3am adventure.
+            </TypographyLead>
+            <Button asChild variant="outline">
+              <Link href="/blogs">
+                See all posts
+                <CaretRightIcon
+                  data-icon="inline-end"
+                  className="size-3.5"
+                  aria-hidden="true"
+                />
+              </Link>
+            </Button>
+          </div>
+          <ArtStage className="hidden aspect-video md:block">
+            <PageArt name="lateNight" />
+          </ArtStage>
         </div>
 
-        <div className="mb-8">
+        <div>
           {posts.map((post) => (
             <Link
               key={post.url}
@@ -48,26 +67,14 @@ export function BlogTeaser() {
                   aria-hidden="true"
                 />
               </span>
-              <TypographyMuted
-                className="shrink-0 font-mono text-xs"
-                aria-hidden="true"
-              >
-                {formatShortDate(post.data.date!)}
+              <TypographyMuted asChild className="shrink-0 font-mono text-xs">
+                <time dateTime={toISOString(post.data.date!)}>
+                  {formatShortDate(post.data.date!)}
+                </time>
               </TypographyMuted>
             </Link>
           ))}
         </div>
-
-        <Button asChild variant="outline">
-          <Link href="/blogs">
-            See all posts
-            <CaretRightIcon
-              data-icon="inline-end"
-              className="size-3.5"
-              aria-hidden="true"
-            />
-          </Link>
-        </Button>
       </Reveal>
     </Section>
   );

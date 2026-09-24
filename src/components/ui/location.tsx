@@ -3,7 +3,58 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { formatTimeInZone, getZoneOffsetHours } from "@/lib/date";
+import { formatTimeInZone, getHourInZone, getZoneOffsetHours } from "@/lib/date";
+
+function statusFor(hour: number) {
+  if (hour < 2) return "one more commit";
+  if (hour < 6) return "probably asleep";
+  if (hour < 9) return "brewing coffee";
+  if (hour < 13) return "deep in the code";
+  if (hour < 14) return "lunch break";
+  if (hour < 18) return "shipping things";
+  if (hour < 21) return "side-quest hours";
+  return "one more commit";
+}
+
+function SkyIcon({ hour }: { hour: number | null }) {
+  if (hour === null) {
+    return <span className="size-4 shrink-0" aria-hidden="true" />;
+  }
+
+  if (hour >= 6 && hour < 18) {
+    return (
+      <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0">
+        <g className="origin-center [transform-box:fill-box] motion-safe:animate-[spin_14s_linear_infinite]">
+          {Array.from({ length: 8 }, (_, i) => (
+            <path
+              key={i}
+              d="M8 1.2 V2.8"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              transform={`rotate(${i * 45} 8 8)`}
+              className="stroke-amber-400"
+            />
+          ))}
+        </g>
+        <circle cx="8" cy="8" r="3.2" className="fill-amber-400" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0">
+      <path
+        d="M10.8 11.9 A5 5 0 1 1 7.2 3.1 A4 4 0 0 0 10.8 11.9 Z"
+        className="fill-slate-300"
+      />
+      <path
+        d="M12.5 2.5 l0.5 1.2 1.2 0.5 -1.2 0.5 -0.5 1.2 -0.5 -1.2 -1.2 -0.5 1.2 -0.5 z"
+        className="fill-slate-300 motion-safe:animate-pulse"
+      />
+      <circle cx="13.2" cy="8.6" r="0.7" className="fill-slate-300 motion-safe:animate-pulse [animation-delay:700ms]" />
+    </svg>
+  );
+}
 
 interface LocationTagProps {
   city?: string;
@@ -17,13 +68,18 @@ export function LocationTag({
   timezone = "Asia/Kolkata",
 }: LocationTagProps) {
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState({ current: "", offset: "" });
+  const [time, setTime] = useState({
+    current: "",
+    offset: "",
+    hour: null as number | null,
+  });
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
       const current = formatTimeInZone(timezone, now);
       const diffHrs = getZoneOffsetHours(timezone, now);
+      const hour = getHourInZone(timezone, now);
 
       const offset =
         diffHrs === 0
@@ -32,7 +88,7 @@ export function LocationTag({
             ? `+${diffHrs}h`
             : `-${Math.abs(diffHrs)}h`;
 
-      setTime({ current, offset });
+      setTime({ current, offset, hour });
     };
 
     updateTime();
@@ -46,6 +102,7 @@ export function LocationTag({
       : time.offset.startsWith("+")
         ? `${time.offset.slice(1)} ahead of you`
         : `${time.offset.slice(1)} behind you`;
+  const status = time.hour === null ? "" : statusFor(time.hour);
 
   return (
     <Button
@@ -58,7 +115,7 @@ export function LocationTag({
       onBlur={() => setIsActive(false)}
       aria-label={
         time.current
-          ? `${city}, ${country}. Local time ${time.current}, ${offsetLabel}.`
+          ? `${city}, ${country}. Local time ${time.current}, ${offsetLabel}, ${status}.`
           : `Location: ${city}, ${country}`
       }
       className={cn(
@@ -66,13 +123,10 @@ export function LocationTag({
         "border border-border/60 hover:border-border",
       )}
     >
-      <span className="relative flex size-2 shrink-0" aria-hidden="true">
-        <span className="absolute inline-flex size-full animate-ping rounded-full bg-green-500/40" />
-        <span className="relative inline-flex size-2 rounded-full bg-green-500" />
-      </span>
+      <SkyIcon hour={time.hour} />
 
       <span
-        className="relative grid h-5 items-center overflow-hidden"
+        className="relative grid h-5 items-center justify-items-start overflow-hidden text-left"
         aria-hidden="true"
       >
         <span
@@ -93,9 +147,9 @@ export function LocationTag({
           }}
         >
           {time.current || `${city}, ${country}`}
-          {time.offset && (
-            <span className="text-xs font-normal text-muted-foreground tabular-nums">
-              · {time.offset}
+          {status && (
+            <span className="text-xs font-normal text-muted-foreground">
+              {status}
             </span>
           )}
         </span>

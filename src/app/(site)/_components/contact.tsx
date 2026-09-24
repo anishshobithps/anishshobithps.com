@@ -18,6 +18,7 @@ import {
 import { siteConfig } from "@/lib/config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { Fragment } from "react";
+import { SocialsNudge } from "@/app/(site)/_components/doodles";
 
 export function Contact() {
   return (
@@ -26,9 +27,7 @@ export function Contact() {
         <div className="iso-trigger @container grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_18rem] lg:grid-cols-[minmax(0,1fr)_22rem]">
           <div className="min-w-0 space-y-8">
             <div className="space-y-4 max-w-2xl">
-              <TypographyH2>
-                Got something worth building?
-              </TypographyH2>
+              <TypographyH2>Got something worth building?</TypographyH2>
 
               <TypographyLead>
                 If you’re working on something ambitious and need a frontend
@@ -43,7 +42,7 @@ export function Contact() {
               </TypographyMuted>
             </div>
 
-            <nav aria-label="Contact links" className="pt-4">
+            <nav aria-label="Contact links" className="pt-4 pb-10">
               <div className="flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" className="font-semibold">
                   <Link
@@ -59,34 +58,39 @@ export function Contact() {
                   </Link>
                 </Button>
 
-                <ButtonGroup>
-                  {siteConfig.social.map((item, index) => (
-                    <Fragment key={item.platform}>
-                      {index > 0 && <ButtonGroupSeparator />}
-                      <Button
-                        asChild
-                        size="lg"
-                        variant="outline"
-                        className="font-semibold"
-                      >
-                        <a
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${item.label} profile (opens in new tab)`}
+                <div className="relative">
+                  <ButtonGroup>
+                    {siteConfig.social.map((item, index) => (
+                      <Fragment key={item.platform}>
+                        {index > 0 && <ButtonGroupSeparator />}
+                        <Button
+                          asChild
+                          size="lg"
+                          variant="outline"
+                          className="font-semibold"
                         >
-                          {getPlatformIcon(item.platform, "size-4")}
-                          <span className="hidden sm:inline">{item.label}</span>
-                          <ArrowUpRightIcon
-                            data-icon="inline-end"
-                            className="size-3.5 opacity-50 hidden @sm:inline-flex"
-                            aria-hidden="true"
-                          />
-                        </a>
-                      </Button>
-                    </Fragment>
-                  ))}
-                </ButtonGroup>
+                          <a
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${item.label} profile (opens in new tab)`}
+                          >
+                            {getPlatformIcon(item.platform, "size-4")}
+                            <span className="hidden sm:inline">
+                              {item.label}
+                            </span>
+                            <ArrowUpRightIcon
+                              data-icon="inline-end"
+                              className="size-3.5 opacity-50 hidden @sm:inline-flex"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        </Button>
+                      </Fragment>
+                    ))}
+                  </ButtonGroup>
+                  <SocialsNudge />
+                </div>
               </div>
             </nav>
           </div>
