@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TypographyMuted } from "@/components/ui/typography";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@/lib/cn";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 type ComposerSubmitResult = void | boolean;
 
@@ -50,6 +50,8 @@ export function Composer({
 }: ComposerProps) {
   const [value, setValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [emptyError, setEmptyError] = useState(false);
+  const errorId = useId();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   useAutoResizeTextarea(textareaRef, value, maxHeight);
   const pending = disabled || submitting;
@@ -74,7 +76,12 @@ export function Composer({
   };
 
   const submit = () => {
-    if (!trimmed || pending) return;
+    if (pending) return;
+    if (!trimmed) {
+      setEmptyError(true);
+      textareaRef.current?.focus();
+      return;
+    }
     const body = trimmed;
     setValue("");
 
@@ -115,29 +122,40 @@ export function Composer({
       <Textarea
         ref={textareaRef}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value);
+          if (emptyError) setEmptyError(false);
+        }}
         onKeyDown={handleKeyDown}
         rows={rows}
         maxLength={maxLength}
         placeholder={placeholder}
         aria-label={ariaLabel}
-        aria-describedby={counterId}
+        aria-describedby={
+          [emptyError ? errorId : null, counterId].filter(Boolean).join(" ") ||
+          undefined
+        }
+        aria-invalid={emptyError || undefined}
         disabled={pending}
         className="resize-none min-h-20 max-h-50"
         autoComplete="off"
       />
+      {emptyError && (
+        <TypographyMuted id={errorId} className="text-xs text-destructive">
+          Write a message before sending.
+        </TypographyMuted>
+      )}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-1.5">
           <span
             id={counterId}
-            aria-live="polite"
             aria-label={`${remaining} of ${maxLength} characters remaining`}
             className={cn(
               "text-sm font-medium tabular-nums transition-colors duration-150",
               remaining <= dangerThreshold
                 ? "text-destructive"
                 : remaining <= warnThreshold
-                  ? "text-amber-500"
+                  ? "text-amber-700 dark:text-amber-500"
                   : "text-muted-foreground",
             )}
           >
@@ -159,7 +177,7 @@ export function Composer({
           <Button
             size="sm"
             onClick={submit}
-            disabled={!trimmed || pending}
+            disabled={pending}
             aria-busy={pending}
             className="gap-1.5 font-semibold"
           >
@@ -172,7 +190,7 @@ export function Composer({
             ) : (
               <PaperPlaneTiltIcon data-icon="inline-start" size={14} aria-hidden="true" />
             )}
-            {pending ? "Sending…" : submitLabel}
+            {submitLabel}
           </Button>
         </div>
       </div>

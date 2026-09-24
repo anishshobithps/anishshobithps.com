@@ -2,8 +2,15 @@ import { toast } from "sonner";
 
 export type ToastType = "error" | "warning" | "info" | "success";
 
+const persistentTypes: ReadonlySet<ToastType> = new Set(["error", "warning"]);
+
 export function typedToast(type: ToastType, message: string): void {
-    toast[type](message);
+    toast[type](
+        message,
+        persistentTypes.has(type)
+            ? { duration: Infinity, closeButton: true }
+            : undefined,
+    );
 }
 
 export function classifyError(error: string): ToastType {
