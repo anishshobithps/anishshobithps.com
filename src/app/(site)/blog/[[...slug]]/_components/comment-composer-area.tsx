@@ -76,7 +76,7 @@ export function CommentComposerArea({
             >
               <Link href="/guestbook">
                 <PencilIcon data-icon="inline-start" size={13} aria-hidden="true" />
-                <span className="hidden sm:inline">Checkout Guestbook!!</span>
+                <span className="sr-only sm:not-sr-only">Checkout Guestbook!!</span>
               </Link>
             </Button>
             <ButtonGroupSeparator />
@@ -105,7 +105,7 @@ export function CommentComposerArea({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 px-4 border bg-muted/30">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div className="space-y-0.5">
         <TypographySmall className="font-semibold">
           Got something to say?

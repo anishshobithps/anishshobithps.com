@@ -59,10 +59,10 @@ export const GuestbookEntry = memo(function GuestbookEntry({
     <li
       {...liProps}
       className={cn(
-        "relative px-3 py-3 sm:px-5 sm:py-4",
-        "transition-colors duration-150 hover:bg-muted/30",
-        entry.isPinned && "bg-primary/3",
+        "relative px-gutter py-3 sm:py-4",
+        "transition-colors duration-150 hover:bg-surface-hover",
         liProps.className,
+        entry.isPinned && "bg-surface-pinned",
       )}
     >
       {entry.isPinned && (

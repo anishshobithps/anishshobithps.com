@@ -15,7 +15,7 @@ import {
   type MoodState,
   MoodPicker,
 } from "@/app/(site)/blog/[[...slug]]/_components/mood-picker";
-import { Card } from "@/components/layouts/page";
+import { Panel, PanelRow } from "@/components/layouts/page";
 import { SectionLabel, TypographyMuted } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
 import { classifyError, typedToast } from "@/lib/toast";
@@ -258,6 +258,7 @@ export function PostEngagement({
         onClick: () => removeComment.mutate(id),
       },
       cancel: { label: "Keep", onClick: () => {} },
+      duration: Infinity,
     });
   }, [removeComment]);
 
@@ -290,42 +291,39 @@ export function PostEngagement({
   const userName = user ? user.fullName || user.username : null;
 
   return (
-    <div className="space-y-8" aria-label="Post engagement">
-      <div className="flex items-center gap-3" aria-hidden="true">
+    <Panel>
+      <PanelRow className="py-3" aria-hidden="true">
         <SectionLabel>
           {totalComments > 0
             ? `${totalComments} thought${totalComments === 1 ? "" : "s"} (and a vibe check)`
             : "Vibe check + thoughts"}
         </SectionLabel>
-        <div className="flex-1 h-px bg-border/40" />
-      </div>
+      </PanelRow>
 
-      <Card>
-        <div className="space-y-8">
-          <MoodPicker
-            moodOptimistic={moodState}
-            moodLoading={moodLoading}
-            onSelect={handleMoodSelect}
-          />
+      <PanelRow className="space-y-3 py-8">
+        <MoodPicker
+          moodOptimistic={moodState}
+          moodLoading={moodLoading}
+          onSelect={handleMoodSelect}
+        />
 
-          {!moodLoading && reactionTotal === 0 && (
-            <TypographyMuted className="text-center text-xs">
-              Nothing here yet. Be the first to react.
-            </TypographyMuted>
-          )}
+        {!moodLoading && reactionTotal === 0 && (
+          <TypographyMuted className="text-center text-xs">
+            Nothing here yet. Be the first to react.
+          </TypographyMuted>
+        )}
+      </PanelRow>
 
-          <div className="h-px bg-border/40" aria-hidden="true" />
-
-          <CommentComposerArea
-            isLoaded={isLoaded}
-            isSignedIn={isSignedIn}
-            user={user}
-            userName={userName}
-            onSubmit={(body) => handleCommentSubmit(body)}
-            onSignOut={() => signOut({ redirectUrl: window.location.pathname })}
-          />
-        </div>
-      </Card>
+      <PanelRow className="py-6">
+        <CommentComposerArea
+          isLoaded={isLoaded}
+          isSignedIn={isSignedIn}
+          user={user}
+          userName={userName}
+          onSubmit={(body) => handleCommentSubmit(body)}
+          onSignOut={() => signOut({ redirectUrl: window.location.pathname })}
+        />
+      </PanelRow>
 
       <CommentList
         comments={comments}
@@ -337,6 +335,6 @@ export function PostEngagement({
         onReply={(parentId, body) => handleCommentSubmit(body, parentId)}
         pendingLikes={pendingLikes}
       />
-    </div>
+    </Panel>
   );
 }

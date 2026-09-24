@@ -1,5 +1,6 @@
 import { getComments } from "@/app/(site)/blog/[[...slug]]/actions";
 import { PostEngagement } from "@/app/(site)/blog/[[...slug]]/_components/post-engagement";
+import { Panel, PanelRow } from "@/components/layouts/page";
 
 export async function CommentsSection({
   slug,
@@ -20,9 +21,10 @@ export async function CommentsSection({
 
 export function CommentsFallback() {
   return (
-    <div className="space-y-8" aria-hidden="true">
-      <div className="h-44 rounded-md border border-border/40 bg-muted/20 animate-pulse" />
-      <div className="h-64 rounded-md border border-border/40 bg-muted/20 animate-pulse" />
-    </div>
+    <Panel aria-hidden="true" className="animate-pulse">
+      <PanelRow className="h-10" />
+      <PanelRow className="h-44" />
+      <PanelRow className="h-64" />
+    </Panel>
   );
 }

@@ -14,11 +14,12 @@ import { Composer } from "@/components/engagement/composer";
 import { EngagementEmptyState } from "@/components/engagement/empty-state";
 import { EngagementNudge } from "@/components/engagement/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
-import { Card } from "@/components/layouts/page";
+import { Panel, PanelRow, panelListItem } from "@/components/layouts/page";
 import { BookOpenIcon, SignOutIcon } from "@/components/shared/icons";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Spinner } from "@/components/ui/spinner";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
 import { toastError } from "@/lib/toast";
@@ -268,6 +269,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
         onClick: () => removeEntry.mutate(id),
       },
       cancel: { label: "Keep", onClick: () => {} },
+      duration: Infinity,
     });
   }, [removeEntry]);
 
@@ -283,8 +285,8 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
   }, [fetchNextPage]);
 
   return (
-    <div className="w-full space-y-6">
-      <Card>
+    <Panel>
+      <PanelRow className="@container py-8">
         {!isLoaded ? (
           <div
             className="h-12 animate-pulse bg-muted rounded"
@@ -358,74 +360,73 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
             <EngagementNudge type="guestbook" className="pt-1 text-left" />
           </>
         )}
-      </Card>
+      </PanelRow>
 
-      <Card className="p-0 @lg:p-0 overflow-hidden">
-        <PanelHeader label="Messages" count={count} />
+      <PanelHeader label="Messages" count={count} />
 
-        <div className="relative z-10">
-          {entries.length === 0 ? (
-            <EngagementEmptyState
-              title="Nobody here yet."
-              description="Be the first to leave a mark. It takes 10 seconds."
+      {entries.length === 0 ? (
+        <PanelRow>
+          <EngagementEmptyState
+            title="Nobody here yet."
+            description="Be the first to leave a mark. It takes 10 seconds."
+          >
+            <EngagementNudge type="guestbook" />
+          </EngagementEmptyState>
+        </PanelRow>
+      ) : (
+        <ScrollArea className="max-h-[60vh]" viewportRef={viewportRef}>
+          <div className="max-h-[60vh]">
+            <ul
+              role="list"
+              aria-label="Guestbook messages"
+              className="relative"
+              style={{ height: entryVirtualizer.getTotalSize() }}
             >
-              <EngagementNudge type="guestbook" />
-            </EngagementEmptyState>
-          ) : (
-            <ScrollArea className="max-h-[60vh]" viewportRef={viewportRef}>
-              <div className="max-h-[60vh]">
-                <ul
-                  role="list"
-                  aria-label="Guestbook messages"
-                  className="relative"
-                  style={{ height: entryVirtualizer.getTotalSize() }}
-                >
-                  {entryVirtualizer.getVirtualItems().map((row) => {
-                    const entry = entries[row.index]!;
-                    return (
-                      <GuestbookEntry
-                        key={entry.id}
-                        ref={entryVirtualizer.measureElement}
-                        data-index={row.index}
-                        className="border-b border-border"
-                        style={{
-                          position: "absolute",
-                          insetInline: 0,
-                          top: 0,
-                          transform: `translateY(${row.start}px)`,
-                        }}
-                        entry={entry}
-                        currentUserId={currentUserId}
-                        onLike={handleLike}
-                        onDelete={handleDelete}
-                        pendingLikes={pendingLikes}
-                      />
-                    );
-                  })}
-                </ul>
+              {entryVirtualizer.getVirtualItems().map((row) => {
+                const entry = entries[row.index]!;
+                return (
+                  <GuestbookEntry
+                    key={entry.id}
+                    ref={entryVirtualizer.measureElement}
+                    data-index={row.index}
+                    className={panelListItem}
+                    style={{
+                      position: "absolute",
+                      insetInline: 0,
+                      top: 0,
+                      transform: `translateY(${row.start}px)`,
+                    }}
+                    entry={entry}
+                    currentUserId={currentUserId}
+                    onLike={handleLike}
+                    onDelete={handleDelete}
+                    pendingLikes={pendingLikes}
+                  />
+                );
+              })}
+            </ul>
 
-                {hasMore && (
-                  <div className="flex justify-center border-t p-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleLoadMore}
-                      disabled={isFetchingNextPage}
-                      aria-busy={isFetchingNextPage}
-                    >
-                      {isFetchingNextPage
-                        ? "Loading…"
-                        : loadMoreFailed
-                          ? "Couldn't load, retry"
-                          : "Load more"}
-                    </Button>
-                  </div>
-                )}
+            {hasMore && (
+              <div className="flex justify-center border-t border-line bg-background p-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLoadMore}
+                  disabled={isFetchingNextPage}
+                  aria-busy={isFetchingNextPage}
+                >
+                  {isFetchingNextPage && (
+                    <Spinner data-icon="inline-start" aria-hidden="true" />
+                  )}
+                  {loadMoreFailed && !isFetchingNextPage
+                    ? "Couldn't load, retry"
+                    : "Load more"}
+                </Button>
               </div>
-            </ScrollArea>
-          )}
-        </div>
-      </Card>
-    </div>
+            )}
+          </div>
+        </ScrollArea>
+      )}
+    </Panel>
   );
 }

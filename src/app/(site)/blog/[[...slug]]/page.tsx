@@ -214,7 +214,7 @@ export default async function Page(props: {
 
       <Section
         id="engagement"
-        variant="compact"
+        variant="flush"
         aria-label="Post engagement"
         data-comment-count={commentCount}
       >

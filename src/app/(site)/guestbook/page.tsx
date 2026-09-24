@@ -3,7 +3,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryClient } from "@/lib/get-query-client";
 import { queryKeys } from "@/lib/query-keys";
 import { GuestbookClient } from "@/app/(site)/guestbook/guestbook-client";
-import { Section } from "@/components/layouts/page";
+import { Panel, PanelRow, Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import {
   TypographyH1,
@@ -42,10 +42,10 @@ async function GuestbookFeed({ currentUserId }: { currentUserId: string | null }
 
 function GuestbookFallback() {
   return (
-    <div className="w-full space-y-6" aria-hidden="true">
-      <div className="h-32 rounded-md border border-border/40 bg-muted/20 animate-pulse" />
-      <div className="h-[50vh] rounded-md border border-border/40 bg-muted/20 animate-pulse" />
-    </div>
+    <Panel aria-hidden="true" className="animate-pulse">
+      <PanelRow className="h-32" />
+      <PanelRow className="h-[50vh]" />
+    </Panel>
   );
 }
 
@@ -68,7 +68,7 @@ export default async function GuestbookPage() {
         </TypographyLead>
       </Section>
 
-      <Section aria-label="Guestbook entries">
+      <Section variant="flush" aria-label="Guestbook entries">
         <Suspense fallback={<GuestbookFallback />}>
           <GuestbookFeed currentUserId={userId} />
         </Suspense>

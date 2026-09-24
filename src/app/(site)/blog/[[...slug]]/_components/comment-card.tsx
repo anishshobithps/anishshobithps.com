@@ -101,7 +101,8 @@ export function CommentCard({
   const isOptimistic = comment.id < 0;
   const isLikePending = pendingLikes.has(comment.id);
   const canDelete = currentUserId === comment.user.id;
-  const isPinnedRoot = comment.isPinned && depth === 0;
+  const isRoot = depth === 0;
+  const isPinnedRoot = comment.isPinned && isRoot;
 
   useEffect(() => {
     if (replying && replyRef.current) {
@@ -114,9 +115,9 @@ export function CommentCard({
       {...liProps}
       className={cn(
         "relative",
-        isPinnedRoot && "bg-primary/3",
-        isOptimistic && "opacity-70",
         liProps.className,
+        isPinnedRoot && "bg-surface-pinned",
+        isOptimistic && "opacity-70",
       )}
       aria-busy={isOptimistic || undefined}
     >
@@ -127,7 +128,12 @@ export function CommentCard({
         />
       )}
 
-      <div className="px-3 py-3 sm:px-5 sm:py-4 transition-colors duration-150 hover:bg-muted/30">
+      <div
+        className={cn(
+          "py-3 sm:py-4 transition-colors duration-150 hover:bg-muted/30",
+          isRoot ? "px-gutter" : "px-3 sm:px-5",
+        )}
+      >
         <div className="flex gap-2.5 sm:gap-3">
           <Avatar imageUrl={comment.user.imageUrl} name={comment.user.name} />
 
@@ -159,7 +165,7 @@ export function CommentCard({
               {isPinnedRoot && (
                 <Badge
                   variant="secondary"
-                  className="gap-1 h-4 px-1.5 text-[10px] py-0 font-medium"
+                  className="gap-1 h-auto px-1.5 py-0.5 text-[11px] font-medium"
                 >
                   <PushPinSimpleIcon size={9} aria-hidden="true" />
                   Pinned
@@ -219,7 +225,7 @@ export function CommentCard({
                             aria-hidden="true"
                           />
                           Reply
-                          <span className="text-[10px] opacity-50">
+                          <span className="text-xs text-muted-foreground">
                             (sign in)
                           </span>
                         </Button>
