@@ -1,49 +1,32 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
 import { HouseIcon } from "@/components/shared/icons";
+import { PageArt } from "@/components/diagrams/page-art";
+import { ArtStage } from "@/components/layouts/hero-art";
 import {
-  TypographyP,
+  Text,
   TypographyMuted,
   TypographyMark,
 } from "@/components/ui/typography";
 import Link from "next/link";
-import { useRef } from "react";
-import { BouncingLogos } from "@/components/shared/bouncing-logo";
-import { FlickerText } from "@/components/shared/flicker-text";
 
 export default function NotFound() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
-    <div
-      ref={containerRef}
-      role="main"
-      aria-label="Page not found"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-14"
-    >
-      <div aria-hidden="true">
-        <BouncingLogos containerRef={containerRef} opacity="opacity-[0.12]" />
-      </div>
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
+      <Empty className="relative z-10 flex-none gap-4 border-0">
+        <ArtStage active className="aspect-[4/3] w-full max-w-md">
+          <PageArt name="notFound" />
+        </ArtStage>
 
-      <Empty
-        className="relative z-10 flex-none border-0"
-        role="status"
-        aria-live="polite"
-      >
         <EmptyHeader>
-          <FlickerText
-            chars={["4", "logo", "4"]}
-            charWidth={96}
-            className="text-foreground"
-            label="404"
-          />
-
           <div className="space-y-2 text-center">
-            <TypographyP className="text-lg font-semibold tracking-tight">
+            <Text
+              as="h1"
+              variant="none"
+              className="text-lg font-semibold tracking-tight"
+            >
               Even my 404 has motion
-            </TypographyP>
+            </Text>
             <TypographyMuted>
               I spent weeks on this site and you landed on the{" "}
               <TypographyMark>one page that doesn’t exist</TypographyMark>.
@@ -61,6 +44,6 @@ export default function NotFound() {
           </Button>
         </EmptyContent>
       </Empty>
-    </div>
+    </main>
   );
 }

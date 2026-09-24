@@ -4,12 +4,17 @@ import type { ReactNode } from "react";
 
 interface ArtStageProps {
   className?: string;
+  active?: boolean;
   children: ReactNode;
 }
 
-export function ArtStage({ className, children }: ArtStageProps) {
+export function ArtStage({ className, active, children }: ArtStageProps) {
   return (
-    <IsoStage ambient className={cn("relative", className)}>
+    <IsoStage
+      ambient
+      data-active={active || undefined}
+      className={cn("relative", className)}
+    >
       <div aria-hidden="true" className="iso-canvas hero-art-grid absolute inset-0" />
       {children}
     </IsoStage>

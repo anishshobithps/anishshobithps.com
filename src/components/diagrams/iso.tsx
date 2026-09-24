@@ -105,6 +105,47 @@ export function IsoCylinder({
   );
 }
 
+interface IsoConeProps {
+  p: Projector;
+  tip: Vec3;
+  radius: number;
+  height: number;
+}
+
+export function IsoCone({ p, tip: [x, y, z], radius, height }: IsoConeProps) {
+  const [rx, ry] = ellipseRadii(p, radius);
+  const [tx, ty] = project(p, [x, y, z]);
+  const [cx, cy] = project(p, [x, y, z + height]);
+  const [sx, sy] = project(p, [x, y, z + height + radius * 0.75]);
+  const r = rx * 0.95;
+  const side = `M${tx},${ty} L${cx - rx},${cy} A${rx},${ry} 0 0 0 ${cx + rx},${cy} Z`;
+  const waffle = `M${tx},${ty} L${cx - rx * 0.4},${cy + ry * 0.92} M${tx},${ty} L${cx + rx * 0.4},${cy + ry * 0.92}`;
+  const chips: Vec2[] = [
+    [-0.35, -0.3],
+    [0.3, -0.45],
+    [0.4, 0.15],
+    [-0.15, 0.3],
+  ];
+  return (
+    <g>
+      <g data-tone="default">
+        <path className="iso-face iso-face-left" d={side} />
+        <path className="iso-guide" d={waffle} />
+      </g>
+      <g data-tone="accent">
+        <circle className="iso-face iso-face-top" cx={sx} cy={sy} r={r} />
+        <path
+          className="iso-face iso-face-top"
+          d={`M${sx + r * 0.35},${sy + r * 0.9} q${r * 0.12},${r * 0.55} 0,${r * 0.7} q${-r * 0.12},${-r * 0.15} 0,${-r * 0.7}`}
+        />
+      </g>
+      {chips.map(([dx, dy]) => (
+        <circle key={`${dx}${dy}`} className="iso-dot" cx={sx + dx * r} cy={sy + dy * r} r={1} />
+      ))}
+    </g>
+  );
+}
+
 interface IsoRippleProps {
   p: Projector;
   center: Vec3;
@@ -128,6 +169,44 @@ export function IsoRipple({ p, center, radius }: IsoRippleProps) {
         />
       ))}
     </g>
+  );
+}
+
+interface IsoShadowProps {
+  p: Projector;
+  center: Vec3;
+  radius: number;
+}
+
+export function IsoShadow({ p, center, radius }: IsoShadowProps) {
+  const [rx, ry] = ellipseRadii(p, radius);
+  const [cx, cy] = project(p, center);
+  return <ellipse className="iso-shadow" cx={cx} cy={cy} rx={rx} ry={ry} />;
+}
+
+interface IsoPrintProps {
+  p: Projector;
+  center: Vec3;
+  toward: Vec3;
+  radius: number;
+  index: number;
+  tone?: "default" | "accent" | "ghost";
+}
+
+export function IsoPrint({ p, center, toward, radius, index, tone = "default" }: IsoPrintProps) {
+  const [cx, cy] = project(p, center);
+  const [tx, ty] = project(p, toward);
+  const angle = (Math.atan2(ty - cy, tx - cx) * 180) / Math.PI;
+  const size = radius * p.scale;
+  return (
+    <ellipse
+      className="iso-print"
+      data-tone={tone}
+      style={{ "--i": index } as CSSProperties}
+      rx={(size * 1.5).toFixed(2)}
+      ry={(size * 0.75).toFixed(2)}
+      transform={`translate(${cx.toFixed(2)} ${cy.toFixed(2)}) rotate(${angle.toFixed(2)})`}
+    />
   );
 }
 
@@ -183,7 +262,7 @@ interface IsoDotsProps {
   seed?: number;
 }
 
-function hash(n: number) {
+export function hash(n: number) {
   const s = Math.sin(n * 12.9898) * 43758.5453;
   return s - Math.floor(s);
 }
