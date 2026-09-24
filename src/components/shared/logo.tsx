@@ -8,7 +8,6 @@ export interface LogoProps extends SVGProps<SVGSVGElement> {
   size?: number;
   showWordmark?: boolean;
   full?: boolean;
-  copyOnClick?: boolean;
 }
 
 const ICON_CENTER = 32;
@@ -27,7 +26,6 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
       size = 64,
       showWordmark = false,
       full = false,
-      copyOnClick = false,
       "aria-label": ariaLabel,
       "aria-hidden": ariaHidden,
       ...props
@@ -57,20 +55,13 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
         <LogoIcon
           ref={ref}
           size={size}
-          className={cn(
-            "transition-colors select-none",
-            copyOnClick && "cursor-pointer",
-            className,
-          )}
+          className={cn("transition-colors select-none", className)}
           aria-label={
             isHidden
               ? undefined
               : ((ariaLabel as string) ?? "Anish Shobith P S")
           }
           aria-hidden={isHidden ? true : undefined}
-          onClick={() => {
-            if (copyOnClick) navigator.clipboard.writeText("Anish Shobith P S");
-          }}
         />
       );
     }
@@ -93,35 +84,15 @@ export const Logo = forwardRef<SVGSVGElement, LogoProps>(
     return (
       <svg
         ref={mergedRef}
-        role={isHidden ? undefined : copyOnClick ? "button" : "img"}
+        role={isHidden ? undefined : "img"}
         aria-label={isHidden ? undefined : (ariaLabel ?? defaultLabel)}
         aria-hidden={isHidden ? true : undefined}
-        tabIndex={copyOnClick ? 0 : undefined}
         viewBox={`${vbX} 0 ${vbW} ${VB_HEIGHT}`}
         width={scaledWidth}
         height={size}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={cn(
-          "transition-colors select-none",
-          copyOnClick && "cursor-pointer",
-          className,
-        )}
-        onClick={
-          copyOnClick
-            ? () => navigator.clipboard.writeText(defaultLabel)
-            : undefined
-        }
-        onKeyDown={
-          copyOnClick
-            ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  navigator.clipboard.writeText(defaultLabel);
-                }
-              }
-            : undefined
-        }
+        className={cn("transition-colors select-none", className)}
         {...props}
       >
         {!isHidden && <title>{ariaLabel ?? defaultLabel}</title>}
