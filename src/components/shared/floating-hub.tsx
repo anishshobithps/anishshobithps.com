@@ -19,14 +19,18 @@ import { Button } from "@/components/ui/button";
 import { Text, TypographyMuted } from "@/components/ui/typography";
 import {
   ArrowDownIcon,
-  ChatCircleIcon,
   DownloadIcon,
-  HeartIcon,
   SignInIcon,
   SignOutIcon,
   XIcon,
 } from "@/components/shared/icons";
-import { LogoIcon } from "@/components/shared/logo-icon";
+import { LogoMascot } from "@/components/shared/logo-mascot";
+import {
+  CommentBubble,
+  EmptyAvatar,
+  Pass,
+  ReadingProgress,
+} from "@/components/shared/hub-doodles";
 import { Avatar } from "@/components/engagement/avatar";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import { useDraggable } from "@/hooks/use-draggable";
@@ -47,6 +51,68 @@ function HubLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+function greetingFor(pathname: string) {
+  if (pathname.startsWith("/blog/"))
+    return [
+      "enjoying the read?",
+      "Reactions, comments and the repo live here.",
+    ];
+  if (pathname === "/resume")
+    return ["hiring? nice.", "The PDF is one tap away."];
+  if (pathname.startsWith("/guestbook"))
+    return ["leaving a mark?", "Sign in below, then say hi."];
+  return ["psst, shortcuts", "The stuff that didn't fit in the header."];
+}
+
+function HubHeader() {
+  const pathname = usePathname();
+  const [title, subtitle] = greetingFor(pathname);
+  return (
+    <div className="flex items-center gap-3">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-border bg-muted/30 text-foreground">
+        <LogoMascot size={30} waving />
+      </span>
+      <div className="flex min-w-0 flex-col gap-1">
+        <Text
+          as="p"
+          variant="small"
+          className="font-pixel text-xs uppercase tracking-widest text-(--brand-text)"
+        >
+          {title}
+        </Text>
+        <Text as="p" variant="muted" className="text-xs">
+          {subtitle}
+        </Text>
+      </div>
+    </div>
+  );
+}
+
+function DragTip() {
+  return (
+    <div className="flex items-center gap-2 text-muted-foreground">
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="size-5 shrink-0 overflow-visible"
+      >
+        <path
+          d="M12 3 V21 M3 12 H21 M9 6 L12 3 L15 6 M9 18 L12 21 L15 18 M6 9 L3 12 L6 15 M18 9 L21 12 L18 15"
+          fill="none"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray="2 2.5"
+          className="mascot-drag stroke-(--brand)"
+        />
+      </svg>
+      <Text as="p" variant="muted" className="text-xs">
+        Tip: drag this button anywhere. It remembers the spot.
+      </Text>
+    </div>
+  );
+}
+
 function AuthSection({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
   const { user, isSignedIn, isLoaded } = useUser();
@@ -61,12 +127,21 @@ function AuthSection({ onClose }: { onClose: () => void }) {
           className="h-14 animate-pulse rounded-lg border border-border bg-muted/30"
         />
       ) : isSignedIn && user ? (
-        <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-3">
-          <Avatar
-            imageUrl={user.imageUrl}
-            name={user.fullName || user.username || "You"}
-            size="size-8"
-          />
+        <Pass
+          stub={
+            <span className="relative">
+              <Avatar
+                imageUrl={user.imageUrl}
+                name={user.fullName || user.username || "You"}
+                size="size-8"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full bg-(--color-available) ring-2 ring-background"
+              />
+            </span>
+          }
+        >
           <div className="min-w-0 flex-1">
             <Text as="p" variant="small" className="truncate text-foreground">
               {user.fullName || user.username || "You"}
@@ -87,25 +162,43 @@ function AuthSection({ onClose }: { onClose: () => void }) {
             }}
             className="shrink-0 gap-1.5 text-muted-foreground hover:text-foreground"
           >
-            <SignOutIcon data-icon="inline-start" aria-hidden="true" className="size-3.5" />
+            <SignOutIcon
+              data-icon="inline-start"
+              aria-hidden="true"
+              className="size-3.5"
+            />
             Sign out
           </Button>
-        </div>
+        </Pass>
       ) : (
-        <SignInButton
-          mode="modal"
-          forceRedirectUrl={pathname}
-          signUpForceRedirectUrl={pathname}
-        >
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full gap-2 pointer-coarse:h-11"
+        <Pass stub={<EmptyAvatar />}>
+          <div className="min-w-0 flex-1">
+            <Text as="p" variant="small" className="text-foreground">
+              No pass yet
+            </Text>
+            <Text as="p" variant="muted" className="text-xs">
+              Sign in to comment, react and sign.
+            </Text>
+          </div>
+          <SignInButton
+            mode="modal"
+            forceRedirectUrl={pathname}
+            signUpForceRedirectUrl={pathname}
           >
-            <SignInIcon data-icon="inline-start" aria-hidden="true" className="size-4" />
-            Sign in
-          </Button>
-        </SignInButton>
+            <Button
+              type="button"
+              size="sm"
+              className="shrink-0 gap-1.5 pointer-coarse:h-11"
+            >
+              <SignInIcon
+                data-icon="inline-start"
+                aria-hidden="true"
+                className="size-3.5"
+              />
+              Sign in
+            </Button>
+          </SignInButton>
+        </Pass>
       )}
     </section>
   );
@@ -126,9 +219,12 @@ function HubBody({
 
   return (
     <div className="flex flex-col gap-6 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <HubHeader />
+
       {engagement.present && (
         <section className="flex flex-col gap-2">
           <HubLabel>This post</HubLabel>
+          <ReadingProgress />
           <Button
             type="button"
             variant="secondary"
@@ -138,24 +234,19 @@ function HubBody({
             }}
             className={CARD_CLASS}
           >
-            <span className="flex items-center gap-1.5 text-rose-500">
-              <HeartIcon data-icon="inline-start" weight="fill" aria-hidden="true" className="size-4" />
-            </span>
+            <CommentBubble count={engagement.commentCount} />
             <span className="flex min-w-0 flex-1 flex-col">
               <Text as="span" variant="small" className="text-foreground">
                 Reactions &amp; comments
               </Text>
               <Text as="span" variant="muted" className="text-xs">
-                {engagement.commentCount != null
-                  ? `${engagement.commentCount} ${engagement.commentCount === 1 ? "comment" : "comments"} · jump to the discussion`
-                  : "Jump to the discussion"}
+                {engagement.commentCount === 0
+                  ? "Quiet in here. Be the first to say something"
+                  : engagement.commentCount != null
+                    ? `Jump to the ${engagement.commentCount} ${engagement.commentCount === 1 ? "comment" : "comments"}`
+                    : "Jump to the discussion"}
               </Text>
             </span>
-            <ChatCircleIcon
-              data-icon="inline-end"
-              aria-hidden="true"
-              className="size-4 text-muted-foreground"
-            />
             <ArrowDownIcon
               data-icon="inline-end"
               aria-hidden="true"
@@ -194,6 +285,8 @@ function HubBody({
         <HubLabel>Repository</HubLabel>
         {repoCard}
       </section>
+
+      <DragTip />
     </div>
   );
 }
@@ -228,7 +321,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
       {...handlers}
       onClick={toggle}
       className={cn(
-        "size-12 touch-none rounded-full border border-border bg-background/90 shadow-lg backdrop-blur-md transition-[transform,box-shadow,border-color] select-none hover:bg-background/90",
+        "fab size-12 touch-none rounded-full border border-border bg-background/90 shadow-lg backdrop-blur-md transition-[transform,box-shadow,border-color] select-none hover:bg-background/90",
         dragging
           ? "scale-105 cursor-grabbing shadow-xl"
           : "cursor-grab hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.96]",
@@ -238,10 +331,10 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
       {open ? (
         <XIcon aria-hidden="true" className="size-5 text-foreground" />
       ) : (
-        <LogoIcon
-          size={22}
-          aria-hidden="true"
-          className="size-[22px] text-foreground"
+        <LogoMascot
+          size={24}
+          eyes={dragging ? "happy" : "open"}
+          className="text-foreground"
         />
       )}
     </Button>
@@ -249,7 +342,12 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
 
   return (
     <div
-      style={{ position: "fixed", left: position.x, top: position.y, zIndex: 40 }}
+      style={{
+        position: "fixed",
+        left: position.x,
+        top: position.y,
+        zIndex: 40,
+      }}
       className="print:hidden"
     >
       {isMobile ? (
@@ -263,10 +361,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
               </DrawerDescription>
               <ScrollArea className="w-full [&>[data-slot=scroll-area-viewport]]:max-h-[70dvh]">
                 <div className="mx-auto w-full max-w-md">
-                  <HubBody
-                    repoCard={repoCard}
-                    onClose={() => setOpen(false)}
-                  />
+                  <HubBody repoCard={repoCard} onClose={() => setOpen(false)} />
                 </div>
               </ScrollArea>
             </DrawerContent>
