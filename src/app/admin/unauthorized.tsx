@@ -45,14 +45,14 @@ export function AdminUnauthorized() {
             <TypographyMark>one specific account</TypographyMark>, and it is
             not yours.
           </TypographyMuted>
-          <TypographyMuted className="font-mono text-xs text-muted-foreground/50">
+          <TypographyMuted className="font-mono text-xs">
             {"// try being the owner next time."}
           </TypographyMuted>
         </div>
 
         <ButtonGroup>
           <Button asChild size="lg" variant="outline" className="font-semibold">
-            <Link href="/" aria-label="Back to site">
+            <Link href="/">
               <HouseIcon data-icon="inline-start" weight="bold" aria-hidden="true" />
               Back to site
             </Link>
@@ -63,7 +63,6 @@ export function AdminUnauthorized() {
             variant="outline"
             className="font-semibold"
             onClick={() => signOut({ redirectUrl: "/" })}
-            aria-label="Sign out"
           >
             <SignOutIcon data-icon="inline-start" weight="bold" aria-hidden="true" />
             Sign out

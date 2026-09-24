@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useId, useReducer } from "react";
-import { LazyMotion, domAnimation, m } from "motion/react";
+import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
 import opentype from "opentype.js";
 
 interface SignatureProps {
@@ -50,6 +50,7 @@ export function Signature({
   const topMargin = Math.max(5, (height - fontSize) / 2);
   const baseline = Math.min(height - 5, topMargin + fontSize);
   const maskId = `sig-${useId().replace(/:/g, "")}`;
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     let cancelled = false;
@@ -93,7 +94,7 @@ export function Signature({
         viewBox={`0 0 ${width} ${height}`}
         fill="none"
         className={className}
-        initial="hidden"
+        initial={reduceMotion ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once, amount: 0.5 }}
       >

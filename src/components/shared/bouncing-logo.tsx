@@ -57,6 +57,8 @@ export function BouncingLogos({
 
     paint();
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const tick = () => {
       const maxX = container.clientWidth - LOGO_W;
       const maxY = container.clientHeight - LOGO_SIZE;

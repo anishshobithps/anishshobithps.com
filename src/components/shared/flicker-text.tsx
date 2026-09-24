@@ -1,5 +1,7 @@
 "use client";
 
+import { useReducedMotion } from "motion/react";
+
 interface FlickerCharProps {
   char: string;
   x: number;
@@ -10,6 +12,7 @@ interface FlickerCharProps {
   logoScale?: number;
   logoX?: number;
   logoY?: number;
+  animated: boolean;
 }
 
 function FlickerChar({
@@ -22,6 +25,7 @@ function FlickerChar({
   logoScale = 1.375,
   logoX = 0,
   logoY = 0,
+  animated,
 }: FlickerCharProps) {
   return (
     <g aria-hidden="true">
@@ -55,14 +59,16 @@ function FlickerChar({
           {char}
         </text>
       )}
-      <animate
-        attributeName="opacity"
-        calcMode="discrete"
-        values={values}
-        keyTimes={keyTimes}
-        dur={dur}
-        repeatCount="indefinite"
-      />
+      {animated && (
+        <animate
+          attributeName="opacity"
+          calcMode="discrete"
+          values={values}
+          keyTimes={keyTimes}
+          dur={dur}
+          repeatCount="indefinite"
+        />
+      )}
     </g>
   );
 }
@@ -101,6 +107,7 @@ export function FlickerText({
   className,
   label,
 }: FlickerTextProps) {
+  const animated = useReducedMotion() === false;
   const totalWidth = chars.length * charWidth;
   const resolvedLabel =
     label ?? chars.map((c) => (c === "logo" ? "A" : c)).join("");
@@ -149,6 +156,7 @@ export function FlickerText({
               logoScale={scale}
               logoX={logoX}
               logoY={logoY}
+              animated={animated}
             />
           );
         }
@@ -161,6 +169,7 @@ export function FlickerText({
             dur={preset.dur}
             values={preset.values}
             keyTimes={preset.keyTimes}
+            animated={animated}
           />
         );
       })}

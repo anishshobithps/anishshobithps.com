@@ -44,7 +44,7 @@ export default function ErrorPage({ reset }: ErrorProps) {
             chars={["5", "0", "0"]}
             charWidth={76}
             className="text-foreground"
-            aria-label="Error 500"
+            label="Error 500"
           />
 
           <div className="space-y-2 text-center">
@@ -64,7 +64,6 @@ export default function ErrorPage({ reset }: ErrorProps) {
               variant="outline"
               size="lg"
               onClick={reset}
-              aria-label="Try the action again"
               className="flex items-center gap-2"
             >
               <ArrowCounterClockwiseIcon
@@ -74,11 +73,7 @@ export default function ErrorPage({ reset }: ErrorProps) {
               Try Again
             </Button>
             <Button asChild size="lg">
-              <Link
-                href="/"
-                aria-label="Go back to the home page"
-                className="flex items-center gap-2"
-              >
+              <Link href="/" className="flex items-center gap-2">
                 <HouseIcon aria-hidden="true" data-icon="inline-start" />
                 Go Home
               </Link>

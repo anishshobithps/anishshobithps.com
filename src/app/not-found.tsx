@@ -37,7 +37,7 @@ export default function NotFound() {
             chars={["4", "logo", "4"]}
             charWidth={96}
             className="text-foreground"
-            aria-label="404"
+            label="404"
           />
 
           <div className="space-y-2 text-center">
@@ -54,11 +54,7 @@ export default function NotFound() {
 
         <EmptyContent>
           <Button asChild size="lg">
-            <Link
-              href="/"
-              aria-label="Go back to the home page"
-              className="flex items-center gap-2"
-            >
+            <Link href="/" className="flex items-center gap-2">
               <HouseIcon aria-hidden="true" data-icon="inline-start" />
               Go Home
             </Link>
