@@ -25,6 +25,40 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+function isActive(pathname: string, href: string) {
+  if (pathname === href) return true;
+  return href === "/blogs" && pathname.startsWith("/blog/");
+}
+
+function NavPin({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      className={cn(
+        "nav-pin pointer-events-none size-4 overflow-visible",
+        className,
+      )}
+    >
+      <path
+        d="M7.5 7.5 L3 14"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        className="stroke-muted-foreground"
+      />
+      <ellipse
+        cx="8.6"
+        cy="6.6"
+        rx="4.2"
+        ry="3.6"
+        className="fill-foreground/15"
+      />
+      <circle cx="8" cy="5.6" r="3.9" className="fill-(--brand)" />
+      <circle cx="6.7" cy="4.3" r="1.2" className="fill-white/70" />
+    </svg>
+  );
+}
+
 function CommandMenuButton({ isMac }: { isMac: boolean }) {
   return (
     <Button
@@ -111,23 +145,39 @@ export function Header() {
               aria-label="Main navigation"
             >
               <NavigationMenuList className="gap-0.5">
-                {siteConfig.nav.map((link) => (
-                  <NavigationMenuItem key={link.href}>
-                    <NavigationMenuLink
-                      href={link.href}
-                      className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-colors aria-[current=page]:text-foreground aria-[current=page]:font-medium aria-[current=page]:bg-(--brand)/8 dark:aria-[current=page]:bg-accent"
-                      aria-current={pathname === link.href ? "page" : undefined}
-                    >
-                      <TypographySmall>{link.label}</TypographySmall>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
+                {siteConfig.nav.map((link) => {
+                  const active = isActive(pathname, link.href);
+                  return (
+                    <NavigationMenuItem key={link.href}>
+                      <NavigationMenuLink
+                        href={link.href}
+                        data-current={active || undefined}
+                        className="nav-note relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-[color,background-color,rotate] data-current:-rotate-2 data-current:bg-(--brand)/10 data-current:font-medium data-current:text-foreground data-current:ring-1 data-current:ring-(--brand)/35 data-current:hover:rotate-0 data-current:hover:bg-(--brand)/15"
+                        aria-current={
+                          pathname === link.href
+                            ? "page"
+                            : active
+                              ? "true"
+                              : undefined
+                        }
+                      >
+                        <TypographySmall>{link.label}</TypographySmall>
+                        {active && (
+                          <NavPin
+                            key={pathname}
+                            className="absolute -top-2 -right-1.5"
+                          />
+                        )}
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  );
+                })}
               </NavigationMenuList>
             </NavigationMenu>
 
             <ButtonGroup className="max-md:hidden">
               <CommandMenuButton isMac={isMac} />
-              <ThemeToggle className="rounded-r-full" />
+              <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-[3px] pl-1 pointer-coarse:h-11" />
             </ButtonGroup>
 
             <ButtonGroup className="md:hidden">
@@ -166,17 +216,29 @@ export function Header() {
             className="flex flex-col divide-y"
             aria-label="Mobile navigation"
           >
-            {siteConfig.nav.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
-                aria-current={pathname === link.href ? "page" : undefined}
-              >
-                <TypographySmall>{link.label}</TypographySmall>
-              </Link>
-            ))}
+            {siteConfig.nav.map((link) => {
+              const active = isActive(pathname, link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
+                  aria-current={
+                    pathname === link.href
+                      ? "page"
+                      : active
+                        ? "true"
+                        : undefined
+                  }
+                >
+                  <span className="flex items-center gap-2">
+                    <TypographySmall>{link.label}</TypographySmall>
+                    {active && <NavPin key={pathname} />}
+                  </span>
+                </Link>
+              );
+            })}
             <div className="flex items-center justify-between px-6 py-3.5">
               <TypographySmall className="text-foreground" id="theme-label">
                 Theme
