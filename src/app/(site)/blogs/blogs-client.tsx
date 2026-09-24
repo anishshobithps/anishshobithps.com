@@ -1,6 +1,5 @@
 "use client";
 
-import { DecorIcon } from "@/components/ui/border";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,
@@ -8,6 +7,7 @@ import {
 } from "@/components/ui/button-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Divider } from "@/components/ui/divider";
+import { panelRow } from "@/components/layouts/page";
 import { Label } from "@/components/ui/label";
 import {
   InputGroup,
@@ -245,7 +245,7 @@ export function BlogsClient({
           >
             <SelectTrigger
               className="cursor-pointer font-semibold w-full"
-              aria-label={`Showing ${per} posts per page`}
+              aria-label="Posts per page"
             >
               <SelectValue />
             </SelectTrigger>
@@ -263,6 +263,12 @@ export function BlogsClient({
           </Select>
         </ButtonGroup>
       </div>
+
+      <TypographyMuted role="status" className="sr-only">
+        {deferredQuery.trim() || tags.length > 0
+          ? `${filtered.length} ${filtered.length === 1 ? "post" : "posts"} found`
+          : ""}
+      </TypographyMuted>
 
       {tags.length > 0 && (
         <ul
@@ -289,42 +295,40 @@ export function BlogsClient({
         </ul>
       )}
 
-      <div className="relative -mx-6 sm:-mx-8 lg:-mx-10" aria-hidden="true">
-        <DecorIcon position="top-left" pageBorder />
-        <DecorIcon position="top-right" pageBorder />
-        <Divider short />
-      </div>
+      <Divider />
 
       <div>
         {paginated.length === 0 ? (
-          <div
-            role="status"
-            aria-live="polite"
-            className="py-12 text-center space-y-2"
-          >
+          <div className="py-12 text-center space-y-2">
             {posts.length === 0 ? (
               <>
                 <TypographyMuted>No posts published yet.</TypographyMuted>
-                <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
+                <TypographyMuted className="font-mono text-xs">
                   {"// check back soon."}
                 </TypographyMuted>
               </>
             ) : (
               <>
                 <TypographyMuted>Nothing matched that search.</TypographyMuted>
-                <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
+                <TypographyMuted className="font-mono text-xs">
                   {"// try different terms or clear the filters."}
                 </TypographyMuted>
               </>
             )}
           </div>
         ) : (
-          <ul role="list" aria-label="Blog posts" aria-live="polite">
+          <ul
+            role="list"
+            aria-label="Blog posts"
+            className="-mx-gutter flex flex-col gap-px bg-line"
+          >
             {paginated.map((post, index) => {
               const date = post.date ? formatShortDate(post.date) : undefined;
               return (
-                <li key={post.url}>
-                  {index > 0 && <Divider plain />}
+                <li
+                  key={post.url}
+                  className={panelRow}
+                >
                   <Reveal delay={Math.min(index, 6) * 55}>
                   <Link
                     href={post.url as Route}
@@ -382,17 +386,9 @@ export function BlogsClient({
 
       {filtered.length > 0 && (
         <>
-          <div className="relative -mx-6 sm:-mx-8 lg:-mx-10" aria-hidden="true">
-            <DecorIcon position="top-left" pageBorder />
-            <DecorIcon position="top-right" pageBorder />
-            <Divider short />
-          </div>
+          <Divider />
           <div className="flex flex-col items-center gap-3 pt-6">
-            <TypographyMuted
-              aria-live="polite"
-              aria-atomic="true"
-              className="text-xs tabular-nums"
-            >
+            <TypographyMuted className="text-xs tabular-nums">
               Showing {(currentPage - 1) * per + 1}–
               {Math.min(currentPage * per, filtered.length)} of{" "}
               {filtered.length} post{filtered.length !== 1 ? "s" : ""}

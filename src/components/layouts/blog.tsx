@@ -1,7 +1,6 @@
 "use client";
 
 import { Section } from "@/components/layouts/page";
-import { FullWidthDivider, DecorIcon } from "@/components/ui/border";
 import {
   Collapsible,
   CollapsibleContent,
@@ -178,23 +177,18 @@ export function MobileTOC() {
       )}
       <div
         ref={rootRef}
-        className="sticky top-14 z-50 xl:hidden bg-background shadow-sm before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-border backdrop-blur-md supports-backdrop-filter:bg-background/80"
+        className="sticky top-14 z-40 -mt-px border border-line bg-background xl:hidden"
       >
-        <FullWidthDivider position="top" />
-        <DecorIcon position="top-left" pageBorder />
-        <DecorIcon position="top-right" pageBorder />
-        <DecorIcon position="bottom-left" alignY="outer" pageBorder />
-        <DecorIcon position="bottom-right" alignY="outer" pageBorder />
         <Collapsible open={open} onOpenChange={setOpen}>
           <header
             className={cn(
-              "backdrop-blur-sm transition-colors bg-background/80",
+              "transition-shadow",
               open && "shadow-lg",
             )}
           >
             <CollapsibleTrigger
               aria-label={open ? "Hide table of contents" : "Show table of contents"}
-              className="flex w-full h-10 items-center text-sm gap-2.5 px-6 sm:px-8 lg:px-10 cursor-pointer"
+              className="flex w-full h-10 items-center text-sm gap-2.5 px-gutter cursor-pointer"
             >
               <ProgressCircle
                 value={(selected + 1) / Math.max(1, items.length)}
@@ -212,7 +206,7 @@ export function MobileTOC() {
               >
                 {selected !== -1 ? items[selected]?.title : "On this page"}
               </span>
-              <span className="shrink-0 font-mono text-xs text-muted-foreground/60 tabular-nums">
+              <span className="shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
                 {selected !== -1 ? selected + 1 : 0}
                 <span className="mx-0.5">/</span>
                 {items.length}
@@ -233,7 +227,7 @@ export function MobileTOC() {
               )}
             >
               <div
-                className="px-6 sm:px-8 lg:px-10 pb-3"
+                className="px-gutter pb-3"
                 ref={scrollContainerRef}
               >
                 <TOCScrollArea className="max-h-[50vh]">
@@ -243,7 +237,6 @@ export function MobileTOC() {
             </CollapsibleContent>
           </header>
         </Collapsible>
-        <FullWidthDivider position="bottom" />
       </div>
     </>
   );
@@ -259,12 +252,10 @@ export function BlogBody({ toc, children }: BlogBodyProps) {
     <TOCProvider toc={toc}>
       <MobileTOC />
 
-      <Section noTopDivider>
+      <Section variant="article">
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
           <article className="prose min-w-0">{children}</article>
           <aside className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
-            <DecorIcon position="top-left" alignX="outer" />
-            <DecorIcon position="bottom-left" alignX="outer" />
             <div className="pl-8 sticky top-20 flex flex-col gap-6">
               <div>
                 <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">

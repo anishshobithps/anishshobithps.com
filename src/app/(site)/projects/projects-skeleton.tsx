@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProjectsSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <CardGrid cols="grid-cols-1 md:grid-cols-2" aria-hidden="true">
+    <CardGrid aria-hidden="true">
       {Array.from({ length: count }).map((_, index) => (
         <CardGridItem key={index}>
           <div className="space-y-4">

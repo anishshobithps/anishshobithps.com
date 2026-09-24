@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@/components/shared/icons";
-import { Section, Card } from "@/components/layouts/page";
+import { Section } from "@/components/layouts/page";
 import { Reveal } from "@/components/shared/reveal";
 import {
   TypographyH2,
@@ -21,7 +21,7 @@ export function Contact() {
   return (
     <Section aria-label="Contact" id="contact">
       <Reveal className="w-full max-w-5xl">
-        <Card className="@lg:p-10">
+        <div className="@container">
           <div className="space-y-8">
             <div className="space-y-4 max-w-2xl">
               <TypographyH2>
@@ -88,7 +88,7 @@ export function Contact() {
               </div>
             </nav>
           </div>
-        </Card>
+        </div>
       </Reveal>
     </Section>
   );

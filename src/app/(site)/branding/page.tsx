@@ -46,7 +46,7 @@ export default function BrandingPage() {
 
       <Section aria-label="Typography">
         <SectionHeader>Typography</SectionHeader>
-        <CardGrid cols="grid-cols-1 md:grid-cols-2">
+        <CardGrid>
           {[
             {
               title: "Heading One",
@@ -171,7 +171,7 @@ export default function BrandingPage() {
 
       <Section aria-label="Logo Variants">
         <SectionHeader>Logo Variants</SectionHeader>
-        <CardGrid cols="grid-cols-1 md:grid-cols-3">
+        <CardGrid columns={3}>
           {[
             { label: "Icon", props: {}, description: "Pocket-sized identity" },
             {

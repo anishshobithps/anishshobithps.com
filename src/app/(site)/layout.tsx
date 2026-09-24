@@ -27,7 +27,10 @@ export default function SiteLayout({
           Skip to content
         </a>
         <Header />
-        <Content id="main-content" className="scroll-smooth pt-14">
+        <Content
+          id="main-content"
+          className="scroll-smooth pt-[calc(3.5rem+1px)]"
+        >
           <ViewTransition>{children}</ViewTransition>
         </Content>
         <Footer />

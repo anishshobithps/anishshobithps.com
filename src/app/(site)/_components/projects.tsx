@@ -39,12 +39,9 @@ export async function ProjectGrid() {
   }
 
   return (
-    <CardGrid cols="grid-cols-1 md:grid-cols-2">
+    <CardGrid>
       {projects.map((project, index) => (
-        <CardGridItem
-          key={project.title}
-          className="group transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1.5 hover:shadow-md"
-        >
+        <CardGridItem key={project.title}>
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
               <TypographyH2 className="text-xl">
@@ -83,7 +80,7 @@ export async function ProjectGrid() {
                             aria-hidden="true"
                           />
 
-                          <span className="ml-2">Live</span>
+                          <span>Live</span>
                         </Link>
                       </Button>
                       <ButtonGroupSeparator />
@@ -102,7 +99,7 @@ export async function ProjectGrid() {
                           className="size-4"
                           aria-hidden="true"
                         />
-                        <span className="ml-2" aria-hidden="true">
+                        <span aria-hidden="true">
                           GitHub
                         </span>
                       </Link>
@@ -152,14 +149,14 @@ export function BuiltThings() {
           >
             <GithubLogoIcon
               data-icon="inline-start"
-              className="size-5 mr-2"
+              className="size-5"
               aria-hidden="true"
             />
 
             <span>Explore the Chaos</span>
             <ArrowUpRightIcon
               data-icon="inline-end"
-              className="size-4 ml-2 opacity-70"
+              className="size-4 opacity-70"
               aria-hidden="true"
             />
           </Link>

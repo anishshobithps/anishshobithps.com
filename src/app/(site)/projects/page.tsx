@@ -39,7 +39,7 @@ export default function ProjectsPage() {
           and never quite finished.
         </TypographyLead>
       </Section>
-      <Section aria-label="Projects list">
+      <Section variant="flush" aria-label="Projects list">
         <Suspense fallback={<ProjectsSkeleton count={6} />}>
           <ProjectGrid />
         </Suspense>

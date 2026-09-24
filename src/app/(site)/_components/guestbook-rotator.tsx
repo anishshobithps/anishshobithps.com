@@ -31,7 +31,7 @@ function EntryAvatar({ entry }: { entry: GuestbookPreviewEntry }) {
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
-        alt={entry.user.name}
+        alt=""
         className="size-7 rounded-full ring-1 ring-border shrink-0 object-cover"
         width={28}
         height={28}
@@ -76,7 +76,7 @@ export function GuestbookRotator({
     return (
       <div className="py-8 space-y-1 mb-8">
         <TypographyMuted>Nobody here yet.</TypographyMuted>
-        <TypographyMuted className="font-mono text-xs text-muted-foreground/40">
+        <TypographyMuted className="font-mono text-xs">
           {"// be the first."}
         </TypographyMuted>
       </div>
@@ -88,7 +88,7 @@ export function GuestbookRotator({
   const duration = `${Math.round((entries.length * 224) / 50)}s`;
 
   return (
-    <div className="mb-8 -mx-6 sm:-mx-8 lg:-mx-10">
+    <div className="mb-8 -mx-gutter">
       <div className="motion-reduce:hidden">
         <div
           className="overflow-hidden"
@@ -113,7 +113,7 @@ export function GuestbookRotator({
           </div>
         </div>
 
-        <div className="flex justify-end px-6 pt-2 sm:px-8 lg:px-10">
+        <div className="flex justify-end px-gutter pt-2">
           <Button
             type="button"
             variant="outline"
@@ -124,7 +124,7 @@ export function GuestbookRotator({
                 ? "Resume scrolling guestbook entries"
                 : "Pause scrolling guestbook entries"
             }
-            className="h-7 gap-1.5 px-2 text-muted-foreground/70 hover:text-foreground"
+            className="h-7 gap-1.5 px-2 text-muted-foreground hover:text-foreground"
           >
             {stopped ? (
               <PlayIcon data-icon="inline-start" size={12} aria-hidden="true" />
@@ -137,7 +137,7 @@ export function GuestbookRotator({
       </div>
 
       <ul
-        className="hidden motion-reduce:flex flex-col gap-4 px-6 sm:px-8 lg:px-10 mb-2"
+        className="hidden motion-reduce:flex flex-col gap-4 px-gutter mb-2"
         aria-label="Guestbook entries"
       >
         {entries.slice(0, 4).map((entry) => (

@@ -39,10 +39,10 @@ export function BlogTeaser() {
             <Link
               key={post.url}
               href={post.url as Route}
-              className="group flex items-baseline justify-between gap-4 py-4 border-b last:border-b-0 -mx-6 px-6 sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10 hover:bg-muted/40 transition-colors"
+              className="group flex items-baseline justify-between gap-4 py-4 border-b last:border-b-0 -mx-gutter px-gutter hover:bg-muted/40 transition-colors"
             >
               <span className="font-medium text-foreground flex items-center gap-2 min-w-0">
-                <span className="truncate">{post.data.title}</span>
+                <span className="text-pretty">{post.data.title}</span>
                 <CaretRightIcon
                   className="size-3.5 text-muted-foreground/50 shrink-0 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-[opacity,transform] duration-200"
                   aria-hidden="true"

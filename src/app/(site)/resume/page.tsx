@@ -54,7 +54,7 @@ export default function ResumePage() {
         </TypographyLead>
       </Section>
 
-      <Section noTopDivider variant="compact" aria-label="Resume document">
+      <Section variant="article" aria-label="Resume document">
         <Reveal>
         <PdfViewer
           file="/api/resume"

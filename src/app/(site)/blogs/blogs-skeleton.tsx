@@ -1,5 +1,5 @@
-import { DecorIcon } from "@/components/ui/border";
 import { Divider } from "@/components/ui/divider";
+import { panelRow } from "@/components/layouts/page";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function BlogsSkeleton({ count }: { count: number }) {
@@ -13,16 +13,11 @@ export function BlogsSkeleton({ count }: { count: number }) {
         </div>
       </div>
 
-      <div className="relative -mx-6 sm:-mx-8 lg:-mx-10">
-        <DecorIcon position="top-left" pageBorder />
-        <DecorIcon position="top-right" pageBorder />
-        <Divider short />
-      </div>
+      <Divider />
 
-      <div>
+      <div className="-mx-gutter flex flex-col gap-px bg-line">
         {Array.from({ length: count }).map((_, index) => (
-          <div key={index}>
-            {index > 0 && <Divider plain />}
+          <div key={index} className={panelRow}>
             <div className="flex flex-col gap-2 py-6">
               <div className="flex items-baseline justify-between gap-4">
                 <Skeleton className="h-5 w-2/3" />
