@@ -32,10 +32,12 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
     return (
       <Tag
         ref={ref}
-        role="heading"
-        aria-level={Number(
-          as?.replace("h", "") ?? level?.replace("h", "") ?? 1,
-        )}
+        role={asChild ? "heading" : undefined}
+        aria-level={
+          asChild
+            ? Number(as?.replace("h", "") ?? level?.replace("h", "") ?? 1)
+            : undefined
+        }
         className={cn(headingVariants({ level }), className)}
         {...props}
       />
@@ -149,7 +151,6 @@ export const TypographyBlockquote = forwardRef<
   return (
     <Tag
       ref={ref}
-      role="blockquote"
       className={cn(
         "mt-6 border-l-2 border-border pl-6 italic text-muted-foreground",
         className,
@@ -188,10 +189,6 @@ export const TypographyInlineCode = forwardRef<HTMLElement, InlineCodeProps>(
     return (
       <Tag
         ref={ref}
-        role="code"
-        aria-label={
-          typeof props.children === "string" ? props.children : undefined
-        }
         className={cn(
           "relative rounded bg-muted px-[0.3em] py-[0.15em] font-mono text-[0.875em] font-semibold text-foreground",
           className,
@@ -211,11 +208,6 @@ export const TypographyMark = forwardRef<HTMLElement, MarkProps>(
     return (
       <Tag
         ref={ref}
-        aria-label={
-          typeof props.children === "string"
-            ? `highlighted: ${props.children}`
-            : undefined
-        }
         className={cn(
           "bg-(--selection-bg) text-(--selection-fg) **:text-inherit rounded-sm px-[0.25em] not-italic",
           className,
