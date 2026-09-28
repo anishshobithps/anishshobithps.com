@@ -98,7 +98,7 @@ export function LogoMascot({
       style={{ width, height: size }}
       fill="none"
       aria-hidden="true"
-      className={cn("mascot shrink-0 overflow-visible", className)}
+      className={cn("shrink-0 overflow-visible", className)}
     >
       {waving && (
         <g className="[transform-box:view-box] origin-[44px_42px] animate-mascot-wave">

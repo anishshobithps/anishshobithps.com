@@ -20,15 +20,28 @@ interface PostCardProps {
   featured?: boolean;
 }
 
-function CoverMeta({ label, number, accent }: { label?: string; number: number; accent?: boolean }) {
+function CoverMeta({
+  label,
+  number,
+  accent,
+}: {
+  label?: string;
+  number: number;
+  accent?: boolean;
+}) {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-3 p-4">
       {label && (
         <SectionLabel
           pixel
-          className={cn("flex items-center gap-2", accent && "text-(--brand-text)")}
+          className={cn(
+            "flex items-center gap-2",
+            accent && "text-(--brand-text)",
+          )}
         >
-          {accent && <span className="size-1.5 rounded-full bg-(--brand) motion-safe:animate-pulse" />}
+          {accent && (
+            <span className="size-1.5 rounded-full bg-(--brand) motion-safe:animate-pulse" />
+          )}
           {label}
         </SectionLabel>
       )}
@@ -92,12 +105,18 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           </TypographyMuted>
         )}
         <ViewTransition name={postTransitionName(post.url)}>
-          <Heading as="h2" level={featured ? "h3" : "h4"} className="text-pretty">
+          <Heading
+            as="h2"
+            level={featured ? "h3" : "h4"}
+            className="text-pretty"
+          >
             {post.title}
           </Heading>
         </ViewTransition>
         {post.description && (
-          <TypographyMuted className={cn("leading-relaxed", !featured && "line-clamp-2")}>
+          <TypographyMuted
+            className={cn("leading-relaxed", !featured && "line-clamp-2")}
+          >
             {post.description}
           </TypographyMuted>
         )}

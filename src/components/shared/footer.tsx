@@ -1,4 +1,9 @@
 import { EndOfPage } from "@/components/shared/end-of-page";
+import {
+  GroupGlyph,
+  OnlinePing,
+  ThemeNudge,
+} from "@/components/shared/doodles";
 import { Logo } from "@/components/shared/logo";
 import { NowPlaying } from "@/components/shared/now-playing";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -16,36 +21,16 @@ import { Suspense } from "react";
 import type { Route } from "next";
 
 const linkGroups = [
-  { title: "Pages", links: siteConfig.nav },
+  { title: "Pages", variant: "pages", links: siteConfig.nav },
   {
     title: "Site",
+    variant: "site",
     links: [
       { href: "/branding", label: "Branding" },
       { href: "/privacy-policy", label: "Privacy Policy" },
     ],
   },
-];
-
-function ThemeNudge() {
-  return (
-    <div aria-hidden="true" className="flex items-center gap-1.5">
-      <SectionLabel pixel className="text-(--brand-text)">
-        <span className="dark:hidden">lights off?</span>
-        <span className="hidden dark:inline">lights on?</span>
-      </SectionLabel>
-      <svg viewBox="0 0 34 22" className="h-5.5 w-8.5 overflow-visible">
-        <path
-          d="M2 16 C10 20, 22 18, 31 9 M24.5 8.5 L31 9 L30 15.5"
-          fill="none"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="stroke-(--brand)"
-        />
-      </svg>
-    </div>
-  );
-}
+] as const;
 
 export function Footer() {
   return (
@@ -71,6 +56,10 @@ export function Footer() {
                 Building opinionated interfaces for the web.
               </TypographySmall>
 
+              <SectionLabel className="inline-flex items-center gap-1.5">
+                <OnlinePing />
+                Elsewhere
+              </SectionLabel>
               <nav aria-label="Social links" className="flex gap-2">
                 {siteConfig.social.map((item) => (
                   <Button
@@ -94,10 +83,7 @@ export function Footer() {
 
               <Suspense
                 fallback={
-                  <div
-                    className="flex items-center gap-1.5"
-                    aria-hidden="true"
-                  >
+                  <div className="flex items-center gap-1.5" aria-hidden="true">
                     <div className="size-9 rounded-full bg-muted animate-pulse shrink-0" />
                     <div className="h-2.5 w-36 rounded bg-muted animate-pulse" />
                   </div>
@@ -108,13 +94,16 @@ export function Footer() {
             </div>
 
             <div className="grid grid-cols-2 gap-8 sm:gap-12">
-              {linkGroups.map(({ title, links }) => (
+              {linkGroups.map(({ title, variant, links }) => (
                 <nav
                   key={title}
                   aria-label={`${title} links`}
                   className="flex flex-col gap-3"
                 >
-                  <SectionLabel>{title}</SectionLabel>
+                  <SectionLabel className="inline-flex items-center gap-1.5">
+                    <GroupGlyph variant={variant} />
+                    {title}
+                  </SectionLabel>
                   <ul role="list" className="flex flex-col gap-1">
                     {links.map(({ href, label }) => (
                       <li key={href}>

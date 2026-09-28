@@ -63,7 +63,11 @@ const TONES: Record<
 };
 
 function face(tone: Tone, side: "top" | "left" | "right") {
-  return cn("stroke-1 [stroke-linejoin:round]", TONES[tone].stroke, TONES[tone][side]);
+  return cn(
+    "stroke-1 [stroke-linejoin:round]",
+    TONES[tone].stroke,
+    TONES[tone][side],
+  );
 }
 
 const LINE = "fill-none [stroke-linecap:round] [stroke-linejoin:round]";
@@ -108,7 +112,12 @@ interface IsoBoxProps {
   tone?: Tone;
 }
 
-export function IsoBox({ p, at: [x, y, z], size: [w, d, h], tone = "default" }: IsoBoxProps) {
+export function IsoBox({
+  p,
+  at: [x, y, z],
+  size: [w, d, h],
+  tone = "default",
+}: IsoBoxProps) {
   const t = z + h;
   return (
     <g>
@@ -203,7 +212,13 @@ export function IsoCone({ p, tip: [x, y, z], radius, height }: IsoConeProps) {
         />
       </g>
       {chips.map(([dx, dy]) => (
-        <circle key={`${dx}${dy}`} className={DOT} cx={sx + dx * r} cy={sy + dy * r} r={1} />
+        <circle
+          key={`${dx}${dy}`}
+          className={DOT}
+          cx={sx + dx * r}
+          cy={sy + dy * r}
+          r={1}
+        />
       ))}
     </g>
   );
@@ -256,7 +271,14 @@ interface IsoPrintProps {
   tone?: "default" | "accent" | "ghost";
 }
 
-export function IsoPrint({ p, center, toward, radius, index, tone = "default" }: IsoPrintProps) {
+export function IsoPrint({
+  p,
+  center,
+  toward,
+  radius,
+  index,
+  tone = "default",
+}: IsoPrintProps) {
   const [cx, cy] = project(p, center);
   const [tx, ty] = project(p, toward);
   const angle = (Math.atan2(ty - cy, tx - cx) * 180) / Math.PI;
@@ -355,8 +377,13 @@ export function IsoDots({
     for (let iy = 0; iy <= rows; iy++) {
       const lx = ix * step;
       const ly = iy * step;
-      if (shape === "circle" && Math.hypot(lx - w / 2, ly - d / 2) > r) continue;
-      if (shape === "rows" && (iy % 3 === 2 || ix > cols * (0.45 + 0.55 * hash(iy + seed)))) continue;
+      if (shape === "circle" && Math.hypot(lx - w / 2, ly - d / 2) > r)
+        continue;
+      if (
+        shape === "rows" &&
+        (iy % 3 === 2 || ix > cols * (0.45 + 0.55 * hash(iy + seed)))
+      )
+        continue;
       const [cx, cy] = project(p, [x + lx, y + ly, z]);
       const h = hash(++i + seed * 97);
       dots.push({ cx, cy, on: h < lit, delay: hash(i + seed) * 3 });

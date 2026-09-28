@@ -6,7 +6,11 @@ interface IsoStageProps extends ComponentProps<"div"> {
   ambient?: boolean;
 }
 
-export function IsoStage({ ambient = false, className, ...props }: IsoStageProps) {
+export function IsoStage({
+  ambient = false,
+  className,
+  ...props
+}: IsoStageProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

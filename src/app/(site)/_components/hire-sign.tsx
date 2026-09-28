@@ -14,7 +14,11 @@ const PHRASES = [
 
 function NeonSign() {
   return (
-    <svg viewBox="0 0 44 30" aria-hidden="true" className="h-7.5 w-11 shrink-0 overflow-visible">
+    <svg
+      viewBox="0 0 44 30"
+      aria-hidden="true"
+      className="h-7.5 w-11 shrink-0 overflow-visible"
+    >
       <circle cx="22" cy="2.5" r="1.6" className="fill-muted-foreground" />
       <g className="[transform-box:view-box] origin-[22px_2.5px] animate-neon-sway group-hover:animate-neon-swing group-focus-visible:animate-neon-swing">
         <path
@@ -55,7 +59,10 @@ export function HireSign() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % PHRASES.length), 2800);
+    const id = setInterval(
+      () => setIndex((i) => (i + 1) % PHRASES.length),
+      2800,
+    );
     return () => clearInterval(id);
   }, []);
 

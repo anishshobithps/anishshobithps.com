@@ -30,7 +30,7 @@ import {
   EmptyAvatar,
   Pass,
   ReadingProgress,
-} from "@/components/shared/hub-doodles";
+} from "@/components/shared/hub-widgets";
 import { Avatar } from "@/components/engagement/avatar";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import { useDraggable } from "@/hooks/use-draggable";

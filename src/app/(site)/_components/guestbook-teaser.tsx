@@ -48,7 +48,7 @@ export async function GuestbookTeaser() {
               </Link>
             </Button>
           </div>
-          <ArtStage className="hidden aspect-video md:block">
+          <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-video">
             <PageArt name="traces" />
           </ArtStage>
         </div>

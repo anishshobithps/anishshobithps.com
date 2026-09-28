@@ -106,7 +106,9 @@ export function GitChaos() {
             height={CELL}
             rx="2"
             className={twinkle ? isoTwinkle : LEVEL_CLASS[level]}
-            style={twinkle ? { animationDelay: `-${d.toFixed(2)}s` } : undefined}
+            style={
+              twinkle ? { animationDelay: `-${d.toFixed(2)}s` } : undefined
+            }
           />
         ))}
       </g>

@@ -6,7 +6,7 @@ import {
   TypographyMuted,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { isoType } from "@/components/diagrams/classes";
+import { Signpost } from "@/components/shared/doodles";
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -41,7 +41,10 @@ function plankClass({ index, accent }: Omit<PlankProps, "children">) {
 }
 
 function plankStyle(index: number) {
-  return { top: `${28 + index * 46}px`, "--tilt": `${TILTS[index]}deg` } as CSSProperties;
+  return {
+    top: `${28 + index * 46}px`,
+    "--tilt": `${TILTS[index]}deg`,
+  } as CSSProperties;
 }
 
 function PlankText({ label, note }: { label: string; note: string }) {
@@ -57,38 +60,6 @@ function PlankText({ label, note }: { label: string; note: string }) {
   );
 }
 
-function Signpost() {
-  return (
-    <svg
-      viewBox="0 0 288 248"
-      aria-hidden="true"
-      className="absolute inset-0 size-full overflow-visible"
-    >
-      <ellipse cx="144" cy="226" rx="112" ry="9" className="fill-foreground/5" />
-      <path
-        d="M70 226 q3 -9 6 0 q3 -12 6 0 M196 225 q3 -8 6 0 q3 -11 6 0 q3 -7 6 0"
-        fill="none"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        className="stroke-(--brand)/60"
-      />
-      <path d="M131 14 L144 4 L157 14 Z" className="fill-muted-foreground/60" />
-      <rect x="138" y="14" width="12" height="214" rx="2" className="fill-muted stroke-foreground/20" />
-      <path d="M142 30 V210 M146 60 V190" strokeWidth="0.8" className="stroke-foreground/10" />
-      <g className="animate-pin-bounce">
-        <path
-          d="M232 222 c-6 -7 -9 -11 -9 -15 a9 9 0 0 1 18 0 c0 4 -3 8 -9 15 z"
-          className="fill-(--brand)"
-        />
-        <circle cx="232" cy="207" r="3" className="fill-background" />
-      </g>
-      <text x="232" y="242" fontSize="8" textAnchor="middle" className={`${isoType} fill-muted-foreground`}>
-        you are here
-      </text>
-    </svg>
-  );
-}
-
 function backToTop() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
@@ -97,7 +68,10 @@ function backToTop() {
 
 export function EndOfPage() {
   const pathname = usePathname();
-  const planks = DESTINATIONS.filter((d) => !pathname.startsWith(d.href)).slice(0, 3);
+  const planks = DESTINATIONS.filter((d) => !pathname.startsWith(d.href)).slice(
+    0,
+    3,
+  );
 
   return (
     <div className="grid items-center gap-8 sm:grid-cols-[minmax(0,1fr)_18rem]">
@@ -112,7 +86,10 @@ export function EndOfPage() {
         </TypographyMuted>
       </div>
 
-      <nav aria-label="Keep exploring" className="relative mx-auto h-62 w-full max-w-72">
+      <nav
+        aria-label="Keep exploring"
+        className="relative mx-auto h-62 w-full max-w-72"
+      >
         <Signpost />
         {planks.map(({ href, label, note, accent }, index) => (
           <Link

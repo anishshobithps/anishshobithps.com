@@ -9,6 +9,18 @@ import {
 import { LogoDownloadCard } from "@/app/(site)/branding/logo-download-card";
 import { BrandingOGPreview } from "@/app/(site)/branding/branding-og-preview";
 import {
+  CricketDoodle,
+  GroupGlyph,
+  IceCreamNote,
+  OnlinePing,
+  PhotoCallout,
+  ReactionMascot,
+  Signpost,
+  SocialsNudge,
+  ThemeNudge,
+  TypingBubble,
+} from "@/components/shared/doodles";
+import {
   TypographyH1,
   TypographyH2,
   TypographyH3,
@@ -25,6 +37,29 @@ import {
   SectionLabel,
   SectionHeader,
 } from "@/components/ui/typography";
+import { cn } from "@/lib/cn";
+import type { ReactNode } from "react";
+
+function DoodleStage({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "relative flex h-24 items-center justify-center",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+const moods = ["", "terrible", "bad", "good", "amazing"] as const;
 
 export default function BrandingPage() {
   return (
@@ -58,7 +93,9 @@ export default function BrandingPage() {
             },
             {
               title: "Heading Three",
-              component: <TypographyH3 as="p">Something&apos;s On Fire</TypographyH3>,
+              component: (
+                <TypographyH3 as="p">Something&apos;s On Fire</TypographyH3>
+              ),
             },
             {
               title: "Heading Four",
@@ -200,6 +237,164 @@ export default function BrandingPage() {
             From 16&times;16 favicon to full-bleed billboard, the logo survives
             it all. <TypographyMark>Unlike my confidence</TypographyMark> before
             a code review.
+          </TypographyLead>
+        </div>
+      </Section>
+
+      <Section aria-label="Doodles">
+        <SectionHeader>Doodles</SectionHeader>
+        <CardGrid>
+          {[
+            {
+              title: "Photo Callout",
+              description:
+                "Points out the profile photo, flips text when it's too dark to see.",
+              component: (
+                <div className="pt-12">
+                  <DoodleStage className="h-12">
+                    <PhotoCallout />
+                  </DoodleStage>
+                </div>
+              ),
+            },
+            {
+              title: "Socials Nudge",
+              description:
+                "Tells you DMs are open before you scroll past the proof.",
+              component: (
+                <div className="pb-10">
+                  <DoodleStage className="h-12">
+                    <SocialsNudge />
+                  </DoodleStage>
+                </div>
+              ),
+            },
+            {
+              title: "Ice Cream Note",
+              description: "Unverified nutritional claim, fully verified vibe.",
+              component: (
+                <DoodleStage>
+                  <IceCreamNote />
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Theme Nudge",
+              description:
+                "Lights on, lights off, still shipping the same bugs.",
+              component: (
+                <DoodleStage>
+                  <ThemeNudge />
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Online Ping",
+              description: "Radar for “technically reachable.”",
+              component: (
+                <DoodleStage>
+                  <OnlinePing />
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Nav Glyphs",
+              description:
+                "So the footer's link groups don't read like a sitemap dump.",
+              component: (
+                <DoodleStage>
+                  <div className="flex items-center gap-8">
+                    <div className="flex flex-col items-center gap-2">
+                      <GroupGlyph variant="pages" />
+                      <TypographyMuted className="text-[10px] uppercase tracking-wider">
+                        Pages
+                      </TypographyMuted>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <GroupGlyph variant="site" />
+                      <TypographyMuted className="text-[10px] uppercase tracking-wider">
+                        Site
+                      </TypographyMuted>
+                    </div>
+                  </div>
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Cricket Doodle",
+              description: "What an empty comment section sounds like.",
+              component: (
+                <DoodleStage>
+                  <CricketDoodle />
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Typing Bubble",
+              description:
+                "Someone's composing a reply. Probably regretting it already.",
+              component: (
+                <DoodleStage>
+                  <TypingBubble />
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Signpost",
+              description:
+                "Four directions out of a page. All of them more scrolling.",
+              component: (
+                <DoodleStage className="h-40">
+                  <div className="relative h-36 w-28">
+                    <Signpost />
+                  </div>
+                </DoodleStage>
+              ),
+            },
+            {
+              title: "Reaction Mascot",
+              description: "Same face, five moods, zero self-control.",
+              component: (
+                <DoodleStage className="h-auto py-4">
+                  <div className="flex flex-wrap items-end justify-center gap-x-3 gap-y-4">
+                    {moods.map((mood) => (
+                      <div
+                        key={mood || "neutral"}
+                        className="flex flex-col items-center gap-1.5"
+                      >
+                        <ReactionMascot mood={mood} />
+                        <TypographyMuted className="text-[10px] uppercase tracking-wider">
+                          {mood || "neutral"}
+                        </TypographyMuted>
+                      </div>
+                    ))}
+                  </div>
+                </DoodleStage>
+              ),
+            },
+          ].map((item) => (
+            <CardGridItem key={item.title} aria-label={`${item.title} example`}>
+              <div className="space-y-3">
+                <TypographyMuted
+                  className="text-xs uppercase tracking-wider"
+                  aria-hidden="true"
+                >
+                  {item.title}
+                </TypographyMuted>
+                {item.component}
+                <TypographySmall className="block font-normal text-muted-foreground">
+                  {item.description}
+                </TypographySmall>
+              </div>
+            </CardGridItem>
+          ))}
+        </CardGrid>
+
+        <div className="mt-14 max-w-3xl">
+          <TypographyLead>
+            The small hand-drawn stuff.{" "}
+            <TypographyMark>Not load-bearing</TypographyMark>, but the site
+            feels off without it.
           </TypographyLead>
         </div>
       </Section>

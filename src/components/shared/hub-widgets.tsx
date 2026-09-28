@@ -68,7 +68,12 @@ export function ReadingProgress() {
           strokeDasharray={`${progress} 1`}
           className="stroke-(--brand) transition-[stroke-dasharray] duration-300"
         />
-        <g className={cn("[transform-box:fill-box] origin-bottom-left", done && "animate-flag-wave")}>
+        <g
+          className={cn(
+            "[transform-box:fill-box] origin-bottom-left",
+            done && "animate-flag-wave",
+          )}
+        >
           <path
             d="M186 15 V2"
             strokeWidth="1.3"

@@ -18,7 +18,7 @@ import {
 import { siteConfig } from "@/lib/config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { Fragment } from "react";
-import { SocialsNudge } from "@/app/(site)/_components/doodles";
+import { SocialsNudge } from "@/components/shared/doodles";
 
 export function Contact() {
   return (
@@ -94,7 +94,7 @@ export function Contact() {
               </div>
             </nav>
           </div>
-          <ArtStage className="hidden aspect-[4/3] md:block">
+          <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-[4/3]">
             <PageArt name="contact" />
           </ArtStage>
         </div>

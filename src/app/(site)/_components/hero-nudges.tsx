@@ -86,7 +86,14 @@ function BlogArt() {
         className="fill-background stroke-foreground/25"
       />
       <path d="M78 8 V20 H90" fill="none" className="stroke-foreground/25" />
-      <rect x="34" y="18" width="30" height="6" rx="3" className="fill-(--brand)" />
+      <rect
+        x="34"
+        y="18"
+        width="30"
+        height="6"
+        rx="3"
+        className="fill-(--brand)"
+      />
       {LINES.map(({ y, w }, i) => (
         <rect
           key={y}
@@ -99,7 +106,13 @@ function BlogArt() {
           style={{ ...delay(900 + i * 220), "--i": i } as CSSProperties}
         />
       ))}
-      <rect x="61" y="54" width="1.6" height="7" className="animate-nudge-blink fill-(--brand)" />
+      <rect
+        x="61"
+        y="54"
+        width="1.6"
+        height="7"
+        className="animate-nudge-blink fill-(--brand)"
+      />
       <path
         d="M70 8 V24 L74.5 20 L79 24 V8"
         className={cn(RIBBON, "fill-(--brand)/80")}
@@ -121,7 +134,9 @@ function Nudge({ href, label, art, children }: NudgeProps) {
       href={href as Route}
       className="group/nudge flex items-center gap-3 rounded-md border bg-background/70 p-2 pr-4 transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
     >
-      <IsoStage className={cn(isoCanvas, "h-16 w-24 shrink-0 rounded-sm")}>{art}</IsoStage>
+      <IsoStage className={cn(isoCanvas, "h-16 w-24 shrink-0 rounded-sm")}>
+        {art}
+      </IsoStage>
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <SectionLabel pixel aria-hidden={undefined}>
           {label}

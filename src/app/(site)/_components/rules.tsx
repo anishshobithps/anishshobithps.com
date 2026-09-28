@@ -25,7 +25,7 @@ export function RulesIFollow() {
           , because software should feel simple even when the logic behind it
           isn&apos;t.
         </TypographyLead>
-        <ArtStage className="hidden aspect-video md:block">
+        <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-video">
           <PageArt name="principles" />
         </ArtStage>
       </div>

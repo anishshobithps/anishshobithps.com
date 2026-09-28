@@ -17,7 +17,7 @@ import {
 import { LocationTag } from "@/components/ui/location";
 import { HireSign } from "@/app/(site)/_components/hire-sign";
 import { HeroNudges } from "@/app/(site)/_components/hero-nudges";
-import { IceCreamNote, PhotoCallout } from "@/app/(site)/_components/doodles";
+import { IceCreamNote, PhotoCallout } from "@/components/shared/doodles";
 import { source } from "@/lib/source";
 import { toTimestamp } from "@/lib/date";
 
