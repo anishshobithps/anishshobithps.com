@@ -1,31 +1,32 @@
-const theme = {
-  background: "#141417",
-  foreground: "#f9f9fb",
-  mutedFg: "#8888a0",
-  border: "rgba(255,255,255,0.10)",
-  input: "rgba(255,255,255,0.15)",
-  purple: "#a855f7",
-  selectionBg: "#86efac",
-  selectionFg: "#052e16",
-  gridLine: "rgba(255,255,255,0.025)",
-};
+import {
+  boxFaces,
+  ellipseRadii,
+  hash,
+  project,
+  projector,
+  toPoints,
+  type Vec3,
+} from "@/components/diagrams/iso";
+import { LogoIcon } from "@/components/shared/logo-icon";
+import { MASCOT_POINTS, MascotFigure } from "@/components/shared/logo-mascot";
+import { themeColor } from "@/lib/theme-tokens";
+import type { CSSProperties, ReactNode } from "react";
 
-function LogoGlyph({ size = 32, color }: { size?: number; color: string }) {
-  const scaledWidth = Math.round((50 / 64) * size);
-  return (
-    <svg
-      viewBox="14 0 50 64"
-      width={scaledWidth}
-      height={size}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <polygon points="32,4 48,60 40.5,60 32,14 23.5,60 16,60" fill={color} />
-      <rect x="18" y="36" width="11" height="5" rx="2.5" fill={color} />
-      <rect x="35" y="36" width="11" height="5" rx="2.5" fill={color} />
-    </svg>
-  );
-}
+export const OG_SIZE = { width: 1200, height: 630 } as const;
+
+export const OG_FONTS = {
+  display: {
+    name: "Bricolage Grotesque",
+    weight: 700,
+    googleFamily: "Bricolage+Grotesque:opsz,wght@60,700",
+  },
+  body: { name: "Manrope", weight: 500, googleFamily: "Manrope:wght@500" },
+  pixel: {
+    name: "Geist Pixel",
+    weight: 400,
+    googleFamily: "Geist+Pixel:ELSH@0..100",
+  },
+} as const;
 
 export interface OGImageProps {
   title: string;
@@ -38,73 +39,687 @@ export interface OGImageProps {
   availableForHire: boolean;
 }
 
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max).trimEnd() + "…" : str;
-}
+const { width: WIDTH, height: HEIGHT } = OG_SIZE;
+const RAIL = 40;
+const BAND = 28;
+const HEADER = 72;
+const FOOTER = 88;
+const GUTTER = 56;
+const HAIRLINE = 1;
+const FILLET = 14;
+const HATCH = 8;
+const ART_WIDTH = 416;
 
-function getTitleFontSize(title: string): number {
-  const len = title.length;
-  if (len < 20) return 64;
-  if (len < 40) return 52;
-  if (len < 60) return 42;
-  if (len < 80) return 34;
-  return 28;
-}
+const FRAME = {
+  left: RAIL,
+  top: BAND,
+  right: WIDTH - RAIL,
+  bottom: HEIGHT - BAND,
+};
 
-function getDescFontSize(desc: string): number {
-  const len = desc.length;
-  if (len < 80) return 24;
-  if (len < 140) return 20;
-  return 17;
-}
+const ART_HEIGHT =
+  FRAME.bottom - FRAME.top - 4 * HAIRLINE - HEADER - FOOTER;
 
-function parsePathSegments(input: string): string[] {
-  let cleaned = input.trim();
-  try {
-    const url = new URL(cleaned);
-    cleaned = url.pathname;
-  } catch {}
-  return cleaned.split("/").filter(Boolean);
-}
+const token = (name: string) => themeColor(`var(--${name})`);
 
-function PathDisplay({ path }: { path: string }) {
-  const segments = parsePathSegments(path);
+const tint = (name: string, amount: number) =>
+  themeColor(
+    `color-mix(in oklab, var(--${name}) ${amount}%, var(--background))`,
+  );
+
+const fade = (name: string, amount: number) =>
+  themeColor(`color-mix(in oklab, var(--${name}) ${amount}%, transparent)`);
+
+const color = {
+  background: token("background"),
+  foreground: token("foreground"),
+  muted: token("muted-foreground"),
+  line: token("line"),
+  hatch: token("hatch-line"),
+  brand: token("brand"),
+  brandText: token("brand-text"),
+  available: token("color-available"),
+  surface: tint("foreground", 3),
+  floor: tint("foreground", 2),
+  extrusion: tint("foreground", 28),
+  stroke: fade("foreground", 45),
+  guide: fade("foreground", 28),
+  speck: fade("foreground", 9),
+  shadow: themeColor("oklch(0 0 0 / 35%)"),
+  hireBorder: fade("brand-text", 30),
+  hireFill: fade("brand", 12),
+  hireRing: fade("color-available", 16),
+};
+
+const TONES = {
+  default: {
+    stroke: color.stroke,
+    top: tint("foreground", 9),
+    left: tint("foreground", 5),
+    right: tint("foreground", 2),
+  },
+  accent: {
+    stroke: color.brand,
+    top: tint("brand", 24),
+    left: tint("brand", 12),
+    right: tint("brand", 6),
+  },
+} as const;
+
+const family = {
+  display: `'${OG_FONTS.display.name}', Geist, sans-serif`,
+  body: `'${OG_FONTS.body.name}', Geist, sans-serif`,
+  pixel: `'${OG_FONTS.pixel.name}', 'Geist Mono', monospace`,
+};
+
+const PIXEL_SHAPE = "'ELSH' 25";
+
+const TITLE_SIZES = [
+  [20, 68],
+  [40, 56],
+  [64, 46],
+] as const;
+
+function titleSize(title: string) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      {segments.map((segment, i) => {
-        const isLast = i === segments.length - 1;
-        return (
-          <div
-            key={segment}
-            style={{ display: "flex", alignItems: "center", gap: 6 }}
+    TITLE_SIZES.find(([maxLength]) => title.length <= maxLength)?.[1] ?? 40
+  );
+}
+
+const ART_P = projector(20, ART_WIDTH / 2, 230);
+
+const MASCOT = {
+  base: [0, 0.5, 0.8] as Vec3,
+  anchor: [32, 60] as const,
+  scale: 0.11,
+  depth: 0.9,
+  layers: 20,
+};
+
+const MASCOT_LAYERS = Array.from(
+  { length: MASCOT.layers },
+  (_, i) => MASCOT.depth * (1 - i / MASCOT.layers),
+);
+
+const FLOOR = { radius: 5, dotRadius: 4.6, step: 0.9 };
+const FLOOR_STEP_COUNT = Math.floor(FLOOR.dotRadius / FLOOR.step);
+const FLOOR_STEPS = Array.from(
+  { length: 2 * FLOOR_STEP_COUNT + 1 },
+  (_, i) => (i - FLOOR_STEP_COUNT) * FLOOR.step,
+);
+const FLOOR_DOTS = FLOOR_STEPS.flatMap((x) =>
+  FLOOR_STEPS.map((y): Vec3 => [x, y, 0]),
+).filter(([x, y]) => Math.hypot(x, y) <= FLOOR.dotRadius);
+
+const SPARKLES: { at: Vec3; radius: number }[] = [
+  { at: [-1.4, 1, 7.4], radius: 7 },
+  { at: [4.6, -4.6, 4.6], radius: 4.5 },
+  { at: [-5.2, -0.8, 3.6], radius: 3.5 },
+];
+
+function glyphToWorld(u: number, v: number): Vec3 {
+  const [x, y, z] = MASCOT.base;
+  const [anchorU, anchorV] = MASCOT.anchor;
+  return [
+    x + (u - anchorU) * MASCOT.scale,
+    y,
+    z + (anchorV - v) * MASCOT.scale,
+  ];
+}
+
+function screenDelta(vector: Vec3) {
+  const [x0, y0] = project(ART_P, [0, 0, 0]);
+  const [x1, y1] = project(ART_P, vector);
+  return [x1 - x0, y1 - y0] as const;
+}
+
+function glyphMatrix() {
+  const [ox, oy] = project(ART_P, glyphToWorld(0, 0));
+  const [ux, uy] = project(ART_P, glyphToWorld(1, 0));
+  const [vx, vy] = project(ART_P, glyphToWorld(0, 1));
+  return `matrix(${ux - ox} ${uy - oy} ${vx - ox} ${vy - oy} ${ox} ${oy})`;
+}
+
+const LABEL_POINT = project(ART_P, glyphToWorld(36, 22));
+const LABEL_ELBOW = [LABEL_POINT[0] + 48, LABEL_POINT[1] - 44] as const;
+
+function PixelText({
+  children,
+  size = 14,
+  color: textColor = color.muted,
+}: {
+  children: ReactNode;
+  size?: number;
+  color?: string;
+}) {
+  return (
+    <span
+      style={{
+        fontFamily: family.pixel,
+        fontVariationSettings: PIXEL_SHAPE,
+        fontSize: size,
+        lineHeight: 1,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        textWrap: "nowrap",
+        color: textColor,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function Backdrop() {
+  const { left, right, top, bottom } = FRAME;
+  const rails = [
+    [left + 0.5, 0, left + 0.5, HEIGHT],
+    [right - 0.5, 0, right - 0.5, HEIGHT],
+    [0, top + 0.5, WIDTH, top + 0.5],
+    [0, bottom - 0.5, WIDTH, bottom - 0.5],
+  ];
+
+  return (
+    <svg
+      width={WIDTH}
+      height={HEIGHT}
+      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      style={{ position: "absolute", top: 0, left: 0 }}
+    >
+      <defs>
+        <pattern
+          id="og-hatch"
+          width={HATCH}
+          height={HATCH}
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <line
+            x1={HATCH / 2}
+            y1="0"
+            x2={HATCH / 2}
+            y2={HATCH}
+            stroke={color.hatch}
+            strokeWidth="1"
+          />
+        </pattern>
+      </defs>
+      <rect width={WIDTH} height={HEIGHT} fill="url(#og-hatch)" />
+      <g stroke={color.line} strokeWidth="1">
+        {rails.map(([x1, y1, x2, y2]) => (
+          <line
+            key={`${x1}-${y1}-${x2}-${y2}`}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+          />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+function Cell({
+  style,
+  children,
+}: {
+  style: CSSProperties;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        overflow: "hidden",
+        borderRadius: FILLET,
+        backgroundColor: color.background,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Breadcrumb({ path }: { path: string }) {
+  const segments = path
+    .split("/")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      {segments.map((segment, index) => (
+        <div
+          key={`${index}-${segment}`}
+          style={{ display: "flex", alignItems: "center", gap: 10 }}
+        >
+          {index > 0 && <PixelText color={color.guide}>/</PixelText>}
+          <PixelText
+            color={
+              index === segments.length - 1 ? color.brandText : color.muted
+            }
           >
-            {i > 0 && (
-              <span
-                style={{
-                  fontFamily: "'Geist Mono', monospace",
-                  fontSize: 13,
-                  color: "rgba(136,136,160,0.3)",
-                  fontWeight: 300,
-                }}
-              >
-                /
-              </span>
-            )}
-            <span
-              style={{
-                fontFamily: "'Geist Mono', monospace",
-                fontWeight: isLast ? 500 : 400,
-                fontSize: 13,
-                letterSpacing: "0.02em",
-                color: isLast ? theme.selectionBg : "rgba(136,136,160,0.4)",
-              }}
-            >
-              {segment}
-            </span>
+            {segment}
+          </PixelText>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Header({ path, domain }: Pick<OGImageProps, "path" | "domain">) {
+  return (
+    <Cell
+      style={{
+        flexShrink: 0,
+        height: HEADER,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 24,
+        paddingLeft: GUTTER,
+        paddingRight: GUTTER,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+          minWidth: 0,
+          overflow: "hidden",
+        }}
+      >
+        <LogoIcon size={26} color={color.foreground} />
+        <div style={{ width: 1, height: 18, backgroundColor: color.line }} />
+        <Breadcrumb path={path} />
+      </div>
+      <PixelText>{domain}</PixelText>
+    </Cell>
+  );
+}
+
+function Tags({ tags }: { tags: string[] }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 8,
+        height: 28,
+        overflow: "hidden",
+      }}
+    >
+      {tags.map((tag, index) => (
+        <div
+          key={`${index}-${tag}`}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            height: 28,
+            paddingLeft: 10,
+            paddingRight: 10,
+            borderRadius: 6,
+            border: `1px solid ${color.line}`,
+            backgroundColor: color.surface,
+          }}
+        >
+          <PixelText size={13}>{`#${tag}`}</PixelText>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Copy({
+  title,
+  description,
+  tags,
+}: Pick<OGImageProps, "title" | "description" | "tags">) {
+  return (
+    <Cell
+      style={{
+        flex: 1,
+        minWidth: 0,
+        flexDirection: "column",
+        justifyContent: "center",
+        gap: 28,
+        paddingLeft: GUTTER,
+        paddingRight: 48,
+      }}
+    >
+      {tags.length > 0 && <Tags tags={tags} />}
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div
+          style={{
+            fontFamily: family.display,
+            fontWeight: OG_FONTS.display.weight,
+            fontSize: titleSize(title),
+            lineHeight: 1.08,
+            letterSpacing: "-0.025em",
+            color: color.foreground,
+            textWrap: "balance",
+            lineClamp: 3,
+            overflow: "hidden",
+          }}
+        >
+          {title}
+        </div>
+        {description && (
+          <div
+            style={{
+              fontFamily: family.body,
+              fontWeight: OG_FONTS.body.weight,
+              fontSize: 20,
+              lineHeight: 1.5,
+              color: color.muted,
+              textWrap: "pretty",
+              lineClamp: 3,
+              overflow: "hidden",
+            }}
+          >
+            {description}
           </div>
+        )}
+      </div>
+    </Cell>
+  );
+}
+
+function Box({
+  at,
+  size,
+  tone,
+}: {
+  at: Vec3;
+  size: Vec3;
+  tone: keyof typeof TONES;
+}) {
+  const colors = TONES[tone];
+  return (
+    <g stroke={colors.stroke} strokeWidth="1.25" strokeLinejoin="round">
+      {boxFaces(at, size).map(([side, points]) => (
+        <polygon
+          key={side}
+          fill={colors[side]}
+          points={toPoints(ART_P, points)}
+        />
+      ))}
+    </g>
+  );
+}
+
+function Shadow({
+  center,
+  radius,
+  fill,
+}: {
+  center: Vec3;
+  radius: number;
+  fill: string;
+}) {
+  const [cx, cy] = project(ART_P, center);
+  const [rx, ry] = ellipseRadii(ART_P, radius);
+  return <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={fill} />;
+}
+
+function FloatingCube({
+  at,
+  size,
+  tone,
+}: {
+  at: Vec3;
+  size: number;
+  tone: keyof typeof TONES;
+}) {
+  const [x, y, z] = at;
+  const center: Vec3 = [x + size / 2, y + size / 2, 0];
+  const [x1, y1] = project(ART_P, center);
+  const [x2, y2] = project(ART_P, [center[0], center[1], z]);
+
+  return (
+    <g>
+      <Shadow center={center} radius={size * 0.7} fill={color.speck} />
+      <line
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke={color.guide}
+        strokeWidth="1"
+        strokeDasharray="2 4"
+        strokeLinecap="round"
+      />
+      <Box at={at} size={[size, size, size]} tone={tone} />
+    </g>
+  );
+}
+
+function Floor() {
+  const r = FLOOR.radius;
+  return (
+    <g>
+      <polygon
+        points={toPoints(ART_P, [
+          [-r, -r, 0],
+          [r, -r, 0],
+          [r, r, 0],
+          [-r, r, 0],
+        ])}
+        fill={color.floor}
+        stroke={color.guide}
+        strokeWidth="1"
+        strokeDasharray="3 4"
+      />
+      {FLOOR_DOTS.map((point, index) => {
+        const [cx, cy] = project(ART_P, point);
+        const lit = hash(index + 1) < 0.12;
+        return (
+          <circle
+            key={`${cx}-${cy}`}
+            cx={cx}
+            cy={cy}
+            r={lit ? 1.5 : 1}
+            fill={lit ? color.brandText : color.guide}
+          />
         );
       })}
+    </g>
+  );
+}
+
+function Mascot() {
+  const matrix = glyphMatrix();
+  return (
+    <g>
+      {MASCOT_LAYERS.map((depth) => {
+        const [dx, dy] = screenDelta([0, -depth, 0]);
+        return (
+          <polygon
+            key={depth}
+            points={MASCOT_POINTS}
+            fill={color.extrusion}
+            transform={`translate(${dx} ${dy}) ${matrix}`}
+          />
+        );
+      })}
+      <g color={color.foreground} transform={matrix}>
+        <MascotFigure />
+      </g>
+    </g>
+  );
+}
+
+function Sparkle({ at, radius: r }: { at: Vec3; radius: number }) {
+  const [x, y] = project(ART_P, at);
+  return (
+    <path
+      d={`M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`}
+      fill={color.brandText}
+    />
+  );
+}
+
+function Leader() {
+  const [x, y] = LABEL_POINT;
+  const [ex, ey] = LABEL_ELBOW;
+  return (
+    <g>
+      <polyline
+        points={`${x},${y} ${ex},${ey} ${ex + 8},${ey}`}
+        fill="none"
+        stroke={color.guide}
+        strokeWidth="1"
+      />
+      <circle
+        cx={x}
+        cy={y}
+        r="2"
+        fill={color.background}
+        stroke={color.stroke}
+        strokeWidth="1"
+      />
+    </g>
+  );
+}
+
+function Art() {
+  const [glowX, glowY] = project(ART_P, [0, 0.05, 3.8]);
+  const [elbowX, elbowY] = LABEL_ELBOW;
+
+  return (
+    <Cell style={{ flexShrink: 0, width: ART_WIDTH }}>
+      <svg
+        width={ART_WIDTH}
+        height={ART_HEIGHT}
+        viewBox={`0 0 ${ART_WIDTH} ${ART_HEIGHT}`}
+      >
+        <defs>
+          <pattern
+            id="og-dots"
+            width="16"
+            height="16"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="8" cy="8" r="1" fill={color.speck} />
+          </pattern>
+          <radialGradient id="og-fade" cx="50%" cy="45%" r="60%">
+            <stop offset="0" stopColor="white" />
+            <stop offset="1" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id="og-vignette">
+            <rect width={ART_WIDTH} height={ART_HEIGHT} fill="url(#og-fade)" />
+          </mask>
+          <radialGradient id="og-glow">
+            <stop offset="0" stopColor={color.brand} stopOpacity="0.28" />
+            <stop offset="1" stopColor={color.brand} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect
+          width={ART_WIDTH}
+          height={ART_HEIGHT}
+          fill="url(#og-dots)"
+          mask="url(#og-vignette)"
+        />
+        <circle cx={glowX} cy={glowY} r="190" fill="url(#og-glow)" />
+        <Floor />
+        <FloatingCube at={[-4.6, -0.2, 1.8]} size={1.2} tone="default" />
+        <Box at={[-2.2, -2.2, 0]} size={[4.4, 4.4, 0.8]} tone="accent" />
+        <Shadow center={[0, 0.05, 0.8]} radius={1.9} fill={color.shadow} />
+        <Mascot />
+        <FloatingCube at={[2.9, -4.1, 2.4]} size={1.1} tone="accent" />
+        {SPARKLES.map(({ at, radius }) => (
+          <Sparkle key={at.join()} at={at} radius={radius} />
+        ))}
+        <Leader />
+      </svg>
+      <div
+        style={{
+          position: "absolute",
+          left: elbowX + 12,
+          top: elbowY - 7,
+          display: "flex",
+        }}
+      >
+        <PixelText color={color.brandText}>that’s me</PixelText>
+      </div>
+    </Cell>
+  );
+}
+
+function HireBadge() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        height: 34,
+        paddingLeft: 13,
+        paddingRight: 14,
+        borderRadius: 17,
+        border: `1px solid ${color.hireBorder}`,
+        backgroundColor: color.hireFill,
+      }}
+    >
+      <div
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: color.available,
+          boxShadow: `0 0 0 4px ${color.hireRing}`,
+        }}
+      />
+      <PixelText color={color.brandText}>Available for hire</PixelText>
     </div>
+  );
+}
+
+function Footer({
+  name,
+  role,
+  showName,
+  availableForHire,
+}: Pick<OGImageProps, "name" | "role" | "availableForHire"> & {
+  showName: boolean;
+}) {
+  return (
+    <Cell
+      style={{
+        flexShrink: 0,
+        height: FOOTER,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingLeft: GUTTER,
+        paddingRight: GUTTER,
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {showName && (
+          <span
+            style={{
+              fontFamily: family.display,
+              fontWeight: OG_FONTS.display.weight,
+              fontSize: 22,
+              lineHeight: 1,
+              letterSpacing: "-0.01em",
+              color: color.foreground,
+            }}
+          >
+            {name}
+          </span>
+        )}
+        <PixelText>{role}</PixelText>
+      </div>
+      {availableForHire && <HireBadge />}
+    </Cell>
   );
 }
 
@@ -121,305 +736,41 @@ export function OGImage({
   return (
     <div
       style={{
-        width: 1200,
-        height: 630,
-        backgroundColor: theme.background,
         position: "relative",
-        overflow: "hidden",
-        fontFamily: "'Geist', sans-serif",
         display: "flex",
+        width: WIDTH,
+        height: HEIGHT,
+        overflow: "hidden",
+        backgroundColor: color.background,
+        fontFamily: family.body,
       }}
     >
+      <Backdrop />
       <div
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 2,
-          background: `linear-gradient(90deg, transparent 0%, ${theme.selectionBg}88 20%, ${theme.selectionBg} 50%, ${theme.selectionBg}88 80%, transparent 100%)`,
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: `linear-gradient(${theme.gridLine} 1px, transparent 1px), linear-gradient(90deg, ${theme.gridLine} 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          top: -140,
-          right: -100,
-          width: 640,
-          height: 640,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(134,239,172,0.08) 0%, transparent 70%)",
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: -160,
-          left: -80,
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(134,239,172,0.04) 0%, transparent 70%)",
-        }}
-      />
-
-      <svg
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          opacity: 0.04,
-          mixBlendMode: "overlay",
-        }}
-      >
-        <filter id="noise">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.75"
-            numOctaves="4"
-            stitchTiles="stitch"
-          />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#noise)" />
-      </svg>
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.6) 100%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: -110,
-          right: -40,
-          transform: "rotate(10deg)",
-          opacity: 0.025,
-        }}
-      >
-        <LogoGlyph size={520} color={theme.foreground} />
-      </div>
-
-      <div
-        style={{
-          padding: "0 80px 56px 80px",
+          top: FRAME.top,
+          left: FRAME.left,
+          width: FRAME.right - FRAME.left,
+          height: FRAME.bottom - FRAME.top,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          width: "100%",
-          position: "relative",
+          gap: HAIRLINE,
+          padding: HAIRLINE,
+          backgroundColor: color.line,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingTop: 44,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <LogoGlyph size={32} color={theme.foreground} />
-            <div
-              style={{
-                width: 1,
-                height: 20,
-                background: `linear-gradient(to bottom, transparent, ${theme.input}, transparent)`,
-              }}
-            />
-            <PathDisplay path={path} />
-          </div>
-          <span
-            style={{
-              fontFamily: "'Geist Mono', monospace",
-              fontSize: 20,
-              fontStyle: "italic",
-              color: theme.mutedFg,
-            }}
-          >
-            {domain}
-          </span>
+        <Header path={path} domain={domain} />
+        <div style={{ display: "flex", flex: 1, minHeight: 0, gap: HAIRLINE }}>
+          <Copy title={title} description={description} tags={tags} />
+          <Art />
         </div>
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 22,
-            justifyContent: "center",
-            flex: 1,
-          }}
-        >
-          {tags.length > 0 && (
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    padding: "5px 14px",
-                    fontSize: 11,
-                    fontFamily: "'Geist Mono', monospace",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.12em",
-                    border: "1px solid rgba(134,239,172,0.2)",
-                    backgroundColor: "rgba(134,239,172,0.06)",
-                    color: theme.selectionBg,
-                    borderRadius: 6,
-                  }}
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div
-            style={{
-              fontSize: getTitleFontSize(title),
-              fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: "-0.03em",
-              color: theme.foreground,
-            }}
-          >
-            {truncate(title, 80)}
-          </div>
-
-          <div
-            style={{
-              fontSize: getDescFontSize(description),
-              color: theme.mutedFg,
-              maxWidth: "72%",
-              lineHeight: 1.55,
-              fontStyle: "italic",
-            }}
-          >
-            {truncate(description, 160)}
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            borderTop: `1px solid ${theme.border}`,
-            paddingTop: 28,
-          }}
-        >
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-              <span
-                style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.35em",
-                  color: theme.purple,
-                  fontFamily: "'Geist Mono', monospace",
-                }}
-              >
-                {role}
-              </span>
-              <div
-                style={{
-                  fontSize: 36,
-                  fontWeight: 700,
-                  color: theme.foreground,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                {name}
-              </div>
-            </div>
-
-            {availableForHire && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  paddingTop: 6,
-                  paddingBottom: 6,
-                  paddingLeft: 12,
-                  paddingRight: 12,
-                  borderRadius: 6,
-                  backgroundColor: "rgba(134,239,172,0.08)",
-                  border: "1px solid rgba(134,239,172,0.25)",
-                  alignSelf: "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: 4,
-                    backgroundColor: theme.selectionBg,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontFamily: "'Geist Mono', monospace",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.12em",
-                    color: theme.selectionBg,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Available for hire
-                </span>
-              </div>
-            )}
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-              gap: 8,
-              opacity: 0.45,
-            }}
-          >
-            <div
-              style={{ width: 40, height: 1, backgroundColor: theme.mutedFg }}
-            />
-            <span
-              style={{
-                fontFamily: "'Geist Mono', monospace",
-                fontSize: 17,
-                color: theme.mutedFg,
-                letterSpacing: "0.12em",
-                fontWeight: 600,
-              }}
-            >
-              © 2022–{new Date().getFullYear()}
-            </span>
-          </div>
-        </div>
+        <Footer
+          name={name}
+          role={role}
+          showName={title !== name}
+          availableForHire={availableForHire}
+        />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import { useReducer } from "react";
-import { ScaledOG } from "@/app/(site)/branding/scaled-og";
-import { OGImage } from "@/components/shared/OG";
+import { useReducer, useState } from "react";
+import NextImage from "next/image";
+import { useDebouncedValue } from "@wojtekmaj/react-hooks";
 import { TypographyMuted } from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -10,7 +10,9 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { cn } from "@/lib/cn";
 import { siteConfig } from "@/lib/config";
+import { buildOGPath } from "@/lib/metadata";
 import {
   UserIcon,
   TextTIcon,
@@ -78,16 +80,21 @@ export function BrandingOGPreview() {
         .filter(Boolean)
     : defaultTags;
 
-  const ogProps = {
-    title,
-    description,
-    name,
-    role,
-    domain,
-    path: "home / branding",
-    tags,
-    availableForHire,
-  };
+  const ogPath = useDebouncedValue(
+    buildOGPath({
+      title,
+      description,
+      name,
+      role,
+      domain,
+      path: "home / branding",
+      tags,
+      available: availableForHire,
+    }),
+    300,
+  );
+  const [renderedPath, setRenderedPath] = useState<string | null>(null);
+  const rendering = renderedPath !== ogPath;
 
   return (
     <div className="border rounded-xl overflow-hidden">
@@ -201,9 +208,24 @@ export function BrandingOGPreview() {
         </fieldset>
       </div>
 
-      <ScaledOG>
-        <OGImage {...ogProps} />
-      </ScaledOG>
+      <div
+        aria-busy={rendering}
+        className="aspect-[1200/630] w-full bg-muted/20"
+      >
+        <NextImage
+          src={ogPath}
+          alt={`Open Graph image preview for “${title}”`}
+          width={1200}
+          height={630}
+          unoptimized
+          onLoad={() => setRenderedPath(ogPath)}
+          onError={() => setRenderedPath(ogPath)}
+          className={cn(
+            "block size-full transition-opacity duration-150",
+            rendering && "opacity-60",
+          )}
+        />
+      </div>
     </div>
   );
 }

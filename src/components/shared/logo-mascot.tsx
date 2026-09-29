@@ -8,7 +8,7 @@ interface MascotFigureProps {
   mouthFilled?: boolean;
 }
 
-const MASCOT_POINTS = "32,4 48,60 40.5,60 32,14 23.5,60 16,60";
+export const MASCOT_POINTS = "32,4 48,60 40.5,60 32,14 23.5,60 16,60";
 
 function MascotEyeShapes({ eyes }: { eyes: MascotEyes }) {
   if (eyes === "happy") {
@@ -33,7 +33,7 @@ function MascotEyeShapes({ eyes }: { eyes: MascotEyes }) {
   }
   const flat = eyes === "flat";
   return (
-    <>
+    <g>
       {[18, 35].map((x) => (
         <rect
           key={x}
@@ -46,7 +46,7 @@ function MascotEyeShapes({ eyes }: { eyes: MascotEyes }) {
           fill="currentColor"
         />
       ))}
-    </>
+    </g>
   );
 }
 
@@ -56,7 +56,7 @@ export function MascotFigure({
   mouthFilled = false,
 }: MascotFigureProps) {
   return (
-    <>
+    <g>
       <polygon points={MASCOT_POINTS} fill="currentColor" />
       <g className="transition-[translate] duration-200 ease-out group-hover/fab:-translate-y-[3px]">
         <MascotEyeShapes eyes={eyes} />
@@ -73,7 +73,7 @@ export function MascotFigure({
           )}
         />
       )}
-    </>
+    </g>
   );
 }
 

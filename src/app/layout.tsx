@@ -36,6 +36,7 @@ const geistPixel = Geist_Pixel({
   display: "swap",
   axes: ["ELSH"],
   adjustFontFallback: false,
+  fallback: ["ui-monospace", "monospace"],
   variable: "--font-geist-pixel",
 });
 

@@ -12,7 +12,7 @@ interface OGParams {
     available?: boolean;
 }
 
-export function buildOGUrl({
+export function buildOGPath({
     title = siteConfig.name,
     description = "",
     name = siteConfig.name,
@@ -22,16 +22,20 @@ export function buildOGUrl({
     role = siteConfig.role,
     available = siteConfig.availableForHire,
 }: OGParams = {}): string {
-    const url = new URL(`${siteConfig.baseUrl}/og`);
-    url.searchParams.set("title", title);
-    if (description) url.searchParams.set("description", description);
-    url.searchParams.set("name", name);
-    url.searchParams.set("domain", domain);
-    url.searchParams.set("path", path);
-    if (tags.length > 0) url.searchParams.set("tags", tags.join(","));
-    url.searchParams.set("role", role);
-    url.searchParams.set("available", String(available));
-    return url.toString();
+    const params = new URLSearchParams();
+    params.set("title", title);
+    if (description) params.set("description", description);
+    params.set("name", name);
+    params.set("domain", domain);
+    params.set("path", path);
+    if (tags.length > 0) params.set("tags", tags.join(","));
+    params.set("role", role);
+    params.set("available", String(available));
+    return `/og?${params}`;
+}
+
+export function buildOGUrl(params: OGParams = {}): string {
+    return new URL(buildOGPath(params), siteConfig.baseUrl).toString();
 }
 
 export function buildOGMeta(params: OGParams) {

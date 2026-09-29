@@ -24,11 +24,11 @@ export function projector(scale: number, ox: number, oy: number): Projector {
   return { scale, ox, oy };
 }
 
-function project(p: Projector, [x, y, z]: Vec3): Vec2 {
+export function project(p: Projector, [x, y, z]: Vec3): Vec2 {
   return [p.ox + (x - y) * COS * p.scale, p.oy + ((x + y) / 2 - z) * p.scale];
 }
 
-function toPoints(p: Projector, list: Vec3[]) {
+export function toPoints(p: Projector, list: Vec3[]) {
   return list
     .map((v) =>
       project(p, v)
@@ -62,7 +62,9 @@ const TONES: Record<
   },
 };
 
-function face(tone: Tone, side: "top" | "left" | "right") {
+type BoxSide = "top" | "left" | "right";
+
+function face(tone: Tone, side: BoxSide) {
   return cn(
     "stroke-1 [stroke-linejoin:round]",
     TONES[tone].stroke,
@@ -101,8 +103,44 @@ const PRINT_TONES = {
   ghost: "fill-foreground/16",
 } as const;
 
-function ellipseRadii(p: Projector, radius: number): Vec2 {
+export function ellipseRadii(p: Projector, radius: number): Vec2 {
   return [Math.SQRT2 * COS * radius * p.scale, (radius / Math.SQRT2) * p.scale];
+}
+
+export function boxFaces(
+  [x, y, z]: Vec3,
+  [w, d, h]: Vec3,
+): readonly (readonly [BoxSide, Vec3[]])[] {
+  const t = z + h;
+  return [
+    [
+      "left",
+      [
+        [x, y + d, z],
+        [x + w, y + d, z],
+        [x + w, y + d, t],
+        [x, y + d, t],
+      ],
+    ],
+    [
+      "right",
+      [
+        [x + w, y, z],
+        [x + w, y + d, z],
+        [x + w, y + d, t],
+        [x + w, y, t],
+      ],
+    ],
+    [
+      "top",
+      [
+        [x, y, t],
+        [x + w, y, t],
+        [x + w, y + d, t],
+        [x, y + d, t],
+      ],
+    ],
+  ];
 }
 
 interface IsoBoxProps {
@@ -112,42 +150,16 @@ interface IsoBoxProps {
   tone?: Tone;
 }
 
-export function IsoBox({
-  p,
-  at: [x, y, z],
-  size: [w, d, h],
-  tone = "default",
-}: IsoBoxProps) {
-  const t = z + h;
+export function IsoBox({ p, at, size, tone = "default" }: IsoBoxProps) {
   return (
     <g>
-      <polygon
-        className={face(tone, "left")}
-        points={toPoints(p, [
-          [x, y + d, z],
-          [x + w, y + d, z],
-          [x + w, y + d, t],
-          [x, y + d, t],
-        ])}
-      />
-      <polygon
-        className={face(tone, "right")}
-        points={toPoints(p, [
-          [x + w, y, z],
-          [x + w, y + d, z],
-          [x + w, y + d, t],
-          [x + w, y, t],
-        ])}
-      />
-      <polygon
-        className={face(tone, "top")}
-        points={toPoints(p, [
-          [x, y, t],
-          [x + w, y, t],
-          [x + w, y + d, t],
-          [x, y + d, t],
-        ])}
-      />
+      {boxFaces(at, size).map(([side, points]) => (
+        <polygon
+          key={side}
+          className={face(tone, side)}
+          points={toPoints(p, points)}
+        />
+      ))}
     </g>
   );
 }
