@@ -24,7 +24,9 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-const LAST_UPDATED = "September 14, 2026";
+const LAST_UPDATED = "September 29, 2026";
+
+const POLICY_HISTORY_URL = `${siteConfig.repoUrl}/commits/main/src/app/(site)/privacy-policy/page.tsx`;
 
 export default function PrivacyPolicyPage() {
   return (
@@ -54,17 +56,22 @@ export default function PrivacyPolicyPage() {
 
       <Section aria-label="What this site is">
         <SectionHeader>What this site is</SectionHeader>
-        <div className="max-w-2xl">
+        <div className="max-w-2xl space-y-4">
           <TypographyP>
             This is a personal portfolio and blog at{" "}
-            <TypographyMark>{siteConfig.domain}</TypographyMark>. There&apos;s
-            no newsletter. The site has a{" "}
-            <TypographyMark>guestbook</TypographyMark> and a{" "}
+            <TypographyMark>{siteConfig.domain}</TypographyMark>. The site has
+            a <TypographyMark>guestbook</TypographyMark> and a{" "}
             <TypographyMark>blog comments section</TypographyMark>, both of
             which require signing in via <TypographyMark>Clerk</TypographyMark>{" "}
             (GitHub, Google, or Discord) to leave a message, post a comment, or
-            like an entry. Everything else, including blog posts, projects, and
-            the resume, is fully public and requires no account.
+            like an entry. Everything else, including blog posts, reactions,
+            projects, and the resume, is fully public and requires no account.
+          </TypographyP>
+          <TypographyP>
+            There&apos;s no newsletter. If you want new posts, the{" "}
+            <TypographyMark>RSS feed at /feed.xml</TypographyMark> is a plain
+            file your reader fetches, and nothing about who subscribes is
+            recorded.
           </TypographyP>
         </div>
       </Section>
@@ -77,13 +84,13 @@ export default function PrivacyPolicyPage() {
             <TypographyP>
               When you visit a blog post, a{" "}
               <TypographyMark>hashed</TypographyMark> version of your IP address
-              is stored alongside the post slug to count unique reads. The hash
-              is{" "}
+              is stored alongside the post to count unique reads. The hash is{" "}
               <TypographyMark>
                 one-way (SHA-256 with a server-side salt)
               </TypographyMark>
               . Your actual IP is <TypographyMark>never stored</TypographyMark>{" "}
-              and cannot be reverse-engineered from it.
+              and cannot be reverse-engineered from it. There is one row per
+              post per hash, so reloading a post doesn&apos;t count twice.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -91,7 +98,7 @@ export default function PrivacyPolicyPage() {
             <TypographyP>
               If you click one of the reaction buttons on a blog post, your
               choice (one of: <em>Not for me, Meh, Liked it, Loved it</em>) is
-              stored with the same hashed IP + post slug pair. Reactions are{" "}
+              stored with the same hashed IP and post pair. Reactions are{" "}
               <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t click anything,{" "}
               <TypographyMark>nothing is stored</TypographyMark>.
@@ -102,27 +109,32 @@ export default function PrivacyPolicyPage() {
             <TypographyP>
               Following a short link (any{" "}
               <TypographyMark>{siteConfig.domain}/&lt;slug&gt;</TypographyMark>{" "}
-              that redirects somewhere else) adds one to a counter on that
-              link. No IP address, hash, account, or per-click timestamp is
-              recorded, so the number says how many times a link was followed
-              and <TypographyMark>nothing about who followed it</TypographyMark>.
+              that redirects somewhere else, or the same slug on the separate
+              short-link domain that points at this site) adds one to a counter
+              on that link. No IP address, hash, account, or per-click
+              timestamp is recorded, so the number says how many times a link
+              was followed and{" "}
+              <TypographyMark>nothing about who followed it</TypographyMark>.
             </TypographyP>
           </div>
           <div className="space-y-2">
             <Heading as="h3" level="h4" className="border-b border-border pb-2">Guestbook entries &amp; likes</Heading>
             <TypographyP>
               If you sign in and leave a guestbook message, the following is
-              stored in our database:{" "}
+              stored in the database:{" "}
               <TypographyMark>
                 your Clerk user ID, your message text, and a timestamp
               </TypographyMark>
               . If you like an entry, your Clerk user ID and the entry ID are
-              stored. Your{" "}
+              stored. Entries removed during moderation are{" "}
+              <TypographyMark>soft-deleted</TypographyMark>: hidden from the
+              page but kept in the database until you ask for them to be
+              erased. Your{" "}
               <TypographyMark>
                 name, username, and profile picture
               </TypographyMark>{" "}
               are fetched live from Clerk when rendering the guestbook, not
-              stored in our database. Both actions are{" "}
+              stored in the database. Both actions are{" "}
               <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t sign in, nothing is stored.
             </TypographyP>
@@ -131,21 +143,21 @@ export default function PrivacyPolicyPage() {
             <Heading as="h3" level="h4" className="border-b border-border pb-2">Blog post comments &amp; comment likes</Heading>
             <TypographyP>
               If you sign in and post a comment on a blog post, the following is
-              stored in our database:{" "}
+              stored in the database:{" "}
               <TypographyMark>
-                your Clerk user ID, your comment text, the post slug, an
-                optional parent comment ID (for replies), and a timestamp
+                your Clerk user ID, your comment text, the post it belongs to,
+                an optional parent comment ID (for replies), and a timestamp
               </TypographyMark>
               . If you like a comment, your Clerk user ID and the comment ID are
               stored. Deleted comments are{" "}
               <TypographyMark>soft-deleted</TypographyMark>: the text is hidden
-              but the record is retained for referential integrity. Full deletion
-              is honoured on request (see Your rights below). Your{" "}
+              but the record is kept so the reply thread stays intact. Full
+              deletion is honoured on request (see Your rights below). Your{" "}
               <TypographyMark>
                 name, username, and profile picture
               </TypographyMark>{" "}
               are fetched live from Clerk when rendering comments, not stored
-              in our database. Both actions are{" "}
+              in the database. Both actions are{" "}
               <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t sign in, nothing is stored.
             </TypographyP>
@@ -166,12 +178,36 @@ export default function PrivacyPolicyPage() {
         </div>
       </Section>
 
+      <Section aria-label="Stored in your browser">
+        <SectionHeader>Stored in your browser</SectionHeader>
+        <div className="max-w-2xl space-y-4">
+          <TypographyP>
+            A few preferences live in your browser&apos;s{" "}
+            <TypographyMark>localStorage</TypographyMark> and are never sent to
+            this site&apos;s server: your{" "}
+            <TypographyMark>theme choice</TypographyMark> (light, dark, or
+            system), the spot you last dragged the{" "}
+            <TypographyMark>floating quick-menu button</TypographyMark> to, and,
+            once you&apos;ve played a video in a post, the player&apos;s{" "}
+            <TypographyMark>volume, mute, and subtitle settings</TypographyMark>
+            . Clerk&apos;s script also keeps a copy of its own configuration
+            there. Clearing this site&apos;s data in your browser removes all
+            of it.
+          </TypographyP>
+          <TypographyP>
+            This site sets <TypographyMark>no cookies of its own</TypographyMark>.
+            The only cookies come from Clerk and are covered under Third-party
+            services below.
+          </TypographyP>
+        </div>
+      </Section>
+
       <Section aria-label="Where data is stored">
         <SectionHeader>Where data is stored</SectionHeader>
         <div className="max-w-2xl space-y-4">
           <TypographyP>
-            Read counts and reactions are stored in a PostgreSQL database hosted
-            on{" "}
+            Read counts, reactions, and short-link counters are stored in a
+            PostgreSQL database hosted on{" "}
             <a
               href="https://neon.tech"
               target="_blank"
@@ -180,17 +216,17 @@ export default function PrivacyPolicyPage() {
             >
               Neon
             </a>
-            . These records contain no personal information, only post slugs,
-            IP hashes, moods, and timestamps.
+            . These records contain no personal information, only post
+            references, IP hashes, moods, counts, and timestamps.
           </TypographyP>
           <TypographyP>
             Guestbook entries, likes, blog comments, and comment likes are all
             stored in the same Neon PostgreSQL database. These records contain
-            your <TypographyMark>Clerk user ID</TypographyMark>, message/comment
-            text, post slug, and timestamps. Your Clerk user ID is an opaque
-            identifier assigned by Clerk, not your email, name, or any other
-            human-readable detail. Your profile information (name, username,
-            avatar) is stored and managed by{" "}
+            your <TypographyMark>Clerk user ID</TypographyMark>, message or
+            comment text, the post they belong to, and timestamps. Your Clerk
+            user ID is an opaque identifier assigned by Clerk, not your email,
+            name, or any other human-readable detail. Your profile information
+            (name, username, avatar) is stored and managed by{" "}
             <a
               href="https://clerk.com"
               target="_blank"
@@ -199,7 +235,7 @@ export default function PrivacyPolicyPage() {
             >
               Clerk
             </a>
-            , not in our database.
+            , not in this site&apos;s database.
           </TypographyP>
         </div>
       </Section>
@@ -216,7 +252,7 @@ export default function PrivacyPolicyPage() {
               className="link-external"
             >
               Umami Analytics
-            </a>{" "}
+            </a>
             , a <TypographyMark>privacy-focused, open-source</TypographyMark>{" "}
             analytics tool hosted on{" "}
             <a
@@ -243,24 +279,22 @@ export default function PrivacyPolicyPage() {
         <SectionHeader>Third-party services</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Spotify</Heading>
+            <Heading as="h3" level="h4" className="border-b border-border pb-2">Hosting</Heading>
             <TypographyP>
-              The footer displays what I&apos;m currently listening to (or last
-              listened to) via the{" "}
+              The site runs on{" "}
               <a
-                href="https://developer.spotify.com/documentation/web-api"
+                href="https://vercel.com/legal/privacy-policy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-external"
               >
-                Spotify Web API
+                Vercel
               </a>
-              . This is a{" "}
-              <TypographyMark>read-only, server-side</TypographyMark> call using
-              my own account credentials, and no data about you is sent to Spotify.
-              The currently playing track is cached for{" "}
-              <TypographyMark>60 seconds</TypographyMark> on the server; no
-              Spotify data is stored in the database.
+              . Like any host, Vercel handles each request, including your{" "}
+              <TypographyMark>IP address and user agent</TypographyMark>, in
+              order to serve the page, and keeps short-lived request logs for
+              operating the platform. This site doesn&apos;t read those logs
+              for anything beyond debugging.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -291,10 +325,48 @@ export default function PrivacyPolicyPage() {
                 Clerk&apos;s Privacy Policy
               </a>
               . This site only stores the opaque Clerk user ID in its own
-              database. Clerk uses{" "}
-              <TypographyMark>session cookies</TypographyMark> to maintain your
-              signed-in state. These are set only when you sign in to the
-              guestbook or the blog comments section.
+              database.
+            </TypographyP>
+            <TypographyP>
+              Because the sign-in button is available from the quick menu on
+              every page, Clerk&apos;s script loads site-wide from{" "}
+              <TypographyMark>clerk.{siteConfig.domain}</TypographyMark>, which
+              is Clerk&apos;s service running under this domain&apos;s name.
+              Clerk uses <TypographyMark>cookies</TypographyMark> to know
+              whether you&apos;re signed in, and some of them can be set before
+              you ever sign in. They exist for authentication only, not for
+              advertising or analytics.
+            </TypographyP>
+            <TypographyP>
+              Profile pictures next to comments and guestbook entries load{" "}
+              <TypographyMark>directly from Clerk&apos;s image CDN</TypographyMark>{" "}
+              (img.clerk.com). That includes the guestbook preview on the home
+              page, so viewing the home page, the guestbook, or a post with
+              comments lets Clerk see your IP address and user agent, the way
+              any image host does.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <Heading as="h3" level="h4" className="border-b border-border pb-2">Spotify</Heading>
+            <TypographyP>
+              The footer displays what I&apos;m currently listening to (or last
+              listened to) via the{" "}
+              <a
+                href="https://developer.spotify.com/documentation/web-api"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-external"
+              >
+                Spotify Web API
+              </a>
+              . This is a{" "}
+              <TypographyMark>read-only, server-side</TypographyMark> call using
+              my own account credentials, and no data about you is sent to
+              Spotify. The currently playing track is cached for{" "}
+              <TypographyMark>60 seconds</TypographyMark> on the server, and
+              the footer refreshes it through this site rather than contacting
+              Spotify from your browser. No Spotify data is stored in the
+              database.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -311,9 +383,10 @@ export default function PrivacyPolicyPage() {
               </a>
               . Playing one connects your browser to Cloudinary, which sees
               your <TypographyMark>IP address and user agent</TypographyMark>{" "}
-              the way any site you visit does. Images are handled differently:
-              they are optimised and served from this domain, so viewing a post
-              involves no third party until you press play.
+              the way any site you visit does. Images inside posts are handled
+              differently: they are optimised and served from this domain, so
+              reading a post involves no Cloudinary request until you press
+              play.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -323,8 +396,9 @@ export default function PrivacyPolicyPage() {
               downloaded at build time and served from this domain, so your
               browser never contacts Google to render this page. The resume is
               fetched from GitHub Releases by the server and passed through{" "}
-              <TypographyMark>/api/resume</TypographyMark>, so GitHub never
-              sees your request either.
+              <TypographyMark>/api/resume</TypographyMark>, and the repository
+              card in the quick menu is read from GitHub&apos;s API on the
+              server and cached, so GitHub never sees your request for either.
             </TypographyP>
           </div>
         </div>
@@ -341,19 +415,21 @@ export default function PrivacyPolicyPage() {
           </TypographyP>
           <TypographyP>
             If you have signed in and left a guestbook message, posted a
-            comment, or liked either, you can request deletion of that data by
-            emailing{" "}
+            comment, or liked either, you can ask for that data to be erased
+            by emailing{" "}
             <a href={`mailto:${siteConfig.email}`} className="link-external">
               {siteConfig.email}
             </a>
-            . To delete your Clerk account and the profile data Clerk holds
-            (name, email, avatar), you can do so directly through the{" "}
-            <TypographyMark>guestbook or comments sign-in page</TypographyMark>{" "}
-            or by contacting me at the email above. Depending on your
-            jurisdiction, you may have rights to access, correct, or erase your
-            personal data under laws such as{" "}
-            <TypographyMark>GDPR (EU)</TypographyMark> or{" "}
-            <TypographyMark>CCPA (California)</TypographyMark>.
+            . I can also delete your Clerk account and the profile data Clerk
+            holds (name, email, avatar). When a Clerk account is deleted, your{" "}
+            <TypographyMark>
+              guestbook entries, comments, and likes are removed automatically
+            </TypographyMark>
+            , soft-deleted ones included. Depending on your jurisdiction, you
+            may have rights to access, correct, or erase your personal data
+            under laws such as <TypographyMark>GDPR (EU)</TypographyMark>,{" "}
+            <TypographyMark>CCPA (California)</TypographyMark>, or{" "}
+            <TypographyMark>India&apos;s DPDP Act</TypographyMark>.
           </TypographyP>
         </div>
       </Section>
@@ -362,10 +438,19 @@ export default function PrivacyPolicyPage() {
         <SectionHeader>Changes to this policy</SectionHeader>
         <div className="max-w-2xl">
           <TypographyP>
-            If anything meaningful changes (like adding analytics), this page
-            will be updated and the{" "}
+            When something meaningful changes, like a new third-party service
+            or a new kind of data, this page is updated and the{" "}
             <TypographyMark>&ldquo;Last updated&rdquo;</TypographyMark> date
-            will reflect it.
+            moves with it. Every past version is public in the{" "}
+            <a
+              href={POLICY_HISTORY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-external"
+            >
+              repository history
+            </a>
+            .
           </TypographyP>
         </div>
       </Section>

@@ -38,6 +38,7 @@ import {
   SectionHeader,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
+import { siteConfig } from "@/lib/config";
 import type { ReactNode } from "react";
 
 function DoodleStage({
@@ -231,6 +232,39 @@ export default function BrandingPage() {
             </CardGridItem>
           ))}
         </CardGrid>
+
+        <div
+          role="note"
+          aria-label="Logo usage"
+          className="mt-6 max-w-3xl space-y-1.5 rounded-lg border border-border bg-muted/30 p-4"
+        >
+          <SectionLabel>Before you download</SectionLabel>
+          <TypographySmall className="block font-normal leading-relaxed text-muted-foreground">
+            Everything on this page is here for reference. The artwork may be
+            shared unmodified, for non-commercial use and with attribution,
+            under{" "}
+            <a
+              href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-external"
+            >
+              CC BY-NC-ND 4.0
+            </a>
+            . It does not give permission to use {siteConfig.name},{" "}
+            {siteConfig.domain}, the logo, wordmark, or mascot as your own
+            brand, or to imply endorsement. The{" "}
+            <a
+              href={`${siteConfig.repoUrl}/blob/main/LICENSE.md`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-external"
+            >
+              license
+            </a>{" "}
+            has the details.
+          </TypographySmall>
+        </div>
 
         <div className="mt-14 max-w-3xl">
           <TypographyLead>
