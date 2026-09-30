@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   BookOpenIcon,
+  CameraIcon,
   ChatCircleIcon,
   HouseIcon,
   LinkIcon,
@@ -22,6 +23,7 @@ import {
   FolderOpenIcon,
 } from "@/components/shared/icons";
 import { LogoIcon } from "@/components/shared/logo-icon";
+import { features } from "@/lib/features";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import type { Route } from "next";
@@ -32,6 +34,9 @@ const navItems = [
   { title: "Guestbook", href: "/admin/guestbook", icon: ChatCircleIcon },
   { title: "Comments", href: "/admin/comments", icon: BookOpenIcon },
   { title: "Projects", href: "/admin/projects", icon: FolderOpenIcon },
+  ...(features.photos
+    ? [{ title: "Photos", href: "/admin/photos", icon: CameraIcon }]
+    : []),
   { title: "Links", href: "/admin/links", icon: LinkIcon },
 ];
 

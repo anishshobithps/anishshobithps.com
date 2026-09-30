@@ -46,9 +46,10 @@ Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, b
 | `/projects`                  | Pulled from the database, not a hardcoded array; ordered and toggled from the admin                                 |
 | `/resume`                    | PDF rendered inline with react-pdf, streamed from the latest GitHub release; `/api/resume/download` saves it         |
 | `/guestbook`                 | Clerk-authenticated messages with likes, pinning, and soft delete                                                    |
+| `/photos`                    | Photo gallery with the EXIF each shot was taken at. Dev only for now, see [Photos](#photos)                          |
 | `/branding`                  | Type scale, logo downloads (SVG or PNG, 16 to 512 px), the doodle set, and a live OG preview                         |
 | `/privacy-policy`            | What gets stored, where, and why                                                                                     |
-| `/admin/*`                   | Owner-only dashboard for comments, guestbook, links, and projects                                                    |
+| `/admin/*`                   | Owner-only dashboard for comments, guestbook, links, projects, and photos (dev only)                                 |
 | `/og`                        | Generated OpenGraph cards with the isometric mascot ([takumi](https://github.com/kane50613/takumi), not Satori)      |
 | `/feed.xml`                  | RSS 2.0 feed of every post, linked from page metadata for autodiscovery                                              |
 | `/llms.txt`                  | Machine-readable site summary; every post also serves raw MDX at `/blog/<slug>.mdx`                                  |
@@ -107,6 +108,13 @@ NEXT_PUBLIC_BASE_URL=https://anishshobithps.com
 NEXT_PUBLIC_UMAMI_WEBSITE_ID=...       # optional, or remove from layout.tsx
 GITHUB_TOKEN=ghp_...                   # optional — only lifts the API rate limit on repo cards
 SHORTLINK_DOMAIN=                      # optional — a second domain that only serves short links
+
+R2_ACCOUNT_ID=                         # optional — photos only, see the Photos section
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_ORIGINALS_BUCKET=                   # private: untouched originals
+R2_PUBLIC_BUCKET=                      # public: resized web copies
+R2_PUBLIC_URL=https://photos.example.com
 ```
 
 Only `DATABASE_URL` and `IP_HASH_SALT` are truly required to boot. `IP_HASH_SALT` throws loudly if missing rather than silently hashing with nothing. `NEXT_PUBLIC_BASE_URL` falls back to the Vercel production URL, then `http://localhost:3000`.
@@ -210,6 +218,47 @@ Any unclaimed path resolves through `/[...link]`, in one of two shapes:
 Slugs are unique per `(tag, slug)`. Each link can redirect straight through (permanent or temporary), or, if it has a title, description, or OG image, render an interstitial with preview metadata first, which is the point when you're posting into something that unfurls links. Clicks are counted in `after()` so the redirect isn't waiting on the write, and only the count is stored.
 
 Set `SHORTLINK_DOMAIN` to serve the same links from a second, shorter domain pointed at this deployment. [`src/proxy.ts`](src/proxy.ts) lets slugs through on that host and sends anything that belongs to the main site (`/blog`, `/admin`, `/api`, …) to the main domain with a 308. The list of main-site paths lives in [`src/lib/reserved-segments.ts`](src/lib/reserved-segments.ts), so add new top-level routes there too.
+
+---
+
+## Photos
+
+`/photos` is built but switched off in production. `src/lib/features.ts` turns it on for `next dev` only, and while it's off the page, its admin screen, the nav entry, the sitemap entry, and the privacy-policy section for R2 all disappear. Flipping that flag is the launch.
+
+It exists because Cloudinary's free tier caps uploads at 10 MB, and a straight-off-the-phone HEIC or a DSLR JPEG blows past that. So photos skip Cloudinary and the server entirely:
+
+1. The admin page reads the file in the browser. It sniffs the real format from the bytes, pulls EXIF with [exifr](https://github.com/MikeKovarik/exifr), and renders four web copies (480 to 2400 px wide, WebP where the browser can encode it, JPEG otherwise) plus a 16 px blur placeholder. HEIC decodes natively in Safari; other browsers lazy-load [heic-to](https://github.com/hoppergee/heic-to) (libheif, LGPL-3.0) only when they need it.
+2. A server action checks everything with zod, writes a row with status `uploading`, and hands back presigned PUT URLs. `Content-Length` and `Content-Type` are part of the signature, so R2 rejects anything other than the exact file the server approved.
+3. The browser uploads straight to R2, with progress, retries, and cancel. Nothing passes through Vercel, so its 4.5 MB request limit never comes into it. Originals can be up to 200 MB.
+4. A second action `HEAD`s every object and checks the original's size before flipping the row to `draft`. A failed or cancelled upload deletes whatever did land.
+
+Originals go into a **private** bucket byte for byte, EXIF and GPS included, and you can download them from the admin. The public bucket only ever holds the resized copies, which are re-encoded from a canvas and carry no metadata at all. GPS is never read into the database. A photo needs alt text before it can be published.
+
+On the page, rows are justified with plain flexbox (each tile grows by its aspect ratio), so there's no layout JavaScript and no shift. `?photo=<id>` opens the viewer, which makes every photo a shareable link with its own OpenGraph image. Arrow keys and swipes move between photos, and dates show in the time zone the photo was taken in.
+
+### Setting it up
+
+1. In Cloudflare R2, create two buckets, one for originals and one for web copies. Give only the web-copies bucket public access, through a custom domain for production or the `r2.dev` URL for testing, and put that URL in `R2_PUBLIC_URL`.
+2. Create an R2 API token with **Object Read & Write** on both buckets, and fill in the `R2_*` variables above.
+3. Add this CORS policy to **both** buckets, with your real origins:
+
+   ```json
+   [
+     {
+       "AllowedOrigins": ["http://localhost:3000", "https://anishshobithps.com"],
+       "AllowedMethods": ["PUT"],
+       "AllowedHeaders": ["content-type", "cache-control"],
+       "MaxAgeSeconds": 3600
+     }
+   ]
+   ```
+
+4. Run `pnpm db:migrate` to create the `photos` table (`drizzle/0012_photos.sql`).
+5. Open `/admin/photos`, drop some files in, add alt text, and publish.
+
+If a variable is missing, the admin page lists which ones instead of showing the uploader.
+
+No CSP or `next.config.mjs` change is needed. The gallery uses plain `<img>` tags with a precomputed `srcset` rather than the Next image optimizer, and the CSP already allows HTTPS for `img-src` and `connect-src`.
 
 ---
 

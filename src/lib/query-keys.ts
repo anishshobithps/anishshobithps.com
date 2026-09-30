@@ -6,6 +6,7 @@ export const queryKeys = {
     stats: ["admin", "stats"] as const,
     links: ["admin", "links"] as const,
     projects: ["admin", "projects"] as const,
+    photos: ["admin", "photos"] as const,
     comments: ["admin", "comments"] as const,
     guestbook: ["admin", "guestbook"] as const,
   },

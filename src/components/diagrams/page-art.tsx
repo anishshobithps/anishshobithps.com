@@ -3,6 +3,7 @@ import { LayersCover } from "./layers";
 import {
   IsoBox,
   IsoCone,
+  IsoCylinder,
   IsoDots,
   IsoFaceText,
   IsoFlow,
@@ -582,7 +583,68 @@ function Principles() {
   );
 }
 
+function Darkroom() {
+  const p = projector(18, 200, 176);
+  const span = 5;
+  const line = 8;
+  const lineAt = (t: number) => line - 0.8 * (1 - (t / span) ** 2);
+  const wire: Vec3[] = Array.from({ length: 17 }, (_, i) => {
+    const t = -span + (i / 16) * span * 2;
+    return [t, -t, lineAt(t)];
+  });
+  const prints = [
+    { t: -3.15, h: 3.1, label: "HEIC" },
+    { t: 0, h: 3.7, label: "EXIF", accent: true },
+    { t: 3.15, h: 2.9, label: "JPEG" },
+  ];
+  return (
+    <>
+      <IsoPlate p={p} at={[-5.4, -5.4, 0]} size={[10.8, 10.8]} />
+      {[-span, span].map((t) => (
+        <IsoBox key={t} p={p} at={[t - 0.14, -t - 0.14, 0]} size={[0.28, 0.28, line + 0.3]} />
+      ))}
+      <IsoPath p={p} points={wire} />
+      {prints.map(({ t, h, label, accent }, i) => {
+        const top = lineAt(t) - 0.2;
+        return (
+          <IsoLift key={label} lift={accent ? -9 : -5} delay={i * 150}>
+            <IsoBox
+              p={p}
+              at={[t - 1.25, -t - 0.05, top - h]}
+              size={[2.5, 0.1, h]}
+              tone={accent ? "accent" : "default"}
+            />
+            <IsoBox p={p} at={[t - 0.95, -t - 0.1, top - h + 0.8]} size={[1.9, 0.05, h - 1.1]} tone="ghost" />
+            <IsoFaceText
+              p={p}
+              plane="left"
+              at={[t, -t + 0.05, top - h + 0.4]}
+              size={7}
+              tone={accent ? "accent" : "muted"}
+            >
+              {label}
+            </IsoFaceText>
+            <IsoBox p={p} at={[t - 0.12, -t - 0.12, top - 0.15]} size={[0.24, 0.24, 0.5]} tone="accent" />
+          </IsoLift>
+        );
+      })}
+      <IsoLabel p={p} at={[0, 0, lineAt(0) + 0.35]} dy={-24} leader size={9} tone="accent">
+        ƒ/1.8 · 1/120
+      </IsoLabel>
+      <IsoBox p={p} at={[1.7, 1.55, 0]} size={[4.2, 1, 0.06]} />
+      <IsoDots p={p} at={[1.9, 1.72, 0.06]} size={[3.8, 0.01]} step={0.38} />
+      <IsoDots p={p} at={[1.9, 2.38, 0.06]} size={[3.8, 0.01]} step={0.38} />
+      <IsoCylinder p={p} center={[0.9, 2.05, 0]} radius={0.9} height={2.1} />
+      <IsoCylinder p={p} center={[0.9, 2.05, 2.1]} radius={0.32} height={0.4} tone="accent" />
+      <IsoLabel p={p} at={[0.9, 2.05, 2.5]} dx={-34} dy={-6} anchor="end" leader size={8}>
+        35mm
+      </IsoLabel>
+    </>
+  );
+}
+
 const scenes = {
+  photos: Darkroom,
   blogs: Sheets,
   projects: Assembly,
   guestbook: Notes,

@@ -12,6 +12,7 @@ import {
   SectionHeader,
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
+import { features } from "@/lib/features";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 
@@ -389,6 +390,30 @@ export default function PrivacyPolicyPage() {
               play.
             </TypographyP>
           </div>
+          {features.photos && (
+            <div className="space-y-2">
+              <Heading as="h3" level="h4" className="border-b border-border pb-2">Cloudflare R2</Heading>
+              <TypographyP>
+                Photos on the photos page load straight from{" "}
+                <a
+                  href="https://www.cloudflare.com/developer-platform/products/r2/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-external"
+                >
+                  Cloudflare R2
+                </a>
+                . Viewing one connects your browser to Cloudflare, which sees
+                your <TypographyMark>IP address and user agent</TypographyMark>{" "}
+                the way any site you visit does. The copies you see are resized
+                before upload and carry{" "}
+                <TypographyMark>no embedded metadata</TypographyMark>. The camera
+                settings shown beside a photo are read from the original when I
+                upload it, GPS coordinates are never extracted or published, and
+                the originals sit in a private bucket only I can read.
+              </TypographyP>
+            </div>
+          )}
           <div className="space-y-2">
             <Heading as="h3" level="h4" className="border-b border-border pb-2">Fonts &amp; GitHub</Heading>
             <TypographyP>

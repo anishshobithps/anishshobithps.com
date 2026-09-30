@@ -6,6 +6,7 @@ import type {
   WebPage,
   BlogPosting,
   BreadcrumbList,
+  ImageGallery,
   WithContext,
 } from "schema-dts";
 
@@ -27,11 +28,28 @@ type SchemaProps =
       updatedAt?: string;
       tags?: string[];
     }
-  | { type: "breadcrumb"; items: { name: string; url: string }[] };
+  | { type: "breadcrumb"; items: { name: string; url: string }[] }
+  | {
+      type: "gallery";
+      title: string;
+      description: string;
+      canonicalUrl: string;
+      images: GalleryImage[];
+    };
+
+type GalleryImage = {
+  url: string;
+  pageUrl: string;
+  caption: string;
+  width: number;
+  height: number;
+  takenAt: string | null;
+};
 
 type ArticleProps = Extract<SchemaProps, { type: "article" }>;
+type GalleryProps = Extract<SchemaProps, { type: "gallery" }>;
 type AnySchema = WithContext<
-  Person | WebSite | WebPage | BlogPosting | BreadcrumbList
+  Person | WebSite | WebPage | BlogPosting | BreadcrumbList | ImageGallery
 >;
 
 const SCHEMA_CONTEXT = "https://schema.org" as const;
@@ -139,6 +157,34 @@ function buildBreadcrumb(
   };
 }
 
+function buildGallery({
+  title,
+  description,
+  canonicalUrl,
+  images,
+}: GalleryProps): WithContext<ImageGallery> {
+  return {
+    "@context": SCHEMA_CONTEXT,
+    "@type": "ImageGallery",
+    name: title,
+    description,
+    url: canonicalUrl,
+    isPartOf: { "@type": "WebSite", url: siteConfig.baseUrl },
+    author: schemaAuthor,
+    associatedMedia: images.map((image) => ({
+      "@type": "ImageObject",
+      contentUrl: image.url,
+      url: image.pageUrl,
+      caption: image.caption,
+      width: String(image.width),
+      height: String(image.height),
+      ...(image.takenAt && { dateCreated: image.takenAt }),
+      creator: schemaAuthor,
+      creditText: siteConfig.name,
+    })),
+  };
+}
+
 function resolveSchema(props: SchemaProps): AnySchema {
   switch (props.type) {
     case "person":
@@ -151,6 +197,8 @@ function resolveSchema(props: SchemaProps): AnySchema {
       return buildBlogPosting(props);
     case "breadcrumb":
       return buildBreadcrumb(props.items);
+    case "gallery":
+      return buildGallery(props);
   }
 }
 

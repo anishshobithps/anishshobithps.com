@@ -85,6 +85,13 @@
       "when": 1789357525073,
       "tag": "0011_overconfident_nehzno",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1790682831929,
+      "tag": "0012_photos",
+      "breakpoints": true
     }
   ]
 }
