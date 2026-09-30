@@ -44,8 +44,9 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
       ref={ref}
       data-revealed={visible || undefined}
       className={cn(
-        "transition-[opacity,transform] duration-700 ease-out",
-        mounted && !visible ? "opacity-0 translate-y-5" : "opacity-100 translate-y-0",
+        mounted && !visible
+          ? "opacity-0 translate-y-5"
+          : "opacity-100 translate-y-0 transition-[opacity,translate] duration-700 ease-out",
         className,
       )}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}

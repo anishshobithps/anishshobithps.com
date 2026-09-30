@@ -104,7 +104,11 @@ export function PostCard({ post, featured = false }: PostCardProps) {
             <time dateTime={post.date}>{date}</time>
           </TypographyMuted>
         )}
-        <ViewTransition name={postTransitionName(post.url)}>
+        <ViewTransition
+          name={postTransitionName(post.url)}
+          share="auto"
+          default="none"
+        >
           <Heading
             as="h2"
             level={featured ? "h3" : "h4"}

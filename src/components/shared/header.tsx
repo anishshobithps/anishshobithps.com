@@ -150,24 +150,28 @@ export function Header() {
                   return (
                     <NavigationMenuItem key={link.href}>
                       <NavigationMenuLink
-                        href={link.href}
+                        asChild
                         data-current={active || undefined}
                         className="relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-[color,background-color,rotate] data-current:-rotate-2 data-current:bg-(--brand)/10 data-current:font-medium data-current:text-foreground data-current:ring-1 data-current:ring-(--brand)/35 data-current:hover:rotate-0 data-current:hover:bg-(--brand)/15 data-current:animate-note-swing"
-                        aria-current={
-                          pathname === link.href
-                            ? "page"
-                            : active
-                              ? "true"
-                              : undefined
-                        }
                       >
-                        <TypographySmall>{link.label}</TypographySmall>
-                        {active && (
-                          <NavPin
-                            key={pathname}
-                            className="absolute -top-2 -right-1.5"
-                          />
-                        )}
+                        <Link
+                          href={link.href}
+                          aria-current={
+                            pathname === link.href
+                              ? "page"
+                              : active
+                                ? "true"
+                                : undefined
+                          }
+                        >
+                          <TypographySmall>{link.label}</TypographySmall>
+                          {active && (
+                            <NavPin
+                              key={pathname}
+                              className="absolute -top-2 -right-1.5"
+                            />
+                          )}
+                        </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   );

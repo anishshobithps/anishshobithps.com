@@ -8,7 +8,7 @@ import {
   FloatingHubFallback,
 } from "@/components/shared/floating-hub-server";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Suspense, ViewTransition } from "react";
+import { Suspense } from "react";
 
 export default function SiteLayout({
   children,
@@ -32,7 +32,7 @@ export default function SiteLayout({
           tabIndex={-1}
           className="scroll-smooth pt-[calc(3.5rem+1px)] outline-none"
         >
-          <ViewTransition>{children}</ViewTransition>
+          {children}
         </Content>
         <Footer />
       </PageLayout>
