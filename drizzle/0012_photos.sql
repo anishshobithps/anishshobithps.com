@@ -1,0 +1,31 @@
+CREATE TABLE "photos" (
+	"id" varchar(16) PRIMARY KEY NOT NULL,
+	"status" varchar(16) DEFAULT 'uploading' NOT NULL,
+	"alt" text DEFAULT '' NOT NULL,
+	"caption" text,
+	"location" varchar(120),
+	"original_name" varchar(255) NOT NULL,
+	"original_type" varchar(32) NOT NULL,
+	"original_bytes" integer NOT NULL,
+	"width" integer NOT NULL,
+	"height" integer NOT NULL,
+	"display_format" varchar(8) NOT NULL,
+	"display_widths" integer[] NOT NULL,
+	"blur_data_url" text NOT NULL,
+	"taken_at" timestamp with time zone,
+	"taken_at_offset" integer,
+	"camera" varchar(120),
+	"lens" varchar(160),
+	"focal_length" double precision,
+	"focal_length_35mm" integer,
+	"aperture" double precision,
+	"exposure_time" double precision,
+	"iso" integer,
+	"published_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "photos_status_check" CHECK ("photos"."status" in ('uploading', 'draft', 'published')),
+	CONSTRAINT "photos_display_format_check" CHECK ("photos"."display_format" in ('webp', 'jpeg'))
+);
+--> statement-breakpoint
+CREATE INDEX "photos_status_taken_at_idx" ON "photos" USING btree ("status","taken_at");

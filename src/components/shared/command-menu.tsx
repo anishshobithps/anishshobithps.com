@@ -17,6 +17,7 @@ import {
 import {
   BookOpenIcon,
   BriefcaseIcon,
+  CameraIcon,
   DownloadIcon,
   FileTextIcon,
   GithubLogoIcon,
@@ -40,6 +41,7 @@ import { useIsMac } from "@/hooks/use-is-mac";
 const NAV_ICONS = {
   "/projects": BriefcaseIcon,
   "/blogs": BookOpenIcon,
+  "/photos": CameraIcon,
   "/resume": FileTextIcon,
   "/guestbook": PencilIcon,
 } as const;

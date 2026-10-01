@@ -2,6 +2,7 @@ export const RESERVED_SEGMENTS = new Set<string>([
   "admin",
   "api",
   "og",
+  "photos",
   "blog",
   "blogs",
   "branding",

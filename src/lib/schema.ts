@@ -9,6 +9,8 @@ import {
     text,
     integer,
     unique,
+    check,
+    doublePrecision,
     type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
@@ -185,5 +187,43 @@ export const linkSlugs = pgTable(
     (table) => [
         unique("link_slugs_tag_slug_unique").on(table.tag, table.slug),
         index("link_slugs_link_idx").on(table.linkId),
+    ],
+);
+
+export const photos = pgTable(
+    "photos",
+    {
+        id: varchar("id", { length: 16 }).primaryKey(),
+        status: varchar("status", { length: 16, enum: ["uploading", "draft", "published"] })
+            .default("uploading")
+            .notNull(),
+        alt: text("alt").default("").notNull(),
+        caption: text("caption"),
+        location: varchar("location", { length: 120 }),
+        originalName: varchar("original_name", { length: 255 }).notNull(),
+        originalType: varchar("original_type", { length: 32 }).notNull(),
+        originalBytes: integer("original_bytes").notNull(),
+        width: integer("width").notNull(),
+        height: integer("height").notNull(),
+        displayFormat: varchar("display_format", { length: 8, enum: ["webp", "jpeg"] }).notNull(),
+        displayWidths: integer("display_widths").array().notNull(),
+        blurDataUrl: text("blur_data_url").notNull(),
+        takenAt: timestamp("taken_at", { withTimezone: true }),
+        takenAtOffset: integer("taken_at_offset"),
+        camera: varchar("camera", { length: 120 }),
+        lens: varchar("lens", { length: 160 }),
+        focalLength: doublePrecision("focal_length"),
+        focalLength35mm: integer("focal_length_35mm"),
+        aperture: doublePrecision("aperture"),
+        exposureTime: doublePrecision("exposure_time"),
+        iso: integer("iso"),
+        publishedAt: timestamp("published_at", { withTimezone: true }),
+        createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+        updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    },
+    (table) => [
+        index("photos_status_taken_at_idx").on(table.status, table.takenAt),
+        check("photos_status_check", sql`${table.status} in ('uploading', 'draft', 'published')`),
+        check("photos_display_format_check", sql`${table.displayFormat} in ('webp', 'jpeg')`),
     ],
 );

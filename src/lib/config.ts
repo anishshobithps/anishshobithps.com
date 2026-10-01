@@ -1,3 +1,5 @@
+import { features } from "@/lib/features";
+
 export const siteConfig = {
     name: "Anish Shobith P S",
     domain: "anishshobithps.com",
@@ -25,6 +27,9 @@ export const siteConfig = {
     nav: [
         { href: "/projects", label: "Projects" },
         { href: "/blogs", label: "Blogs" },
+        ...(features.photos
+            ? ([{ href: "/photos", label: "Photos" }] as const)
+            : []),
         { href: "/resume", label: "Resume" },
         { href: "/guestbook", label: "Guestbook" },
     ] as const,
