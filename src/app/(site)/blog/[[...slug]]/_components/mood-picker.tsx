@@ -112,6 +112,7 @@ export function MoodPicker({
                 aria-label={`${label}${count !== null && count > 0 ? `, ${count} reaction${count === 1 ? "" : "s"}` : ""}`}
                 className={cn(
                   "gap-2 transition-[color,background-color,border-color] duration-150 cursor-pointer",
+                  // eslint-disable-next-line shadcn/require-static-classes
                   isActive ? activeClassName : inactiveClassName,
                 )}
               >

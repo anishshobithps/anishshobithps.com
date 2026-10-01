@@ -15,8 +15,12 @@ const headingVariants = cva(
         h3: "text-[clamp(1.375rem,1.05rem+1.4vw,1.75rem)] font-semibold",
         h4: "text-[clamp(1.125rem,0.95rem+0.75vw,1.375rem)] font-semibold",
       },
+      divider: {
+        true: "border-b border-border pb-2",
+        false: "",
+      },
     },
-    defaultVariants: { level: "h1" },
+    defaultVariants: { level: "h1", divider: false },
   },
 );
 
@@ -27,7 +31,10 @@ type HeadingProps = HTMLAttributes<HTMLHeadingElement> &
   };
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
-  ({ className, level = "h1", as, asChild = false, ...props }, ref) => {
+  (
+    { className, level = "h1", as, asChild = false, divider = false, ...props },
+    ref,
+  ) => {
     const Tag = asChild ? Slot.Root : (as ?? level ?? "h1");
     return (
       <Tag
@@ -38,7 +45,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
             ? Number(as?.replace("h", "") ?? level?.replace("h", "") ?? 1)
             : undefined
         }
-        className={cn(headingVariants({ level }), className)}
+        className={cn(headingVariants({ level, divider }), className)}
         {...props}
       />
     );
@@ -220,10 +227,13 @@ export const TypographyMark = forwardRef<HTMLElement, MarkProps>(
 TypographyMark.displayName = "TypographyMark";
 
 type SectionLabelProps = HTMLAttributes<HTMLParagraphElement> &
-  AsChildProps & { pixel?: boolean };
+  AsChildProps & { pixel?: boolean; accent?: boolean };
 
 export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
-  ({ className, asChild = false, pixel = false, ...props }, ref) => {
+  (
+    { className, asChild = false, pixel = false, accent = false, ...props },
+    ref,
+  ) => {
     const Tag = asChild ? Slot.Root : "p";
     return (
       <Tag
@@ -232,6 +242,7 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
         className={cn(
           "text-sm font-mono font-medium tracking-widest text-muted-foreground uppercase",
           pixel && "font-pixel text-[11px]",
+          accent && "text-(--brand-text)",
           className,
         )}
         {...props}

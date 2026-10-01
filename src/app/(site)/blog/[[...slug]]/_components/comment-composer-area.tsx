@@ -68,7 +68,7 @@ export function CommentComposerArea({
             variant="ghost"
             size="sm"
             onClick={onSignOut}
-            className="shrink-0 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+            className="shrink-0 text-xs text-muted-foreground hover:text-foreground"
           >
             <SignOutIcon
               data-icon="inline-start"
@@ -111,7 +111,7 @@ export function CommentComposerArea({
         </div>
       </div>
       <SignInButton mode="modal">
-        <Button size="sm" className="gap-1.5 shrink-0">
+        <Button size="sm" className="shrink-0">
           <SignInIcon data-icon="inline-start" size={14} aria-hidden="true" />
           Sign in to comment
         </Button>

@@ -80,7 +80,7 @@ export default function PrivacyPolicyPage() {
         <SectionHeader>What data is collected</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Blog read counts</Heading>
+            <Heading as="h3" level="h4" divider>Blog read counts</Heading>
             <TypographyP>
               When you visit a blog post, a{" "}
               <TypographyMark>hashed</TypographyMark> version of your IP address
@@ -94,7 +94,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Reactions and mood votes</Heading>
+            <Heading as="h3" level="h4" divider>Reactions and mood votes</Heading>
             <TypographyP>
               If you click one of the reaction buttons on a blog post, your
               choice (one of: <em>Not for me, Meh, Liked it, Loved it</em>) is
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Short link clicks</Heading>
+            <Heading as="h3" level="h4" divider>Short link clicks</Heading>
             <TypographyP>
               Following a short link (any{" "}
               <TypographyMark>{siteConfig.domain}/&lt;slug&gt;</TypographyMark>{" "}
@@ -118,7 +118,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Guestbook entries &amp; likes</Heading>
+            <Heading as="h3" level="h4" divider>Guestbook entries &amp; likes</Heading>
             <TypographyP>
               If you sign in and leave a guestbook message, the following is
               stored in the database:{" "}
@@ -140,7 +140,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Blog post comments &amp; comment likes</Heading>
+            <Heading as="h3" level="h4" divider>Blog post comments &amp; comment likes</Heading>
             <TypographyP>
               If you sign in and post a comment on a blog post, the following is
               stored in the database:{" "}
@@ -279,7 +279,7 @@ export default function PrivacyPolicyPage() {
         <SectionHeader>Third-party services</SectionHeader>
         <div className="max-w-2xl space-y-6">
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Hosting</Heading>
+            <Heading as="h3" level="h4" divider>Hosting</Heading>
             <TypographyP>
               The site runs on{" "}
               <a
@@ -298,7 +298,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Clerk (Authentication)</Heading>
+            <Heading as="h3" level="h4" divider>Clerk (Authentication)</Heading>
             <TypographyP>
               Sign-in for the guestbook and blog comments is handled by{" "}
               <a
@@ -347,7 +347,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Spotify</Heading>
+            <Heading as="h3" level="h4" divider>Spotify</Heading>
             <TypographyP>
               The footer displays what I&apos;m currently listening to (or last
               listened to) via the{" "}
@@ -370,7 +370,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Cloudinary</Heading>
+            <Heading as="h3" level="h4" divider>Cloudinary</Heading>
             <TypographyP>
               Video in blog posts streams directly from{" "}
               <a
@@ -390,7 +390,7 @@ export default function PrivacyPolicyPage() {
             </TypographyP>
           </div>
           <div className="space-y-2">
-            <Heading as="h3" level="h4" className="border-b border-border pb-2">Fonts &amp; GitHub</Heading>
+            <Heading as="h3" level="h4" divider>Fonts &amp; GitHub</Heading>
             <TypographyP>
               Fonts are <TypographyMark>self-hosted</TypographyMark>. They are
               downloaded at build time and served from this domain, so your

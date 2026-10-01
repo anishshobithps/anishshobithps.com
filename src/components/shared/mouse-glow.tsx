@@ -7,9 +7,6 @@ interface Point {
   y: number;
 }
 
-const GLOW_SIZE = 100;
-const GLOW_COLOR = "var(--glow)";
-
 function getTouchPoint(event: TouchEvent): Point | null {
   const touch = event.touches[0];
   if (!touch) return null;
@@ -96,12 +93,8 @@ export function MouseGlow() {
     <div
       ref={glowRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 blur-3xl will-change-transform"
+      className="pointer-events-none fixed inset-0 z-0 h-25 w-25 rounded-full bg-(--glow) blur-3xl will-change-transform"
       style={{
-        width: GLOW_SIZE,
-        height: GLOW_SIZE,
-        backgroundColor: GLOW_COLOR,
-        borderRadius: "50%",
         transform: "translate(-9999px, -9999px)",
         opacity: isVisible ? 1 : 0,
       }}

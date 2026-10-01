@@ -30,6 +30,7 @@ export default function SiteLayout({
         <Content
           id="main-content"
           tabIndex={-1}
+          // eslint-disable-next-line shadcn/no-arbitrary-values
           className="scroll-smooth pt-[calc(3.5rem+1px)] outline-none"
         >
           {children}

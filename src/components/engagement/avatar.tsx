@@ -52,7 +52,7 @@ export const Avatar = memo(function Avatar({
         size,
         "shrink-0 rounded-full ring-1 ring-border bg-muted",
         "flex items-center justify-center",
-        "text-[10px] font-semibold text-muted-foreground",
+        "text-3xs font-semibold text-muted-foreground",
         className,
       )}
     >

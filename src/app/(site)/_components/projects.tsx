@@ -69,7 +69,7 @@ export async function ProjectGrid({
               >
                 {project.highlights.map((tag) => (
                   <li key={tag}>
-                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                    <Badge variant="outline">
                       {tag}
                     </Badge>
                   </li>

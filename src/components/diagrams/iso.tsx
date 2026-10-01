@@ -72,6 +72,7 @@ function face(tone: Tone, side: BoxSide) {
   );
 }
 
+// eslint-disable-next-line shadcn/no-raw-colors
 const LINE = "fill-none [stroke-linecap:round] [stroke-linejoin:round]";
 const GUIDE = cn(LINE, "stroke-foreground/20 stroke-1 [stroke-dasharray:2_4]");
 const DOT = "fill-foreground/28";
@@ -89,10 +90,10 @@ const LABEL_TONES = {
 } as const;
 
 const ACTIVE_LIFT =
-  "transition-transform duration-600 ease-[cubic-bezier(0.2,0.8,0.2,1)] delay-(--delay) in-data-iso-active:translate-y-(--lift) group-hover/iso:translate-y-(--lift) group-focus-visible/iso:translate-y-(--lift) in-data-iso-ambient:in-data-iso-active:animate-iso-float in-data-iso-ambient:group-hover/iso:animate-iso-float in-data-iso-ambient:group-focus-visible/iso:animate-iso-float";
+  "transition-transform duration-600 ease-snappy delay-(--delay) in-data-iso-active:translate-y-(--lift) group-hover/iso:translate-y-(--lift) group-focus-visible/iso:translate-y-(--lift) in-data-iso-ambient:in-data-iso-active:animate-iso-float in-data-iso-ambient:group-hover/iso:animate-iso-float in-data-iso-ambient:group-focus-visible/iso:animate-iso-float";
 
 const SHADOW =
-  "fill-foreground/9 [transform-box:fill-box] origin-center transition-[scale] duration-600 ease-[cubic-bezier(0.2,0.8,0.2,1)] in-data-iso-active:scale-75 group-hover/iso:scale-75 group-focus-visible/iso:scale-75 in-data-iso-ambient:in-data-iso-active:animate-iso-shadow in-data-iso-ambient:group-hover/iso:animate-iso-shadow in-data-iso-ambient:group-focus-visible/iso:animate-iso-shadow";
+  "fill-foreground/9 [transform-box:fill-box] origin-center transition-[scale] duration-600 ease-snappy in-data-iso-active:scale-75 group-hover/iso:scale-75 group-focus-visible/iso:scale-75 in-data-iso-ambient:in-data-iso-active:animate-iso-shadow in-data-iso-ambient:group-hover/iso:animate-iso-shadow in-data-iso-ambient:group-focus-visible/iso:animate-iso-shadow";
 
 const PRINT =
   "in-data-iso-active:animate-iso-print group-hover/iso:animate-iso-print group-focus-visible/iso:animate-iso-print";
@@ -539,6 +540,7 @@ export function IsoLabel({
       {leader && (
         <>
           <line
+            // eslint-disable-next-line shadcn/no-raw-colors
             className="fill-none stroke-foreground/25 stroke-1"
             x1={x}
             y1={y}

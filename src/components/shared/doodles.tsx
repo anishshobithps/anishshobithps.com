@@ -26,6 +26,7 @@ export function PhotoCallout() {
           d="M26 6 C14 6, 5 14, 4 35 M0.5 29 L4 35 L8.5 29.5"
           pathLength={1}
           className={cn(nudgeDraw, "stroke-(--brand)")}
+          // eslint-disable-next-line shadcn/no-inline-styles
           style={delay(900)}
           {...stroke}
         />
@@ -131,6 +132,23 @@ export function ThemeNudge() {
   );
 }
 
+export function HoverNudge() {
+  return (
+    <div aria-hidden="true" className="flex items-start gap-1">
+      <svg viewBox="0 0 24 28" className="h-7 w-6 overflow-visible">
+        <path
+          d="M20 26 C10 24, 5 16, 5 3 M1.5 8.5 L5 3 L9 8"
+          className="stroke-(--brand)"
+          {...stroke}
+        />
+      </svg>
+      <SectionLabel pixel accent className="mt-4">
+        hover me
+      </SectionLabel>
+    </div>
+  );
+}
+
 export function GroupGlyph({ variant }: { variant: "pages" | "site" }) {
   if (variant === "site") {
     return (
@@ -199,6 +217,7 @@ export function OnlinePing() {
         cy="8"
         r="5"
         strokeWidth="1"
+        // eslint-disable-next-line shadcn/no-raw-colors
         className="fill-none stroke-(--brand) [transform-box:fill-box] origin-center animate-iso-ripple"
       />
       <circle

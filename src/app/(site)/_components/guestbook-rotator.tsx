@@ -42,6 +42,7 @@ function EntryAvatar({ entry }: { entry: GuestbookPreviewEntry }) {
   }
 
   return (
+    // eslint-disable-next-line shadcn/no-arbitrary-values
     <div className="size-7 rounded-full bg-muted ring-1 ring-border flex items-center justify-center text-[9px] font-semibold text-muted-foreground shrink-0 select-none">
       {initials || "?"}
     </div>
@@ -91,11 +92,7 @@ export function GuestbookRotator({
     <div className="-mx-gutter">
       <div className="motion-reduce:hidden">
         <div
-          className="overflow-hidden"
-          style={{
-            maskImage:
-              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-          }}
+          className="overflow-hidden mask-[linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)]"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
@@ -124,7 +121,7 @@ export function GuestbookRotator({
                 ? "Resume scrolling guestbook entries"
                 : "Pause scrolling guestbook entries"
             }
-            className="h-7 gap-1.5 px-2 text-muted-foreground hover:text-foreground"
+            className="h-7 px-2 text-muted-foreground hover:text-foreground"
           >
             {stopped ? (
               <PlayIcon data-icon="inline-start" size={12} aria-hidden="true" />

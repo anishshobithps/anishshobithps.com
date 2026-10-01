@@ -24,6 +24,7 @@ export interface GuestbookEntryWithMeta {
     likeCount: number;
     likedByMe: boolean;
     user: PublicUser;
+    number?: number;
 }
 
 export interface GetEntriesResult {
@@ -61,6 +62,7 @@ async function loadGuestbookEntries(
                 isPinned: guestbookEntries.isPinned,
                 createdAt: guestbookEntries.createdAt,
                 likeCount: sql<number>`count(${guestbookLikes.entryId})::int`,
+                number: sql<number>`(row_number() over (order by ${guestbookEntries.createdAt}, ${guestbookEntries.id}))::int`,
             })
             .from(guestbookEntries)
             .leftJoin(guestbookLikes, eq(guestbookEntries.id, guestbookLikes.entryId))
@@ -99,6 +101,7 @@ async function loadGuestbookEntries(
         likeCount: row.likeCount,
         likedByMe: likedEntryIds.has(row.id),
         user: resolveUser(userMap, row.clerkUserId),
+        number: row.number,
     }));
 
     return { entries, total, hasMore: page.offset + entries.length < total };

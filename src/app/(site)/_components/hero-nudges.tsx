@@ -19,11 +19,7 @@ const TYPE_LOOP =
   "[transform-box:fill-box] origin-left scale-x-0 animate-nudge-type in-data-iso-active:animate-nudge-type-loop group-hover/nudge:animate-nudge-type-loop group-focus-visible/nudge:animate-nudge-type-loop motion-reduce:scale-x-100";
 
 const RIBBON =
-  "transition-[translate] duration-400 ease-[cubic-bezier(0.2,0.8,0.2,1)] in-data-iso-active:translate-y-1 group-hover/nudge:translate-y-1 group-focus-visible/nudge:translate-y-1";
-
-function delay(ms: number) {
-  return { "--nudge-delay": `${ms}ms` } as CSSProperties;
-}
+  "transition-[translate] duration-400 ease-snappy in-data-iso-active:translate-y-1 group-hover/nudge:translate-y-1 group-focus-visible/nudge:translate-y-1";
 
 function GuestbookArt() {
   return (
@@ -51,12 +47,12 @@ function GuestbookArt() {
         strokeLinecap="round"
         strokeLinejoin="round"
         className={cn(DRAW_LOOP, "stroke-(--brand)")}
-        style={delay(900)}
+        style={{ "--nudge-delay": "900ms" } as CSSProperties}
       />
       <path
         d="M88 34 l-6.5 -6.2 a3.8 3.8 0 0 1 6.5 -4.8 a3.8 3.8 0 0 1 6.5 4.8 z"
         className={cn(POP_LOOP, "fill-(--brand)")}
-        style={delay(2000)}
+        style={{ "--nudge-delay": "2000ms" } as CSSProperties}
       />
     </svg>
   );
@@ -103,7 +99,12 @@ function BlogArt() {
           height="3"
           rx="1.5"
           className={cn(TYPE_LOOP, "fill-foreground/20")}
-          style={{ ...delay(900 + i * 220), "--i": i } as CSSProperties}
+          style={
+            {
+              "--nudge-delay": `${900 + i * 220}ms`,
+              "--i": i,
+            } as CSSProperties
+          }
         />
       ))}
       <rect
@@ -176,7 +177,7 @@ export function HeroNudges({ latest }: HeroNudgesProps) {
             strokeLinecap="round"
             strokeLinejoin="round"
             className={cn(nudgeDraw, "stroke-(--brand)")}
-            style={delay(1400)}
+            style={{ "--nudge-delay": "1400ms" } as CSSProperties}
           />
         </svg>
       </div>

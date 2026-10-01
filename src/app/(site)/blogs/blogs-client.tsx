@@ -291,7 +291,7 @@ export function BlogsClient({
                   setParams({ tags: tags.filter((t) => t !== tag), page: 1 })
                 }
                 aria-label={`Remove ${tag} filter`}
-                className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-xs text-primary hover:bg-primary/20 cursor-pointer h-auto"
+                className="flex items-center bg-primary/10 py-0.5 font-mono text-primary hover:bg-primary/20 cursor-pointer h-auto"
               >
                 {tag}
                 <XIcon className="size-3" aria-hidden="true" />

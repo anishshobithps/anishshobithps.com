@@ -12,6 +12,10 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-pixel: var(--font-geist-pixel), var(--font-geist-mono), ui-monospace, monospace;
   --font-pixel--font-variation-settings: "ELSH" 25;
+  --text-2xs: 0.6875rem;
+  --text-3xs: 0.625rem;
+  --tracking-mega: 0.18em;
+  --ease-snappy: cubic-bezier(0.2, 0.8, 0.2, 1);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -34,6 +38,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-line: var(--line);
   --color-surface-hover: var(--surface-hover);
@@ -84,7 +90,16 @@
   --ring: oklch(0.58 0.14 155);
   --brand: oklch(0.58 0.14 155);
   --brand-text: oklch(0.44 0.13 155);
+  --brand-foreground: oklch(0.145 0 0);
+  --warning: oklch(0.769 0.188 70.08);
+  --warning-foreground: oklch(0.555 0.163 48.998);
   --color-available: oklch(0.72 0.19 142);
+  --color-traffic-red: oklch(0.704 0.191 22.216);
+  --color-traffic-yellow: oklch(0.852 0.199 91.936);
+  --color-traffic-green: oklch(0.792 0.209 151.711);
+  --color-sun: oklch(0.828 0.189 84.429);
+  --color-moon: oklch(0.869 0.022 252.894);
+  --color-heart: oklch(0.645 0.246 16.439);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -100,7 +115,6 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
   --scrollbar-thumb: oklch(0.65 0 0 / 0.35);
   --scrollbar-border: oklch(1 0 0);
-  --grid-line: oklch(0.2 0 0 / 0.04);
   --hatch-line: color-mix(in oklab, var(--line) 40%, transparent);
   --surface-hover: color-mix(in oklab, var(--muted) 30%, var(--background));
   --surface-pinned: color-mix(in oklab, var(--primary) 3%, var(--background));
@@ -149,11 +163,11 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
   --scrollbar-thumb: oklch(0.35 0.005 285.823);
   --scrollbar-border: oklch(0.141 0.005 285.823);
-  --grid-line: oklch(1 0 0 / 0.025);
   --glow: oklch(0.8 0.03 40 / 0.08);
   --tap-highlight: oklch(0.72 0.15 155 / 0.2);
   --color-available: oklch(0.78 0.19 142);
   --brand-text: oklch(0.72 0.15 155);
+  --warning-foreground: oklch(0.828 0.189 84.429);
 }
 
 @media (width >= 40rem) {
@@ -339,6 +353,23 @@
       > li:nth-child(3n):last-child {
       border-end-start-radius: var(--panel-radius);
     }
+  }
+
+  [data-slot="content"] {
+    counter-reset: section;
+  }
+
+  [data-slot="section"] {
+    counter-increment: section;
+  }
+
+  [data-slot="section-index"]:empty::before {
+    content: counter(section, decimal-leading-zero);
+  }
+
+  [data-slot="section-dimension"] {
+    writing-mode: vertical-rl;
+    white-space: nowrap;
   }
 
   section:last-of-type

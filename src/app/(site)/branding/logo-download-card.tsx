@@ -156,7 +156,7 @@ export function LogoDownloadCard({
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 h-8 gap-1.5 text-xs"
+          className="flex-1 h-8 text-xs"
           aria-label={`Download ${label} logo as SVG at ${size}px`}
           onClick={() =>
             svgRef.current && downloadSVG(svgRef.current, filename, size)
@@ -168,7 +168,7 @@ export function LogoDownloadCard({
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 h-8 gap-1.5 text-xs"
+          className="flex-1 h-8 text-xs"
           aria-label={`Download ${label} logo as PNG at ${size}px`}
           onClick={() =>
             svgRef.current && downloadPNG(svgRef.current, filename, size)

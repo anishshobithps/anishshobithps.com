@@ -45,7 +45,7 @@ const CARD_CLASS =
 
 function HubLabel({ children }: { children: React.ReactNode }) {
   return (
-    <TypographyMuted className="font-mono text-[11px] uppercase tracking-widest">
+    <TypographyMuted className="font-mono text-2xs uppercase tracking-widest">
       {children}
     </TypographyMuted>
   );
@@ -160,7 +160,7 @@ function AuthSection({ onClose }: { onClose: () => void }) {
               onClose();
               signOut({ redirectUrl: pathname });
             }}
-            className="shrink-0 gap-1.5 text-muted-foreground hover:text-foreground"
+            className="shrink-0 text-muted-foreground hover:text-foreground"
           >
             <SignOutIcon
               data-icon="inline-start"
@@ -188,7 +188,7 @@ function AuthSection({ onClose }: { onClose: () => void }) {
             <Button
               type="button"
               size="sm"
-              className="shrink-0 gap-1.5 pointer-coarse:h-11"
+              className="shrink-0 pointer-coarse:h-11"
             >
               <SignInIcon
                 data-icon="inline-start"
@@ -218,6 +218,7 @@ function HubBody({
   const isResume = pathname === "/resume";
 
   return (
+    // eslint-disable-next-line shadcn/no-arbitrary-values
     <div className="flex flex-col gap-6 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
       <HubHeader />
 
@@ -343,12 +344,10 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
   return (
     <div
       style={{
-        position: "fixed",
         left: position.x,
         top: position.y,
-        zIndex: 40,
       }}
-      className="print:hidden"
+      className="fixed z-40 print:hidden"
     >
       {isMobile ? (
         <>

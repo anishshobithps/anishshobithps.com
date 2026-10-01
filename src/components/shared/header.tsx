@@ -73,7 +73,7 @@ function CommandMenuButton({ isMac }: { isMac: boolean }) {
       <Kbd
         translate="no"
         aria-hidden="true"
-        className="max-md:hidden rounded-full px-1.5 font-mono text-[10px]"
+        className="max-md:hidden rounded-full px-1.5 font-mono text-3xs"
       >
         {isMac ? "\u2318\u00A0K" : "Ctrl\u00A0K"}
       </Kbd>
@@ -134,9 +134,9 @@ export function Header() {
           <Link
             href="/"
             aria-label={`${siteConfig.name}, home`}
-            className="cursor-pointer"
+            className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
           >
-            <Logo size={32} showWordmark aria-hidden="true" />
+            <Logo size={32} showWordmark alive aria-hidden="true" />
           </Link>
 
           <div className="flex items-center gap-1">
@@ -181,7 +181,7 @@ export function Header() {
 
             <ButtonGroup className="max-md:hidden">
               <CommandMenuButton isMac={isMac} />
-              <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-[3px] pl-1 pointer-coarse:h-11" />
+              <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-0.75 pl-1 pointer-coarse:h-11" />
             </ButtonGroup>
 
             <ButtonGroup className="md:hidden">

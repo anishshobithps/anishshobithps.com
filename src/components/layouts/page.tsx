@@ -1,3 +1,4 @@
+import { SectionMargins } from "@/components/layouts/section-margins";
 import { cn } from "@/lib/cn";
 import { ComponentPropsWithRef, forwardRef } from "react";
 
@@ -13,16 +14,6 @@ export const PageLayout = forwardRef<
     )}
     {...props}
   >
-    <div
-      className={cn(
-        "absolute inset-0 pointer-events-none isolate",
-        "bg-[linear-gradient(to_right,var(--grid-line)_0.5px,transparent_1px),linear-gradient(to_bottom,var(--grid-line)_0.5px,transparent_1px)]",
-        "bg-size-[80px_80px]",
-        "mask-[linear-gradient(to_right,black_0%,black_calc(50%-32rem),transparent_calc(50%-32rem),transparent_calc(50%+32rem),black_calc(50%+32rem),black_100%)]",
-        "mask-composite:intersect",
-        "[-webkit-mask-composite:source-in]",
-      )}
-    />
     {children}
   </div>
 ));
@@ -32,6 +23,7 @@ export const Content = forwardRef<HTMLElement, ComponentPropsWithRef<"main">>(
   ({ className, ...props }, ref) => (
     <main
       ref={ref}
+      data-slot="content"
       className={cn(
         "relative mx-auto w-full max-w-5xl",
         "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:z-20 before:w-px before:bg-line",
@@ -67,9 +59,11 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
   ({ variant = "default", children, className, ...props }, ref) => (
     <section
       ref={ref}
+      data-slot="section"
       className="section-gap group/section relative border border-line bg-line"
       {...props}
     >
+      <SectionMargins label={props["aria-label"]} />
       <div
         className={cn(
           "relative flex flex-col bg-background px-gutter group-last-of-type/section:overflow-hidden group-last-of-type/section:rounded-b-2xl",

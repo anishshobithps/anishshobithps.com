@@ -45,7 +45,7 @@ export function ResumeRefresh() {
         size="sm"
         onClick={handleRefresh}
         disabled={pending}
-        className="shrink-0 gap-1.5"
+        className="shrink-0"
       >
         {pending ? (
           <Spinner data-icon="inline-start" className="size-4" />

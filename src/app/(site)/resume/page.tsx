@@ -20,7 +20,7 @@ import {
   PdfViewerZoom,
 } from "@/components/ui/pdf-viewer";
 import { getResumeFilename } from "@/lib/resume";
-import { LogoLoader } from "@/components/shared/loader";
+import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
 import { Reveal } from "@/components/shared/reveal";
 import { buildMeta } from "@/lib/metadata";
 import { siteConfig } from "@/lib/config";
@@ -35,6 +35,12 @@ export const metadata: Metadata = buildMeta({
   canonicalPath: "/resume",
   type: "profile",
 });
+
+const RESUME_QUIPS = [
+  "fetching the pdf",
+  "dusting off the resume",
+  "double checking for typos",
+];
 
 export default function ResumePage() {
   const filename = getResumeFilename();
@@ -66,11 +72,12 @@ export default function ResumePage() {
           aria-label={`Resume PDF: ${filename}`}
           loader={
             <div
-              className="flex h-full items-center justify-center"
+              className="flex h-full flex-col items-center justify-center gap-4"
               role="status"
               aria-label="Loading resume"
             >
               <LogoLoader aria-hidden="true" />
+              <LoaderCaption phrases={RESUME_QUIPS} />
             </div>
           }
         >
@@ -92,7 +99,7 @@ export default function ResumePage() {
           </PdfViewerToolbar>
 
           <PdfViewerFooter>
-            <TypographyMuted className="font-mono text-[11px] tracking-wide">
+            <TypographyMuted className="font-mono text-2xs tracking-wide">
               Served with ETag, Last-Modified and Content-Length
             </TypographyMuted>
           </PdfViewerFooter>

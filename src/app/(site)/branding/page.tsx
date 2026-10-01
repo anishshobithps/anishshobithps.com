@@ -1,5 +1,6 @@
 import { PageArt } from "@/components/diagrams/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
+import { SectionMargins } from "@/components/layouts/section-margins";
 import {
   Section,
   Card,
@@ -11,6 +12,7 @@ import { BrandingOGPreview } from "@/app/(site)/branding/branding-og-preview";
 import {
   CricketDoodle,
   GroupGlyph,
+  HoverNudge,
   IceCreamNote,
   OnlinePing,
   PhotoCallout,
@@ -20,6 +22,8 @@ import {
   ThemeNudge,
   TypingBubble,
 } from "@/components/shared/doodles";
+import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
+import { Logo } from "@/components/shared/logo";
 import {
   TypographyH1,
   TypographyH2,
@@ -60,7 +64,86 @@ function DoodleStage({
   );
 }
 
+interface ShowcaseItem {
+  title: string;
+  description: string;
+  component: ReactNode;
+  className?: string;
+}
+
+function ShowcaseCard({
+  title,
+  description,
+  component,
+  className,
+}: ShowcaseItem) {
+  return (
+    <CardGridItem aria-label={`${title} example`} className={className}>
+      <div className="space-y-3">
+        <TypographyMuted
+          className="text-xs uppercase tracking-wider"
+          aria-hidden="true"
+        >
+          {title}
+        </TypographyMuted>
+        {component}
+        <TypographySmall className="block font-normal text-muted-foreground">
+          {description}
+        </TypographySmall>
+      </div>
+    </CardGridItem>
+  );
+}
+
 const moods = ["", "terrible", "bad", "good", "amazing"] as const;
+
+const motion: ShowcaseItem[] = [
+  {
+    title: "Sketch Loader",
+    description:
+      "Pencil draws the mark, colors it in, then it wakes up. Plays while pages load.",
+    component: (
+      <DoodleStage className="h-44">
+        <div className="flex flex-col items-center gap-3">
+          <LogoLoader size={88} />
+          <LoaderCaption />
+        </div>
+      </DoodleStage>
+    ),
+  },
+  {
+    title: "Live Mark",
+    description:
+      "The header logo. Its eyes follow your cursor, and it cheers up when you hover.",
+    component: (
+      <DoodleStage className="h-44">
+        <div className="flex flex-col items-center gap-1">
+          <div className="group/logo">
+            <Logo size={56} showWordmark alive aria-hidden="true" />
+          </div>
+          <div className="ml-16">
+            <HoverNudge />
+          </div>
+        </div>
+      </DoodleStage>
+    ),
+  },
+  {
+    title: "Margin Notes",
+    description:
+      "Every section is measured like a drawing sheet. The ruler reads your scroll, and the section you're in gets its dimension line inked in green.",
+    className: "md:col-span-2",
+    component: (
+      <div className="flex h-72 flex-col overflow-hidden rounded-lg border border-line">
+        <div className="hatch h-6 shrink-0 border-b border-line" />
+        <div className="relative mx-24 flex-1 border-x border-line bg-background">
+          <SectionMargins label="Motion" index="07" demo />
+        </div>
+        <div className="hatch h-6 shrink-0 border-t border-line" />
+      </div>
+    ),
+  },
+];
 
 export default function BrandingPage() {
   return (
@@ -340,13 +423,13 @@ export default function BrandingPage() {
                   <div className="flex items-center gap-8">
                     <div className="flex flex-col items-center gap-2">
                       <GroupGlyph variant="pages" />
-                      <TypographyMuted className="text-[10px] uppercase tracking-wider">
+                      <TypographyMuted className="text-3xs uppercase tracking-wider">
                         Pages
                       </TypographyMuted>
                     </div>
                     <div className="flex flex-col items-center gap-2">
                       <GroupGlyph variant="site" />
-                      <TypographyMuted className="text-[10px] uppercase tracking-wider">
+                      <TypographyMuted className="text-3xs uppercase tracking-wider">
                         Site
                       </TypographyMuted>
                     </div>
@@ -397,7 +480,7 @@ export default function BrandingPage() {
                         className="flex flex-col items-center gap-1.5"
                       >
                         <ReactionMascot mood={mood} />
-                        <TypographyMuted className="text-[10px] uppercase tracking-wider">
+                        <TypographyMuted className="text-3xs uppercase tracking-wider">
                           {mood || "neutral"}
                         </TypographyMuted>
                       </div>
@@ -407,20 +490,7 @@ export default function BrandingPage() {
               ),
             },
           ].map((item) => (
-            <CardGridItem key={item.title} aria-label={`${item.title} example`}>
-              <div className="space-y-3">
-                <TypographyMuted
-                  className="text-xs uppercase tracking-wider"
-                  aria-hidden="true"
-                >
-                  {item.title}
-                </TypographyMuted>
-                {item.component}
-                <TypographySmall className="block font-normal text-muted-foreground">
-                  {item.description}
-                </TypographySmall>
-              </div>
-            </CardGridItem>
+            <ShowcaseCard key={item.title} {...item} />
           ))}
         </CardGrid>
 
@@ -429,6 +499,23 @@ export default function BrandingPage() {
             The small hand-drawn stuff.{" "}
             <TypographyMark>Not load-bearing</TypographyMark>, but the site
             feels off without it.
+          </TypographyLead>
+        </div>
+      </Section>
+
+      <Section aria-label="Motion">
+        <SectionHeader>Motion</SectionHeader>
+        <CardGrid>
+          {motion.map((item) => (
+            <ShowcaseCard key={item.title} {...item} />
+          ))}
+        </CardGrid>
+
+        <div className="mt-14 max-w-3xl">
+          <TypographyLead>
+            The bits that move.{" "}
+            <TypographyMark>Every one of them sits still</TypographyMark> when
+            your system asks for reduced motion.
           </TypographyLead>
         </div>
       </Section>

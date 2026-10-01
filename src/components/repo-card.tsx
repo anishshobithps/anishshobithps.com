@@ -31,7 +31,7 @@ const repoCardVariants = cva(
           "border-border/60 bg-muted/30 hover:bg-muted/60",
       },
       size: {
-        sm: "p-3 [&_[data-slot=repo-name]]:text-sm [&_[data-slot=repo-description]]:text-xs [&_[data-slot=repo-meta]]:text-[11px]",
+        sm: "p-3 [&_[data-slot=repo-name]]:text-sm [&_[data-slot=repo-description]]:text-xs [&_[data-slot=repo-meta]]:text-2xs",
         default: "p-4 [&_[data-slot=repo-name]]:text-sm [&_[data-slot=repo-description]]:text-xs [&_[data-slot=repo-meta]]:text-xs",
         lg: "p-5 [&_[data-slot=repo-name]]:text-base [&_[data-slot=repo-description]]:text-sm [&_[data-slot=repo-meta]]:text-xs",
       },
@@ -100,13 +100,13 @@ async function RepoCard({
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           {repoData.isArchived && (
-            <span className="inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
+            <span className="inline-flex items-center gap-1 rounded border border-warning/30 bg-warning/10 px-1.5 py-0.5 text-3xs font-medium text-warning-foreground">
               <ArchiveIcon aria-hidden="true" className="size-2.5" />
               Archived
             </span>
           )}
           {repoData.isFork && (
-            <span className="inline-flex items-center gap-1 rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+            <span className="inline-flex items-center gap-1 rounded border border-border bg-muted/50 px-1.5 py-0.5 text-3xs font-medium text-muted-foreground">
               <GitForkIcon aria-hidden="true" className="size-2.5" />
               Fork
             </span>
@@ -125,13 +125,13 @@ async function RepoCard({
           {topics.map((topic) => (
             <span
               key={topic}
-              className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary"
+              className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-2xs font-medium text-primary"
             >
               {topic}
             </span>
           ))}
           {hasMoreTopics && (
-            <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+            <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-2xs font-medium text-muted-foreground">
               +{repoData.topics.length - maxTopics}
             </span>
           )}
