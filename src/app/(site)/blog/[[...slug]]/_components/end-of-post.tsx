@@ -9,10 +9,6 @@ import { gitDraw, gitPop } from "@/components/diagrams/classes";
 import { cn } from "@/lib/cn";
 import type { CSSProperties } from "react";
 
-function delay(ms: number) {
-  return { "--git-delay": `${ms}ms` } as CSSProperties;
-}
-
 function FinishLine() {
   return (
     <div aria-hidden="true" className="relative h-3">
@@ -28,7 +24,7 @@ function FinishLine() {
           strokeWidth="1.5"
           strokeLinecap="round"
           className={cn(gitDraw, "stroke-border")}
-          style={delay(100)}
+          style={{ "--git-delay": "100ms" } as CSSProperties}
         />
       </svg>
       <div
@@ -36,7 +32,7 @@ function FinishLine() {
           gitPop,
           "absolute right-1 bottom-1.5 flex origin-bottom items-end gap-0.5",
         )}
-        style={delay(900)}
+        style={{ "--git-delay": "900ms" } as CSSProperties}
       >
         <svg viewBox="0 0 16 30" className="h-7.5 w-4 overflow-visible">
           <g className="[transform-box:fill-box] origin-bottom-left animate-flag-wave">
@@ -68,7 +64,7 @@ export function EndOfPost({ commentCount, className }: EndOfPostProps) {
   };
 
   return (
-    <Reveal className={cn("not-prose mt-14 mb-2", className)}>
+    <Reveal className={cn("mt-14 mb-2", className)}>
       <FinishLine />
       <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
@@ -85,7 +81,7 @@ export function EndOfPost({ commentCount, className }: EndOfPostProps) {
           variant="outline"
           size="sm"
           onClick={scrollToEngagement}
-          className="gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground rounded-sm shrink-0"
+          className="text-xs text-muted-foreground hover:text-foreground rounded-sm shrink-0"
           aria-label="Scroll to reactions and comments"
         >
           <ChatCircleIcon
@@ -111,7 +107,7 @@ export function ScrollToEngagement({ count }: { count: number }) {
           .getElementById("engagement")
           ?.scrollIntoView({ behavior: "smooth", block: "start" })
       }
-      className="h-auto px-0 py-0 font-mono text-xs text-muted-foreground gap-1.5 hover:bg-transparent hover:text-foreground"
+      className="h-auto px-0 py-0 font-mono text-xs text-muted-foreground hover:bg-transparent hover:text-foreground"
       aria-label={`${count} comment${count !== 1 ? "s" : ""}, scroll to discussion`}
     >
       <ChatCircleIcon

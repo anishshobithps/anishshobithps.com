@@ -30,12 +30,12 @@ interface PlankProps {
 function plankClass({ index, accent }: Omit<PlankProps, "children">) {
   const right = index % 2 === 0;
   return cn(
-    "plank absolute flex w-40 rotate-(--tilt) flex-col justify-center gap-0.5 py-2 transition-[rotate,translate,background-color] duration-300 ease-out hover:rotate-0 focus-visible:rotate-0",
+    "absolute flex w-40 rotate-(--tilt) flex-col justify-center gap-0.5 py-2 transition-[rotate,translate,background-color] duration-300 ease-out hover:rotate-0 focus-visible:rotate-0",
     right
       ? "left-[calc(50%-6px)] origin-left pr-6 pl-5 [clip-path:polygon(0_0,calc(100%-14px)_0,100%_50%,calc(100%-14px)_100%,0_100%)] hover:translate-x-1.5"
       : "right-[calc(50%-6px)] origin-right pr-5 pl-6 text-right [clip-path:polygon(14px_0,100%_0,100%_100%,14px_100%,0_50%)] hover:-translate-x-1.5",
     accent
-      ? "animate-plank-nudge hover:animate-none focus-visible:animate-none bg-(--brand) text-neutral-950 hover:bg-(--brand)/90"
+      ? "animate-plank-nudge hover:animate-none focus-visible:animate-none bg-(--brand) text-(--brand-foreground) hover:bg-(--brand)/90"
       : "bg-secondary text-foreground hover:bg-muted",
   );
 }
@@ -53,7 +53,7 @@ function PlankText({ label, note }: { label: string; note: string }) {
       <SectionLabel pixel asChild className="text-inherit">
         <span>{label}</span>
       </SectionLabel>
-      <span aria-hidden="true" className="text-[11px] leading-none opacity-70">
+      <span aria-hidden="true" className="text-2xs leading-none opacity-70">
         {note}
       </span>
     </>
@@ -97,16 +97,19 @@ export function EndOfPage() {
             href={href as Route}
             aria-label={`${label}, ${note}`}
             className={plankClass({ index, accent })}
+            // eslint-disable-next-line shadcn/no-inline-styles
             style={plankStyle(index)}
           >
             <PlankText label={label} note={note} />
           </Link>
         ))}
+        {/* eslint-disable-next-line no-restricted-syntax */}
         <button
           type="button"
           onClick={backToTop}
           aria-label="Back to top"
           className={plankClass({ index: planks.length })}
+          // eslint-disable-next-line shadcn/no-inline-styles
           style={plankStyle(planks.length)}
         >
           <PlankText label="Back to top" note="one more lap?" />

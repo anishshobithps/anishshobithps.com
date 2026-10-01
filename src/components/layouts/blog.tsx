@@ -9,7 +9,7 @@ import {
 import { TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
-import { useActiveAnchor } from "fumadocs-core/toc";
+import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
 import { TOCItem, TOCItems } from "fumadocs-ui/components/toc/clerk";
 import {
   TOCProvider,
@@ -125,14 +125,8 @@ function MobileTOC() {
   );
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!scrollContainerRef.current) return;
-    const activeEl = scrollContainerRef.current.querySelector(
-      '[data-active="true"]',
-    );
-    activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [active]);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const disabledAutoScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -143,6 +137,18 @@ function MobileTOC() {
     container.addEventListener("click", onLinkClick);
     return () => container.removeEventListener("click", onLinkClick);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const viewport = viewportRef.current;
+    const activeEl = viewport?.querySelector<HTMLElement>('[data-active="true"]');
+    if (!viewport || !activeEl) return;
+    const viewportRect = viewport.getBoundingClientRect();
+    const activeRect = activeEl.getBoundingClientRect();
+    if (activeRect.top < viewportRect.top || activeRect.bottom > viewportRect.bottom) {
+      activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }, [active, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -232,8 +238,13 @@ function MobileTOC() {
                 className="px-gutter pb-3"
                 ref={scrollContainerRef}
               >
-                <TOCScrollArea className="max-h-[50vh]">
-                  <TOCList />
+                <TOCScrollArea
+                  ref={viewportRef}
+                  className="overscroll-contain max-h-[50svh]"
+                >
+                  <ScrollProvider containerRef={disabledAutoScrollRef}>
+                    <TOCList />
+                  </ScrollProvider>
                 </TOCScrollArea>
               </div>
             </CollapsibleContent>

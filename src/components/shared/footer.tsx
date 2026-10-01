@@ -52,7 +52,7 @@ export function Footer() {
                 {siteConfig.description}
               </TypographyMuted>
 
-              <TypographySmall className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              <TypographySmall className="font-mono text-2xs uppercase tracking-mega text-muted-foreground">
                 Building opinionated interfaces for the web.
               </TypographySmall>
 

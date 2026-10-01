@@ -2116,6 +2116,7 @@ function MediaPlayerSeek(props: MediaPlayerSeekProps) {
                     }}
                   >
                     {thumbnail.coords ? (
+                      // eslint-disable-next-line shadcn/no-inline-styles
                       <div style={spriteStyle} />
                     ) : (
                       // biome-ignore lint/performance/noImgElement: dynamic thumbnail URLs from media don't work well with Next.js Image optimization

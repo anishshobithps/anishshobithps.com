@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden">
-      <Empty className="relative z-10 flex-none gap-4 border-0">
+      <Empty className="relative z-10 flex-none gap-4">
         <ArtStage active className="aspect-[4/3] w-full max-w-md">
           <PageArt name="notFound" />
         </ArtStage>

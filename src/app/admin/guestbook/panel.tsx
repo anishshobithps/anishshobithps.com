@@ -92,7 +92,7 @@ export function GuestbookPanel() {
 
   if (entries.length === 0) {
     return (
-      <Empty className="border">
+      <Empty bordered>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <ChatCircleIcon aria-hidden="true" />
@@ -137,7 +137,7 @@ export function GuestbookPanel() {
           variant={pinned ? "secondary" : "outline"}
           size="sm"
           onClick={() => setParams({ pinned: !pinned })}
-          className="shrink-0 gap-1.5 h-8 text-xs"
+          className="shrink-0 h-8 text-xs"
         >
           <PushPinSimpleIcon
             data-icon="inline-start"
@@ -155,7 +155,7 @@ export function GuestbookPanel() {
       </TypographyMuted>
 
       {filtered.length === 0 ? (
-        <Empty className="border">
+        <Empty bordered>
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <MagnifyingGlassIcon aria-hidden="true" />
@@ -209,7 +209,7 @@ export function GuestbookPanel() {
                     </TypographyMuted>
                   )}
                   {entry.isPinned && (
-                    <Badge variant="secondary" className="text-xs gap-1">
+                    <Badge variant="secondary">
                       <PushPinSimpleIcon className="size-3" weight="fill" />
                       Pinned
                     </Badge>

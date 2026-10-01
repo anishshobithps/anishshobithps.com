@@ -81,6 +81,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
               {entry.user.name}
             </TypographySmall>
             <TypographyMuted className="text-xs tabular-nums">
+              {entry.number !== undefined && <>#{entry.number} · </>}
               <time dateTime={entry.createdAt} suppressHydrationWarning>
                 {timeAgo(entry.createdAt)}
               </time>
@@ -95,6 +96,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
             ref={msgRef}
             variant="none"
             className={cn(
+              // eslint-disable-next-line shadcn/no-arbitrary-values
               "text-[13px] sm:text-sm leading-relaxed wrap-anywhere",
               !expanded && "line-clamp-3",
             )}
@@ -127,7 +129,6 @@ export const GuestbookEntry = memo(function GuestbookEntry({
                     ? `Unlike (${entry.likeCount})`
                     : `Like (${entry.likeCount})`
                 }
-                className="gap-1.5"
               >
                 <HeartIcon
                   data-icon="inline-start"
@@ -150,7 +151,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
                     size="sm"
                     onClick={() => onDelete(entry.id)}
                     aria-label="Delete message"
-                    className="gap-1.5 text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
+                    className="text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
                   >
                     <TrashIcon
                       data-icon="inline-start"

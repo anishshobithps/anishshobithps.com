@@ -128,19 +128,19 @@ export function CommentBubble({ count }: { count: number | null }) {
           fontSize={label.length > 2 ? 6 : 7.5}
           textAnchor="middle"
           dominantBaseline="central"
-          className="font-mono font-semibold fill-neutral-950"
+          className="font-mono font-semibold fill-(--brand-foreground)"
         >
           {label}
         </text>
       ) : (
         <path
           d="M18.5 18 l-3.6 -3.4 a2.1 2.1 0 0 1 3.6 -2.6 a2.1 2.1 0 0 1 3.6 2.6 z"
-          className="fill-neutral-950"
+          className="fill-(--brand-foreground)"
         />
       )}
       <path
         d="M24 5.5 l-2.6 -2.4 a1.5 1.5 0 0 1 2.6 -1.9 a1.5 1.5 0 0 1 2.6 1.9 z"
-        className="[transform-box:fill-box] origin-center fill-rose-500 opacity-0 transition-[opacity,translate] duration-300 ease-out group-hover:translate-x-px group-hover:-translate-y-1 group-hover:opacity-100"
+        className="[transform-box:fill-box] origin-center fill-(--color-heart) opacity-0 transition-[opacity,translate] duration-300 ease-out group-hover:translate-x-px group-hover:-translate-y-1 group-hover:opacity-100"
       />
     </svg>
   );

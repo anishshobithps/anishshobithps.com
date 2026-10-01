@@ -49,7 +49,6 @@ function LikeButton({
       aria-pressed={liked}
       aria-busy={pending}
       aria-label={liked ? `Unlike (${count})` : `Like (${count})`}
-      className="gap-1.5"
     >
       {pending ? (
         <Spinner
@@ -165,7 +164,7 @@ export function CommentCard({
               {isPinnedRoot && (
                 <Badge
                   variant="secondary"
-                  className="gap-1 h-auto px-1.5 py-0.5 text-[11px] font-medium"
+                  className="h-auto px-1.5 text-2xs"
                 >
                   <PushPinSimpleIcon size={9} aria-hidden="true" />
                   Pinned
@@ -176,6 +175,7 @@ export function CommentCard({
             <Text
               as="p"
               variant="none"
+              // eslint-disable-next-line shadcn/no-arbitrary-values
               className="text-[13px] sm:text-sm leading-relaxed whitespace-pre-wrap wrap-break-word"
             >
               {comment.body}
@@ -202,7 +202,6 @@ export function CommentCard({
                         aria-expanded={replying}
                         aria-busy={isPending}
                         aria-label="Reply to comment"
-                        className="gap-1.5"
                       >
                         <ArrowBendDownRightIcon
                           data-icon="inline-start"
@@ -218,7 +217,7 @@ export function CommentCard({
                       </Button>
                     ) : (
                       <SignInButton mode="modal">
-                        <Button variant="outline" size="sm" className="gap-1.5">
+                        <Button variant="outline" size="sm">
                           <ArrowBendDownRightIcon
                             data-icon="inline-start"
                             size={14}
@@ -242,7 +241,7 @@ export function CommentCard({
                       size="sm"
                       onClick={() => onDelete(comment.id)}
                       aria-label="Delete comment"
-                      className="gap-1.5 text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
+                      className="text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
                     >
                       <TrashIcon
                         data-icon="inline-start"

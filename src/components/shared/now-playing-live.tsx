@@ -58,7 +58,7 @@ function Turntable({ playing }: { playing: boolean }) {
       />
       <g
         className={cn(
-          "origin-[41px_7px] [transform-box:view-box] motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+          "origin-[41px_7px] [transform-box:view-box] motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-snappy",
           !playing && "-rotate-14",
         )}
       >

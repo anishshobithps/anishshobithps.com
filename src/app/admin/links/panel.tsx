@@ -248,7 +248,7 @@ function SlugPairFields({
           </Button>
         )}
       </div>
-      <TypographyMuted className="font-mono text-[11px]">
+      <TypographyMuted className="font-mono text-2xs">
         {siteConfig.domain}/{pathLabel(preview)}
       </TypographyMuted>
     </div>
@@ -364,7 +364,6 @@ function LinkForm({
               type="button"
               variant="outline"
               size="sm"
-              className="gap-1.5"
               onClick={() => append({ tag: primary.tag, slug: "" })}
               disabled={submitting}
             >
@@ -581,14 +580,14 @@ export function LinksPanel() {
             each redirecting {siteConfig.domain}/path to a target
           </TypographyMuted>
         </div>
-        <Button size="sm" className="gap-1.5" onClick={openAdd}>
+        <Button size="sm" onClick={openAdd}>
           <PlusIcon data-icon="inline-start" className="size-3.5" aria-hidden="true" />
           Add Link
         </Button>
       </div>
 
       {links.length === 0 ? (
-        <Empty className="border">
+        <Empty bordered>
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <LinkIcon aria-hidden="true" />
@@ -599,7 +598,7 @@ export function LinksPanel() {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button size="sm" className="gap-1.5" onClick={openAdd}>
+            <Button size="sm" onClick={openAdd}>
               <PlusIcon
                 data-icon="inline-start"
                 className="size-3.5"
@@ -622,6 +621,7 @@ export function LinksPanel() {
                     return (
                       <TableHead
                         key={header.id}
+                        // eslint-disable-next-line shadcn/require-static-classes
                         className={HEAD_CLASS[header.id]}
                         aria-sort={
                           direction === "asc"
@@ -632,17 +632,19 @@ export function LinksPanel() {
                         }
                       >
                         {sortable ? (
-                          <button
+                          <Button
                             type="button"
+                            variant="muted"
+                            size="xs"
                             onClick={header.column.getToggleSortingHandler()}
-                            className="inline-flex items-center gap-1 hover:text-foreground"
+                            className="-mx-1.5"
                           >
                             {label}
                             <CaretUpDownIcon
                               className="size-3 opacity-60"
                               aria-hidden="true"
                             />
-                          </button>
+                          </Button>
                         ) : (
                           label
                         )}
@@ -682,7 +684,7 @@ export function LinksPanel() {
                           {link.ogEnabled && (
                             <Badge
                               variant="outline"
-                              className="gap-1 px-1.5 py-0 h-4 text-[10px]"
+                              className="px-1.5 py-0 h-4 text-3xs"
                             >
                               <ImageIcon className="size-2.5" aria-hidden />
                               OG
@@ -691,7 +693,7 @@ export function LinksPanel() {
                           {link.permanent && (
                             <Badge
                               variant="outline"
-                              className="px-1.5 py-0 h-4 text-[10px]"
+                              className="px-1.5 py-0 h-4 text-3xs"
                             >
                               308
                             </Badge>
@@ -704,7 +706,7 @@ export function LinksPanel() {
                                 key={`${a.tag}/${a.slug}`}
                                 asChild
                               >
-                                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">
+                                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-3xs">
                                   /{formatPath(a)}
                                 </span>
                               </TypographyMuted>
@@ -785,8 +787,8 @@ export function LinksPanel() {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
+                                variant="destructive"
                                 onClick={() => handleDelete(link.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
                                 Delete
                               </AlertDialogAction>

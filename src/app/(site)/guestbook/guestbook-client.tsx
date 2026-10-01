@@ -177,6 +177,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
         createdAt: nowISO(),
         likeCount: 0,
         likedByMe: false,
+        number: count + 1,
         user: {
           id: user.id,
           name: user.fullName || user.username || "You",
@@ -199,7 +200,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
         .then(() => true)
         .catch(() => false);
     },
-    [user, setPages, bumpTotal, submitEntry],
+    [user, count, setPages, bumpTotal, submitEntry],
   );
 
   const handleLike = useCallback(
@@ -314,7 +315,6 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
                   size="sm"
                   onClick={() => signOut({ redirectUrl: "/guestbook" })}
                   aria-label="Sign out"
-                  className="gap-1.5"
                 >
                   <SignOutIcon data-icon="inline-start" size={14} aria-hidden="true" />
                   <span className="hidden sm:inline">Sign out</span>
@@ -351,7 +351,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
                 signUpForceRedirectUrl="/guestbook"
               >
                 <ButtonGroup>
-                  <Button size="sm" className="gap-1.5 font-semibold shrink-0">
+                  <Button size="sm" className="font-semibold shrink-0">
                     <BookOpenIcon data-icon="inline-start" size={14} aria-hidden="true" />
                     Sign in
                   </Button>

@@ -68,7 +68,7 @@ export function Composer({
     remaining <= dangerThreshold
       ? "text-destructive"
       : remaining <= warnThreshold
-        ? "text-amber-700 dark:text-amber-500"
+        ? "text-warning-foreground"
         : "text-muted-foreground";
 
   const restoreDraft = (body: string) => {
@@ -178,7 +178,7 @@ export function Composer({
             onClick={submit}
             disabled={pending}
             aria-busy={pending}
-            className="gap-1.5 font-semibold"
+            className="font-semibold"
           >
             {pending ? (
               <Spinner

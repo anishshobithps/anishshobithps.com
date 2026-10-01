@@ -105,12 +105,12 @@ export function BrandingOGPreview() {
       >
         <div className="flex items-center gap-2">
           <div aria-hidden="true" className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-400/50" />
-            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400/50" />
-            <span className="w-2.5 h-2.5 rounded-full bg-green-400/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-(--color-traffic-red)/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-(--color-traffic-yellow)/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-(--color-traffic-green)/50" />
           </div>
           <div className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden">
-            <TypographyMuted className="font-mono text-[10px] truncate leading-none">
+            <TypographyMuted className="font-mono text-3xs truncate leading-none">
               {domain}/home / branding
             </TypographyMuted>
           </div>

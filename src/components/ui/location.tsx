@@ -32,11 +32,11 @@ function SkyIcon({ hour }: { hour: number | null }) {
               strokeWidth="1.3"
               strokeLinecap="round"
               transform={`rotate(${i * 45} 8 8)`}
-              className="stroke-amber-400"
+              className="stroke-(--color-sun)"
             />
           ))}
         </g>
-        <circle cx="8" cy="8" r="3.2" className="fill-amber-400" />
+        <circle cx="8" cy="8" r="3.2" className="fill-(--color-sun)" />
       </svg>
     );
   }
@@ -45,13 +45,13 @@ function SkyIcon({ hour }: { hour: number | null }) {
     <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0">
       <path
         d="M10.8 11.9 A5 5 0 1 1 7.2 3.1 A4 4 0 0 0 10.8 11.9 Z"
-        className="fill-slate-300"
+        className="fill-(--color-moon)"
       />
       <path
         d="M12.5 2.5 l0.5 1.2 1.2 0.5 -1.2 0.5 -0.5 1.2 -0.5 -1.2 -1.2 -0.5 1.2 -0.5 z"
-        className="fill-slate-300 motion-safe:animate-pulse"
+        className="fill-(--color-moon) motion-safe:animate-pulse"
       />
-      <circle cx="13.2" cy="8.6" r="0.7" className="fill-slate-300 motion-safe:animate-pulse [animation-delay:700ms]" />
+      <circle cx="13.2" cy="8.6" r="0.7" className="fill-(--color-moon) motion-safe:animate-pulse [animation-delay:700ms]" />
     </svg>
   );
 }

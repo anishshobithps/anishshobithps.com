@@ -108,7 +108,7 @@ export function CommentsPanel() {
 
   if (comments.length === 0) {
     return (
-      <Empty className="border">
+      <Empty bordered>
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <ChatCircleIcon aria-hidden="true" />
@@ -163,7 +163,7 @@ export function CommentsPanel() {
           variant={pinned ? "secondary" : "outline"}
           size="sm"
           onClick={() => setParams({ pinned: !pinned })}
-          className="shrink-0 gap-1.5 h-8 text-xs"
+          className="shrink-0 h-8 text-xs"
         >
           <PushPinSimpleIcon
             data-icon="inline-start"
@@ -181,7 +181,7 @@ export function CommentsPanel() {
       </TypographyMuted>
 
       {slugs.length === 0 && (
-        <Empty className="border">
+        <Empty bordered>
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <MagnifyingGlassIcon aria-hidden="true" />
@@ -263,15 +263,13 @@ export function CommentsPanel() {
                         </TypographyMuted>
                       )}
                       {comment.isPinned && (
-                        <Badge variant="secondary" className="text-xs gap-1">
+                        <Badge variant="secondary">
                           <PushPinSimpleIcon className="size-3" weight="fill" />
                           Pinned
                         </Badge>
                       )}
                       {comment.parentId !== null && (
-                        <Badge variant="outline" className="text-xs">
-                          Reply
-                        </Badge>
+                        <Badge variant="outline">Reply</Badge>
                       )}
                       <TypographyMuted className="text-xs ml-auto">
                         {formatShortDate(comment.createdAt)}

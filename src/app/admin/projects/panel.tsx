@@ -351,14 +351,14 @@ export function ProjectsPanel() {
             visible, in the order they appear on the site
           </TypographyMuted>
         </div>
-        <Button size="sm" className="gap-1.5" onClick={openAdd}>
+        <Button size="sm" onClick={openAdd}>
           <PlusIcon data-icon="inline-start" className="size-3.5" aria-hidden="true" />
           Add Project
         </Button>
       </div>
 
       {sorted.length === 0 ? (
-        <Empty className="border">
+        <Empty bordered>
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <FolderOpenIcon aria-hidden="true" />
@@ -369,7 +369,7 @@ export function ProjectsPanel() {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button size="sm" className="gap-1.5" onClick={openAdd}>
+            <Button size="sm" onClick={openAdd}>
               <PlusIcon
                 data-icon="inline-start"
                 className="size-3.5"
@@ -444,7 +444,7 @@ export function ProjectsPanel() {
                           {!project.enabled && (
                             <Badge
                               variant="outline"
-                              className="text-[10px] px-1.5 py-0 h-4"
+                              className="text-3xs px-1.5 py-0 h-4"
                             >
                               Hidden
                             </Badge>
@@ -461,13 +461,13 @@ export function ProjectsPanel() {
                         {project.highlights.slice(0, 4).map((h) => (
                           <span
                             key={h}
-                            className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+                            className="rounded bg-muted px-1.5 py-0.5 font-mono text-3xs text-muted-foreground"
                           >
                             {h}
                           </span>
                         ))}
                         {project.highlights.length > 4 && (
-                          <span className="text-[10px] text-muted-foreground self-center">
+                          <span className="text-3xs text-muted-foreground self-center">
                             +{project.highlights.length - 4}
                           </span>
                         )}
@@ -524,8 +524,8 @@ export function ProjectsPanel() {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
+                                variant="destructive"
                                 onClick={() => handleDelete(project.id)}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
                                 Delete
                               </AlertDialogAction>

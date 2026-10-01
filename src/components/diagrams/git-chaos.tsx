@@ -85,12 +85,14 @@ export function GitChaos() {
       className="h-auto w-full overflow-visible"
     >
       <defs>
+        {/* eslint-disable shadcn/no-raw-colors */}
         <linearGradient id="git-chaos-fade">
           <stop offset="0" stopColor="white" stopOpacity="0" />
           <stop offset="0.2" stopColor="white" />
           <stop offset="0.8" stopColor="white" />
           <stop offset="1" stopColor="white" stopOpacity="0" />
         </linearGradient>
+        {/* eslint-enable shadcn/no-raw-colors */}
         <mask id="git-chaos-mask">
           <rect width="560" height="150" fill="url(#git-chaos-fade)" />
         </mask>

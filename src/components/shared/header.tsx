@@ -73,7 +73,7 @@ function CommandMenuButton({ isMac }: { isMac: boolean }) {
       <Kbd
         translate="no"
         aria-hidden="true"
-        className="max-md:hidden rounded-full px-1.5 font-mono text-[10px]"
+        className="max-md:hidden rounded-full px-1.5 font-mono text-3xs"
       >
         {isMac ? "\u2318\u00A0K" : "Ctrl\u00A0K"}
       </Kbd>
@@ -134,9 +134,9 @@ export function Header() {
           <Link
             href="/"
             aria-label={`${siteConfig.name}, home`}
-            className="cursor-pointer"
+            className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
           >
-            <Logo size={32} showWordmark aria-hidden="true" />
+            <Logo size={32} showWordmark alive aria-hidden="true" />
           </Link>
 
           <div className="flex items-center gap-1">
@@ -150,24 +150,28 @@ export function Header() {
                   return (
                     <NavigationMenuItem key={link.href}>
                       <NavigationMenuLink
-                        href={link.href}
+                        asChild
                         data-current={active || undefined}
                         className="relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-[color,background-color,rotate] data-current:-rotate-2 data-current:bg-(--brand)/10 data-current:font-medium data-current:text-foreground data-current:ring-1 data-current:ring-(--brand)/35 data-current:hover:rotate-0 data-current:hover:bg-(--brand)/15 data-current:animate-note-swing"
-                        aria-current={
-                          pathname === link.href
-                            ? "page"
-                            : active
-                              ? "true"
-                              : undefined
-                        }
                       >
-                        <TypographySmall>{link.label}</TypographySmall>
-                        {active && (
-                          <NavPin
-                            key={pathname}
-                            className="absolute -top-2 -right-1.5"
-                          />
-                        )}
+                        <Link
+                          href={link.href}
+                          aria-current={
+                            pathname === link.href
+                              ? "page"
+                              : active
+                                ? "true"
+                                : undefined
+                          }
+                        >
+                          <TypographySmall>{link.label}</TypographySmall>
+                          {active && (
+                            <NavPin
+                              key={pathname}
+                              className="absolute -top-2 -right-1.5"
+                            />
+                          )}
+                        </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   );
@@ -177,7 +181,7 @@ export function Header() {
 
             <ButtonGroup className="max-md:hidden">
               <CommandMenuButton isMac={isMac} />
-              <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-[3px] pl-1 pointer-coarse:h-11" />
+              <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-0.75 pl-1 pointer-coarse:h-11" />
             </ButtonGroup>
 
             <ButtonGroup className="md:hidden">

@@ -119,7 +119,11 @@ export default async function Page(props: {
 
       <Section variant="hero" aria-label="Post header">
         <HeroWithArt art={<BlogCover slug={page.slugs.at(-1) ?? ""} zoom />}>
-          <ViewTransition name={postTransitionName(page.url)}>
+          <ViewTransition
+            name={postTransitionName(page.url)}
+            share="auto"
+            default="none"
+          >
             <TypographyH1>{page.data.title}</TypographyH1>
           </ViewTransition>
 
