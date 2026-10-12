@@ -3,7 +3,7 @@ export const isoCanvas =
 
 export const isoType = "font-pixel uppercase tracking-[0.06em]";
 
-export const isoPlay =
+const isoPlay =
   "[animation-play-state:paused] in-data-iso-active:[animation-play-state:running] group-hover/iso:[animation-play-state:running] group-focus-visible/iso:[animation-play-state:running]";
 
 export const isoRipple =

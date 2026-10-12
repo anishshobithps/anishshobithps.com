@@ -2,6 +2,7 @@ import { docs } from 'fumadocs-mdx:collections/server';
 import { type InferPageType, loader } from 'fumadocs-core/source';
 import { buildOGUrl } from '@/lib/metadata';
 import { siteConfig } from '@/lib/config';
+import { toTimestamp } from '@/lib/date';
 
 export const source = loader({
     baseUrl: '/blog',
@@ -19,4 +20,16 @@ export function getPageImage(page: InferPageType<typeof source>) {
     });
 
     return { url };
+}
+
+export function getLatestPost() {
+    return source
+        .getPages()
+        .reduce<InferPageType<typeof source> | undefined>(
+            (latest, page) =>
+                !latest || toTimestamp(page.data.date) > toTimestamp(latest.data.date)
+                    ? page
+                    : latest,
+            undefined,
+        );
 }

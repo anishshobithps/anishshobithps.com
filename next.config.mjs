@@ -7,7 +7,7 @@ const config = {
   reactStrictMode: true,
   poweredByHeader: false,
   allowedDevOrigins: ["http://127.0.0.1:3000"],
-  serverExternalPackages: ["@takumi-rs/image-response"],
+  serverExternalPackages: ["takumi-js"],
   typedRoutes: true,
   experimental: {
     optimizePackageImports: [
@@ -66,7 +66,7 @@ const config = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/((?!svg(?:/|$)).*)",
         headers: [
           {
             key: "X-Frame-Options",

@@ -10,6 +10,7 @@ const vendoredRegistryFiles = [
 const noTailwindFiles = [
   'src/app/og/route.tsx',
   'src/components/shared/OG.tsx',
+  'src/lib/svg/**/*.tsx',
   'src/app/icon.tsx',
   'src/app/apple-icon.tsx',
   'src/app/global-error.tsx',

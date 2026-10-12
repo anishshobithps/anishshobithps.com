@@ -3,18 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { formatTimeInZone, getHourInZone, getZoneOffsetHours } from "@/lib/date";
-
-function statusFor(hour: number) {
-  if (hour < 2) return "one more commit";
-  if (hour < 6) return "probably asleep";
-  if (hour < 9) return "brewing coffee";
-  if (hour < 13) return "deep in the code";
-  if (hour < 14) return "lunch break";
-  if (hour < 18) return "shipping things";
-  if (hour < 21) return "side-quest hours";
-  return "one more commit";
-}
+import { formatTimeInZone, getHourInZone, getZoneOffsetHours, statusForHour } from "@/lib/date";
 
 function SkyIcon({ hour }: { hour: number | null }) {
   if (hour === null) {
@@ -102,7 +91,7 @@ export function LocationTag({
       : time.offset.startsWith("+")
         ? `${time.offset.slice(1)} ahead of you`
         : `${time.offset.slice(1)} behind you`;
-  const status = time.hour === null ? "" : statusFor(time.hour);
+  const status = time.hour === null ? "" : statusForHour(time.hour);
 
   return (
     <Button

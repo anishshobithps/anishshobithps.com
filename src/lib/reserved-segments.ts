@@ -15,6 +15,7 @@ export const RESERVED_SEGMENTS = new Set<string>([
   "icon",
   "apple-icon",
   "stats",
+  "svg",
   "_next",
   "favicon-dark",
   "favicon-light",

@@ -16,8 +16,8 @@ export function IsoStage({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (!window.matchMedia("(hover: none)").matches) return;
 
+    // Scenes loop only while they're on screen.
     const observer = new IntersectionObserver(
       ([entry]) => el.toggleAttribute("data-iso-active", entry.isIntersecting),
       { threshold: ambient ? 0.2 : 0.6 },

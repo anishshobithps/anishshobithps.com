@@ -16,6 +16,22 @@ export function formatShortDate(date: Date | string): string {
     });
 }
 
+export function formatMonthYear(date: Date | string): string {
+    return new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+    });
+}
+
+export function formatMonthDay(date: Date | string): string {
+    return new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+    });
+}
+
 export function toISOString(date: Date | string): string {
     return new Date(date).toISOString();
 }
@@ -59,6 +75,17 @@ export function getHourInZone(timezone: string, date: Date = new Date()): number
             timeZone: timezone,
         }).format(date),
     );
+}
+
+export function statusForHour(hour: number): string {
+    if (hour < 2) return "one more commit";
+    if (hour < 6) return "probably asleep";
+    if (hour < 9) return "brewing coffee";
+    if (hour < 13) return "deep in the code";
+    if (hour < 14) return "lunch break";
+    if (hour < 18) return "shipping things";
+    if (hour < 21) return "side-quest hours";
+    return "one more commit";
 }
 
 export function getZoneOffsetHours(timezone: string, from: Date = new Date()): number {

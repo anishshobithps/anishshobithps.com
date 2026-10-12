@@ -9,24 +9,11 @@ import {
 } from "@/components/diagrams/iso";
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { MASCOT_POINTS, MascotFigure } from "@/components/shared/logo-mascot";
+import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@/lib/svg/fonts";
 import { themeColor } from "@/lib/theme-tokens";
 import type { CSSProperties, ReactNode } from "react";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
-
-export const OG_FONTS = {
-  display: {
-    name: "Bricolage Grotesque",
-    weight: 700,
-    googleFamily: "Bricolage+Grotesque:opsz,wght@60,700",
-  },
-  body: { name: "Manrope", weight: 500, googleFamily: "Manrope:wght@500" },
-  pixel: {
-    name: "Geist Pixel",
-    weight: 400,
-    googleFamily: "Geist+Pixel:ELSH@0..100",
-  },
-} as const;
 
 export interface OGImageProps {
   title: string;
@@ -105,14 +92,6 @@ const TONES = {
     right: tint("brand", 6),
   },
 } as const;
-
-const family = {
-  display: `'${OG_FONTS.display.name}', Geist, sans-serif`,
-  body: `'${OG_FONTS.body.name}', Geist, sans-serif`,
-  pixel: `'${OG_FONTS.pixel.name}', 'Geist Mono', monospace`,
-};
-
-const PIXEL_SHAPE = "'ELSH' 25";
 
 const TITLE_SIZES = [
   [20, 68],
@@ -195,7 +174,7 @@ function PixelText({
   return (
     <span
       style={{
-        fontFamily: family.pixel,
+        fontFamily: FONT_STACK.pixel,
         fontVariationSettings: PIXEL_SHAPE,
         fontSize: size,
         lineHeight: 1,
@@ -396,8 +375,8 @@ function Copy({
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div
           style={{
-            fontFamily: family.display,
-            fontWeight: OG_FONTS.display.weight,
+            fontFamily: FONT_STACK.display,
+            fontWeight: FONTS.display.weight,
             fontSize: titleSize(title),
             lineHeight: 1.08,
             letterSpacing: "-0.025em",
@@ -412,8 +391,8 @@ function Copy({
         {description && (
           <div
             style={{
-              fontFamily: family.body,
-              fontWeight: OG_FONTS.body.weight,
+              fontFamily: FONT_STACK.body,
+              fontWeight: FONTS.body.weight,
               fontSize: 20,
               lineHeight: 1.5,
               color: color.muted,
@@ -705,8 +684,8 @@ function Footer({
         {showName && (
           <span
             style={{
-              fontFamily: family.display,
-              fontWeight: OG_FONTS.display.weight,
+              fontFamily: FONT_STACK.display,
+              fontWeight: FONTS.display.weight,
               fontSize: 22,
               lineHeight: 1,
               letterSpacing: "-0.01em",
@@ -742,7 +721,7 @@ export function OGImage({
         height: HEIGHT,
         overflow: "hidden",
         backgroundColor: color.background,
-        fontFamily: family.body,
+        fontFamily: FONT_STACK.body,
       }}
     >
       <Backdrop />

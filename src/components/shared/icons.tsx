@@ -28,6 +28,7 @@ export {
   CircleIcon,
   ClockIcon,
   CodeIcon,
+  CopyIcon,
   DotsThreeIcon,
   DownloadIcon,
   EnvelopeIcon,

@@ -13,6 +13,10 @@ const config = {
     "src/components/ui/dropdown-menu.tsx",
     "src/hooks/use-lazy-ref.ts",
     "src/lib/compose-refs.ts",
+    // Isometric kit typed from the anatomy skill: kept whole, so most of its exports go unused here.
+    "src/lib/iso/iso-kit.ts",
+    "src/lib/iso/lathe.ts",
+    "src/lib/iso/tube.ts",
     // Utility script — run on-demand, not part of the app
     "scripts/get-spotify-refresh-token.ts",
   ],
