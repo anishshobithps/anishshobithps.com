@@ -135,7 +135,7 @@ interface CalendarResponse {
   } | null;
 }
 
-export async function loadCalendar(): Promise<Calendar> {
+async function calendarFromGraphQL(): Promise<Calendar> {
   const { user } = await graphql<CalendarResponse>(CALENDAR_QUERY, {
     login: GITHUB_USER,
   });
@@ -152,6 +152,71 @@ export async function loadCalendar(): Promise<Calendar> {
       })),
     ),
   };
+}
+
+const TOOLTIP = /<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([^<]*)<\/tool-tip>/g;
+const DAY_CELL = /<td\b[^>]*\bdata-date="[^"]+"[^>]*>/g;
+
+/**
+ * Reads the contribution graph GitHub renders on profile pages: one cell per
+ * day with its date and level, and a tooltip per cell with the count
+ * ("12 contributions on March 4th.", "No contributions on …").
+ */
+export function parseContributionsPage(html: string): Calendar {
+  const counts = new Map<string, number>();
+  for (const [, id = "", text = ""] of html.matchAll(TOOLTIP)) {
+    const count = text.match(/^\s*([\d,]+) contributions?\b/)?.[1];
+    counts.set(id, count ? Number(count.replace(/,/g, "")) : 0);
+  }
+
+  const days: CalendarDay[] = [];
+  for (const [cell] of html.matchAll(DAY_CELL)) {
+    const date = cell.match(/\bdata-date="(\d{4}-\d{2}-\d{2})"/)?.[1];
+    const id = cell.match(/\bid="([^"]+)"/)?.[1];
+    if (!date) continue;
+    days.push({
+      date,
+      weekday: new Date(`${date}T00:00:00Z`).getUTCDay(),
+      count: id ? (counts.get(id) ?? 0) : 0,
+      level: Number(cell.match(/\bdata-level="(\d)"/)?.[1] ?? 0),
+    });
+  }
+  if (!days.length || !counts.size) {
+    throw new Error("GitHub's contribution graph has changed shape");
+  }
+
+  days.sort((a, b) => a.date.localeCompare(b.date));
+  const weeks: CalendarDay[][] = [];
+  for (const day of days) {
+    if (day.weekday === 0 || !weeks.length) weeks.push([]);
+    weeks.at(-1)?.push(day);
+  }
+  return { total: days.reduce((sum, day) => sum + day.count, 0), weeks };
+}
+
+async function calendarFromProfile(): Promise<Calendar> {
+  const res = await fetch(`https://github.com/users/${GITHUB_USER}/contributions`, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+    headers: { "User-Agent": siteConfig.domain },
+  });
+  if (!res.ok) throw new Error(`GitHub contributions page responded ${res.status}`);
+  return parseContributionsPage(await res.text());
+}
+
+/**
+ * GraphQL when a token is set, since it's the documented API. Without one, or
+ * if the token is rejected, the public profile graph has the same numbers.
+ */
+export async function loadCalendar(): Promise<Calendar> {
+  if (process.env.GITHUB_TOKEN) {
+    try {
+      return await calendarFromGraphQL();
+    } catch (error) {
+      console.warn("[svg] calendar: GraphQL failed, reading the profile graph instead:", error);
+    }
+  }
+  return calendarFromProfile();
 }
 
 /**

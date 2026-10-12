@@ -107,7 +107,7 @@ CLERK_WEBHOOK_SECRET=whsec_...         # Clerk > Webhooks > Signing Secret
 
 NEXT_PUBLIC_BASE_URL=https://anishshobithps.com
 NEXT_PUBLIC_UMAMI_WEBSITE_ID=...       # optional, or remove from layout.tsx
-GITHUB_TOKEN=ghp_...                   # optional — lifts the GitHub API rate limit for repo cards and /svg; required for /svg?type=calendar
+GITHUB_TOKEN=ghp_...                   # optional — lifts the GitHub API rate limit for repo cards and /svg
 WAKATIME_API_KEY=waka_...              # optional — only for /svg?type=activity&source=wakatime|both
 SHORTLINK_DOMAIN=                      # optional — a second domain that only serves short links
 ```
@@ -238,7 +238,7 @@ GET /svg?type=<template>&theme=light|dark&v=<n>&<template options>
 | `heading`       | A numbered section heading                                  | `n` (1–99), `title` (optional, cut at 40 characters; without it you get a 24 px circle to sit inline in a Markdown heading) |
 | `post`          | The newest post: title, description, date, reading time and tags | `slug` (defaults to the newest post)                                                 |
 | `activity`      | When I code: a weekday × hour grid in local time            | `source=github\|wakatime\|both` (default `github`)                                        |
-| `calendar`      | The last 12 months of contributions, with current and longest streak, best day and active days | none (needs `GITHUB_TOKEN`)                                        |
+| `calendar`      | The last 12 months of contributions, with current and longest streak, best day and active days | none                                                               |
 | `posts`         | The newest posts with reading time, reads and date          | `limit` (1–8, default 3)                                                                  |
 | `guestbook`     | The latest guestbook signatures with avatars and the total  | `limit` (1–6, default 3)                                                                  |
 | `local`         | Any place right now (Mangalore by default): the time, what the hour is for, the weather, and today's daylight as 24 hour cells | `city` (geocoded) with optional `country` (two letters, e.g. `country=US` for the other Paris), or `lat` + `lon`; `name` relabels the place; `units=c\|f` (default `c`) |
@@ -269,7 +269,7 @@ About the data:
 
 - `activity` only searches public repos (`is:public`), so a `GITHUB_TOKEN` that can see private repos never puts their names on a card. Without a token, GitHub's anonymous search limit is enough at this cache length.
 - `activity` with `source=github` buckets my last 500 public commits by the local hour written in each commit's timestamp. GitHub's own calendar can't show that view. `wakatime` and `both` need `WAKATIME_API_KEY` and read the last seven days of durations; `both` averages each source's share, so commits and minutes weigh the same.
-- `calendar` reads GitHub's own contribution calendar over GraphQL, which has no anonymous access, so it needs `GITHUB_TOKEN` and shows the data-unavailable card without one. An empty today doesn't break the current streak.
+- `calendar` reads the contribution calendar over GraphQL when `GITHUB_TOKEN` is set and works. Without a token, or if GraphQL rejects it, it parses the public graph at `github.com/users/<me>/contributions`, the same one visitors see on my profile. The two can disagree on a few days: GraphQL counts days in the token owner's time zone, the public page in UTC. An empty today doesn't break the current streak.
 - `local` uses [Open-Meteo](https://open-meteo.com/) for geocoding and weather, which needs no key. A city resolves to the most populous match, and the time zone comes from the forecast for those coordinates. A city that doesn't exist is a 400, like any other bad option. Coordinates are rounded to two decimals so nearby requests share a cache entry. `resume` reads the releases behind `siteConfig.resumeURL`, so downloads only count the releases still published.
 - Guestbook avatars are fetched by the loader and cached as data URIs (capped at 120 KB each), so the SVG never points at another host. Emoji in guestbook messages come from takumi's twemoji provider, also inlined.
 

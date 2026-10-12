@@ -7,7 +7,7 @@ import {
   summarize,
   toLevels,
 } from "@/lib/svg/data/activity";
-import { type CalendarDay, summarizeCalendar } from "@/lib/svg/data/github";
+import { type CalendarDay, parseContributionsPage, summarizeCalendar } from "@/lib/svg/data/github";
 import { describeWeather, formatCoordinates, hourOf, zoneLabel } from "@/lib/svg/data/weather";
 import { plural, truncate } from "@/lib/svg/primitives";
 
@@ -137,6 +137,37 @@ describe("summarizeCalendar", () => {
       best: null,
       active: 0,
     });
+  });
+});
+
+describe("parseContributionsPage", () => {
+  const cell = (date: string, id: string, level: number) =>
+    `<td tabindex="0" data-ix="0" style="width: 10px" data-date="${date}" id="${id}" data-level="${level}" role="gridcell" class="ContributionCalendar-day"></td>`;
+  const tip = (id: string, text: string) =>
+    `<tool-tip id="tooltip-${id}" for="${id}" popover="manual" data-type="label" class="sr-only position-absolute">${text}</tool-tip>`;
+  // GitHub lays the grid out row by row (all Sundays, then all Mondays), not in date order.
+  const html = [
+    cell("2026-10-04", "day-0-0", 0),
+    cell("2026-10-11", "day-0-1", 4),
+    cell("2026-10-05", "day-1-0", 1),
+    cell("2026-10-12", "day-1-1", 2),
+    tip("day-0-0", "No contributions on October 4th."),
+    tip("day-0-1", "1,204 contributions on October 11th."),
+    tip("day-1-0", "1 contribution on October 5th."),
+    tip("day-1-1", "7 contributions on October 12th."),
+  ].join("\n");
+
+  it("reads each day's date, level and count, in date order, split into Sunday weeks", () => {
+    const { total, weeks } = parseContributionsPage(html);
+    expect(total).toBe(1212);
+    expect(weeks.map((week) => week.map((day) => [day.date, day.weekday, day.count, day.level]))).toEqual([
+      [["2026-10-04", 0, 0, 0], ["2026-10-05", 1, 1, 1]],
+      [["2026-10-11", 0, 1204, 4], ["2026-10-12", 1, 7, 2]],
+    ]);
+  });
+
+  it("fails loudly when the page no longer looks like a contribution graph", () => {
+    expect(() => parseContributionsPage("<html><body>Not Found</body></html>")).toThrow();
   });
 });
 
