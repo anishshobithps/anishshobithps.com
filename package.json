@@ -22,7 +22,7 @@
     "knip": "knip --config knip.config.mjs"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.39.7",
+    "@clerk/nextjs": "^7.9.16",
     "@hookform/resolvers": "^5.9.1",
     "@neondatabase/serverless": "^1.2.0",
     "@phosphor-icons/react": "^2.1.10",
@@ -61,7 +61,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@clerk/backend": "^2.33.7",
+    "@clerk/backend": "^3.24.0",
     "@faker-js/faker": "^10.6.0",
     "@shadcn/lint": "^0.2.1",
     "@tailwindcss/postcss": "^4.3.3",
