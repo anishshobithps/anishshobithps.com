@@ -28,19 +28,25 @@ export function getTemplate(type: string | null): AnySvgTemplate | undefined {
 
 const DEPLOYMENT = process.env.VERCEL_DEPLOYMENT_ID ?? "local";
 
-const loaders = new Map<string, (params: unknown) => Promise<unknown>>();
+type Loader = (params: unknown) => Promise<unknown>;
 
-export function loadData(type: string, template: AnySvgTemplate, params: unknown) {
+// Built once from the table above and keyed by template, so a request's `type`
+// never chooses which function gets called.
+const loaders = new Map<AnySvgTemplate, Loader>();
+
+for (const [type, template] of Object.entries(templates)) {
   const { load } = template;
-  if (!load) return Promise.resolve(undefined);
-
-  let cached = loaders.get(type);
-  if (!cached) {
-    cached = unstable_cache(async (input: unknown) => load(input), ["svg", type, DEPLOYMENT], {
+  if (!load) continue;
+  loaders.set(
+    template,
+    unstable_cache(async (input: unknown) => load(input), ["svg", type, DEPLOYMENT], {
       revalidate: template.revalidate ?? HOUR,
       tags: ["svg", `svg:${type}`],
-    });
-    loaders.set(type, cached);
-  }
-  return cached(params);
+    }),
+  );
+}
+
+export function loadData(template: AnySvgTemplate, params: unknown) {
+  const loader = loaders.get(template);
+  return loader ? loader(params) : Promise.resolve(undefined);
 }

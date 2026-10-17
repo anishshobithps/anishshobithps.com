@@ -72,12 +72,12 @@ export async function GET(req: NextRequest) {
 
   let data: unknown;
   try {
-    data = await loadData(type, template, params.data);
+    data = await loadData(template, params.data);
   } catch (error) {
     if (error instanceof SvgParamError) {
       return errorResponse("bad-params", error.message, theme.data, 400);
     }
-    console.error(`[svg] ${type} data failed to load:`, error);
+    console.error("[svg] %s data failed to load:", type, error);
     return errorResponse(
       "data-unavailable",
       `Couldn't load data for ${type}. Try again later.`,
@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
       await renderTemplate(template, params.data, data, theme.data),
     );
   } catch (error) {
-    console.error(`[svg] ${type} failed to render:`, error);
+    console.error("[svg] %s failed to render:", type, error);
     return errorResponse(
       "render-failed",
       `Couldn't render ${type}.`,
