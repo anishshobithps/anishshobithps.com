@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TypographyMuted } from "@/components/ui/typography";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@/lib/cn";
+import { playCue } from "@/lib/sound-player";
 import { useEffect, useId, useRef, useState } from "react";
 
 type ComposerSubmitResult = void | boolean;
@@ -84,11 +85,13 @@ export function Composer({
   const submit = () => {
     if (pending) return;
     if (!trimmed) {
+      playCue("error");
       setEmptyError(true);
       textareaRef.current?.focus();
       return;
     }
     const body = trimmed;
+    playCue("post");
     setValue("");
 
     let result: ComposerSubmitResult | Promise<ComposerSubmitResult>;

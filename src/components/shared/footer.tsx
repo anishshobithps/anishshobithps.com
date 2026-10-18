@@ -43,6 +43,7 @@ export function Footer() {
             <div className="flex flex-col gap-4">
               <Link
                 href="/"
+                data-sound="tap"
                 aria-label={`${siteConfig.name}, home`}
                 className="w-max"
               >
@@ -71,6 +72,7 @@ export function Footer() {
                   >
                     <a
                       href={item.href}
+                      data-sound="tap"
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${item.label} (opens in new tab)`}
@@ -109,6 +111,7 @@ export function Footer() {
                       <li key={href}>
                         <Link
                           href={href as Route}
+                          data-sound="tap"
                           className="inline-flex min-h-8 items-center text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline pointer-coarse:min-h-11"
                         >
                           <TypographySmall>{label}</TypographySmall>

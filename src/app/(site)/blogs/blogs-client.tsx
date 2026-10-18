@@ -38,6 +38,7 @@ import {
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { Reveal } from "@/components/shared/reveal";
 import { cn } from "@/lib/cn";
+import { playCue } from "@/lib/sound-player";
 import {
   MagnifyingGlassIcon,
   TagIcon,
@@ -220,15 +221,16 @@ export function BlogsClient({
                           <Checkbox
                             checked={tags.includes(tag)}
                             aria-label={`Filter by ${tag}`}
-                            onCheckedChange={(checked) =>
+                            onCheckedChange={(checked) => {
+                              playCue("select");
                               setParams({
                                 tags:
                                   checked === true
                                     ? [...tags, tag]
                                     : tags.filter((t) => t !== tag),
                                 page: 1,
-                              })
-                            }
+                              });
+                            }}
                           />
                           <TypographySmall className="font-semibold uppercase">
                             {tag}
@@ -287,9 +289,10 @@ export function BlogsClient({
               <Button
                 variant="secondary"
                 size="xs"
-                onClick={() =>
-                  setParams({ tags: tags.filter((t) => t !== tag), page: 1 })
-                }
+                onClick={() => {
+                  playCue("select");
+                  setParams({ tags: tags.filter((t) => t !== tag), page: 1 });
+                }}
                 aria-label={`Remove ${tag} filter`}
                 className="flex items-center bg-primary/10 py-0.5 font-mono text-primary hover:bg-primary/20 cursor-pointer h-auto"
               >
@@ -378,8 +381,10 @@ export function BlogsClient({
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (currentPage > 1)
+                        if (currentPage > 1) {
+                          playCue("flip");
                           setParams({ page: currentPage - 1 });
+                        }
                       }}
                       aria-label="Go to previous page"
                       aria-disabled={currentPage <= 1}
@@ -405,6 +410,7 @@ export function BlogsClient({
                           aria-current={p === currentPage ? "page" : undefined}
                           onClick={(e) => {
                             e.preventDefault();
+                            if (p !== currentPage) playCue("flip");
                             setParams({ page: p as number });
                           }}
                           className="cursor-pointer"
@@ -419,8 +425,10 @@ export function BlogsClient({
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (currentPage < totalPages)
+                        if (currentPage < totalPages) {
+                          playCue("flip");
                           setParams({ page: currentPage + 1 });
+                        }
                       }}
                       aria-label="Go to next page"
                       aria-disabled={currentPage >= totalPages}

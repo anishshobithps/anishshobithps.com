@@ -72,6 +72,7 @@ export function Hero() {
                 >
                   <Link
                     href="/resume"
+                    data-sound="tap"
                     prefetch={false}
                     aria-label="View resume"
                     className="flex items-center justify-center gap-2"
@@ -93,6 +94,7 @@ export function Hero() {
                 >
                   <a
                     href="#contact"
+                    data-sound="tap"
                     aria-label="Jump to contact section"
                     className="flex items-center justify-center gap-2"
                   >

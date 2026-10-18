@@ -21,6 +21,7 @@
   },
   "registries": {
     "@diceui": "https://diceui.com/r/{name}.json",
-    "@jalco": "https://ui.justinlevine.me/r/{name}.json"
+    "@jalco": "https://ui.justinlevine.me/r/{name}.json",
+    "@soundcn": "https://soundcn.xyz/r/{name}.json"
   }
 }

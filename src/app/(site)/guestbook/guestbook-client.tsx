@@ -22,7 +22,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
-import { toastError } from "@/lib/toast";
+import { playCue } from "@/lib/sound-player";
+import { toastError, typedToast } from "@/lib/toast";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import {
   useInfiniteQuery,
@@ -206,7 +207,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
   const handleLike = useCallback(
     (id: number) => {
       if (!currentUserId) {
-        toast.info("Sign in to like messages.");
+        typedToast("info", "Sign in to like messages.");
         return;
       }
       if (id < 0 || likeGuard.current.has(id)) return;
@@ -215,6 +216,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
       if (!entry) return;
       const liked = !entry.likedByMe;
 
+      playCue(liked ? "like" : "unlike");
       likeGuard.current.add(id);
       setPendingLikes((prev) => new Set(prev).add(id));
       patchEntries((list) =>
@@ -267,7 +269,10 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
     toast("Delete this message?", {
       action: {
         label: "Delete",
-        onClick: () => removeEntry.mutate(id),
+        onClick: () => {
+          playCue("remove");
+          removeEntry.mutate(id);
+        },
       },
       cancel: { label: "Keep", onClick: () => {} },
       duration: Infinity,

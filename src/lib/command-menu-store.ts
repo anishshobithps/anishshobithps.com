@@ -1,3 +1,5 @@
+import { playCue } from "@/lib/sound-player";
+
 let open = false;
 const listeners = new Set<() => void>();
 
@@ -19,6 +21,7 @@ export function getCommandMenuServerSnapshot() {
 export function setCommandMenuOpen(next: boolean) {
   if (open === next) return;
   open = next;
+  playCue(next ? "open" : "close");
   for (const listener of listeners) listener();
 }
 

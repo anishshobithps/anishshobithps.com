@@ -95,6 +95,7 @@ export function EndOfPage() {
           <Link
             key={href}
             href={href as Route}
+            data-sound="tap"
             aria-label={`${label}, ${note}`}
             className={plankClass({ index, accent })}
             // eslint-disable-next-line shadcn/no-inline-styles
@@ -107,6 +108,7 @@ export function EndOfPage() {
         <button
           type="button"
           onClick={backToTop}
+          data-sound="top"
           aria-label="Back to top"
           className={plankClass({ index: planks.length })}
           // eslint-disable-next-line shadcn/no-inline-styles

@@ -1,6 +1,7 @@
 "use client";
 
 import { Logo } from "@/components/shared/logo";
+import { SoundSwitch, SoundToggle } from "@/components/shared/sound-controls";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -15,6 +16,7 @@ import { TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import { cn } from "@/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
+import { playCue } from "@/lib/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import {
   ListIcon,
@@ -133,6 +135,7 @@ export function Header() {
         <div className="flex h-14 items-center justify-between px-gutter">
           <Link
             href="/"
+            data-sound="tap"
             aria-label={`${siteConfig.name}, home`}
             className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
           >
@@ -156,6 +159,7 @@ export function Header() {
                       >
                         <Link
                           href={link.href}
+                          data-sound="tap"
                           aria-current={
                             pathname === link.href
                               ? "page"
@@ -181,6 +185,7 @@ export function Header() {
 
             <ButtonGroup className="max-md:hidden">
               <CommandMenuButton isMac={isMac} />
+              <SoundToggle className="h-8.5 w-9 pointer-coarse:size-11" />
               <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-0.75 pl-1 pointer-coarse:h-11" />
             </ButtonGroup>
 
@@ -194,7 +199,10 @@ export function Header() {
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
                 aria-controls="mobile-nav"
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                  playCue(open ? "close" : "open");
+                  setOpen(!open);
+                }}
               >
                 {open ? (
                   <XIcon aria-hidden="true" />
@@ -226,6 +234,7 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-sound="tap"
                   onClick={() => setOpen(false)}
                   className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
                   aria-current={
@@ -248,6 +257,12 @@ export function Header() {
                 Theme
               </TypographySmall>
               <ThemeToggle aria-labelledby="theme-label" />
+            </div>
+            <div className="flex items-center justify-between px-6 py-3.5">
+              <TypographySmall id="sound-label">
+                Sound
+              </TypographySmall>
+              <SoundSwitch aria-labelledby="sound-label" />
             </div>
           </nav>
         </div>

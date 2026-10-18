@@ -47,6 +47,7 @@ export function Contact() {
                 <Button asChild size="lg" className="font-semibold">
                   <Link
                     href={`mailto:${siteConfig.email}`}
+                    data-sound="tap"
                     aria-label="Say hello, send an email"
                   >
                     <EnvelopeIcon
@@ -71,6 +72,7 @@ export function Contact() {
                         >
                           <a
                             href={item.href}
+                            data-sound="tap"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${item.label} profile (opens in new tab)`}

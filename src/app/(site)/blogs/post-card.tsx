@@ -73,6 +73,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
   return (
     <Link
       href={post.url as Route}
+      data-sound="read"
       className={cn(
         "group/iso group/post grid h-full outline-none transition-colors duration-300 hover:bg-surface-hover focus-visible:bg-surface-hover",
         featured ? "md:grid-cols-[3fr_2fr]" : "grid-rows-[auto_1fr]",

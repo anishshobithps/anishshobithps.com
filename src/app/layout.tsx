@@ -1,6 +1,7 @@
 import { CommandMenu } from "@/components/shared/command-menu";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { QueryProvider } from "@/components/shared/query-provider";
+import { SoundEffects } from "@/components/shared/sound-effects";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -110,6 +111,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <TooltipProvider>
               <PhosphorProvider>
                 <ThemeHotkey />
+                <SoundEffects />
                 <CommandMenu />
                 {children}
                 <Toaster />

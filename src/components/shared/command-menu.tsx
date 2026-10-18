@@ -24,6 +24,8 @@ import {
   LinkedinLogoIcon,
   MoonIcon,
   PencilIcon,
+  SpeakerHighIcon,
+  SpeakerSlashIcon,
   SunIcon,
   XLogoIcon,
 } from "@/components/shared/icons";
@@ -35,7 +37,10 @@ import {
   toggleCommandMenu,
 } from "@/lib/command-menu-store";
 import { siteConfig } from "@/lib/config";
+import { themeCue } from "@/lib/sound-cues";
+import { disableSound, enableSound, playCue } from "@/lib/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
+import { useSoundPreferences } from "@/hooks/use-sound-preferences";
 
 const NAV_ICONS = {
   "/projects": BriefcaseIcon,
@@ -66,6 +71,7 @@ export function CommandMenu() {
   );
   const router = useRouter();
   const { setTheme } = useTheme();
+  const { enabled: soundEnabled } = useSoundPreferences();
   const isMac = useIsMac();
   const themeShortcut = isMac ? "⇧⌘D" : "Ctrl+Shift+D";
 
@@ -87,6 +93,14 @@ export function CommandMenu() {
     setCommandMenuOpen(false);
     action();
   }, []);
+
+  const applyTheme = useCallback(
+    (theme: "light" | "dark") => {
+      playCue(themeCue(theme));
+      setTheme(theme);
+    },
+    [setTheme],
+  );
 
   return (
     <CommandDialog
@@ -121,14 +135,12 @@ export function CommandMenu() {
         <CommandSeparator />
 
         <CommandGroup heading="Actions">
-          <CommandItem
-            onSelect={() => runCommand(() => setTheme("light"))}
-          >
+          <CommandItem onSelect={() => runCommand(() => applyTheme("light"))}>
             <SunIcon aria-hidden="true" />
             Switch to light theme
             <CommandShortcut translate="no">{themeShortcut}</CommandShortcut>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => setTheme("dark"))}>
+          <CommandItem onSelect={() => runCommand(() => applyTheme("dark"))}>
             <MoonIcon aria-hidden="true" />
             Switch to dark theme
             <CommandShortcut translate="no">{themeShortcut}</CommandShortcut>
@@ -136,6 +148,7 @@ export function CommandMenu() {
           <CommandItem
             onSelect={() =>
               runCommand(() => {
+                playCue("download");
                 window.location.href = "/api/resume/download";
               })
             }
@@ -143,6 +156,22 @@ export function CommandMenu() {
             <DownloadIcon aria-hidden="true" />
             Download resume
             <CommandShortcut>PDF</CommandShortcut>
+          </CommandItem>
+          <CommandItem
+            onSelect={() =>
+              runCommand(() => {
+                if (soundEnabled) disableSound();
+                else void enableSound();
+              })
+            }
+          >
+            {soundEnabled ? (
+              <SpeakerSlashIcon aria-hidden="true" />
+            ) : (
+              <SpeakerHighIcon aria-hidden="true" />
+            )}
+            {soundEnabled ? "Turn sound off" : "Turn sound on"}
+            <CommandShortcut>SFX</CommandShortcut>
           </CommandItem>
         </CommandGroup>
 

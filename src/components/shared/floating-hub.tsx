@@ -25,6 +25,7 @@ import {
   XIcon,
 } from "@/components/shared/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
+import { SoundPanel } from "@/components/shared/sound-controls";
 import {
   CommentBubble,
   EmptyAvatar,
@@ -37,6 +38,7 @@ import { useDraggable } from "@/hooks/use-draggable";
 import { useEngagementAnchor } from "@/hooks/use-engagement-anchor";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/cn";
+import { playCue } from "@/lib/sound-player";
 
 const FAB_SIZE = 48;
 
@@ -261,7 +263,12 @@ function HubBody({
         <section className="flex flex-col gap-2">
           <HubLabel>Resume</HubLabel>
           <Button asChild variant="secondary" className={CARD_CLASS}>
-            <a href="/api/resume/download" download onClick={onClose}>
+            <a
+              href="/api/resume/download"
+              download
+              data-sound="download"
+              onClick={onClose}
+            >
               <DownloadIcon
                 data-icon="inline-start"
                 aria-hidden="true"
@@ -283,6 +290,11 @@ function HubBody({
       {showAuth && <AuthSection onClose={onClose} />}
 
       <section className="flex flex-col gap-2">
+        <HubLabel>Sound</HubLabel>
+        <SoundPanel />
+      </section>
+
+      <section className="flex flex-col gap-2">
         <HubLabel>Repository</HubLabel>
         {repoCard}
       </section>
@@ -302,11 +314,19 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
     FAB_SIZE,
   );
 
+  const changeOpen = useCallback((next: boolean) => {
+    playCue(next ? "open" : "close");
+    setOpen(next);
+  }, []);
+
   const toggle = useCallback(() => {
-    if (wasDragged()) return;
+    if (wasDragged()) {
+      playCue("drop");
+      return;
+    }
     setBoundary(document.getElementById("main-content"));
-    setOpen((prev) => !prev);
-  }, [wasDragged]);
+    changeOpen(!open);
+  }, [wasDragged, changeOpen, open]);
 
   if (!position) return null;
 
@@ -352,7 +372,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
       {isMobile ? (
         <>
           {fab}
-          <Drawer open={open} onOpenChange={setOpen}>
+          <Drawer open={open} onOpenChange={changeOpen}>
             <DrawerContent>
               <DrawerTitle className="sr-only">Quick menu</DrawerTitle>
               <DrawerDescription className="sr-only">
@@ -360,14 +380,17 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
               </DrawerDescription>
               <ScrollArea className="w-full [&>[data-slot=scroll-area-viewport]]:max-h-[70dvh]">
                 <div className="mx-auto w-full max-w-md">
-                  <HubBody repoCard={repoCard} onClose={() => setOpen(false)} />
+                  <HubBody
+                    repoCard={repoCard}
+                    onClose={() => changeOpen(false)}
+                  />
                 </div>
               </ScrollArea>
             </DrawerContent>
           </Drawer>
         </>
       ) : (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={changeOpen}>
           <PopoverAnchor asChild>{fab}</PopoverAnchor>
           <PopoverContent
             side="top"
@@ -383,7 +406,7 @@ export function FloatingHub({ repoCard }: { repoCard: React.ReactNode }) {
             className="max-h-[80vh] w-96 overflow-y-auto p-0"
             aria-label="Quick menu"
           >
-            <HubBody repoCard={repoCard} onClose={() => setOpen(false)} />
+            <HubBody repoCard={repoCard} onClose={() => changeOpen(false)} />
           </PopoverContent>
         </Popover>
       )}

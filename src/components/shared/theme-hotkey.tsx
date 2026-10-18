@@ -3,6 +3,9 @@
 import { useCallback, useEffect } from "react";
 import { useTheme } from "next-themes";
 
+import { themeCue } from "@/lib/sound-cues";
+import { playCue } from "@/lib/sound-player";
+
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   if (target.isContentEditable) return true;
@@ -17,7 +20,9 @@ export function ThemeHotkey() {
 
   const toggle = useCallback(() => {
     const current = theme === "system" ? resolvedTheme : theme;
-    setTheme(current === "dark" ? "light" : "dark");
+    const next = current === "dark" ? "light" : "dark";
+    playCue(themeCue(next));
+    setTheme(next);
   }, [theme, resolvedTheme, setTheme]);
 
   useEffect(() => {

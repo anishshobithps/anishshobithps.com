@@ -14,6 +14,7 @@ import {
   XLogoIcon,
   LinkedinLogoIcon,
 } from "@/components/shared/icons";
+import { playCue } from "@/lib/sound-player";
 import { toast } from "sonner";
 import type { Route } from "next";
 
@@ -38,6 +39,7 @@ export function BlogPostNav({
 }: BlogPostNavProps) {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(pageUrl);
+    playCue("copy");
     toast.success("Link copied to clipboard");
   };
 
@@ -50,7 +52,7 @@ export function BlogPostNav({
   return (
     <>
       <Button variant="outline" size="sm" asChild>
-        <Link href="/blogs" aria-label="Back to all blog posts">
+        <Link href="/blogs" data-sound="tap" aria-label="Back to all blog posts">
           <ArrowLeftIcon
             data-icon="inline-start"
             className="size-3.5 shrink-0"
@@ -80,6 +82,7 @@ export function BlogPostNav({
           >
             <a
               href={xUrl}
+              data-sound="tap"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Share "${title}" on X (opens in new tab)`}
@@ -96,6 +99,7 @@ export function BlogPostNav({
           >
             <a
               href={linkedinUrl}
+              data-sound="tap"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Share "${title}" on LinkedIn (opens in new tab)`}
@@ -109,6 +113,7 @@ export function BlogPostNav({
           <ButtonGroup>
             <PaginationPrevious
               href={(prevPost?.url ?? "#") as Route}
+              data-sound={prevPost ? "flip" : undefined}
               aria-label={
                 prevPost
                   ? `Previous post: ${prevPost.title}`
@@ -122,6 +127,7 @@ export function BlogPostNav({
             />
             <PaginationNext
               href={(nextPost?.url ?? "#") as Route}
+              data-sound={nextPost ? "flip" : undefined}
               aria-label={
                 nextPost ? `Next post: ${nextPost.title}` : "No next post"
               }

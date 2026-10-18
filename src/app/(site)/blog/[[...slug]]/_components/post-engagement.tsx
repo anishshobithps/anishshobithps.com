@@ -18,6 +18,8 @@ import {
 import { Panel, PanelRow } from "@/components/layouts/page";
 import { SectionLabel } from "@/components/ui/typography";
 import { nowISO } from "@/lib/date";
+import { playCue } from "@/lib/sound-player";
+import type { CueName } from "@/lib/sound-cues";
 import { classifyError, typedToast } from "@/lib/toast";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -89,6 +91,13 @@ function findComment(
 
 const EMPTY_MOOD: MoodState = { value: "", counts: {} };
 
+const MOOD_CUES: Record<MoodId, CueName> = {
+  terrible: "moodTerrible",
+  bad: "moodBad",
+  good: "moodGood",
+  amazing: "moodAmazing",
+};
+
 function applyMood(state: MoodState, next: MoodId | ""): MoodState {
   const counts = { ...state.counts };
   if (state.value) {
@@ -152,7 +161,9 @@ export function PostEngagement({
   const comments = baseComments;
 
   const handleMoodSelect = (id: MoodId) => {
-    selectMood(moodState.value === id ? "" : id);
+    const clearing = moodState.value === id;
+    playCue(clearing ? "unlike" : MOOD_CUES[id]);
+    selectMood(clearing ? "" : id);
   };
 
   const postComment = useMutation({
@@ -242,7 +253,10 @@ export function PostEngagement({
       toast("Delete this comment?", {
         action: {
           label: "Delete",
-          onClick: () => removeComment.mutate(id),
+          onClick: () => {
+            playCue("remove");
+            removeComment.mutate(id);
+          },
         },
         cancel: { label: "Keep", onClick: () => {} },
         duration: Infinity,
@@ -263,6 +277,7 @@ export function PostEngagement({
       if (!comment) return;
       const liked = !comment.likedByMe;
 
+      playCue(liked ? "like" : "unlike");
       likeGuard.current.add(id);
       setPendingLikes((prev) => new Set(prev).add(id));
 

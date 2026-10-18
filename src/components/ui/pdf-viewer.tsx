@@ -295,6 +295,7 @@ export const PdfViewerPagination = () => {
         variant="outline"
         size="icon"
         aria-label="Previous page"
+        data-sound="flip"
         onClick={() => goToPage(currentPage - 1)}
       >
         <CaretLeftIcon className="size-4" aria-hidden="true" />
@@ -312,6 +313,7 @@ export const PdfViewerPagination = () => {
         variant="outline"
         size="icon"
         aria-label="Next page"
+        data-sound="flip"
         onClick={() => goToPage(currentPage + 1)}
       >
         <CaretRightIcon className="size-4" aria-hidden="true" />
@@ -390,6 +392,7 @@ export const PdfViewerDownload = ({ label }: { label?: string }) => {
     <Button size="sm" asChild className="sm:px-3 px-2">
       <a
         href={downloadHref}
+        data-sound="download"
         aria-label={label ? `${label}, download as PDF` : "Download as PDF"}
       >
         <DownloadIcon className="size-4" aria-hidden="true" />

@@ -24,7 +24,7 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-const LAST_UPDATED = "September 29, 2026";
+const LAST_UPDATED = "October 19, 2026";
 
 const POLICY_HISTORY_URL = `${siteConfig.repoUrl}/commits/main/src/app/(site)/privacy-policy/page.tsx`;
 
@@ -187,8 +187,10 @@ export default function PrivacyPolicyPage() {
             this site&apos;s server: your{" "}
             <TypographyMark>theme choice</TypographyMark> (light, dark, or
             system), the spot you last dragged the{" "}
-            <TypographyMark>floating quick-menu button</TypographyMark> to, and,
-            once you&apos;ve played a video in a post, the player&apos;s{" "}
+            <TypographyMark>floating quick-menu button</TypographyMark> to, your{" "}
+            <TypographyMark>sound effects setting</TypographyMark> (on or off,
+            and volume) once you change it, and, once you&apos;ve played a
+            video in a post, the player&apos;s{" "}
             <TypographyMark>volume, mute, and subtitle settings</TypographyMark>
             . Clerk&apos;s script also keeps a copy of its own configuration
             there. Clearing this site&apos;s data in your browser removes all

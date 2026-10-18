@@ -3,6 +3,8 @@
 import { MonitorIcon, MoonIcon, SunIcon } from "@/components/shared/icons";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/cn";
+import { themeCue } from "@/lib/sound-cues";
+import { playCue } from "@/lib/sound-player";
 import { useTheme } from "next-themes";
 import {
   useSyncExternalStore,
@@ -104,7 +106,10 @@ export function ThemeToggle({ className, ...props }: ThemeToggleProps) {
           key={key}
           value={key}
           aria-label={label}
-          onClick={(event) => applyTheme(setTheme, key, event)}
+          onClick={(event) => {
+            playCue(themeCue(key));
+            applyTheme(setTheme, key, event);
+          }}
           className="size-6.5 min-w-0 cursor-pointer rounded-full p-0 text-muted-foreground hover:bg-transparent hover:text-foreground data-[state=on]:bg-foreground/10 data-[state=on]:text-foreground"
         >
           <Icon weight="fill" className="size-3.5" aria-hidden="true" />
