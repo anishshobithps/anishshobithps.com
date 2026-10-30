@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { siteConfig } from "@/lib/config";
 
 const GITHUB_USER = siteConfig.githubRepo.split("/")[0];
@@ -15,8 +16,8 @@ async function github<T>(path: string): Promise<T> {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
       "User-Agent": siteConfig.domain,
-      ...(process.env.GITHUB_TOKEN
-        ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+      ...(ENV.GITHUB_TOKEN
+        ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` }
         : {}),
     },
   });
@@ -64,7 +65,7 @@ export async function loadCommitTimes(pages: number) {
 }
 
 async function graphql<T>(query: string, variables: Record<string, unknown>) {
-  const token = process.env.GITHUB_TOKEN;
+  const token = ENV.GITHUB_TOKEN;
   if (!token) throw new Error("GITHUB_TOKEN is not set");
 
   const res = await fetch(`${API}/graphql`, {
@@ -209,7 +210,7 @@ async function calendarFromProfile(): Promise<Calendar> {
  * if the token is rejected, the public profile graph has the same numbers.
  */
 export async function loadCalendar(): Promise<Calendar> {
-  if (process.env.GITHUB_TOKEN) {
+  if (ENV.GITHUB_TOKEN) {
     try {
       return await calendarFromGraphQL();
     } catch (error) {

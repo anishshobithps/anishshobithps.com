@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
@@ -21,7 +22,7 @@ export default async function AdminLayout({
   const { userId, redirectToSignIn } = await auth();
 
   if (!userId) return redirectToSignIn({ returnBackUrl: "/admin" });
-  if (userId !== process.env.OWNER_CLERK_USER_ID) return <AdminUnauthorized />;
+  if (userId !== ENV.OWNER_CLERK_USER_ID) return <AdminUnauthorized />;
 
   return (
     <ClerkProvider>

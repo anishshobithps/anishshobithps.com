@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { bucketDurations, type Matrix } from "@/lib/svg/data/activity";
 
 const TIMEOUT_MS = 5000;
@@ -30,7 +31,7 @@ function recentDates(days: number, now = new Date()) {
 export async function loadCodingTime(
   days: number,
 ): Promise<{ matrix: Matrix; seconds: number; days: number }> {
-  const key = process.env.WAKATIME_API_KEY;
+  const key = ENV.WAKATIME_API_KEY;
   if (!key) throw new Error("WAKATIME_API_KEY is not set");
 
   const responses = await Promise.all(

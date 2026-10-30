@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import {
     NextResponse,
@@ -11,7 +12,7 @@ const withClerk = clerkMiddleware();
 
 function configuredShortLinkHost(): string | null {
     const raw =
-        process.env.SHORTLINK_DOMAIN ?? process.env.NEXT_PUBLIC_SHORTLINK_DOMAIN;
+        ENV.SHORTLINK_DOMAIN ?? ENV.NEXT_PUBLIC_SHORTLINK_DOMAIN;
     if (!raw) return null;
     const host = raw
         .trim()

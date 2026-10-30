@@ -1,3 +1,5 @@
+import { ENV } from "varlock/env";
+
 export const siteConfig = {
     name: "Anish Shobith P S",
     domain: "anishshobithps.com",
@@ -6,9 +8,9 @@ export const siteConfig = {
     description:
         "I build interfaces, bots, and questionable automation scripts, mostly so I don't have to repeat myself. TypeScript, React, and Next.js.",
     baseUrl:
-        process.env.NEXT_PUBLIC_BASE_URL ??
-        (process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
-            ? `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
+        ENV.NEXT_PUBLIC_BASE_URL ??
+        (ENV.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+            ? `https://${ENV.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
             : "http://localhost:3000"),
     availableForHire: true,
     handle: "n10nce",

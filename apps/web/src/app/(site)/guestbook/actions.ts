@@ -1,5 +1,6 @@
 "use server";
 
+import { ENV } from "varlock/env";
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@/lib/db";
 import { guestbookEntries, guestbookLikes } from "@/lib/schema";
@@ -196,7 +197,7 @@ export async function deleteGuestbookEntry(
         if (!entry) return { success: false, error: "Entry not found." };
 
         const isOwner = entry.clerkUserId === userId;
-        const isSiteOwner = userId === process.env.OWNER_CLERK_USER_ID;
+        const isSiteOwner = userId === ENV.OWNER_CLERK_USER_ID;
 
         if (!isOwner && !isSiteOwner) {
             return { success: false, error: "You don't have permission to delete this entry." };
@@ -219,7 +220,7 @@ export async function togglePinEntry(
 ): Promise<{ success: true } | { success: false; error: string }> {
     try {
         const { userId } = await auth();
-        if (!userId || userId !== process.env.OWNER_CLERK_USER_ID) {
+        if (!userId || userId !== ENV.OWNER_CLERK_USER_ID) {
             return { success: false, error: "Not authorized." };
         }
 

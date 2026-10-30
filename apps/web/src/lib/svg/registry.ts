@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { unstable_cache } from "next/cache";
 import { type AnySvgTemplate, HOUR } from "@/lib/svg/template";
 import { activity } from "@/lib/svg/templates/activity";
@@ -26,7 +27,7 @@ export function getTemplate(type: string | null): AnySvgTemplate | undefined {
   return type && Object.hasOwn(templates, type) ? templates[type] : undefined;
 }
 
-const DEPLOYMENT = process.env.VERCEL_DEPLOYMENT_ID ?? "local";
+const DEPLOYMENT = ENV.VERCEL_DEPLOYMENT_ID ?? "local";
 
 type Loader = (params: unknown) => Promise<unknown>;
 

@@ -179,6 +179,7 @@ export function createNextConfig({
       'out/**',
       'build/**',
       'next-env.d.ts',
+      'env.d.ts',
       '.source/**',
       '.unlighthouse/**',
     ]),

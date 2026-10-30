@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { createClerkClient } from "@clerk/nextjs/server";
 
 export interface PublicUser {
@@ -22,7 +23,7 @@ function resolveUserName(user: {
 let backendClient: ReturnType<typeof createClerkClient> | null = null;
 
 function getBackendClient() {
-    backendClient ??= createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+    backendClient ??= createClerkClient({ secretKey: ENV.CLERK_SECRET_KEY });
     return backendClient;
 }
 

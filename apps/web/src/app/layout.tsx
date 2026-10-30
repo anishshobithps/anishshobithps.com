@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { CommandMenu } from "@/components/shared/command-menu";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { QueryProvider } from "@/components/shared/query-provider";
@@ -95,7 +96,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {process.env.NODE_ENV === "production" && (
           <Script
             src="/stats/script.js"
-            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            data-website-id={ENV.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
             data-host-url="/stats"
             strategy="afterInteractive"
           />

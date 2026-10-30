@@ -1,3 +1,5 @@
+import { ENV } from "varlock/env";
+
 export interface GitHubRepoData {
   fullName: string
   description: string | null
@@ -61,8 +63,8 @@ export async function fetchGitHubRepoData(
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
-          ...(process.env.GITHUB_TOKEN
-            ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+          ...(ENV.GITHUB_TOKEN
+            ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` }
             : {}),
         },
         next: { revalidate: 3600 },

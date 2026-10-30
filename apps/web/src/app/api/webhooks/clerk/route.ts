@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { db } from "@/lib/db";
 import {
     blogCommentLikes,
@@ -15,7 +16,7 @@ type UserDeletedEvent = {
 };
 
 export async function POST(req: Request) {
-    const secret = process.env.CLERK_WEBHOOK_SECRET;
+    const secret = ENV.CLERK_WEBHOOK_SECRET;
     if (!secret) {
         return new Response("CLERK_WEBHOOK_SECRET not set", { status: 500 });
     }

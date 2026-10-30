@@ -1,3 +1,4 @@
+import { ENV } from "varlock/env";
 import { unstable_cache } from "next/cache";
 
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
@@ -25,7 +26,7 @@ export type NowPlayingData =
 
 async function getAccessToken(): Promise<string> {
     const basic = Buffer.from(
-        `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
+        `${ENV.SPOTIFY_CLIENT_ID}:${ENV.SPOTIFY_CLIENT_SECRET}`,
     ).toString("base64");
 
     const res = await fetch(TOKEN_ENDPOINT, {
@@ -36,7 +37,7 @@ async function getAccessToken(): Promise<string> {
         },
         body: new URLSearchParams({
             grant_type: "refresh_token",
-            refresh_token: process.env.SPOTIFY_REFRESH_TOKEN ?? "",
+            refresh_token: ENV.SPOTIFY_REFRESH_TOKEN ?? "",
         }),
     });
 
