@@ -64,6 +64,7 @@
     "@clerk/backend": "^3.24.0",
     "@faker-js/faker": "^10.6.0",
     "@repo/tsconfig": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
     "@shadcn/lint": "^0.2.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/culori": "^4.0.1",
