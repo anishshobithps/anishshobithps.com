@@ -2,6 +2,9 @@
 const config = {
   tags: ["-lintignore"],
   workspaces: {
+    ".": {
+      ignoreDependencies: ["next"],
+    },
     "apps/web": {
       ignore: [
         "source.config.ts",

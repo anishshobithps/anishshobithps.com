@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "knip": "^6.43.0",
+    "next": "catalog:",
     "sherif": "^1.13.0",
     "turbo": "^2.11.10",
     "varlock": "^1.24.0"

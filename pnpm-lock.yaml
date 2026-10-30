@@ -79,6 +79,9 @@ importers:
       knip:
         specifier: ^6.43.0
         version: 6.43.0
+      next:
+        specifier: 'catalog:'
+        version: 16.4.3(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.24.0)
       sherif:
         specifier: ^1.13.0
         version: 1.13.0
