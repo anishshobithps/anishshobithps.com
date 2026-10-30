@@ -8,12 +8,16 @@
   },
   "scripts": {
     "lint": "eslint",
-    "types:check": "tsc --noEmit"
+    "types:check": "tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
