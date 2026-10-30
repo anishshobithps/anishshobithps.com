@@ -26,7 +26,7 @@ The build runs `next build` only. It never migrates. When the schema changes, ru
 
 ## Three things that bite on a fresh deploy
 
-- **The CSP names my Clerk domain.** The policy in [`next.config.mjs`](../next.config.mjs) hardcodes `clerk.anishshobithps.com`, so point it at your own Clerk frontend domain, or sign-in scripts get blocked.
+- **The CSP names my Clerk domain.** The policy in [`next.config.mjs`](../apps/web/next.config.mjs) hardcodes `clerk.anishshobithps.com`, so point it at your own Clerk frontend domain, or sign-in scripts get blocked.
 - **Remote images need an entry.** `next/image` only optimises hosts in `images.remotePatterns`. That's `discord.com`, `res.cloudinary.com`, and `img.clerk.com` today. Add any new host there. `img-src` in the CSP already allows any `https:` image, but `media-src` only allows this site and `res.cloudinary.com`, so video from anywhere else needs adding to the CSP.
 - **A second short-link domain has to be on the same project.** If you use `SHORTLINK_DOMAIN`, add that domain to the same Vercel project, or the proxy never sees its requests. See [Short links](short-links.md#a-second-domain).
 

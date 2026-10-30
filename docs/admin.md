@@ -14,7 +14,7 @@ Access is gated on `OWNER_CLERK_USER_ID` matching the signed-in Clerk user. Ther
 - Signed in as someone else: you see an unauthorized page.
 - The pages are `noindex`, always rendered dynamically, and use their own layout with a sidebar.
 
-The check isn't only in the layout. Every admin server action calls `assertAdmin()` through `adminMutation` ([`src/lib/admin-action.ts`](../src/lib/admin-action.ts)), so a mutation can't be triggered by calling the action directly.
+The check isn't only in the layout. Every admin server action calls `assertAdmin()` through `adminMutation` ([`apps/web/src/lib/admin-action.ts`](../apps/web/src/lib/admin-action.ts)), so a mutation can't be triggered by calling the action directly.
 
 Set `OWNER_CLERK_USER_ID` to your Clerk user ID. See [Getting started](getting-started.md#clerk).
 
@@ -44,7 +44,7 @@ Saving a change clears the cache behind `/projects` and the home page right away
 
 ## Short links
 
-Links are managed here, and `scripts/seed-links.ts` can seed a few. Validation lives in [`src/lib/links-schema.ts`](../src/lib/links-schema.ts). The form checks against `linkFormSchema`, and the server action validates again with the stricter `linkInputSchema` and checks for slug conflicts in the database. The rules: a target that's `http(s)` or `mailto:`, lowercase slugs, no reserved paths, and no duplicate or conflicting aliases. See [Short links](short-links.md) for what a link can do.
+Links are managed here, and `apps/web/scripts/seed-links.ts` can seed a few. Validation lives in [`packages/core/src/links-schema.ts`](../packages/core/src/links-schema.ts). The form checks against `linkFormSchema`, and the server action validates again with the stricter `linkInputSchema` and checks for slug conflicts in the database. The rules: a target that's `http(s)` or `mailto:`, lowercase slugs, no reserved paths, and no duplicate or conflicting aliases. See [Short links](short-links.md) for what a link can do.
 
 ## Resume cache
 

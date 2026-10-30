@@ -6,7 +6,7 @@ license: CC-BY-NC-ND-4.0
 
 What's stored, how anonymous visitors are counted without being identified, and how the schema changes.
 
-The schema is [`src/lib/schema.ts`](../src/lib/schema.ts), written with Drizzle. The client in [`src/lib/db.ts`](../src/lib/db.ts) is Neon's serverless HTTP driver, so the database has to be on Neon.
+The schema is [`packages/db/src/schema.ts`](../packages/db/src/schema.ts), written with Drizzle. The client in [`packages/db/src/index.ts`](../packages/db/src/index.ts) is Neon's serverless HTTP driver, so the database has to be on Neon.
 
 ## Tables
 
@@ -29,7 +29,7 @@ Nothing here stores a name, email, or avatar. Those live in Clerk and are fetche
 
 ## Anonymous identity
 
-Reads and reactions need to be unique per visitor without knowing who the visitor is. [`src/lib/ip.ts`](../src/lib/ip.ts) does it in two steps.
+Reads and reactions need to be unique per visitor without knowing who the visitor is. [`apps/web/src/lib/ip.ts`](../apps/web/src/lib/ip.ts) does it in two steps.
 
 1. `getClientIp` takes the first valid address from `x-vercel-forwarded-for`, then `x-forwarded-for`, then `x-real-ip`. If none is usable it returns `127.0.0.1`, so every visitor it can't identify shares one hash.
 2. `hashIp` returns the SHA-256 of `ip:IP_HASH_SALT` as hex. The raw address is never written anywhere. It throws if the salt is missing, because a hash with no secret salt is easy to reverse.
@@ -48,7 +48,7 @@ Reads degrade rather than fail. Loaders wrap queries in `safeQuery`, which logs 
 
 ## Migrations
 
-Migrations are SQL files in `drizzle/` with their snapshots in `drizzle/meta/`. They're committed, and the config is [`drizzle.config.ts`](../drizzle.config.ts). It reads `DATABASE_URL`, and loads `.env.local` itself when the variable isn't already set.
+Migrations are SQL files in `packages/db/drizzle/` with their snapshots in `packages/db/drizzle/meta/`. They're committed, and the config is [`packages/db/drizzle.config.ts`](../packages/db/drizzle.config.ts). It reads `DATABASE_URL`, and loads `.env.local` itself when the variable isn't already set.
 
 ```bash
 pnpm db:migrate         # apply the committed migrations
@@ -58,9 +58,9 @@ pnpm db:studio          # Drizzle Studio
 
 To change the schema:
 
-1. Edit `src/lib/schema.ts`.
+1. Edit `packages/db/src/schema.ts`.
 2. Run `pnpm exec drizzle-kit generate`. It writes a new numbered `.sql` file and its snapshot.
-3. Read the SQL, then commit the schema, the SQL, and `drizzle/meta/`.
+3. Read the SQL, then commit the schema, the SQL, and `packages/db/drizzle/meta/`.
 4. Run `pnpm db:migrate`, first against a development database, then against production.
 
 The build never migrates. `next build` doesn't touch the database, so a deploy that needs a schema change needs `pnpm db:migrate` run against production on your side, ideally before the new code goes live. `db:push` is for throwaway development databases only, because it leaves no migration behind.

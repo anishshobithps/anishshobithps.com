@@ -10,22 +10,22 @@ None of the illustrations are image exports. They're all drawn in code, so they 
 
 | Piece | Where |
 | --- | --- |
-| Isometric scene engine | [`src/lib/iso/`](../src/lib/iso/): `figure.ts` (the scene model and its markup), `iso-kit.ts` (projection, solids, shading), `lathe.ts` (turned parts), `tube.ts` (tubes), `parts.ts` (recipes every scene reuses) |
-| Scenes | [`src/lib/iso/scenes/`](../src/lib/iso/scenes/), one file per figure |
-| Rendering a scene | [`iso-art.tsx`](../src/components/diagrams/iso-art.tsx) draws it as inline SVG, and [`iso-stage.tsx`](../src/components/diagrams/iso-stage.tsx) runs its motion while it's on screen |
-| Page figures | [`page-art.tsx`](../src/components/diagrams/page-art.tsx) maps a page name to a scene |
-| Blog covers | [`blog-covers.tsx`](../src/components/diagrams/blog-covers.tsx) maps a post slug to a scene |
-| Projection helpers | [`iso.tsx`](../src/components/diagrams/iso.tsx), still used by the OG images, the post grid filler, and the git chart ([`git-chaos.tsx`](../src/components/diagrams/git-chaos.tsx)) |
-| Shared animation classes | [`classes.ts`](../src/components/diagrams/classes.ts) |
-| Doodles and nudges | [`src/components/shared/doodles.tsx`](../src/components/shared/doodles.tsx) |
-| Logo and mascot | `logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx` in `src/components/shared/` |
-| OpenGraph card | [`src/components/shared/OG.tsx`](../src/components/shared/OG.tsx), rendered by `/og` |
+| Isometric scene engine | [`packages/iso/src/`](../packages/iso/src/): `figure.ts` (the scene model and its markup), `iso-kit.ts` (projection, solids, shading), `lathe.ts` (turned parts), `tube.ts` (tubes), `parts.ts` (recipes every scene reuses) |
+| Scenes | [`packages/iso/src/scenes/`](../packages/iso/src/scenes/), one file per figure |
+| Rendering a scene | [`iso-art.tsx`](../packages/diagrams/src/iso-art.tsx) draws it as inline SVG, and [`iso-stage.tsx`](../packages/diagrams/src/iso-stage.tsx) runs its motion while it's on screen |
+| Page figures | [`page-art.tsx`](../packages/diagrams/src/page-art.tsx) maps a page name to a scene |
+| Blog covers | [`blog-covers.tsx`](../packages/diagrams/src/blog-covers.tsx) maps a post slug to a scene |
+| Projection helpers | [`iso.tsx`](../packages/diagrams/src/iso.tsx), still used by the OG images, the post grid filler, and the git chart ([`git-chaos.tsx`](../packages/diagrams/src/git-chaos.tsx)) |
+| Shared animation classes | [`classes.ts`](../packages/diagrams/src/classes.ts) |
+| Doodles and nudges | [`apps/web/src/components/shared/doodles.tsx`](../apps/web/src/components/shared/doodles.tsx) |
+| Logo and mascot | `logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx` in `apps/web/src/components/shared/` |
+| OpenGraph card | [`apps/web/src/components/shared/OG.tsx`](../apps/web/src/components/shared/OG.tsx), rendered by `/og` |
 
 The `/branding` page shows the type scale, logos, doodles, and a live OG preview in one place.
 
 ## How a scene works
 
-A scene is one drawn object: static SVG markup plus the CSS keyframes that move it. The engine in `src/lib/iso/` touches neither React nor the DOM. It builds the markup as a string, and motion comes from a model sampled at build time, so every part that moves and every number in a readout share one timeline.
+A scene is one drawn object: static SVG markup plus the CSS keyframes that move it. The engine in `packages/iso/src/` touches neither React nor the DOM. It builds the markup as a string, and motion comes from a model sampled at build time, so every part that moves and every number in a readout share one timeline.
 
 On the site, `PageArt` and `BlogCover` build each scene once on the server and cache it. `IsoArt` writes the markup into an SVG, and `IsoStage` watches the element and turns on the loop while it's visible. Hovering or focusing a card plays it too. Both the site and the README build import the same engine.
 
@@ -33,7 +33,7 @@ Motion respects `prefers-reduced-motion`.
 
 ### Adding a page figure
 
-1. Add a file in `src/lib/iso/scenes/` that exports a function returning a `Scene`.
+1. Add a file in `packages/iso/src/scenes/` that exports a function returning a `Scene`.
 2. Add it to the `scenes` object in `page-art.tsx`.
 3. Render it with `<PageArt name="yourScene" />`.
 
@@ -45,7 +45,7 @@ Add the post's slug to the `covers` object in `blog-covers.tsx`. A post without 
 
 ## Colour
 
-Colours come from the tokens in [`src/app/global.css`](../src/app/global.css). The OG route and the `/svg` cards run on the server, where CSS variables don't exist, so [`src/lib/theme-tokens.ts`](../src/lib/theme-tokens.ts) reads that file and resolves `var()` and `color-mix()` into hex. The README artwork in `.github/` is built the same way, with its text converted to outlines so it renders identically on GitHub in both themes.
+Colours come from the tokens in [`apps/web/src/app/global.css`](../apps/web/src/app/global.css). The OG route and the `/svg` cards run on the server, where CSS variables don't exist, so [`packages/styles/src/theme-tokens.ts`](../packages/styles/src/theme-tokens.ts) reads that file and resolves `var()` and `color-mix()` into hex. The README artwork in `.github/` is built the same way, with its text converted to outlines so it renders identically on GitHub in both themes.
 
 ## Licensing
 

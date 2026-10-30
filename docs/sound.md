@@ -26,16 +26,16 @@ These come from the sources at the bottom. The short version:
 ## How it works
 
 ```
-src/lib/sound-types.ts         soundcn: SoundAsset type
-src/lib/sound-engine.ts        soundcn: Web Audio context, decode cache, playSound
-src/sounds/*.ts                soundcn: one file per sound (base64 mp3 + metadata)
-src/sounds/palette.ts          the only file that maps a cue to an asset, with gain and cooldown
-src/lib/sound-cues.ts          cue names, as a type and a runtime list (no audio data)
-src/lib/sound-preferences.ts   enabled + volume store, localStorage, cross-tab sync
-src/lib/sound-player.ts        playCue, unlock, enable/disable, limiter, lazy palette load
-src/hooks/use-sound-preferences.ts
-src/components/shared/sound-effects.tsx    mounted once in the root layout
-src/components/shared/sound-controls.tsx   header button, switch, hub card
+packages/sounds/src/sound-types.ts         soundcn: SoundAsset type
+packages/sounds/src/sound-engine.ts        soundcn: Web Audio context, decode cache, playSound
+packages/sounds/src/sounds/*.ts                soundcn: one file per sound (base64 mp3 + metadata)
+packages/sounds/src/sounds/palette.ts          the only file that maps a cue to an asset, with gain and cooldown
+packages/sounds/src/sound-cues.ts          cue names, as a type and a runtime list (no audio data)
+packages/sounds/src/sound-preferences.ts   enabled + volume store, localStorage, cross-tab sync
+packages/sounds/src/sound-player.ts        playCue, unlock, enable/disable, limiter, lazy palette load
+packages/sounds/src/use-sound-preferences.ts
+apps/web/src/components/shared/sound-effects.tsx    mounted once in the root layout
+apps/web/src/components/shared/sound-controls.tsx   header button, switch, hub card
 ```
 
 Choices worth knowing:
@@ -51,7 +51,7 @@ Choices worth knowing:
 
 The site is drawn as a desk: pins, notes, passes, a signpost, a 404 that boasts. The sounds follow that. Soft clicks and ticks for controls, paper and card sounds for reading and posting, a pin drop when a page arrives. Rising pitch means on, open, or good; falling means off, closing, or removing. Negative feedback on a reaction is a soft thud, not a buzzer, because someone honestly rating a post as "Not for me" shouldn't be told off.
 
-Gains are in `src/sounds/palette.ts` (0 to 1, before the master volume). Frequent cues are around 0.5, confirmations around 0.7, and the guestbook note landing is the loudest at 0.9.
+Gains are in `packages/sounds/src/sounds/palette.ts` (0 to 1, before the master volume). Frequent cues are around 0.5, confirmations around 0.7, and the guestbook note landing is the loudest at 0.9.
 
 ## Sound map
 
@@ -99,12 +99,12 @@ Browse and audition at [soundcn.xyz](https://www.soundcn.xyz/). Then:
 
 ```bash
 pnpm exec shadcn add @soundcn/click-003
-mv src/lib/click-003.ts src/sounds/
+mv apps/web/src/lib/click-003.ts packages/sounds/src/sounds/
 ```
 
-The CLI puts every sound in `src/lib/`; move it into `src/sounds/`. The `@soundcn` registry is already in `components.json`. Then:
+The CLI puts every sound in `apps/web/src/lib/`; move it into `packages/sounds/src/sounds/`. The `@soundcn` registry is already in `components.json`. Then:
 
-1. Import it in `src/sounds/palette.ts` and point a cue at it, or add a name to `cueNames` in `src/lib/sound-cues.ts` and give it an entry (the `Record<CueName, Cue>` type makes a missing entry a compile error).
+1. Import it in `packages/sounds/src/sounds/palette.ts` and point a cue at it, or add a name to `cueNames` in `packages/sounds/src/sound-cues.ts` and give it an entry (the `Record<CueName, Cue>` type makes a missing entry a compile error).
 2. Use it with `playCue("name")` or `data-sound="name"`.
 3. Update the sound map above.
 
@@ -114,7 +114,7 @@ Check the sound's license before using it. Everything currently installed is CC0
 
 ## Tests
 
-`tests/sound-preferences.test.ts` covers the opt-in default, persistence, corrupt storage, volume clamping, and cross-tab sync. `tests/sound-player.test.ts` covers silence before opt-in and before a gesture, the gain maths, cooldown, hidden tabs, enabling and disabling, and warming the palette.
+`packages/sounds/tests/sound-preferences.test.ts` covers the opt-in default, persistence, corrupt storage, volume clamping, and cross-tab sync. `packages/sounds/tests/sound-player.test.ts` covers silence before opt-in and before a gesture, the gain maths, cooldown, hidden tabs, enabling and disabling, and warming the palette.
 
 ## Sources
 

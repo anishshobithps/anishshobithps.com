@@ -8,7 +8,7 @@ What's in the site, where it lives, and how a request moves through it.
 
 ## Stack
 
-- Next.js (App Router, Turbopack), React, and TypeScript, with Tailwind CSS 4 and shadcn-style primitives in `src/components/ui/`.
+- Next.js (App Router, Turbopack), React, and TypeScript, with Tailwind CSS 4 and shadcn-style primitives in `packages/ui/src/components/`.
 - Posts are MDX, loaded through [fumadocs](https://fumadocs.dev) (`fumadocs-mdx`, `fumadocs-core`).
 - Postgres on Neon, through Drizzle.
 - Clerk for sign-in, with TanStack Query for optimistic updates on the client.
@@ -45,10 +45,10 @@ On every page:
 
 ## How a request moves
 
-1. **`src/proxy.ts`** sees every request first. On the main domain it hands off to Clerk's middleware. If `SHORTLINK_DOMAIN` is set and the request arrives on that host, Clerk is skipped. Slugs pass through, and anything that belongs to the main site is redirected to the main domain with a 308. The list of main-site paths is in `src/lib/reserved-segments.ts`.
-2. **`src/app/layout.tsx`** sets up the fonts, theme (next-themes), URL state (nuqs), TanStack Query, tooltips, the icon provider, the command menu, the sound effects, and the toaster.
-3. **`src/app/(site)/layout.tsx`** wraps the public pages in `ClerkProvider`, the header, the footer, the floating quick menu, and the page shell. **`src/app/admin/layout.tsx`** has its own gate and sidebar.
-4. **Pages** read from Postgres or the MDX source. Reads that can fail go through `safeQuery` (`src/lib/safe-query.ts`), which logs the error and returns a fallback, so a database hiccup degrades a number instead of breaking a page.
+1. **`apps/web/src/proxy.ts`** sees every request first. On the main domain it hands off to Clerk's middleware. If `SHORTLINK_DOMAIN` is set and the request arrives on that host, Clerk is skipped. Slugs pass through, and anything that belongs to the main site is redirected to the main domain with a 308. The list of main-site paths is in `packages/core/src/reserved-segments.ts`.
+2. **`apps/web/src/app/layout.tsx`** sets up the fonts, theme (next-themes), URL state (nuqs), TanStack Query, tooltips, the icon provider, the command menu, the sound effects, and the toaster.
+3. **`apps/web/src/app/(site)/layout.tsx`** wraps the public pages in `ClerkProvider`, the header, the footer, the floating quick menu, and the page shell. **`apps/web/src/app/admin/layout.tsx`** has its own gate and sidebar.
+4. **Pages** read from Postgres or the MDX source. Reads that can fail go through `safeQuery` (`apps/web/src/lib/safe-query.ts`), which logs the error and returns a fallback, so a database hiccup degrades a number instead of breaking a page.
 5. **Mutations** are server actions in `actions.ts` files next to the pages. They check identity, write, and `revalidatePath` the affected page. The client updates optimistically and rolls back if the action reports a failure.
 
 ## Data and caching
@@ -60,46 +60,45 @@ On every page:
 | Projects | Postgres | `unstable_cache` tagged `public-projects`, cleared by admin edits |
 | Repo card | GitHub API, server side | Cached on the server |
 | `/svg` card data | GitHub, WakaTime, Open-Meteo, Postgres | Per-loader `unstable_cache`. See [SVG cards](svg-cards.md) |
-| Posts | `content/blog` through fumadocs | Built at build time |
+| Posts | `apps/web/content/blog` through fumadocs | Built at build time |
 
 Everything the browser needs from a third party goes through this site. Spotify, GitHub, and the resume are fetched on the server, and fonts are self-hosted. [Deployment](deployment.md) lists the few exceptions the CSP allows.
 
 ## Project layout
 
 ```
-content/blog/          MDX posts, the only place posts live
+apps/web/              the Next.js app
+  content/blog/        MDX posts, the only place posts live
+  public/              static files and fonts
+  scripts/             one-off tsx scripts (seeding, Spotify token)
+  tests/               vitest, node environment
+  .env.schema          every environment variable, checked by varlock
+  src/
+    proxy.ts           Clerk middleware and short-link domain routing
+    app/(site)/        public pages
+    app/admin/         owner-only dashboard
+    app/api/           resume proxy and Clerk webhook
+    app/[...link]/     short-link resolver (catch-all, keep it last)
+    app/og/            OpenGraph image route
+    app/svg/           SVG card route and the dev-only /svg/preview
+    components/
+      shared/          header, footer, quick menu, command palette, doodles, logo and mascot, OG card
+      engagement/      comment and guestbook panels
+      layouts/         page, blog, and hero shells
+    hooks/             client hooks (draggable, engagement anchor, ...)
+    lib/               everything not React that belongs to the app
+    lib/svg/           SVG card templates, loaders, and the post data they read
+packages/              the workspace packages, listed below
 docs/                  these pages
-drizzle/               committed SQL migrations and meta
-scripts/               one-off tsx scripts (seeding, Spotify token)
-tests/                 vitest, node environment
 .github/               CI workflow and the README artwork
-src/
-  proxy.ts             Clerk middleware and short-link domain routing
-  app/(site)/          public pages
-  app/admin/           owner-only dashboard
-  app/api/             resume proxy and Clerk webhook
-  app/[...link]/       short-link resolver (catch-all, keep it last)
-  app/og/              OpenGraph image route
-  app/svg/             SVG card route and the dev-only /svg/preview
-  components/
-    diagrams/          renders the isometric scenes and holds the page and cover mappings
-    shared/            header, footer, quick menu, command palette, doodles, logo and mascot, OG card
-    engagement/        comment and guestbook panels
-    layouts/           page, blog, and hero shells
-    ui/                shadcn primitives
-  hooks/               client hooks (draggable, engagement anchor, sound preferences, ...)
-  lib/                 db, schema, and everything not React
-  lib/iso/             the isometric scene engine and every scene
-  lib/svg/             SVG card templates, primitives, loaders, fonts shared with /og
-  sounds/              soundcn sound files and the palette that maps cues to them
 ```
 
-Imports use the `@/*` alias for `src/*`. The `.source/` folder is generated by `fumadocs-mdx` and git-ignored.
+Imports use the `@/*` alias for `apps/web/src/*`. The `.source/` folder is generated by `fumadocs-mdx` and git-ignored.
 
 ## Things worth knowing
 
-- Reactions and view counts are anonymous, with no account needed. Identity is a SHA-256 of `ip:IP_HASH_SALT` (`src/lib/ip.ts`), giving one row per post per hash. The raw IP is never stored. See [Database](database.md).
+- Reactions and view counts are anonymous, with no account needed. Identity is a SHA-256 of `ip:IP_HASH_SALT` (`apps/web/src/lib/ip.ts`), giving one row per post per hash. The raw IP is never stored. See [Database](database.md).
 - Comments and the guestbook need Clerk. Deleting a Clerk account removes that user's rows through the webhook.
-- Projects, links, and engagement live in Postgres, and posts live in `content/blog`. Nothing is hardcoded that shouldn't be.
+- Projects, links, and engagement live in Postgres, and posts live in `apps/web/content/blog`. Nothing is hardcoded that shouldn't be.
 - The artwork is authored in code rather than imported as raster exports. The isometric scenes, blog covers, doodles, mascot, and OG card are SVG drawn in TypeScript and TSX, coloured from the same CSS tokens as the rest of the UI, and they respect `prefers-reduced-motion`. See [The art](art.md).
 - The build never migrates the database. Schema changes are applied by hand. See [Database](database.md#migrations).

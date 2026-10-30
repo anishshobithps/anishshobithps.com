@@ -57,7 +57,7 @@ Node 22+ and pnpm 11 (the repo pins `packageManager`, so `corepack enable` is en
 
 ```bash
 pnpm install
-pnpm db:migrate         # applies the committed migrations in drizzle/
+pnpm db:migrate         # applies the committed migrations in packages/db/drizzle/
 pnpm dev                # http://localhost:3000
 ```
 
