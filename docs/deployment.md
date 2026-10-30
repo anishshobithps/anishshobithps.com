@@ -14,10 +14,10 @@ The site runs on Vercel, with Neon for the database, Clerk for sign-in, and a fe
 
 ## Steps
 
-1. Import the repository into Vercel. Set the Root Directory to `apps/web` and leave "Include source files outside of the Root Directory" on, so the workspace packages are available to the build.
+1. Import the repository into Vercel and leave the Root Directory at the repo root. `vercel.json` points the build at `apps/web`: it builds with `turbo run build --filter=web` and reads `apps/web/.next`, and `next` is a root dev dependency so Vercel can detect the version. Setting the Root Directory to `apps/web` also works, with "Include source files outside of the Root Directory" on, and then `vercel.json` is not needed.
 2. Add the environment variables from [Getting started](getting-started.md#environment-variables) for the Production environment. `NEXT_PUBLIC_*` values are inlined at build time, so changing one needs a new deploy.
 3. Point `DATABASE_URL` at your Neon database, then run the migrations against it yourself (see below).
-4. Run `pnpm --filter web exec varlock generate-key` and add the result as `_VARLOCK_ENV_KEY` to both the build and the runtime environments, for Production and Preview. varlock decrypts its schema with it, so without the key the build fails on purpose.
+4. Run `pnpm --filter web exec varlock generate-key` and add the result as `_VARLOCK_ENV_KEY` in the project's environment variables, for Production and Preview, so it reaches both the build and the runtime. varlock freezes the resolved env into the build and encrypts it with that key, so without the key the build fails on purpose. Preview builds also need the six required variables.
 5. In Clerk, create a production instance, set its keys, and add the webhook for `user.deleted` at `https://<your-domain>/api/webhooks/clerk`.
 6. Deploy, then run through the [checklist](#after-the-first-deploy).
 
