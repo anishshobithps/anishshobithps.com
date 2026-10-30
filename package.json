@@ -16,6 +16,7 @@
     "test:watch": "pnpm --filter web run test:watch",
     "types:check": "turbo run types:check",
     "knip": "knip --config knip.config.mjs",
+    "env:scan": "pnpm --filter web exec varlock scan",
     "db:migrate": "pnpm --filter web run db:migrate",
     "db:push": "pnpm --filter web run db:push",
     "db:studio": "pnpm --filter web run db:studio",

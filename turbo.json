@@ -22,7 +22,10 @@
         "GITHUB_TOKEN",
         "WAKATIME_API_KEY",
         "SHORTLINK_DOMAIN",
-        "VERCEL_DEPLOYMENT_ID"
+        "VERCEL_DEPLOYMENT_ID",
+        "_VARLOCK_ENV_KEY",
+        "CI",
+        "VERCEL"
       ],
       "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
     },
