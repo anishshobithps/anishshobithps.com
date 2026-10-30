@@ -11,6 +11,7 @@
     "dev": "turbo run dev --filter=web",
     "start": "turbo run start --filter=web",
     "lint": "turbo run lint",
+    "lint:ws": "sherif",
     "test": "turbo run test",
     "test:watch": "pnpm --filter web run test:watch",
     "types:check": "turbo run types:check",
@@ -25,6 +26,7 @@
     "banners": "pnpm --filter web run banners"
   },
   "devDependencies": {
+    "sherif": "^1.13.0",
     "turbo": "^2.11.10"
   }
 }

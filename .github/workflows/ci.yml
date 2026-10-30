@@ -23,4 +23,6 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - run: pnpm lint:ws
+
       - run: pnpm turbo run types:check test
