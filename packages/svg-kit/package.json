@@ -1,0 +1,37 @@
+{
+  "name": "@repo/svg-kit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./error": "./src/error.tsx",
+    "./fonts": "./src/fonts.ts",
+    "./palette": "./src/palette.ts",
+    "./params": "./src/params.ts",
+    "./primitives": "./src/primitives.tsx",
+    "./render": "./src/render.tsx",
+    "./template": "./src/template.ts"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "types:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/site-config": "workspace:*",
+    "@repo/styles": "workspace:*",
+    "takumi-js": "^2.16.2",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

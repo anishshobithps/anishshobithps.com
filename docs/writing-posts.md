@@ -4,11 +4,11 @@ license: CC-BY-NC-ND-4.0
 
 # Writing posts
 
-Posts are MDX files in `content/blog/`. Adding one is a file and a push.
+Posts are MDX files in `apps/web/content/blog/`. Adding one is a file and a push.
 
 ## The file
 
-Drop an `.mdx` file in `content/blog/`. The filename is the slug, so `making-my-resume-machine-readable.mdx` is served at `/blog/making-my-resume-machine-readable`. Frontmatter is validated by [`source.config.ts`](../source.config.ts):
+Drop an `.mdx` file in `apps/web/content/blog/`. The filename is the slug, so `making-my-resume-machine-readable.mdx` is served at `/blog/making-my-resume-machine-readable`. Frontmatter is validated by [`source.config.ts`](../source.config.ts):
 
 ```yaml
 ---
@@ -32,7 +32,7 @@ lastModified: 2026-04-02
 
 `lastModified` is manual on purpose. It used to come from git history, but shallow clones on the deploy host re-dated every post on every push. The sitemap uses `lastModified`, then `date`.
 
-Reading time is computed at build time by a remark plugin ([`src/lib/remarkReadingTime.ts`](../src/lib/remarkReadingTime.ts)).
+Reading time is computed at build time by a remark plugin ([`apps/web/src/lib/remarkReadingTime.ts`](../apps/web/src/lib/remarkReadingTime.ts)).
 
 ## What you can use in a post
 
@@ -41,16 +41,16 @@ Everything `fumadocs-ui` provides by default for MDX works: headings, tables, ca
 - `<TypographyMark>` and `<TypographyMuted>`
 - The fumadocs tab components
 
-Video goes through the media player in `src/components/ui/media-player.tsx`. Import it at the top of the post, and see an existing post for the pattern. Videos stream from Cloudinary, which needs `res.cloudinary.com` allowed in the CSP, and it already is. Images inside posts are served from this domain.
+Video goes through the media player in `packages/media-player/src/index.tsx`. Import it at the top of the post, and see an existing post for the pattern. Videos stream from Cloudinary, which needs `res.cloudinary.com` allowed in the CSP, and it already is. Images inside posts are served from this domain.
 
 ## The cover
 
-Every post gets an isometric cover. To give a post its own scene, add its slug to the `covers` map in [`src/components/diagrams/blog-covers.tsx`](../src/components/diagrams/blog-covers.tsx), pointing at a scene from `src/lib/iso/scenes/`. A post without an entry gets the typewriter scene (`blogsScene`) until it has its own. See [The art](art.md) for how scenes are built.
+Every post gets an isometric cover. To give a post its own scene, add its slug to the `covers` map in [`packages/diagrams/src/blog-covers.tsx`](../packages/diagrams/src/blog-covers.tsx), pointing at a scene from `packages/iso/src/scenes/`. A post without an entry gets the typewriter scene (`blogsScene`) until it has its own. See [The art](art.md) for how scenes are built.
 
 ## What a post gets for free
 
 - A page at `/blog/<slug>` with reading time, a cover, and previous and next links.
-- Anonymous reactions, a unique read count, and threaded comments. Rows are created the first time they're needed, and only for slugs that exist in `content/blog`.
+- Anonymous reactions, a unique read count, and threaded comments. Rows are created the first time they're needed, and only for slugs that exist in `apps/web/content/blog`.
 - An entry in `/blogs`, `/feed.xml`, `/sitemap.xml`, and `/llms.txt`.
 - Raw MDX at `/blog/<slug>.mdx`, for tools that want the source. The `/blogs/latest` route redirects to the newest post.
 - An OpenGraph card from `/og`, built from the title and description.

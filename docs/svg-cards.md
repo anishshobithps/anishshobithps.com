@@ -47,11 +47,11 @@ GET /svg?type=<template>&theme=light|dark&v=<n>&<template options>
 
 ## How it fits together
 
-- [`src/app/svg/route.tsx`](../src/app/svg/route.tsx) reads `type`, finds the template in [`src/lib/svg/registry.ts`](../src/lib/svg/registry.ts), validates the options with the template's zod schema, loads its data, and renders it with takumi's `renderSvg()`.
-- Each template is one file in [`src/lib/svg/templates/`](../src/lib/svg/templates/), built from the primitives in [`primitives.tsx`](../src/lib/svg/primitives.tsx). Colours go through `themeColor()`, the same path as the OG card. Fonts load once per server in [`fonts.ts`](../src/lib/svg/fonts.ts), shared with `/og`.
-- Templates never fetch and loaders never render. Loaders live in [`src/lib/svg/data/`](../src/lib/svg/data/) and are cached with `unstable_cache`: half an hour for `local`'s weather, an hour for `post`, `posts` and `guestbook`, six hours for the GitHub-backed cards. Anything that depends on the clock (the time on `local`, "3d ago") is worked out at render, so it stays right between refreshes. The cache key includes the deployment ID, so a new deploy never reads data shaped by older code. With camo's cache switched off, every README view reaches the route, so a warm response is a cache read and a render.
+- [`apps/web/src/app/svg/route.tsx`](../apps/web/src/app/svg/route.tsx) reads `type`, finds the template in [`apps/web/src/lib/svg/registry.ts`](../apps/web/src/lib/svg/registry.ts), validates the options with the template's zod schema, loads its data, and renders it with takumi's `renderSvg()`.
+- Each template is one file in [`apps/web/src/lib/svg/templates/`](../apps/web/src/lib/svg/templates/), built from the primitives in [`primitives.tsx`](../packages/svg-kit/src/primitives.tsx). Colours go through `themeColor()`, the same path as the OG card. Fonts load once per server in [`fonts.ts`](../packages/svg-kit/src/fonts.ts), shared with `/og`.
+- Templates never fetch and loaders never render. Loaders live in [`apps/web/src/lib/svg/data/`](../apps/web/src/lib/svg/data/) and are cached with `unstable_cache`: half an hour for `local`'s weather, an hour for `post`, `posts` and `guestbook`, six hours for the GitHub-backed cards. Anything that depends on the clock (the time on `local`, "3d ago") is worked out at render, so it stays right between refreshes. The cache key includes the deployment ID, so a new deploy never reads data shaped by older code. With camo's cache switched off, every README view reaches the route, so a warm response is a cache read and a render.
 - Every response, errors included, is `image/svg+xml` with `Cache-Control: max-age=0, no-cache, no-store, must-revalidate`, `Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox`, and `X-Content-Type-Options: nosniff`. Errors are small SVG cards (400 for bad input, 500 when data or rendering fails), never an HTML page.
-- `/svg` is left out of the global header rule in [`next.config.mjs`](../next.config.mjs). Otherwise the site's CSP replaces the card's sandboxed one.
+- `/svg` is left out of the global header rule in [`next.config.mjs`](../apps/web/next.config.mjs). Otherwise the site's CSP replaces the card's sandboxed one.
 
 ## About the data
 
@@ -68,9 +68,9 @@ GET /svg?type=<template>&theme=light|dark&v=<n>&<template options>
 
 ## Adding a card
 
-1. Add one file in `src/lib/svg/templates/` that exports `defineTemplate({ params, size, load, revalidate, fixtures, render })`.
+1. Add one file in `apps/web/src/lib/svg/templates/` that exports `defineTemplate({ params, size, load, revalidate, fixtures, render })`.
 2. Add one line in the registry.
 
 Geist Pixel glyphs are heavy as outlines (about 20 KB each), so the pixel face is kept to a card's title label and the heading number, and the rest of the small labels use Fira Code. Cards come out between 40 and 280 KB and gzip to about a tenth of that.
 
-Tests for the route and its loaders are in `tests/svg-route.test.ts` and `tests/svg-data.test.ts`.
+Tests for the route and its loaders are in `apps/web/tests/svg-route.test.ts` and `apps/web/tests/svg-data.test.ts`.

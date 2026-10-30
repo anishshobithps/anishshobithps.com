@@ -1,14 +1,15 @@
 # deps
-/node_modules
+node_modules
 
 # generated content
 .source
 
 # test & build
-/coverage
-/.next/
-/out/
-/build
+coverage
+.next
+out
+build
+.turbo
 *.tsbuildinfo
 
 # misc
@@ -34,4 +35,4 @@ skills-lock.json
 .unlighthouse/
 
 # Seed artifacts
-scripts/.seed-guestbook-ids.json
+**/scripts/.seed-guestbook-ids.json

@@ -1,0 +1,106 @@
+import { ArtStage } from "@/components/layouts/hero-art";
+import { PageArt } from "@repo/diagrams/page-art";
+import Link from "next/link";
+import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/icons";
+import { Section } from "@/components/layouts/page";
+import { Reveal } from "@/components/shared/reveal";
+import {
+  TypographyH2,
+  TypographyLead,
+  TypographyMuted,
+  TypographyMark,
+} from "@repo/ui/components/typography";
+import { Button } from "@repo/ui/components/button";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+} from "@repo/ui/components/button-group";
+import { siteConfig } from "@repo/site-config";
+import { getPlatformIcon } from "@/components/shared/platform-icons";
+import { Fragment } from "react";
+import { SocialsNudge } from "@/components/shared/doodles";
+
+export function Contact() {
+  return (
+    <Section aria-label="Contact" id="contact">
+      <Reveal className="w-full max-w-5xl">
+        <div className="group/iso @container grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_18rem] lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <div className="min-w-0 space-y-8">
+            <div className="space-y-4 max-w-2xl">
+              <TypographyH2>Got something worth building?</TypographyH2>
+
+              <TypographyLead>
+                If you’re working on something ambitious and need a frontend
+                engineer who prefers{" "}
+                <TypographyMark>clarity over chaos</TypographyMark>, we’ll
+                probably get along.
+              </TypographyLead>
+
+              <TypographyMuted>
+                Open to full-time roles, collaborations, and projects that make
+                sense (or at least teach me something).
+              </TypographyMuted>
+            </div>
+
+            <nav aria-label="Contact links" className="pt-4 pb-10">
+              <div className="flex flex-wrap items-center gap-3">
+                <Button asChild size="lg" className="font-semibold">
+                  <Link
+                    href={`mailto:${siteConfig.email}`}
+                    data-sound="tap"
+                    aria-label="Say hello, send an email"
+                  >
+                    <EnvelopeIcon
+                      data-icon="inline-start"
+                      className="size-4 shrink-0"
+                      aria-hidden="true"
+                    />
+                    Say Hello
+                  </Link>
+                </Button>
+
+                <div className="relative">
+                  <ButtonGroup>
+                    {siteConfig.social.map((item, index) => (
+                      <Fragment key={item.platform}>
+                        {index > 0 && <ButtonGroupSeparator />}
+                        <Button
+                          asChild
+                          size="lg"
+                          variant="outline"
+                          className="font-semibold"
+                        >
+                          <a
+                            href={item.href}
+                            data-sound="tap"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${item.label} profile (opens in new tab)`}
+                          >
+                            {getPlatformIcon(item.platform, "size-4")}
+                            <span className="hidden sm:inline">
+                              {item.label}
+                            </span>
+                            <ArrowUpRightIcon
+                              data-icon="inline-end"
+                              className="size-3.5 opacity-50 hidden @sm:inline-flex"
+                              aria-hidden="true"
+                            />
+                          </a>
+                        </Button>
+                      </Fragment>
+                    ))}
+                  </ButtonGroup>
+                  <SocialsNudge />
+                </div>
+              </div>
+            </nav>
+          </div>
+          <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-[4/3]">
+            <PageArt name="contact" />
+          </ArtStage>
+        </div>
+      </Reveal>
+    </Section>
+  );
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "@repo/tsconfig/library.json",
+  "compilerOptions": {
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src",
+    "tests"
+  ]
+}

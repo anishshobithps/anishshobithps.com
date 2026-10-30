@@ -1,0 +1,31 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "types:check": "tsc --noEmit",
+    "db:migrate": "varlock run --path ../../apps/web/ -- drizzle-kit migrate",
+    "db:push": "varlock run --path ../../apps/web/ -- drizzle-kit push",
+    "db:studio": "varlock run --path ../../apps/web/ -- drizzle-kit studio",
+    "db:check": "varlock run --path ../../apps/web/ -- drizzle-kit check"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "drizzle-orm": "catalog:",
+    "varlock": "^1.24.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

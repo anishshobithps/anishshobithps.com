@@ -11,6 +11,15 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://ci-placeholder
+      CLERK_SECRET_KEY: ci-placeholder
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ci-placeholder
+      CLERK_WEBHOOK_SECRET: ci-placeholder
+      OWNER_CLERK_USER_ID: ci-placeholder
+      IP_HASH_SALT: ci-placeholder
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v7
 
@@ -18,11 +27,11 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm types:check
+      - run: pnpm lint:ws
 
-      - run: pnpm test
+      - run: pnpm turbo run types:check test

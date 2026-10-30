@@ -1,0 +1,113 @@
+import { createMDX } from "fumadocs-mdx/next";
+import { varlockNextConfigPlugin } from "@varlock/nextjs-integration/plugin";
+
+const withMDX = createMDX();
+const withVarlock = varlockNextConfigPlugin();
+
+/** @type {import('next').NextConfig} */
+const config = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  allowedDevOrigins: ["http://127.0.0.1:3000"],
+  serverExternalPackages: ["takumi-js"],
+  typedRoutes: true,
+  reactCompiler: { compilationMode: "annotation" },
+  experimental: {
+    optimizePackageImports: [
+      "@phosphor-icons/react",
+      "radix-ui",
+      "fumadocs-ui",
+      "fumadocs-core",
+    ],
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "discord.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+        pathname: "/**",
+      },
+    ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/stats/script.js",
+        destination: "https://cloud.umami.is/script.js",
+      },
+      {
+        source: "/stats/api/send",
+        destination: "https://cloud.umami.is/api/send",
+      },
+      {
+        source: "/blog/:path*.mdx",
+        destination: "/llms.mdx/blog/:path*",
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source:
+          "/blog/i-built-a-4am-alert-system-to-get-RCB-tickets-and%20-it-actually-worked",
+        destination:
+          "/blog/rcb-tickets-are-broken-so-i-built-an-alert-system-at-4am",
+        permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: "/((?!svg(?:/|$)).*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com http://localhost:8400",
+              "style-src 'self' 'unsafe-inline'",
+              "font-src 'self' data:",
+              "img-src 'self' data: blob: https:",
+              "connect-src 'self' blob: https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com https: http://localhost:8400",
+              "media-src 'self' https://res.cloudinary.com",
+              "worker-src 'self' blob:",
+              "frame-src 'self' https://clerk.anishshobithps.com https://*.clerk.accounts.dev https://*.clerk.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join("; "),
+          },
+        ],
+      },
+    ];
+  },
+};
+
+export default withVarlock(withMDX(config));

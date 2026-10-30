@@ -1,0 +1,231 @@
+"use client";
+
+import { useReducer, useState } from "react";
+import NextImage from "next/image";
+import { useDebouncedValue } from "@wojtekmaj/react-hooks";
+import { TypographyMuted } from "@repo/ui/components/typography";
+import { Switch } from "@repo/ui/components/switch";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@repo/ui/components/input-group";
+import { cn } from "@repo/ui/lib/cn";
+import { siteConfig } from "@repo/site-config";
+import { buildOGPath } from "@/lib/metadata";
+import {
+  UserIcon,
+  TextTIcon,
+  BriefcaseIcon,
+  GlobeIcon,
+  TagIcon,
+  AlignLeftIcon,
+} from "@repo/icons";
+
+export function BrandingOGPreview() {
+  const defaultTitle = siteConfig.name;
+  const defaultDescription = siteConfig.description;
+  const defaultName = siteConfig.name;
+  const defaultRole = siteConfig.role;
+  const defaultDomain = siteConfig.domain;
+  const defaultTags = ["tag1", "tag2"];
+
+  type OGFormState = {
+    titleInput: string;
+    descriptionInput: string;
+    nameInput: string;
+    roleInput: string;
+    domainInput: string;
+    tagsInput: string;
+    availableForHire: boolean;
+  };
+
+  const [state, dispatch] = useReducer(
+    (prev: OGFormState, update: Partial<OGFormState>): OGFormState => ({
+      ...prev,
+      ...update,
+    }),
+    {
+      titleInput: "",
+      descriptionInput: "",
+      nameInput: "",
+      roleInput: "",
+      domainInput: "",
+      tagsInput: "",
+      availableForHire: siteConfig.availableForHire,
+    },
+  );
+
+  const {
+    titleInput,
+    descriptionInput,
+    nameInput,
+    roleInput,
+    domainInput,
+    tagsInput,
+    availableForHire,
+  } = state;
+
+  const title = titleInput.trim() ? titleInput : defaultTitle;
+  const description = descriptionInput.trim()
+    ? descriptionInput
+    : defaultDescription;
+  const name = nameInput.trim() ? nameInput : defaultName;
+  const role = roleInput.trim() ? roleInput : defaultRole;
+  const domain = domainInput.trim() ? domainInput : defaultDomain;
+  const tags = tagsInput.trim()
+    ? tagsInput
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+    : defaultTags;
+
+  const ogPath = useDebouncedValue(
+    buildOGPath({
+      title,
+      description,
+      name,
+      role,
+      domain,
+      path: "home / branding",
+      tags,
+      available: availableForHire,
+    }),
+    300,
+  );
+  const [renderedPath, setRenderedPath] = useState<string | null>(null);
+  const rendering = renderedPath !== ogPath;
+
+  return (
+    <div className="border rounded-xl overflow-hidden">
+      <div
+        className="flex flex-col gap-4 px-4 py-3 border-b bg-muted/20"
+        role="group"
+        aria-label="OG image preview controls"
+      >
+        <div className="flex items-center gap-2">
+          <div aria-hidden="true" className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-(--color-traffic-red)/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-(--color-traffic-yellow)/50" />
+            <span className="w-2.5 h-2.5 rounded-full bg-(--color-traffic-green)/50" />
+          </div>
+          <div className="flex-1 mx-2 h-5 rounded bg-muted/60 px-2 flex items-center overflow-hidden">
+            <TypographyMuted className="font-mono text-3xs truncate leading-none">
+              {domain}/home / branding
+            </TypographyMuted>
+          </div>
+          <div className="flex items-center gap-2">
+            <TypographyMuted className="text-xs" id="hire-label">
+              Available for hire
+            </TypographyMuted>
+            <Switch
+              checked={availableForHire}
+              onCheckedChange={(checked: boolean) =>
+                dispatch({ availableForHire: checked })
+              }
+              aria-labelledby="hire-label"
+              className="cursor-pointer"
+              size="default"
+            />
+          </div>
+        </div>
+
+        <fieldset className="border-0 p-0 m-0" aria-label="OG image fields">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <InputGroup>
+              <InputGroupInput
+                autoComplete="off"
+                value={titleInput}
+                onChange={(e) => dispatch({ titleInput: e.target.value })}
+                placeholder="Title"
+                aria-label={`Title (default: ${defaultTitle})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <TextTIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                autoComplete="off"
+                value={descriptionInput}
+                onChange={(e) => dispatch({ descriptionInput: e.target.value })}
+                placeholder="Description"
+                aria-label={`Description (default: ${defaultDescription})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <AlignLeftIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                autoComplete="off"
+                value={nameInput}
+                onChange={(e) => dispatch({ nameInput: e.target.value })}
+                placeholder="Name"
+                aria-label={`Name (default: ${defaultName})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <UserIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                autoComplete="off"
+                value={roleInput}
+                onChange={(e) => dispatch({ roleInput: e.target.value })}
+                placeholder="Role"
+                aria-label={`Role (default: ${defaultRole})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <BriefcaseIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                autoComplete="off"
+                value={domainInput}
+                onChange={(e) => dispatch({ domainInput: e.target.value })}
+                placeholder="Domain"
+                aria-label={`Domain (default: ${defaultDomain})`}
+              />
+              <InputGroupAddon aria-hidden="true">
+                <GlobeIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+            <InputGroup>
+              <InputGroupInput
+                autoComplete="off"
+                value={tagsInput}
+                onChange={(e) => dispatch({ tagsInput: e.target.value })}
+                placeholder="tag1, tag2, ..."
+                aria-label="Tags, comma separated"
+              />
+              <InputGroupAddon aria-hidden="true">
+                <TagIcon size={16} />
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+        </fieldset>
+      </div>
+
+      <div
+        aria-busy={rendering}
+        className="aspect-[1200/630] w-full bg-muted/20"
+      >
+        <NextImage
+          src={ogPath}
+          alt={`Open Graph image preview for “${title}”`}
+          width={1200}
+          height={630}
+          unoptimized
+          onLoad={() => setRenderedPath(ogPath)}
+          onError={() => setRenderedPath(ogPath)}
+          className={cn(
+            "block size-full transition-opacity duration-150",
+            rendering && "opacity-60",
+          )}
+        />
+      </div>
+    </div>
+  );
+}

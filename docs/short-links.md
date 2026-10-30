@@ -8,7 +8,7 @@ Any unclaimed path on the site can be a short link. They're stored in Postgres a
 
 ## Shapes
 
-A link resolves through `src/app/[...link]/page.tsx`, in one of two shapes:
+A link resolves through `apps/web/src/app/[...link]/page.tsx`, in one of two shapes:
 
 ```
 /<slug>          tag = "" (the default bucket)
@@ -30,7 +30,7 @@ Clicks are counted in `after()`, so the redirect isn't waiting on the write, and
 
 ## Reserved paths
 
-Slugs and tags can't use a path the site already owns. The list is [`src/lib/reserved-segments.ts`](../src/lib/reserved-segments.ts): `admin`, `api`, `og`, `blog`, `blogs`, `branding`, `guestbook`, `llms`, `privacy-policy`, `projects`, `resume`, `sitemap`, `robots`, `icon`, `apple-icon`, `stats`, `svg`, `_next`, and the two favicons.
+Slugs and tags can't use a path the site already owns. The list is [`packages/core/src/reserved-segments.ts`](../packages/core/src/reserved-segments.ts): `admin`, `api`, `og`, `blog`, `blogs`, `branding`, `guestbook`, `llms`, `privacy-policy`, `projects`, `resume`, `sitemap`, `robots`, `icon`, `apple-icon`, `stats`, `svg`, `_next`, and the two favicons.
 
 When you add a new top-level route, add it there too. Otherwise a link could claim the path, and the short-link domain wouldn't know to send the path to the main site.
 
@@ -38,7 +38,7 @@ When you add a new top-level route, add it there too. Otherwise a link could cla
 
 Set `SHORTLINK_DOMAIN` to serve the same links from a shorter domain pointed at this deployment, so `/talk/react-india` also works at `short.example/talk/react-india`. `NEXT_PUBLIC_SHORTLINK_DOMAIN` is accepted as a fallback.
 
-[`src/proxy.ts`](../src/proxy.ts) handles that host before anything else:
+[`apps/web/src/proxy.ts`](../apps/web/src/proxy.ts) handles that host before anything else:
 
 - A slug on that host resolves as a short link, without Clerk's middleware.
 - Anything that belongs to the main site (the home page and every reserved path) is redirected to the main domain with a 308.

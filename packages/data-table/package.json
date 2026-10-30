@@ -1,0 +1,29 @@
+{
+  "name": "@repo/data-table",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./features": "./src/features.ts",
+    "./sortable-header": "./src/sortable-header.tsx"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "types:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/icons": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "@tanstack/react-table": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

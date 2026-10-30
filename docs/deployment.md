@@ -14,11 +14,12 @@ The site runs on Vercel, with Neon for the database, Clerk for sign-in, and a fe
 
 ## Steps
 
-1. Import the repository into Vercel. It's a standard Next.js project, so the defaults work.
+1. Import the repository into Vercel. Set the Root Directory to `apps/web` and leave "Include source files outside of the Root Directory" on, so the workspace packages are available to the build.
 2. Add the environment variables from [Getting started](getting-started.md#environment-variables) for the Production environment. `NEXT_PUBLIC_*` values are inlined at build time, so changing one needs a new deploy.
 3. Point `DATABASE_URL` at your Neon database, then run the migrations against it yourself (see below).
-4. In Clerk, create a production instance, set its keys, and add the webhook for `user.deleted` at `https://<your-domain>/api/webhooks/clerk`.
-5. Deploy, then run through the [checklist](#after-the-first-deploy).
+4. Run `pnpm --filter web exec varlock generate-key` and add the result as `_VARLOCK_ENV_KEY` to both the build and the runtime environments, for Production and Preview. varlock decrypts its schema with it, so without the key the build fails on purpose.
+5. In Clerk, create a production instance, set its keys, and add the webhook for `user.deleted` at `https://<your-domain>/api/webhooks/clerk`.
+6. Deploy, then run through the [checklist](#after-the-first-deploy).
 
 ## Migrations
 
@@ -26,7 +27,7 @@ The build runs `next build` only. It never migrates. When the schema changes, ru
 
 ## Three things that bite on a fresh deploy
 
-- **The CSP names my Clerk domain.** The policy in [`next.config.mjs`](../next.config.mjs) hardcodes `clerk.anishshobithps.com`, so point it at your own Clerk frontend domain, or sign-in scripts get blocked.
+- **The CSP names my Clerk domain.** The policy in [`next.config.mjs`](../apps/web/next.config.mjs) hardcodes `clerk.anishshobithps.com`, so point it at your own Clerk frontend domain, or sign-in scripts get blocked.
 - **Remote images need an entry.** `next/image` only optimises hosts in `images.remotePatterns`. That's `discord.com`, `res.cloudinary.com`, and `img.clerk.com` today. Add any new host there. `img-src` in the CSP already allows any `https:` image, but `media-src` only allows this site and `res.cloudinary.com`, so video from anywhere else needs adding to the CSP.
 - **A second short-link domain has to be on the same project.** If you use `SHORTLINK_DOMAIN`, add that domain to the same Vercel project, or the proxy never sees its requests. See [Short links](short-links.md#a-second-domain).
 
