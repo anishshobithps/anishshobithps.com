@@ -1,4 +1,4 @@
-import { ENV } from "varlock/env";
+import { ENV } from "../env";
 
 export const siteConfig = {
     name: "Anish Shobith P S",

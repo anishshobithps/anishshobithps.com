@@ -23,7 +23,7 @@ import { getResumeFilename } from "@/lib/resume";
 import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
 import { Reveal } from "@/components/shared/reveal";
 import { buildMeta } from "@/lib/metadata";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/shared/json-ld";
 

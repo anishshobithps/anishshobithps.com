@@ -6,7 +6,7 @@ import { BlogTeaser } from "@/app/(site)/_components/blog-teaser";
 import { GuestbookTeaser } from "@/app/(site)/_components/guestbook-teaser";
 import { JsonLd } from "@/components/shared/json-ld";
 import { Section } from "@/components/layouts/page";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 import { Suspense } from "react";

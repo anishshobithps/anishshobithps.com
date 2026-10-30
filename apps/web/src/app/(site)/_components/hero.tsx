@@ -7,7 +7,7 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { Section } from "@/components/layouts/page";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import {
   TypographyH1,
   TypographyLead,

@@ -36,7 +36,7 @@ import {
   subscribeCommandMenu,
   toggleCommandMenu,
 } from "@/lib/command-menu-store";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { themeCue } from "@/lib/sound-cues";
 import { disableSound, enableSound, playCue } from "@/lib/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";

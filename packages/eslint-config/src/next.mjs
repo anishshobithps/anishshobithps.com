@@ -180,6 +180,7 @@ export function createNextConfig({
       'build/**',
       'next-env.d.ts',
       'env.d.ts',
+      'env.ts',
       '.source/**',
       '.unlighthouse/**',
     ]),

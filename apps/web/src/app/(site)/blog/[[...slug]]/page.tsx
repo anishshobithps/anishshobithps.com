@@ -23,7 +23,7 @@ import {
   TypographyLead,
   TypographyMuted,
 } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import {
   formatLongDate,
   formatShortDate,

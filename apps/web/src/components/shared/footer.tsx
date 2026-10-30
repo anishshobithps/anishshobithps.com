@@ -13,7 +13,7 @@ import {
   TypographyMuted,
   TypographySmall,
 } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { currentYear } from "@repo/core/date";
 import Link from "next/link";

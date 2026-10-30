@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { FloatingHub } from "@/components/shared/floating-hub";
 import { RepoCard } from "@/components/repo-card";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 
 const [owner = "", repo = ""] = siteConfig.githubRepo.split("/");
 

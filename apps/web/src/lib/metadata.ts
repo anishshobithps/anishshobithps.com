@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 
 interface OGParams {
     title?: string;

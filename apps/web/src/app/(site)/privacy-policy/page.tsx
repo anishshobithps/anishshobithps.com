@@ -11,7 +11,7 @@ import {
   TypographyP,
   SectionHeader,
 } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 

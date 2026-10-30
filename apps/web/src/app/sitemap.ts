@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { source } from "@/lib/source";
 import type { MetadataRoute } from "next";
 import { toISOString } from "@repo/core/date";

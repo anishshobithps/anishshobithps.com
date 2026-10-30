@@ -12,7 +12,7 @@ import {
   TypographyLead,
   TypographyMark,
 } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";

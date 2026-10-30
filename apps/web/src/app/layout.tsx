@@ -6,7 +6,7 @@ import { SoundEffects } from "@/components/shared/sound-effects";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { ThemeProvider } from "next-themes";
 import type { Metadata, Viewport } from "next";
 import {

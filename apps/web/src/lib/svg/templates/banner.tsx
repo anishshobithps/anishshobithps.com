@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { CSSProperties, ReactNode } from "react";
 import { z } from "zod";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { FONT_STACK, FONTS } from "@/lib/svg/fonts";
 import { palette } from "@/lib/svg/palette";
 import { Label, truncate } from "@/lib/svg/primitives";

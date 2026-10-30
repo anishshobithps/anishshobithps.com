@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { CodeIcon, ImageIcon } from "@repo/icons";
 import { useRef, useState } from "react";
 

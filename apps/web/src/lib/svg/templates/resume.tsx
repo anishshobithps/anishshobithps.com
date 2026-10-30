@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { formatMonthYear, timeAgo } from "@repo/core/date";
 import { loadReleases, type ReleaseHistory } from "@/lib/svg/data/github";
 import { palette } from "@/lib/svg/palette";

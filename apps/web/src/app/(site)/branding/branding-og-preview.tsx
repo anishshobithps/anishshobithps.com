@@ -11,7 +11,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { cn } from "@/lib/cn";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { buildOGPath } from "@/lib/metadata";
 import {
   UserIcon,

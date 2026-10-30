@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { toRFC822, toTimestamp } from "@repo/core/date";
 import { source } from "@/lib/source";
 import { escapeXml } from "@repo/core/xml";

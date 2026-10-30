@@ -42,7 +42,7 @@ import {
   SectionHeader,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import type { ReactNode } from "react";
 
 function DoodleStage({

@@ -1,9 +1,19 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const schema = readFileSync(
-    new URL("../.env.schema", import.meta.url),
-    "utf8",
+function readSchemas(url: URL, seen = new Set<string>()): string[] {
+    if (seen.has(url.href)) return [];
+    seen.add(url.href);
+    const text = readFileSync(url, "utf8");
+    const imported = [...text.matchAll(/^#\s*@import\(([^,)]+)/gm)]
+        .map(([, path]) => (path as string).trim())
+        .filter((path) => path.endsWith(".env.schema"))
+        .map((path) => new URL(path, url));
+    return [text, ...imported.flatMap((next) => readSchemas(next, seen))];
+}
+
+const schema = readSchemas(new URL("../.env.schema", import.meta.url)).join(
+    "\n",
 );
 
 const turbo = JSON.parse(
@@ -19,6 +29,12 @@ const SENSITIVE_NAME = /SECRET|_KEY$|TOKEN|^DATABASE_URL$|^IP_HASH_SALT$/;
 describe(".env.schema", () => {
     it("declares at least one item", () => {
         expect(items.length).toBeGreaterThan(0);
+    });
+
+    it("includes the items of every imported package schema", () => {
+        const names = items.map((item) => item.name);
+        expect(names).toContain("NEXT_PUBLIC_BASE_URL");
+        expect(names).toContain("NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL");
     });
 
     it("lists every item in the turbo build env or passThroughEnv", () => {

@@ -11,7 +11,7 @@ import {
   TypographyLead,
   TypographyMark,
 } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";

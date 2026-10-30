@@ -15,7 +15,7 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { Fragment } from "react";
 import { SocialsNudge } from "@/components/shared/doodles";

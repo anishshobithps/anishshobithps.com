@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { escapeInlineScript } from "@repo/core/inline-script";
 import type {
   Person,

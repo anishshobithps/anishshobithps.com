@@ -1,5 +1,5 @@
 import { ENV } from "varlock/env";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 
 const GITHUB_USER = siteConfig.githubRepo.split("/")[0];
 

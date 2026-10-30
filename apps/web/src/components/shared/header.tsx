@@ -13,7 +13,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { TypographySmall } from "@/components/ui/typography";
-import { siteConfig } from "@/lib/config";
+import { siteConfig } from "@repo/site-config";
 import { cn } from "@/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
 import { playCue } from "@/lib/sound-player";
