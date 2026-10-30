@@ -32,7 +32,18 @@
     "dev": { "cache": false, "persistent": true },
     "start": { "cache": false, "persistent": true, "dependsOn": ["build"] },
     "lint": { "outputs": [] },
-    "types:check": { "dependsOn": ["^types:check"], "outputs": [] },
+    "types:check": {
+      "dependsOn": ["^types:check"],
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "CLERK_SECRET_KEY",
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+        "CLERK_WEBHOOK_SECRET",
+        "OWNER_CLERK_USER_ID",
+        "IP_HASH_SALT"
+      ],
+      "outputs": []
+    },
     "test": { "outputs": [] }
   }
 }
