@@ -484,6 +484,8 @@ function LinkForm({
 }
 
 export function LinksPanel() {
+  "use memo";
+
   const { data: links = [] } = useQuery({
     queryKey: queryKeys.admin.links,
     queryFn: getAdminLinks,

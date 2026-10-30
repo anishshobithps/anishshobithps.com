@@ -78,6 +78,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/ws": "^8.18.2",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "catalog:",
     "postcss": "^8.5.30",
     "shadcn": "^4.21.5",

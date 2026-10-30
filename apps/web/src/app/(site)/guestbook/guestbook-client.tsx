@@ -54,6 +54,8 @@ interface GuestbookClientProps {
 }
 
 export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
+  "use memo";
+
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
 

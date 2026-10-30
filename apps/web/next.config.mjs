@@ -11,6 +11,7 @@ const config = {
   allowedDevOrigins: ["http://127.0.0.1:3000"],
   serverExternalPackages: ["takumi-js"],
   typedRoutes: true,
+  reactCompiler: { compilationMode: "annotation" },
   experimental: {
     optimizePackageImports: [
       "@phosphor-icons/react",

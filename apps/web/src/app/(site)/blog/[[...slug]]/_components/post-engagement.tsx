@@ -118,6 +118,8 @@ export function PostEngagement({
   initialComments,
   currentUserId,
 }: PostEngagementProps) {
+  "use memo";
+
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
 
