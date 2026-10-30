@@ -2,7 +2,7 @@ import { PageArt } from "@repo/diagrams/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { getGuestbookEntries } from "@/app/(site)/guestbook/actions";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getQueryClient } from "@/lib/get-query-client";
+import { getQueryClient } from "@repo/query/client";
 import { queryKeys } from "@/lib/query-keys";
 import { GuestbookClient } from "@/app/(site)/guestbook/guestbook-client";
 import { Panel, PanelRow, Section } from "@/components/layouts/page";

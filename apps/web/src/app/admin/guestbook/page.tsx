@@ -1,6 +1,6 @@
 import { getAllAdminGuestbookEntries } from "@/app/admin/actions";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getQueryClient } from "@/lib/get-query-client";
+import { getQueryClient } from "@repo/query/client";
 import { queryKeys } from "@/lib/query-keys";
 import { GuestbookPanel } from "@/app/admin/guestbook/panel";
 

@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getAllAdminGuestbookEntries } from "@/app/admin/actions";
-import { useActionMutation } from "@/hooks/use-action-mutation";
+import { useActionMutation } from "@repo/query/use-action-mutation";
 import { queryKeys } from "@/lib/query-keys";
 import { useQueryStates, parseAsString, parseAsBoolean } from "nuqs";
 import NextImage from "next/image";

@@ -1,0 +1,32 @@
+{
+  "name": "@repo/query",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./notify": "./src/notify.tsx",
+    "./provider": "./src/provider.tsx",
+    "./use-action-mutation": "./src/use-action-mutation.ts"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "types:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@tanstack/react-query": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -2,8 +2,7 @@
 
 import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import type { ActionResult } from "@repo/core/action-result";
-import { toastError } from "@/lib/toast";
-import { toast } from "sonner";
+import { useNotify } from "./notify";
 
 export function useActionMutation<TVariables>({
   action,
@@ -17,6 +16,7 @@ export function useActionMutation<TVariables>({
   onDone?: (variables: TVariables) => void;
 }) {
   const queryClient = useQueryClient();
+  const notify = useNotify();
 
   return useMutation({
     mutationFn: async (variables: TVariables) => {
@@ -26,7 +26,7 @@ export function useActionMutation<TVariables>({
     },
     onSuccess: (variables) => {
       if (successMessage) {
-        toast.success(
+        notify.success(
           typeof successMessage === "function"
             ? successMessage(variables)
             : successMessage,
@@ -34,7 +34,7 @@ export function useActionMutation<TVariables>({
       }
       onDone?.(variables);
     },
-    onError: (error: Error) => toastError(error.message),
+    onError: (error: Error) => notify.error(error.message),
     onSettled: () => {
       for (const queryKey of invalidate ?? []) {
         void queryClient.invalidateQueries({ queryKey });

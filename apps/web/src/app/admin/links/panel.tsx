@@ -17,7 +17,7 @@ import {
   type AdminLink,
 } from "@/app/admin/links/actions";
 import { useQuery } from "@tanstack/react-query";
-import { useActionMutation } from "@/hooks/use-action-mutation";
+import { useActionMutation } from "@repo/query/use-action-mutation";
 import { queryKeys } from "@/lib/query-keys";
 import {
   formatPath,

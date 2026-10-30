@@ -28,6 +28,7 @@
     "@repo/icons": "workspace:*",
     "@repo/media-player": "workspace:*",
     "@repo/pdf-viewer": "workspace:*",
+    "@repo/query": "workspace:*",
     "@repo/site-config": "workspace:*",
     "@repo/sounds": "workspace:*",
     "@repo/styles": "workspace:*",

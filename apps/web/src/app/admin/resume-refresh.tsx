@@ -1,7 +1,7 @@
 "use client";
 
 import { refreshResume } from "@/app/admin/actions";
-import { useActionMutation } from "@/hooks/use-action-mutation";
+import { useActionMutation } from "@repo/query/use-action-mutation";
 import { Button } from "@repo/ui/components/button";
 import { Spinner } from "@repo/ui/components/spinner";
 import {
