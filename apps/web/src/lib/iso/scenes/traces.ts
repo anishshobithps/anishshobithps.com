@@ -15,17 +15,9 @@ import {
   turned,
 } from "../parts";
 
-/**
- * Fig 07: a hand-cranked postmark machine. A spring-loaded hopper offers the
- * top postcard to a pair of feed rollers; the card runs under an inked die
- * drum that prints a green postmark, and lands on the output stack, whose
- * platform sinks one card's thickness. Every card that goes through leaves
- * the same trace.
- */
-
 const CARD = { w: 34, d: 22 };
 const THICK = 0.4;
-const FEED_Z = 4.5; // underside of the travelling card
+const FEED_Z = 4.5;
 const IN_X = -56;
 const OUT_X = 56;
 const DRUM_X = 0;
@@ -53,12 +45,10 @@ function planCard(): Pose[] {
   poses.push({ t: 0, x: IN_X, hopper: 0, tray: 0, phase: "Ready" });
   poses.push({ t: 0.6, x: IN_X, hopper: 0, tray: 0, phase: "Ready" });
   travel(0.6, 4, IN_X, OUT_X, "Postmarking", 24);
-  // Phase labels by where the card is.
   for (const p of poses) {
     if (p.t > 0.6 && p.x < DRUM_X - CARD.w / 2) p.phase = "Feeding";
     else if (p.t > 0.6 && p.x > DRUM_X + CARD.w / 2) p.phase = "Filed";
   }
-  // Once the card has left the hopper the stack rises a card; once it lands the tray sinks a card.
   const left = poses.find((p) => p.x > IN_X + CARD.w)?.t ?? 1.6;
   for (const p of poses) {
     p.hopper = smoothstep(Math.min(1, Math.max(0, (p.t - left) / 0.4))) * THICK;
@@ -78,14 +68,12 @@ export function tracesScene(width = 400, height = 225): Scene {
 
   basePlate(f, PLATE, 0, 6, { feet: 3, foot: 3.6 });
 
-  // A bottle of green ink at the back right.
   const BOTTLE = alongZ([70, -22, 0]);
   f.add(S(turned(P, BOTTLE, [[0, 4], [7, 4], [8.4, 2.6], [10, 2.6]]), { tone: "mid", crease: "lo", inner: L(arc(P, BOTTLE, 3.5, 4), { tone: "lit" }) }));
   f.add(S(turned(P, BOTTLE, [[10, 2.9], [13, 2.9]]), { tone: "mid", crease: "lo" }));
   f.add(knurlOn(P, BOTTLE, 10, 13, 2.9, 16));
 
 
-  // The postcard's face: address lines, a stamp, and (on the moving and filed cards) the postmark.
   const cardFace = (marked: boolean) => {
     const lines = [0, 1, 2]
       .map((i) => pathOf([[3, 9 + i * 3.4], [3 + [17, 13, 15][i]!, 9 + i * 3.4]]))
@@ -104,8 +92,6 @@ export function tracesScene(width = 400, height = 225): Scene {
     return S(k.slabOf(plan, z, THICK, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"') + `<g transform="${f.topPlane([cx - CARD.w / 2, -CARD.d / 2], z + THICK)}">${cardFace(marked)}</g>`;
   };
 
-  // A tray: back wall and the far side wall, the cards, then the near side wall and front wall.
-  // The hopper opens toward the drum (+x), the output tray toward it (-x).
   const tray = (cx: number, opens: "right" | "left", cards: string) => {
     const inner: Plan = { x: cx - CARD.w / 2 - 1, y: -CARD.d / 2 - 1, w: CARD.w + 2, d: CARD.d + 2, r: 1 };
     const wall = (plan: Plan) => S(k.slabOf(plan, 0, 6.5, P, 2, 0.3), { tone: "mid" });
@@ -117,24 +103,20 @@ export function tracesScene(width = 400, height = 225): Scene {
     f.add(D([at([inner.x + 2, inner.y + inner.d + 0.8, 6.5]), at([inner.x + inner.w - 2, inner.y + inner.d + 0.8, 6.5])], { size: 0.4 }));
   };
 
-  // Hopper on the left: its stack rides up one card's thickness each time a card leaves.
   const hopper = f.moveOf("hopper", poses.map((p) => ({ t: p.t, by: [0, 0, p.hopper] })));
   const inStack = Array.from({ length: STACK }, (_, i) => card(IN_X, FEED_Z - (STACK - i) * THICK, false)).join("");
   tray(IN_X, "right", `<g class="${hopper}">${inStack}</g>`);
 
-  // Output tray on the right: its platform sinks a card when one lands.
   const sink = f.moveOf("tray", poses.map((p) => ({ t: p.t, by: [0, 0, -p.tray] })));
   const outStack = Array.from({ length: STACK }, (_, i) => card(OUT_X, FEED_Z - (STACK - i) * THICK, true)).join("");
   tray(OUT_X, "left", `<g class="${sink}">${outStack}</g>`);
 
-  // Feed roller's back post, the platen under the drum, and the frame's back plate.
   const FEED_ROLL = alongY([IN_X + CARD.w / 2 + 4, 0, FEED_Z + THICK + 2.4]);
   const rollPost = (y: number) => S(k.slabOf({ x: FEED_ROLL.o[0] - 1.6, y, w: 3.2, d: 2.4, r: 0.6 }, 0, FEED_ROLL.o[2] + 2.2, P, 2, 0.3), { tone: "mid" });
   f.add(rollPost(-CARD.d / 2 - 4));
   f.add(S(k.slabOf({ x: DRUM_X - 7, y: -12, w: 14, d: 24, r: 1 }, 0, FEED_Z, P, 2, 0.4), { tone: "mid" }));
   f.add(S(k.slabOf({ x: DRUM_X - 9, y: -16, w: 18, d: 3, r: 1 }, 0, DRUM_Z + 9, P, 3, 0.5), { tone: "mid" }));
 
-  // The card that goes through: a blank copy, and a printed copy that shows only past the drum's line.
   const travel = f.moveOf("card", poses.map((p) => ({ t: p.t, by: [p.x - IN_X, 0, 0] })));
   const clipOut = k.onTop(
     [
@@ -150,7 +132,6 @@ export function tracesScene(width = 400, height = 225): Scene {
   f.defs.push(`<clipPath id="post-printed"><path d="${clipOut}"/></clipPath>`);
   f.add(`<g class="${travel}">${card(IN_X, FEED_Z, false)}</g><g clip-path="url(#post-printed)"><g class="${travel}">${card(IN_X, FEED_Z, true)}</g></g>`);
 
-  // Feed roller, its front post; ink roller and die drum on axles between the plates.
   f.add(S(disc(P, FEED_ROLL, -CARD.d / 2 - 1.6, CARD.d / 2 + 1.6, 2.4), { tone: "mid", crease: "lo" }));
   f.add(rollPost(CARD.d / 2 + 1.6));
   const INK = alongY([DRUM_X - 6.2, 0, DRUM_Z + 5.6]);
@@ -167,7 +148,6 @@ export function tracesScene(width = 400, height = 225): Scene {
   const onDrumFace = (y: number, content: string) => f.inPlane(f.sidePlane([DRUM_X, y], DRUM_Z, "left"), content, drumTurn);
   f.add(onDrumFace(11, L(circleD(0, 0, 3.8, 24) + pathOf([[0, 0], [0, -5.2]]), { tone: "lo" })));
 
-  // Front plate, the bar across the plates' tops, the crank on its hub outside.
   f.add(S(k.slabOf({ x: DRUM_X - 9, y: 13, w: 18, d: 3, r: 1 }, 0, DRUM_Z + 9, P, 3, 0.5), { tone: "mid" }));
   f.add(S(k.slabOf({ x: DRUM_X - 2.5, y: -16, w: 5, d: 32, r: 1 }, DRUM_Z + 9, 2, P, 2, 0.4), { tone: "mid" }));
   f.add(screwsOnTop(P, [[DRUM_X, -14.5], [DRUM_X, 14.5]], DRUM_Z + 11, 0.7));

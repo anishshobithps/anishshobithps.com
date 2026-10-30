@@ -1,13 +1,6 @@
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { alongY, D, disc, face, L, S } from "../parts";
 
-/**
- * Fig 09: a safe-deposit cabinet. Every drawer locks with two keys, the
- * guard's and yours. Both turn, box 07 slides out on its runners and shows
- * what it holds (three records, nothing more), then slides home and locks.
- * No windows, no trackers: just your key.
- */
-
 const COLS = 3;
 const ROWS = 4;
 const CELL_W = 30;
@@ -17,7 +10,7 @@ const LEFT = -45;
 const BOTTOM = 8;
 const DEPTH = 24;
 const PULL = 17;
-const BOX = { col: 1, row: 1 }; // box 07
+const BOX = { col: 1, row: 1 };
 const PERIOD = 9;
 
 interface Pose {
@@ -54,7 +47,6 @@ function planVisit(): Pose[] {
   return poses;
 }
 
-/** Convex hull of screen points. */
 function hull(pts: Flat[]) {
   const s = [...pts].sort((p, q) => p[0] - q[0] || p[1] - q[1]);
   const cross = (o: Flat, p: Flat, q: Flat) => (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0]);
@@ -80,25 +72,21 @@ export function privacyScene(width = 400, height = 300): Scene {
   const at = (p: V3) => f.at(p);
   const poses = planVisit();
 
-  // Vault floor in tiles, the joints running edge to edge.
   f.add(f.halo(FLOOR, -3, 6));
   const joints =
     [-30, 0, 30].map((x) => k.lineOnTop([x, FLOOR.y], [x, FLOOR.y + FLOOR.d], 0, P)).join("") +
     [-7, 14].map((y) => k.lineOnTop([FLOOR.x, y], [FLOOR.x + FLOOR.w, y], 0, P)).join("");
   f.add(S(k.slabOf(FLOOR, -3, 3, P, 3, 0.5), { tone: "lo", inner: L(joints, { tone: "faint" }) }));
 
-  // Cabinet: plinth, body, cornice, rivets down the side panel.
   f.add(S(k.slabOf(k.insetPlan(CAB, 2), 0, 6, P, 2, 0.4), { tone: "mid" }));
   const seams = [BOTTOM - 1, TOP - 1].map((z) => k.sideSeam(CAB, z, P, 2)).join("");
   f.add(S(k.slabOf(CAB, 6, TOP - 6, P, 2, 0.4), { tone: "mid", inner: L(seams, { tone: "faint" }) }));
   const CORNICE = k.insetPlan(CAB, -1.5);
   f.add(S(k.slabOf(CORNICE, TOP, 4, P, 2, 0.6), { tone: "mid" }));
   f.add(L(k.planOutline(k.insetPlan(CORNICE, 5), TOP + 4, P, 2), { tone: "faint" }));
-  // A nameplate on the cornice's front.
   f.add(f.inPlane(f.sidePlane([-14, CORNICE.y + CORNICE.d], TOP + 3.4, "left"), face("M0 0h28v2.8h-28z", "top", "lo") + L("M3 1.4h14", { tone: "lo", free: true }) + D([[1.4, 1.4], [26.6, 1.4]], { size: 0.35 })));
   f.add(D([0, 1, 2, 3].flatMap((i) => [at([CAB.x + CAB.w, -26 + i * 7.3, BOTTOM + 2]), at([CAB.x + CAB.w, -26 + i * 7.3, TOP - 3])]), { size: 0.45 }));
 
-  // The opening behind box 07: a dark recess with its top and left walls.
   const x0 = LEFT + BOX.col * CELL_W;
   const z0 = BOTTOM + BOX.row * CELL_H;
   const open = (inset: number): V3[] => [
@@ -113,7 +101,6 @@ export function privacyScene(width = 400, height = 300): Scene {
   f.add(`<path class="iso-face" data-fill="1" d="${pathOf([mouth[3]!, mouth[2]!, deep[2]!, deep[3]!].map(at), true)}"/>`);
   f.add(`<path class="iso-face" data-fill="2" d="${pathOf([mouth[0]!, mouth[3]!, deep[3]!, deep[0]!].map(at), true)}"/>`);
 
-  // A drawer front: plate, number plate, two escutcheons, a bar pull.
   const front = (col: number, row: number, lit = false) => {
     const fx = LEFT + col * CELL_W;
     const fz = BOTTOM + row * CELL_H;
@@ -134,7 +121,6 @@ export function privacyScene(width = 400, height = 300): Scene {
     for (let col = 0; col < COLS; col++) if (col !== BOX.col || row !== BOX.row) f.add(front(col, row));
   }
 
-  // Box 07: a tray with three records standing in it, behind its front.
   const W = CELL_W - 2.4;
   const tx = x0 + 1.2;
   const tz = z0 + 1.2;
@@ -158,7 +144,6 @@ export function privacyScene(width = 400, height = 300): Scene {
   tray.push(wall({ x: tx + W - 1, y: FACE_Y - DEPTH + 1, w: 1, d: DEPTH - 1, r: 0.3 }, 8));
   tray.push(front(BOX.col, BOX.row, true));
 
-  // The keys: a shank out of each escutcheon and a flat bow that turns a quarter with the key.
   const key = (x: number, which: "guard" | "yours") => {
     const kx = x0 + x;
     const kz = z0 + CELL_H - 4.4;
@@ -175,7 +160,6 @@ export function privacyScene(width = 400, height = 300): Scene {
   };
   tray.push(key(14, "guard"), key(21, "yours"));
 
-  // Show the drawer everywhere except where it is still inside the cabinet, outside the opening's outline.
   const back = f.shift([0, -DEPTH - 2, 0]);
   const hole = mouth.map(at);
   const tunnel = hull([...hole, ...hole.map(([x, y]) => [x + back[0], y + back[1]] as Flat)]);

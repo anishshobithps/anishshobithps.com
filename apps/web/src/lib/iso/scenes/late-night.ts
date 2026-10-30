@@ -1,20 +1,12 @@
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { circleD, D, knob, L, radialD, S, screwsOnTop } from "../parts";
 
-/**
- * Fig 06: a ticker-tape printer for the latest post. Tape runs off a supply
- * reel, round a guide post, past the typewheel, round a second post and onto
- * a take-up reel. For each character the wheel turns to its letter, the
- * hammer presses the tape against it, and the tape steps one pitch on, so the
- * printed line walks out toward the take-up reel.
- */
-
-const TOP = 8; // plinth top
+const TOP = 8;
 const TAPE_Z0 = 21;
 const TAPE_Z1 = 27;
 const WHEEL: Flat = [0, -4];
 const WHEEL_R = 7;
-const TAPE_Y = WHEEL[1] + WHEEL_R; // back face of the tape, against the wheel
+const TAPE_Y = WHEEL[1] + WHEEL_R;
 const SUPPLY: Flat = [-30, -10];
 const SUPPLY_R = 8.5;
 const TAKE: Flat = [30, 8];
@@ -25,7 +17,6 @@ const POSTS: Flat[] = [
 ];
 
 const PITCH = 1.7;
-// One line of print: letter heights (0 is a space), repeated along the tape.
 const LINE = [3.2, 2.4, 3.2, 0, 2.4, 3.6, 2.4, 3.2];
 const CHAR_T = 0.5;
 const IDLE = 1;
@@ -46,7 +37,6 @@ function planPrint(): Pose[] {
   poses.push({ t: 0, wheel, strike: 0, tape, char: -1 });
   LINE.forEach((height, i) => {
     const t0 = i * CHAR_T;
-    // Turn to this character's place on the wheel: 24 places, the next one picked from the letter.
     const target = wheel + (((i * 7 + Math.round(height * 3)) % 24) + 3) * ((Math.PI * 2) / 24);
     const from = wheel;
     for (let s = 1; s <= 6; s++) {
@@ -83,19 +73,16 @@ export function lateNightScene(width = 400, height = 225): Scene {
   const poses = planPrint();
   const spin = (name: string, angle: (p: Pose) => number) => f.spinOf(name, poses.map((p) => ({ t: p.t, angle: angle(p) })), { tolerance: 0.5 });
 
-  // A stepped round plinth, with the seat ring where the glass dome sits when it's on.
   f.add(f.halo({ x: -PLINTH_R, y: -PLINTH_R, w: PLINTH_R * 2, d: PLINTH_R * 2, r: PLINTH_R }, 0, 6));
   f.add(S(k.cylinder(0, 0, PLINTH_R, 0, 4.4, P, 96, 0.8), { tone: "mid", inner: L(k.sideArc(0, 0, PLINTH_R, 2, P, 48), { tone: "faint" }) }));
   f.add(S(k.cylinder(0, 0, PLINTH_R - 4, 4.4, TOP - 4.4, P, 96, 0.6), { tone: "mid" }));
   f.add(L(k.ring(0, 0, PLINTH_R - 7, TOP, P, 96) + k.ring(0, 0, PLINTH_R - 8.4, TOP, P, 96), { tone: "faint" }));
   f.add(screwsOnTop(P, [0, 1, 2, 3].map((i) => [Math.cos(0.4 + (i * Math.PI) / 2) * (PLINTH_R - 7.7), Math.sin(0.4 + (i * Math.PI) / 2) * (PLINTH_R - 7.7)] as Flat), TOP, 0.6));
 
-  // Binding posts and the coil leads at the front left.
   const posts: Flat[] = [
     [-26, 24],
     [-19, 28],
   ];
-  // Supply reel on its spindle, the tape coming off it.
   const reel = (c: Flat, r: number, name: string, dir: number) => {
     f.add(S(k.cylinder(c[0], c[1], 3, TOP, 1.4, P, 24), { tone: "mid" }));
     f.add(S(k.cylinder(c[0], c[1], 1.3, TOP + 1.4, TAPE_Z0 - 1 - TOP - 1.4, P, 14), { tone: "mid", crease: "none" }));
@@ -109,7 +96,6 @@ export function lateNightScene(width = 400, height = 225): Scene {
   };
   reel(SUPPLY, SUPPLY_R, "supply", 1);
 
-  // Tape: a ribbon standing on its edge from reel to post to wheel to post to reel.
   const ribbon = (a: Flat, b: Flat) =>
     `<path class="iso-sheet" d="${pathOf([at([a[0], a[1], TAPE_Z0]), at([b[0], b[1], TAPE_Z0]), at([b[0], b[1], TAPE_Z1]), at([a[0], a[1], TAPE_Z1])], true)}"/>`;
   const tangentFrom = (c: Flat, r: number, p: Flat, side: number): Flat => {
@@ -122,7 +108,6 @@ export function lateNightScene(width = 400, height = 225): Scene {
   const inLeft: Flat = [POSTS[0]![0], TAPE_Y + 0.2];
   f.add(ribbon(tangentFrom(SUPPLY, SUPPLY_R, POSTS[0]!, 1), [POSTS[0]![0] - 1, POSTS[0]![1] + 0.6]));
 
-  // The typewheel's bridge: two pillars and a top plate, the ink roller behind the wheel.
   const PILLARS: Flat[] = [
     [-9.5, -6],
     [9.5, -6],
@@ -148,7 +133,6 @@ export function lateNightScene(width = 400, height = 225): Scene {
   const BRIDGE: Plan = { x: -12, y: -9.5, w: 24, d: 7, r: 3.4 };
   f.add(S(k.slabOf(BRIDGE, 34, 2.4, P, 6, 0.5), { tone: "mid" }));
   f.add(screwsOnTop(P, PILLARS, 36.4, 1));
-  // Star wheel of the escapement on top, stepping with the typewheel.
   f.add(S(k.cylinder(WHEEL[0], WHEEL[1] , 3.6, 36.4, 1, P, 32), { tone: "mid" }));
   const star = Array.from({ length: 12 }, (_, i) => {
     const a0 = (i / 12) * Math.PI * 2;
@@ -160,7 +144,6 @@ export function lateNightScene(width = 400, height = 225): Scene {
   }).flat();
   f.add(f.inPlane(f.topPlane(WHEEL, 37.4), L(pathOf(star, true), { tone: "hi" }) + L(circleD(0, 0, 0.8, 12), { tone: "mid" }), wheelTurn));
 
-  // Guide posts and the straight run past the wheel, with the printed marks travelling on it.
   for (const [x, y] of POSTS) {
     f.add(S(k.cylinder(x, y, 1.2, TOP, TAPE_Z1 + 1.5 - TOP, P, 14), { tone: "mid", crease: "none" }));
     f.add(S(k.cylinder(x, y, 2, TAPE_Z1 + 1.5, 0.8, P, 18), { tone: "mid" }));
@@ -172,7 +155,6 @@ export function lateNightScene(width = 400, height = 225): Scene {
   const marks = Array.from({ length: LINE.length * 3 }, (_, i) => {
     const h = LINE[i % LINE.length]!;
     if (!h) return "";
-    // Character j of a line is struck at tape offset j·PITCH; earlier lines sit whole lines further on.
     const u = -PITCH * (i % LINE.length) + PITCH * LINE.length * Math.floor(i / LINE.length);
     return pathOf([
       [u, 3 - h / 2 + 0.2],
@@ -187,7 +169,6 @@ export function lateNightScene(width = 400, height = 225): Scene {
   );
   f.add(`<g transform="${plane}"><g clip-path="url(#ticker-out)"><g class="${feed}">${L(marks, { tone: "hi", free: true })}</g></g></g>`);
 
-  // Hammer on its lever in front of the tape, pulled by the coils under the lever's end.
   for (const x of [-3.6, 3.6]) {
     f.add(S(k.cylinder(x, 15, 2.6, TOP, 12, P, 24), { tone: "mid", inner: L([2, 4, 6, 8, 10].map((dz) => k.sideArc(x, 15, 2.6, TOP + dz, P, 16)).join(""), { tone: "lo" }) }));
   }
@@ -201,11 +182,9 @@ export function lateNightScene(width = 400, height = 225): Scene {
   f.add(`<g class="${strike}">${lever}</g>`);
   f.add(S(k.cylinder(PIVOT[0], PIVOT[1], 1.1, TOP + 15, 1.4, P, 12), { tone: "hi" }));
 
-  // Take-up reel at the front right, with the tape running to it.
   f.add(ribbon([POSTS[1]![0] + 1, POSTS[1]![1] + 0.6], tangentFrom(TAKE, TAKE_R, POSTS[1]!, 1)));
   reel(TAKE, TAKE_R, "take", -1);
 
-  // Binding posts with their leads to the coils.
   for (const [x, y] of posts) {
     f.add(S(k.cylinder(x, y, 2.4, TOP, 1.2, P, 20), { tone: "mid" }));
     f.add(S(k.cylinder(x, y, 1.6, TOP + 1.2, 3.4, P, 18), { tone: "mid" }));
@@ -223,4 +202,3 @@ export function lateNightScene(width = 400, height = 225): Scene {
       "A ticker-tape printer on a round plinth. Tape runs from a supply reel past a typewheel to a take-up reel. For each character the wheel turns, a hammer presses the tape against it and the tape steps on, so a printed line walks toward the take-up reel.",
   });
 }
-

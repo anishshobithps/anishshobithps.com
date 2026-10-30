@@ -2,13 +2,6 @@ import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, s
 import { alongY, arc, circleD, D, disc, face, G, L, S, screwsOnTop } from "../parts";
 import * as T from "../tube";
 
-/**
- * Cover: a marble stair lift. Seven slats stand in a row in two interleaved
- * groups; when one group rises half a step and the other drops, each slat's
- * top lines up with the next one up, and the marble rolls on to it. Step by
- * step it climbs, then rolls back down the return trough and starts again.
- */
-
 const N = 7;
 const SLAT_W = 6;
 const GAP = 0.8;
@@ -22,7 +15,6 @@ const PERIOD = (N - 1) * PHASE + RETURN;
 
 const slatX = (i: number) => X0 + i * (SLAT_W + GAP);
 const TOP_Z = H0 + (N - 1) * STEP + STEP / 2 + MARBLE_R;
-/** The return trough: off the top slat's right edge, back behind the slats, down to the first. */
 const TROUGH = G.fillet(
   [
     [X0 + (N - 1) * (SLAT_W + GAP) + SLAT_W / 2, 0, TOP_Z],
@@ -35,9 +27,7 @@ const TROUGH = G.fillet(
   4,
   8,
 ) as V3[];
-/** The trough's first leg (beside the top slat) is in front of the frame; the rest runs behind. */
 const SPLIT = TROUGH.findIndex(([, y]) => y < -2);
-/** Group A (even slats) sits up when a = +1, down when a = -1; group B the other way. */
 const lift = (t: number) => {
   if (t >= (N - 1) * PHASE) return -1;
   const phase = Math.floor(t / PHASE);
@@ -47,7 +37,6 @@ const lift = (t: number) => {
 };
 const topOf = (i: number, t: number) => H0 + i * STEP + (STEP / 2) * lift(t) * (i % 2 === 0 ? 1 : -1);
 
-/** Where the marble is: riding a slat, rolling to the next, or running back down the trough. */
 function marbleAt(t: number): V3 {
   if (t >= (N - 1) * PHASE) {
     const u = smoothstep((t - (N - 1) * PHASE) / RETURN);
@@ -67,12 +56,10 @@ export function stairsScene(width = 400, height = 225): Scene {
   const f = new Figure("stairs", P, PERIOD);
   const times = Array.from({ length: 181 }, (_, i) => (i / 180) * PERIOD);
 
-  // Base box with the drive inside, a back wall the slats slide against.
   f.add(f.halo(BASE, -6, 6));
   f.add(S(k.slabOf(BASE, -6, 6, P, 3, 0.6), { tone: "mid", inner: L(k.sideSeam(BASE, -3, P, 3), { tone: "faint" }) }));
   f.add(screwsOnTop(P, k.corners(BASE, 3) as Flat[], 0, 0.8));
 
-  // Return trough behind, then a guide frame: two posts and rods the slats slide against.
   f.add(
     T.tubePieces(TROUGH.slice(SPLIT - 1), 1.5, P, { maxLength: 400 })
       .map((piece) => T.tubeSvg(piece, { tone: "mid" }))
@@ -87,7 +74,6 @@ export function stairsScene(width = 400, height = 225): Scene {
   }
   f.add(screwsOnTop(P, [[X0 - 3, -5.8], [X0 + N * (SLAT_W + GAP) + 0.4, -5.8]], POST_TOP, 0.6));
 
-  // The marble, drawn before the slats when it is behind them in the trough, after when on top.
   const ride = f.moveOf("marble", times.map((t) => ({ t, by: marbleAt(t) })));
   const marble = S(G.sphereOf([0, 0, 0], MARBLE_R, P), { tone: "hi", lit: true });
   const inTrough = (t: number) => t >= (N - 1) * PHASE + 0.25 && t < PERIOD - 0.2;
@@ -95,7 +81,6 @@ export function stairsScene(width = 400, height = 225): Scene {
   const front = f.switchOf("marble-front", times.map((t) => ({ t, on: !inTrough(t) })));
   f.add(`<g class="${back}" opacity="0"><g class="${ride}">${marble}</g></g>`);
 
-  // The slats, two groups moving opposite ways.
   for (let i = 0; i < N; i++) {
     const plan: Plan = { x: slatX(i), y: -4, w: SLAT_W, d: 8, r: 0.6 };
     const h = H0 + i * STEP + STEP;
@@ -110,7 +95,6 @@ export function stairsScene(width = 400, height = 225): Scene {
   );
   f.add(`<g class="${front}"><g class="${ride}">${marble}</g></g>`);
 
-  // Drive: a motor on the right with a crank disc turning one throw per step.
   const MOTOR: Plan = { x: 38, y: -12, w: 12, d: 14, r: 1.5 };
   f.add(S(k.slabOf(MOTOR, 0, 12, P, 3, 0.5), { tone: "mid", inner: L(k.sideSeam(MOTOR, 6, P, 3), { tone: "faint" }) }));
   const CRANK = alongY([44, 2, 7]);

@@ -36,35 +36,19 @@ import {
   turned,
 } from "../parts";
 
-/**
- * Fig 03: a roll-fed pen plotter signing the guestbook.
- *
- * Paper comes off a supply roll at the back, over a guide bar, flat across the
- * platen and under a cover onto a take-up roll at the front. Like a
- * grit-roller plotter, the pen only moves across (x) and the paper moves under
- * it (y), so every stroke is a carriage move plus a paper move. The pen draws
- * the logo mascot and an underline in green, lifts, parks, and the paper feeds
- * one entry forward. The previous entry is already on the paper one pitch
- * ahead, so the loop closes on the same picture it opened with.
- */
-
-// Heights.
-const PAPER = 20.3; // the platen top is 20
+const PAPER = 20.3;
 const TAKE_R = 8.7;
 const TAKE_Z = PAPER - TAKE_R - 0.3;
 
-// Along y (toward the viewer).
-const BACK = -52; // platen back edge
+const BACK = -52;
 const COVER_BACK = 34;
 const TAKE_Y = 47;
 const Y_PEN = -11.6;
 
-// Supply roll, raised behind the gantry so you can see it.
 const SUPPLY: V3 = [0, -66, 38];
 const SUPPLY_R = 10;
 const GUIDE: V3 = [0, BACK - 2.3, PAPER - 2.3];
 
-// The paper and the drawing on it, in paper coordinates (u across, v toward the viewer).
 const PAPER_HALF = 46;
 const PITCH = 42;
 const MASCOT_SCALE = 30 / 56;
@@ -83,16 +67,13 @@ const MASCOT: Flat[] = (
   ] as Flat[]
 ).map(toPaper);
 const eye = (x0: number) => stadium(x0 + 2.5, x0 + 8.5, 38.5, 2.5, 8).map(toPaper);
-/** The hero's underline, as a pen stroke under the mascot. */
 const UNDERLINE: Flat[] = cubic([U0 - 15, 33.4], [U0 - 4, 31.6], [U0 + 8, 35.4], [U0 + 22, 32], 24);
 const STROKES: Flat[][] = [MASCOT, eye(18), eye(35), UNDERLINE];
 
-// Rest: the pen parked at the right, the previous entry just ahead of the pen.
 const X_HOME = 30;
 const F_END = Y_PEN + 6;
 const F_START = F_END - PITCH;
 
-// Motion, in world units per second.
 const V_DRAW = 26;
 const V_TRAVEL = 70;
 const LIFT = 3;
@@ -107,7 +88,6 @@ interface Pose {
   stroke: number;
 }
 
-/** Every move the plotter makes, as one list of poses in time. */
 function planMoves(P: Projection) {
   const screens = STROKES.map((pts) => pts.map(([u, v]) => k.iso([u, v, PAPER], P) as Flat));
   const totals = screens.map((pts) => lengths(pts).at(-1)!);
@@ -152,7 +132,6 @@ function planMoves(P: Projection) {
 
 const PLATE: Plan = { x: -112, y: -82, w: 222, d: 150, r: 7 };
 
-/** A 2D rotation mark (a pointer and a hub ring) for a group laid in a face plane. */
 const spinMark = (length: number, hub: number) =>
   L(`M0 0L0 ${-length}`, { tone: "hi" }) +
   L(k.pathOf(Array.from({ length: 17 }, (_, i) => [Math.cos((i / 16) * Math.PI * 2) * hub, Math.sin((i / 16) * Math.PI * 2) * hub])), { tone: "lo" });
@@ -169,19 +148,16 @@ export function guestbookScene(width = 400, height = 300): Scene {
   const at = (p: V3) => f.at(p);
   const spin = (name: string, angle: (pose: Pose) => number) => f.spinOf(name, poses.map((pose) => ({ t: pose.t, angle: angle(pose) })));
 
-  // Base plate, ruler strip and label plate.
   basePlate(f, PLATE, 0, 8);
   rulerStrip(f, { x: -64, y: PLATE.y + PLATE.d - 9, w: 128, d: 5.5, r: 1 }, 0, 4, 5);
   labelPlate(f, { x: -106, y: 44, w: 30, d: 15, r: 1.5 }, 0);
 
-  // Power brick at the back left, its lead running forward to the controller.
   const PSU: Plan = { x: -110, y: -62, w: 20, d: 24, r: 3 };
   f.add(S(k.slabOf(PSU, 0, 9, P, 5, 0.6), { tone: "mid", inner: L(k.sideSeam(PSU, 4.5, P, 5), { tone: "faint" }) }));
   f.add(L([0, 1, 2, 3].map((i) => k.planOutline({ x: PSU.x + 4 + i * 3.4, y: PSU.y + 5, w: 1.3, d: 13, r: 0.6 }, 9, P, 3)).join(""), { tone: "lo" }));
   f.add(S(k.slabOf({ x: -102, y: PSU.y + PSU.d, w: 4, d: 1.6, r: 0.5 }, 2, 3.2, P, 2), { tone: "mid" }));
   f.add(cable(P, [[-100, PSU.y + PSU.d + 1.6, 3.6], [-100, -24, 0.8], [-100, -12, 0.8], [-100, -6, 3.6]], 0.75));
 
-  // Controller on the front left: case, lid seam, vents, LED, power knob, USB port.
   const CTRL: Plan = { x: -106, y: -6, w: 30, d: 40, r: 2.5 };
   f.add(S(k.slabOf(CTRL, 0, 13, P, 4, 0.6), { tone: "mid", inner: L(k.sideSeam(CTRL, 9.5, P, 4), { tone: "faint" }) }));
   f.add(screwsOnTop(P, k.corners(CTRL, 3) as Flat[], 13, 1));
@@ -198,7 +174,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   knob(f, [CTRL.x + 10, CTRL.y + 30], 13, 3.2, 3.4);
   f.add(`<g transform="${f.sidePlane([CTRL.x + CTRL.w, CTRL.y + 22], 7, "right")}">${L("M-3 -1.3h6v2.6h-6z", { tone: "lo" })}</g>`);
 
-  // Supply roll on two uprights. The sheet leaves its underside and slopes down over the guide bar.
   const upright = (x: number) => {
     const plan: Plan = { x, y: SUPPLY[1] - 6, w: 6, d: 12, r: 2.5 };
     f.add(S(k.slabOf(plan, 0, SUPPLY[2] + 5, P, 4, 0.5), { tone: "mid", inner: L(k.sideSeam(plan, 6, P, 4), { tone: "faint" }) }));
@@ -237,14 +212,12 @@ export function guestbookScene(width = 400, height = 300): Scene {
   const supplySpin = spin("supply-spin", (pose) => (pose.f - F_START) / SUPPLY_R);
   f.add(`<g transform="${f.sidePlane([65.2, SUPPLY[1]], SUPPLY[2], "right")}"><g class="${supplySpin}">${spinMark(3, 0.9)}</g></g>`);
 
-  // Left tower.
   const towerSolid = (x: number) => {
     const plan: Plan = { x, y: -28, w: 10, d: 16, r: 1.5 };
     f.add(S(k.slabOf(plan, 0, 38, P, 3, 0.6), { tone: "mid", inner: L(k.sideSeam(plan, 6, P, 3), { tone: "faint" }) }));
   };
   towerSolid(-74);
 
-  // Guide bar, platen body with vents, and the flat sheet over it.
   f.add(S(disc(P, alongX(GUIDE), -54, 54, 2.3), { tone: "mid", crease: "lo" }));
   const BODY: Plan = { x: -56, y: BACK, w: 112, d: 88, r: 3 };
   f.add(S(k.slabOf(BODY, 0, 20, P, 4, 0.8), { tone: "mid", inner: L(k.sideSeam(BODY, 4, P, 4), { tone: "faint" }) }));
@@ -257,7 +230,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   ] as Flat[];
   f.add(`<path class="iso-sheet" d="${k.onTop(flat, PAPER, P, true)}"/>`);
 
-  // Ink, perforations and entry marks travel with the paper; the flat paper clips them.
   const clip = k.onTop(
     [
       [-PAPER_HALF, BACK],
@@ -311,7 +283,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
       `</g></g>`,
   );
 
-  // Pinch wheels pressing the paper's edges at the pen line, each on an arm hung from the beam.
   for (const side of [-1, 1]) {
     const x = side * (PAPER_HALF - 1);
     const F = alongX([x, Y_PEN, PAPER + 3]);
@@ -330,7 +301,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
     }
   }
 
-  // Right tower, then the beam across both.
   towerSolid(64);
   const BEAM: Plan = { x: -76, y: -27, w: 152, d: 10, r: 1 };
   f.add(
@@ -344,7 +314,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   );
   f.add(screwsOnTop(P, [[72, -22]], 46, 1));
 
-  // Belt loop on top of the beam: idler at the right, motor pulley at the left.
   const BELT_Z = 46;
   for (const y of [-24.8, -19.2]) {
     f.add(S(k.slabOf({ x: -68, y: y - 0.35, w: 136, d: 0.7, r: 0.3 }, BELT_Z + 0.5, 1.6, P, 2), { tone: "lo", crease: "none" }));
@@ -357,7 +326,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   pulley(68, "idler");
   pulley(-68, "pulley");
 
-  // X motor on its bracket over the left pulley.
   const MOTOR: Plan = { x: -75, y: -29, w: 14, d: 14, r: 1.2 };
   for (const [x, y] of byDepth(k.corners(MOTOR, 1.6) as Flat[], P)) {
     f.add(S(k.cylinder(x, y, 0.7, 46, 5, P, 10), { tone: "mid", crease: "none" }));
@@ -368,7 +336,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   f.add(L(k.ring(-68, -22, 4.2, 62.2, P, 28), { tone: "lo" }));
   f.add(screwsOnTop(P, k.corners(MOTOR, 2.2) as Flat[], 62.2, 0.7));
 
-  // Motor lead: from the controller's top, clipped to the left tower, up to the motor's connector.
   const CLIP_Z = 28;
   const lead: V3[] = [
     [-80, 2, 13],
@@ -383,7 +350,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   f.add(S(k.slabOf({ x: -71.2, y: -15.3, w: 4.4, d: 1.6, r: 0.4 }, 53.4, 3.2, P, 2), { tone: "mid" }));
   f.add(S(k.slabOf({ x: -82, y: 0, w: 4, d: 4, r: 0.6 }, 13, 1.6, P, 2), { tone: "mid" }));
 
-  // The carriage, built at x = 0 and moved along the beam.
   const car: string[] = [];
   const PLATE_Y = -17;
   const PLATE_F = -14.6;
@@ -399,8 +365,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   }
   car.push(S(k.slabOf({ x: -5, y: -20.6, w: 10, d: 6, r: 0.6 }, 46, 2.6, P, 2, 0.3), { tone: "mid" }));
   car.push(screwsOnTop(P, [[-2.8, -18.2], [2.8, -18.2]], 48.6, 0.6));
-  // Guide rods for the pen holder with a top bar across them, the return spring on the left rod,
-  // and the lift solenoid standing on the bar.
   const ROD_Y = PLATE_F + 1;
   const BAR_Z = 43.6;
   const springs = [coilZ(P, [-5.6, ROD_Y], 34 + LIFT, BAR_Z, 1.15, 6), coilZ(P, [-5.6, ROD_Y], 34, BAR_Z, 1.15, 6)];
@@ -416,7 +380,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   for (const x of [-5.6, 5.6]) car.push(S(k.cylinder(x, ROD_Y, 0.55, 29.5, BAR_Z - 29.5, P, 10), { tone: "hi", crease: "none" }));
   car.push(springHalf("front", "mid"));
 
-  // The pen holder and the green pen lift together.
   const PEN = alongZ([0, Y_PEN, PAPER]);
   const HOLD: Plan = { x: -3.9, y: PLATE_F, w: 7.8, d: 2 * (Y_PEN - PLATE_F), r: 1.2 };
   const lifted = [
@@ -442,7 +405,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   const carriageCls = f.moveOf("carriage", poses.map((pose) => ({ t: pose.t, by: [pose.x, 0, 0] })));
   f.add(`<g class="${carriageCls}" transform="${f.translate([X_HOME, 0, 0])}">${car.join("")}</g>`);
 
-  // Feed motor on the right tower's outer face; its end mark turns with the paper.
   const FEED = alongX([74, -20, 14]);
   f.add(S(disc(P, FEED, 0, 1.4, 5.6), { tone: "mid" }));
   f.add(D([0, 1, 2, 3].map((i) => at(G.pointOf(FEED, 1.4, 4.6, Math.PI / 4 + (i * Math.PI) / 2) as V3)), { size: 0.4 }));
@@ -450,7 +412,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   const feedSpin = spin("feed-spin", (pose) => (pose.f - F_START) / 3.2);
   f.add(`<g transform="${f.sidePlane([85.6, -20], 14, "right")}"><g class="${feedSpin}">${spinMark(2.4, 1.1)}</g></g>`);
 
-  // Take-up roll at the front, under its cover.
   const TAKE = alongX([0, TAKE_Y, TAKE_Z]);
   const post = (x: number) => {
     const plan: Plan = { x, y: TAKE_Y - 4.5, w: 6, d: 9, r: 1.5 };
@@ -473,7 +434,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   f.add(L(pathOf(teeth), { tone: "faint" }));
   f.add(screwsOnTop(P, [[-54, 46], [54, 46]], PAPER + 2.7, 0.9));
 
-  // A spare roll of paper resting in two V-blocks at the front right.
   const SPARE = alongX([86, 54, 6.4]);
   for (const x of [72, 98]) {
     const block: Plan = { x: x - 2.5, y: 48, w: 5, d: 12, r: 0.8 };
@@ -485,7 +445,6 @@ export function guestbookScene(width = 400, height = 300): Scene {
   f.add(L(circleOn(P, SPARE, 15, 1.4), { tone: "lo" }));
   f.add(S(k.slabOf({ x: 95.5, y: 48, w: 5, d: 12, r: 0.8 }, 0, 3.4, P, 2, 0.3), { tone: "mid" }));
 
-  // Pen carousel: six sockets, five pens, one empty while the green pen works. Its cap lies beside it.
   const CAR: Flat = [90, 14];
   f.add(S(k.cylinder(CAR[0], CAR[1], 13, 0, 3, P, 48, 0.5), { tone: "mid" }));
   f.add(S(k.cylinder(CAR[0], CAR[1], 11.4, 3, 6, P, 48, 0.5), { tone: "mid", inner: L(k.sideArc(CAR[0], CAR[1], 11.4, 6, P, 24), { tone: "faint" }) }));

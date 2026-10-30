@@ -3,7 +3,6 @@ import * as G from "./lathe";
 
 type V3 = Point3;
 
-/** One sample along the drawn tube: its centre on screen, the unit normal across it, and half its width. */
 interface SideFrame {
   p: Flat;
   nx: number;

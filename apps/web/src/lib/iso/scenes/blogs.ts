@@ -1,15 +1,7 @@
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { alongX, arc, circleD, D, disc, face, knurlOn, L, radialD, S, screwsOnTop, turned } from "../parts";
 
-/**
- * Fig 04: a portable typewriter. Each keystroke dips a key, flicks its typebar
- * up to the print point and steps the carriage one character left, so the
- * line grows on the paper. At the end of the line the carriage returns and the
- * platen feeds the sheet up a line, which is where every post starts: a draft.
- */
-
 const PITCH = 1.45;
-// One line of text: word lengths, typed with a space between.
 const WORDS = [5, 3, 6, 2, 4];
 const CHARS = WORDS.flatMap((n, i) => [...Array.from({ length: n }, () => 1), ...(i < WORDS.length - 1 ? [0] : [])]);
 const STRIKE = 0.17;
@@ -19,7 +11,7 @@ const PLATEN_Y = -14;
 const PLATEN_Z = 22;
 const PLATEN_R = 5;
 const PRINT: V3 = [0, PLATEN_Y + PLATEN_R + 0.2, PLATEN_Z];
-const X0 = (CHARS.length * PITCH) / 2; // carriage offset at the start of a line
+const X0 = (CHARS.length * PITCH) / 2;
 
 interface Pose {
   t: number;
@@ -62,30 +54,24 @@ export function blogsScene(width = 400, height = 300): Scene {
   const f = new Figure("type", P, period);
   const at = (p: V3) => f.at(p);
 
-  // Body: base, upper shell with a lid seam, the segment opening where the typebars rest.
   f.add(f.halo(BODY, -3, 7));
   for (const [x, y] of k.corners(BODY, 6) as Flat[]) f.add(S(k.cylinder(x, y, 3, -3, 3, P, 18), { tone: "lo" }));
   f.add(S(k.slabOf(BODY, 0, 8, P, 8, 0.8), { tone: "mid", inner: L(k.sideSeam(BODY, 4, P, 8), { tone: "faint" }) }));
   const SHELL: Plan = { x: -40, y: -20, w: 80, d: 22, r: 5 };
   f.add(S(k.slabOf(SHELL, 8, 7, P, 6, 0.6), { tone: "mid", inner: L(k.sideSeam(SHELL, 11.5, P, 6), { tone: "faint" }) }));
-  // Margin bell on the back right.
   f.add(S(turned(P, { o: [33, -14, 15], a: [0, 0, 1], u: [1, 0, 0], v: [0, 1, 0] }, [[0, 3.4], [1.6, 3.2, 1], [2.8, 2.4, 1], [3.6, 1.2, 1], [3.9, 0, 1]]), { tone: "hi", crease: "lo" }));
 
-  // The carriage: rail, platen and knobs, line-space lever, paper, paper bail, paper rest.
   const car: string[] = [];
   const RAIL: Plan = { x: -40, y: PLATEN_Y - 6, w: 80, d: 6, r: 1 };
   car.push(S(k.slabOf(RAIL, 15, 3, P, 2, 0.4), { tone: "mid", inner: L(k.sideSeam(RAIL, 16.5, P, 2), { tone: "faint" }) }));
-  // Paper rest behind the paper: two wire stays and a bar.
   for (const x of [-18, 18]) car.push(L(pathOf([at([x, PLATEN_Y - 5, 18]), at([x, PLATEN_Y - 11, 52])]), { tone: "mid" }));
   const PLATEN = alongX([0, PLATEN_Y, PLATEN_Z]);
   car.push(S(disc(P, PLATEN, -38, 38, 1.4), { tone: "mid" }));
   car.push(S(disc(P, PLATEN, -32, 32, PLATEN_R), { tone: "mid", crease: "lo", inner: L([-24, 24].map((s) => arc(P, PLATEN, s, PLATEN_R)).join(""), { tone: "faint" }) }));
-  // Paper: rises from the print line, leaning back toward the rest.
   const up: V3 = [0, -Math.sin(LEAN), Math.cos(LEAN)];
   const paperOrigin: V3 = [-22, PRINT[1], PRINT[2] - 1];
   const paperPlane = f.planeOf(paperOrigin, [1, 0, 0], up);
   car.push(`<g transform="${paperPlane}">${face("M0 0h44v32h-44z", "sheet", "lo")}</g>`);
-  // Text: three earlier lines and the one being typed, moving up with the feed.
   const lineD = (row: number) =>
     CHARS.map((isChar, i) => (isChar ? `M${(5 + i * PITCH).toFixed(2)} ${(1.2 + row * LINE_H).toFixed(1)}v${1.1 + ((i * 5) % 3) * 0.25}` : "")).join("");
   const tick = (i: number) => 1.1 + ((i * 5) % 3) * 0.25;
@@ -105,13 +91,10 @@ export function blogsScene(width = 400, height = 300): Scene {
       `<path class="iso-text ${reveal}" d="${lineD(0)}" stroke-dasharray="${typedLen.toFixed(2)} ${(typedLen + 4).toFixed(2)}" stroke-dashoffset="${(typedLen + 0.6).toFixed(2)}"/>` +
       `</g></g></g>`,
   );
-  // Paper bail across the paper, with its two rollers.
   const BAIL = alongX([0, PRINT[1] + 0.6, PLATEN_Z + 5]);
   car.push(S(disc(P, BAIL, -26, 26, 0.5), { tone: "hi", crease: "none" }));
   for (const s of [-10, 10]) car.push(S(disc(P, BAIL, s - 1.2, s + 1.2, 1.4), { tone: "mid" }));
-  // Paper rest bar.
   car.push(S(disc(P, alongX([0, PLATEN_Y - 11, 52]), -20, 20, 0.9), { tone: "mid" }));
-  // Platen knobs, turning as the paper feeds.
   for (const side of [-1, 1]) {
     const K = alongX([side * 38, PLATEN_Y, PLATEN_Z]);
     const [s0, s1] = side < 0 ? [-6, 0] : [0, 6];
@@ -120,13 +103,11 @@ export function blogsScene(width = 400, height = 300): Scene {
   }
   const knobTurn = f.spinOf("knob", poses.map((p) => ({ t: p.t, angle: -(p.feed * LINE_H) / PLATEN_R })));
   car.push(f.inPlane(f.sidePlane([44, PLATEN_Y], PLATEN_Z, "right"), L(circleD(0, 0, 1.4, 14) + pathOf([[0, 0], [0, -3.4]]), { tone: "hi" }), knobTurn));
-  // Carriage-return lever on the left end.
   car.push(S(k.slabOf({ x: -46, y: PLATEN_Y - 1, w: 2, d: 2, r: 0.5 }, PLATEN_Z, 4, P, 2), { tone: "mid" }));
   car.push(S(k.slabOf({ x: -46, y: PLATEN_Y - 1, w: 2, d: 12, r: 0.8 }, PLATEN_Z + 4, 1.6, P, 2, 0.3), { tone: "hi", crease: "lo" }));
   const carriage = f.moveOf("carriage", poses.map((p) => ({ t: p.t, by: [p.carriage, 0, 0] })));
   f.add(`<g class="${carriage}" transform="${f.translate([X0, 0, 0])}">${car.join("")}</g>`);
 
-  // Ribbon spools and the ribbon across the print point.
   const spoolTurn = f.spinOf("spool", poses.map((p) => ({ t: p.t, angle: (X0 - p.carriage) * 0.08 })));
   for (const x of [-28, 28]) {
     f.add(S(k.cylinder(x, -9, 6.4, 15, 1, P, 32), { tone: "mid" }));
@@ -136,7 +117,6 @@ export function blogsScene(width = 400, height = 300): Scene {
   f.add(`<path class="iso-sheet" d="${pathOf([at([-24, PRINT[1] + 1.4, 17]), at([24, PRINT[1] + 1.4, 17]), at([24, PRINT[1] + 1.4, 19.6]), at([-24, PRINT[1] + 1.4, 19.6])], true)}"/>`);
   f.add(L(k.segment([-24, PRINT[1] + 1.4, 18.3], [24, PRINT[1] + 1.4, 18.3], P), { tone: "lit" }));
 
-  // Typebar basket: bars resting in a fan, the type guide, the one that strikes.
   const fan = f.topPlane([0, -2], 13.4);
   const bars = Array.from({ length: 28 }, (_, i) => {
     const a = Math.PI + ((i + 0.5) / 28) * Math.PI;
@@ -150,7 +130,6 @@ export function blogsScene(width = 400, height = 300): Scene {
   const strike = f.switchOf("strike", poses.map((p) => ({ t: p.t, on: p.bar })));
   f.add(`<g class="${strike}" opacity="0">${L(pathOf([at([0, -2, 13.6]), at([0, PRINT[1] + 0.8, PRINT[2] - 0.4])]), { tone: "lit" })}${D([at([0, PRINT[1] + 0.8, PRINT[2] - 0.4])], { size: 0.8, tone: "hi" })}</g>`);
 
-  // Keyboard: four stepped rows of round keys and the space bar; the struck key dips.
   const rows = [
     { y: 4, z: 13.2, n: 10, x0: -19 },
     { y: 10, z: 11.6, n: 9, x0: -17 },

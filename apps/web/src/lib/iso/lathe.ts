@@ -3,7 +3,6 @@ import { cameraOf, iso, pathOf, type Flat, type Point3, type Projection, type So
 type V3 = Point3;
 type Curve = (s: number) => number;
 
-/** A local frame: origin, axis, and two unit vectors across it. */
 export interface Frame3 {
   o: V3;
   a: V3;
@@ -11,7 +10,6 @@ export interface Frame3 {
   v: V3;
 }
 
-/** A point on a meridian: distance along the axis, radius, and a soft flag that smooths the turn there. */
 export type Knot = [s: number, r: number, soft?: number | boolean];
 
 export type Rims = "all" | "first" | "last" | "ends" | "none";
@@ -1134,7 +1132,6 @@ export const fadeOf = (value: number, [lo, hi]: [number, number]) => {
   return t * t * (3 - 2 * t);
 };
 
-/** With `fade`, ribs come back one path each with an opacity; without it, as one path string. */
 export function ribsOf(F: Frame3, s0: number, s1: number, r: number, count: number, P: Projection, options: RibsOptions & { fade: [number, number] }): Faded[];
 export function ribsOf(F: Frame3, s0: number, s1: number, r: number, count: number, P: Projection, options?: RibsOptions): string;
 export function ribsOf(F: Frame3, s0: number, s1: number, r: number, count: number, P: Projection, { phase = 0, twist = 0, least = 0.12, r1 = r, fade = null, seams = false }: RibsOptions = {}): string | Faded[] {

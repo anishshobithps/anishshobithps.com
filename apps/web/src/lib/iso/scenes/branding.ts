@@ -1,13 +1,6 @@
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep } from "../figure";
 import { alongZ, arc, face, L, rulerStrip, S, turned } from "../parts";
 
-/**
- * Fig 10: a brand kit on a cutting mat. A colour fan deck swings open on its
- * pivot screw, every strip a tint ramp, one of them the brand green; next to
- * it a metal type sort with the logo's A, the logo stamp on its pad, and a
- * card it printed. Same marks, every time.
- */
-
 const PIVOT: Flat = [-58, 24];
 const STRIPS = 11;
 const BRAND = 7;
@@ -41,7 +34,6 @@ export function brandingScene(width = 400, height = 300): Scene {
   const f = new Figure("brand", P, PERIOD);
   const times = Array.from({ length: 151 }, (_, i) => (i / 150) * PERIOD);
 
-  // Cutting mat with a grid running edge to edge, and ruled edges.
   f.add(f.halo(MAT, -2, 6));
   const grid =
     Array.from({ length: 15 }, (_, i) => k.lineOnTop([MAT.x + 8 + i * 10, MAT.y], [MAT.x + 8 + i * 10, MAT.y + MAT.d], 0, P)).join("") +
@@ -49,21 +41,18 @@ export function brandingScene(width = 400, height = 300): Scene {
   f.add(S(k.slabOf(MAT, -2, 2, P, 3, 0.4), { tone: "lo", inner: L(grid, { tone: "faint" }) }));
   rulerStrip(f, { x: MAT.x + 4, y: MAT.y + 2, w: MAT.w - 8, d: 4, r: 0.6 }, 0, 2, 5);
 
-  // A steel rule lying along the back.
   const RULE: Plan = { x: -4, y: -40, w: 78, d: 6, r: 0.6 };
   f.add(S(k.slabOf(RULE, 0, 0.8, P, 2, 0.2), { tone: "mid" }));
   const ticks = k.topTicks(RULE.x + 2, RULE.x + RULE.w - 2, 2, 5, RULE.y + RULE.d, 0.8, [-1.2, -2.4], P);
   f.add(L(ticks.minor, { tone: "lo" }), L(ticks.major, { tone: "mid" }));
   f.add(L(k.ring(RULE.x + 3.4, RULE.y + 3, 1, 0.8, P, 12), { tone: "lo" }));
 
-  // Metal type sort standing at the back, the logo's A raised on its face.
   const SORT: Plan = { x: 28, y: -30, w: 12, d: 12, r: 0.6 };
   f.add(S(k.slabOf(SORT, 0, 20, P, 2, 0.4), { tone: "mid", inner: L(k.sideSeam(SORT, 6, P, 2), { tone: "faint" }) }));
   f.add(L(k.segment([SORT.x, SORT.y + SORT.d, 6.5], [SORT.x + SORT.w, SORT.y + SORT.d, 6.5], P), { tone: "lo" }));
   const glyph = MASCOT.map(([x, y]) => [SORT.x + 1.6 + (x - 16) * 0.27, SORT.y + 1.6 + (y - 4) * 0.155] as Flat);
   f.add(S(k.extrude(glyph, 20, 1.2, P, { convex: false }), { tone: "hi", crease: "lo" }));
 
-  // Ink pad (green) and the logo stamp resting beside it.
   const PAD: Plan = { x: 50, y: -18, w: 24, d: 16, r: 2 };
   f.add(S(k.slabOf(PAD, 0, 3, P, 3, 0.4), { tone: "mid" }));
   f.add(`<path class="iso-face" data-fill="lit" d="${k.planOutline(k.insetPlan(PAD, 2), 3, P, 3)}"/>`, L(k.planOutline(k.insetPlan(PAD, 2), 3, P, 3), { tone: "lit" }));
@@ -73,7 +62,6 @@ export function brandingScene(width = 400, height = 300): Scene {
   f.add(S(turned(P, STAMP, [[6.4, 2.4], [10, 1.8, 1], [12, 2.6, 1], [14.6, 4.2, 1], [17, 4.2, 1], [18.6, 2.6, 1], [19.4, 0, 1]]), { tone: "mid", crease: "lo", inner: L(arc(P, STAMP, 7.6, 2.3), { tone: "faint" }) }));
   f.add(f.inPlane(f.topPlane([58.6, 4.6], 6.4), face(pathOf(MASCOT.map(([x, y]) => [3 + (x - 16) * 0.27, 2 + (y - 4) * 0.18] as Flat), true), "top", "lo")));
 
-  // A card the stamp printed, lying at the front.
   const CARD: Plan = { x: 14, y: 16, w: 34, d: 22, r: 0.8 };
   f.add(S(k.slabOf(CARD, 0, 0.4, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"'));
   f.add(
@@ -84,7 +72,6 @@ export function brandingScene(width = 400, height = 300): Scene {
     ),
   );
 
-  // The fan deck: strips stacked on a pivot screw, each a tint ramp; they fan open and close again.
   const ramp = (i: number) => {
     const chips: string[] = [];
     for (let c = 0; c < 6; c++) {

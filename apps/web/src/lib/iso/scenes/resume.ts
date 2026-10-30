@@ -1,14 +1,6 @@
 import { Figure, type Flat, k, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { cable, face, knob, L, rulerStrip, S, screwsOnTop } from "../parts";
 
-/**
- * Fig 08: an overhead line scanner reading the résumé. A gantry runs down two
- * rails, its light bar laying a green line across the page; each line of the
- * résumé lights up as it is read, the metadata block last, and the count on
- * the unit's display is the number of fields parsed. Built for people and
- * parsers alike.
- */
-
 const PAGE: Plan = { x: -30, y: -42, w: 60, d: 84, r: 0.6 };
 const RAIL_X = 40;
 const BAR_Z = 16;
@@ -17,7 +9,6 @@ const Y_END = 50;
 const SWEEP = 4.2;
 const PERIOD = 7.2;
 
-/** The page's rows, top to bottom: [y in page units, length, weight]. */
 const ROWS: Array<[number, number, "head" | "rule" | "text"]> = [
   [5, 30, "head"],
   [9, 42, "text"],
@@ -50,7 +41,6 @@ export function resumeScene(width = 400, height = 300): Scene {
   const at = (p: V3) => f.at(p);
   const times = Array.from({ length: 145 }, (_, i) => (i / 144) * PERIOD);
 
-  // Scanning mat with ruler strips along two edges and corner guides for the page.
   f.add(f.halo(MAT, -3, 7));
   f.add(S(k.slabOf(MAT, -3, 3, P, 4, 0.6), { tone: "lo" }));
   rulerStrip(f, { x: MAT.x + 3, y: MAT.y + 4, w: 5, d: MAT.d - 8, r: 0.8 }, 0, 4, 5);
@@ -64,7 +54,6 @@ export function resumeScene(width = 400, height = 300): Scene {
     f.add(L(k.onTop([[x + sx * 6, y], [x, y], [x, y + sy * 6]], 0, P), { tone: "mid" }));
   }
 
-  // Control unit to the right, its lead running to the rail's end block.
   const UNIT: Plan = { x: 56, y: -24, w: 22, d: 30, r: 2 };
   f.add(S(k.slabOf(UNIT, 0, 12, P, 4, 0.6), { tone: "mid", inner: L(k.sideSeam(UNIT, 3, P, 4), { tone: "faint" }) }));
   f.add(screwsOnTop(P, k.corners(UNIT, 2.4) as Flat[], 12, 0.7));
@@ -85,9 +74,7 @@ export function resumeScene(width = 400, height = 300): Scene {
   f.add(f.inPlane(screen, face("M0 0h18v7h-18z", "0", "mid") + lcd));
   f.add(cable(P, [[UNIT.x, -8, 4], [50, -8, 2], [RAIL_X + 6, -8, 2], [RAIL_X + 6, -52, 2], [RAIL_X + 3, -52, 2.6]], 0.7));
 
-  // The page: header, section rules, text lines, and the metadata block.
   const top = f.topPlane([PAGE.x, PAGE.y], 0.3);
-  /** A row as words: segments with gaps, seeded by the row so it reads as text. */
   const words = ([y, len, w]: (typeof ROWS)[number]) => {
     if (w !== "text") return `M5 ${y}h${len * 0.9}`;
     let x = 5;
@@ -123,7 +110,6 @@ export function resumeScene(width = 400, height = 300): Scene {
       `<path class="iso-face" data-fill="2" d="${qrCells}"/>` +
       `</g>`,
   );
-  // As the bar passes each row, the row lights: read.
   const lit = ROWS.map(([y, len, w], i) => {
     const on = f.switchOf(`row${i}`, times.map((t) => ({ t, on: PAGE.y + y <= headAt(t) && t < 0.4 + SWEEP + 0.8 })));
     return `<path class="iso-ink ${on}" opacity="0" style="stroke-width:${w === "head" ? 1.4 : w === "rule" ? 0.9 : 0.6};stroke-linecap:butt" d="${words([y, len, w])}"/>`;
@@ -131,7 +117,6 @@ export function resumeScene(width = 400, height = 300): Scene {
   const qrOn = f.switchOf("qr", times.map((t) => ({ t, on: PAGE.y + QR.y + QR.size <= headAt(t) && t < 0.4 + SWEEP + 0.8 })));
   f.add(`<g transform="${top}">${lit}<path class="iso-face ${qrOn}" data-fill="ink" opacity="0" d="${qrCells}"/></g>`);
 
-  // Rails with end stops.
   const rail = (x: number) => {
     f.add(S(k.slabOf({ x: x - 2, y: -54, w: 4, d: 108, r: 1 }, 0, 4, P, 2, 0.4), { tone: "mid", inner: L(k.segment([x + 2, -54, 2], [x + 2, 54, 2], P), { tone: "faint" }) }));
     for (const y of [-54, 51]) f.add(S(k.slabOf({ x: x - 3, y, w: 6, d: 3, r: 0.8 }, 0, 6, P, 2, 0.3), { tone: "mid" }));
@@ -139,7 +124,6 @@ export function resumeScene(width = 400, height = 300): Scene {
   rail(-RAIL_X);
   rail(RAIL_X);
 
-  // The gantry: carriages on the rails, towers, a crossbar, the light bar and the line it lays.
   const g: string[] = [];
   const tower = (x: number) => {
     g.push(S(k.slabOf({ x: x - 3.5, y: -5, w: 7, d: 10, r: 1 }, 4, 5, P, 2, 0.4), { tone: "mid" }));

@@ -1,19 +1,11 @@
 import { Figure, type Flat, k, lengths, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { alongX, arc, circleD, D, disc, face, knob, L, S, screwsOnTop, turned } from "../parts";
 
-/**
- * Fig 02: a belt 3D printer. The belt is the Y axis: the nozzle moves across
- * and up, the belt moves under it, so each layer of the part (the logo's A) is
- * a carriage move plus a belt move. When the last layer is down the belt runs
- * on and carries the part over the front roller into the bin with the others.
- * Shipped, mostly.
- */
-
 const BELT_Z = 16;
 const BACK_ROLL = -38;
 const FRONT_ROLL = 38;
 const ROLL_R = 4;
-const HALF = 24; // belt half-width
+const HALF = 24;
 const LAYERS = 8;
 const LH = 1.6;
 const Y_NOZZLE = 0;
@@ -74,11 +66,9 @@ function planPrint(P: Projection) {
     });
   }
   push({ t: pose.t + 0.15, layer: LAYERS, phase: "Ejecting" });
-  // Park high, then run the belt on: the part rides over the front roller and drops into the bin.
   move(20, pose.f, LAYERS * LH + 6, 0.5);
   const start = pose.t;
   move(20, PITCH, LAYERS * LH + 6, 1.8, 18);
-  // The part leaves the belt when its back edge passes the roller's top.
   const offAt = poses.find((p) => p.t >= start && p.f - 9 > FRONT_ROLL - 1)?.t ?? pose.t;
   for (const p of poses) if (p.t >= offAt) p.fall = Math.min(1, (p.t - offAt) / 0.45);
   push({ t: pose.t + 0.2, fall: 1 });
@@ -99,14 +89,12 @@ export function projectsScene(width = 400, height = 300): Scene {
   const f = new Figure("print", P, period);
   const at = (p: V3) => f.at(p);
 
-  // Base frame: four feet, side and end bars.
   f.add(f.halo(FRAME, -4, 6));
   for (const [x, y] of k.corners(FRAME, 4) as Flat[]) f.add(S(k.cylinder(x, y, 3, -4, 4, P, 18), { tone: "lo" }));
   const bar = (plan: Plan, z = 0, h = 6) => f.add(S(k.slabOf(plan, z, h, P, 2, 0.4), { tone: "mid", inner: L(k.sideSeam(plan, z + h / 2, P, 2), { tone: "faint" }) }));
   bar({ x: -42, y: -48, w: 84, d: 6, r: 1 });
   bar({ x: -42, y: -42, w: 6, d: 84, r: 1 });
 
-  // Spool behind the top bar (drawn first; it sits farthest back).
   const SPOOL = alongX([0, -22, 96]);
   for (const x of [-16, 16]) f.add(S(k.slabOf({ x: x - 1.5, y: -25, w: 3, d: 6, r: 1 }, 84, 12, P, 2, 0.3), { tone: "mid" }));
   f.add(S(disc(P, SPOOL, -18, 18, 1.6), { tone: "mid" }));
@@ -116,7 +104,6 @@ export function projectsScene(width = 400, height = 300): Scene {
   const spoolTurn = f.spinOf("spool", poses.map((p) => ({ t: p.t, angle: (p.layer < 0 ? 0 : p.layer + p.ink.reduce((a, b) => a + b, 0) / 400) * 0.6 })));
   f.add(f.inPlane(f.sidePlane([13, -22], 96, "right"), L(circleD(0, 0, 4, 20) + [0, 1, 2, 3, 4, 5].map((i) => pathOf([[Math.cos(i * 1.047) * 4, Math.sin(i * 1.047) * 4], [Math.cos(i * 1.047) * 12.6, Math.sin(i * 1.047) * 12.6]])).join(""), { tone: "lo" }), spoolTurn));
 
-  // Left upright, its Z motor and lead screw.
   const upright = (x: number) => {
     const plan: Plan = { x: x - 3, y: -3, w: 6, d: 6, r: 0.6 };
     f.add(S(k.slabOf(plan, 0, 84, P, 2, 0.4), { tone: "mid", inner: L(k.segment([x + 3, 0, 0], [x + 3, 0, 84], P) + k.segment([x, 3, 0], [x, 3, 84], P), { tone: "faint" }) }));
@@ -131,7 +118,6 @@ export function projectsScene(width = 400, height = 300): Scene {
   zDrive(-30);
   bar({ x: 36, y: -42, w: 6, d: 84, r: 1 });
 
-  // Belt rollers in two side plates, the belt over them; ribs on the belt move with it.
   const sidePlate = (x: number) => bar({ x: x - 1.5, y: BACK_ROLL - 6, w: 3, d: FRONT_ROLL - BACK_ROLL + 12, r: 2 }, 6, BELT_Z - 6 + 3);
   sidePlate(-HALF - 2.5);
   for (const y of [BACK_ROLL, FRONT_ROLL]) f.add(S(disc(P, alongX([0, y, BELT_Z - ROLL_R]), -HALF - 1, HALF + 1, ROLL_R), { tone: "mid", crease: "lo" }));
@@ -151,7 +137,6 @@ export function projectsScene(width = 400, height = 300): Scene {
   const ribs = Array.from({ length: 40 }, (_, i) => k.lineOnTop([-HALF, BACK_ROLL - PITCH + i * 5], [HALF, BACK_ROLL - PITCH + i * 5], BELT_Z, P)).join("");
   const belt = f.moveOf("belt", poses.map((p) => ({ t: p.t, by: [0, p.f, 0] })));
 
-  // The part and the layer being laid, riding the belt.
   const states = Array.from({ length: LAYERS }, (_, i) => {
     const solid = S(k.extrude(A, BELT_Z, (i + 1) * LH, P, { convex: false }), { tone: "hi", crease: "lo", lit: true });
     const on = f.switchOf(`layer${i}`, poses.map((p) => ({ t: p.t, on: p.layer > i && p.fall === 0 })));
@@ -167,20 +152,17 @@ export function projectsScene(width = 400, height = 300): Scene {
     .join("");
   f.add(`<g clip-path="url(#print-belt)"><g class="${belt}">${L(ribs, { tone: "faint" })}</g></g><g class="${belt}">${states}${laying}</g>`);
 
-  // Right side plate, right upright and drive.
   sidePlate(HALF + 2.5);
   upright(38);
   zDrive(30);
 
-  // The X gantry: rides up a layer at a time, carrying the head across.
   const gantry = f.moveOf("gantry", poses.map((p) => ({ t: p.t, by: [0, 0, p.z] })));
   const head = f.moveOf("head", poses.map((p) => ({ t: p.t, by: [p.x, 0, 0] })));
-  const ZB = BELT_Z + LH + 15; // beam bottom at the first layer
+  const ZB = BELT_Z + LH + 15;
   const g: string[] = [];
   for (const x of [-34, 34]) g.push(S(k.slabOf({ x: x - 4.5, y: -5, w: 9, d: 14, r: 1 }, ZB - 2, 10, P, 2, 0.4), { tone: "mid" }));
   g.push(S(k.slabOf({ x: -38, y: 3, w: 76, d: 6, r: 0.6 }, ZB, 6, P, 2, 0.4), { tone: "mid", inner: L(k.segment([-38, 9, ZB + 3], [38, 9, ZB + 3], P), { tone: "faint" }) }));
   g.push(screwsOnTop(P, [[-34, -2], [-34, 6], [34, -2], [34, 6]], ZB + 8, 0.6));
-  // The head: carriage plate, heatsink, heater block, nozzle, fan, extruder motor.
   const h: string[] = [];
   h.push(S(k.slabOf({ x: -8, y: 9, w: 16, d: 2.4, r: 0.6 }, ZB - 5, 15, P, 2, 0.3), { tone: "mid" }));
   h.push(S(k.slabOf({ x: -3, y: Y_NOZZLE - 2.2, w: 6, d: 4.4, r: 0.6 }, ZB - 12, 3, P, 2, 0.3), { tone: "mid" }));
@@ -194,11 +176,9 @@ export function projectsScene(width = 400, height = 300): Scene {
   g.push(`<g class="${head}" transform="${f.translate([20, 0, 0])}">${h.join("")}</g>`);
   f.add(`<g class="${gantry}">${g.join("")}</g>`);
 
-  // Top bar across the uprights.
   bar({ x: -41, y: -3, w: 82, d: 6, r: 0.6 }, 84, 6);
   f.add(screwsOnTop(P, [[-38, 0], [38, 0]], 90, 0.8));
 
-  // Front bar, then the bin the parts fall into, with two earlier prints in it.
   bar({ x: -42, y: 42, w: 84, d: 6, r: 1 });
   const BIN: Plan = { x: -18, y: 52, w: 36, d: 22, r: 2 };
   const wall = (plan: Plan) => S(k.slabOf(plan, 0, 10, P, 2, 0.3), { tone: "mid" });
@@ -207,7 +187,6 @@ export function projectsScene(width = 400, height = 300): Scene {
   const OFF_Y = FRONT_ROLL + 9;
   const binPart = (x: number, y: number) => S(k.extrude(A.map(([u, v]) => [u + x, v + y] as Flat), 0.8, LAYERS * LH, P, { convex: false }), { tone: "hi", crease: "lo", lit: true });
   f.add(binPart(-10, 60));
-  // The part that just came off the belt: drops from the roller into the bin.
   const LAND: Flat = [0, 63];
   const drop = f.moveOf(
     "drop",
@@ -218,7 +197,6 @@ export function projectsScene(width = 400, height = 300): Scene {
   f.add(binPart(LAND[0], LAND[1]).replace('<g class="iso-solid"', '<g class="iso-solid" data-rest'));
   f.add(wall({ x: BIN.x + BIN.w - 1.6, y: BIN.y, w: 1.6, d: BIN.d, r: 0.5 }), wall({ x: BIN.x, y: BIN.y + BIN.d - 1.6, w: BIN.w, d: 1.6, r: 0.5 }));
 
-  // Control box with its screen showing the job, and a knob.
   const CTRL: Plan = { x: 46, y: 22, w: 18, d: 24, r: 2 };
   f.add(S(k.slabOf(CTRL, 0, 16, P, 3, 0.5), { tone: "mid", inner: L(k.sideSeam(CTRL, 3, P, 3), { tone: "faint" }) }));
   knob(f, [55, 40], 16, 2.6, 2.4);

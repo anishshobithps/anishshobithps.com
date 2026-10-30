@@ -2,12 +2,6 @@ import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, t
 import { alongY, arc, circleD, D, disc, face, G, L, S } from "../parts";
 import * as T from "../tube";
 
-/**
- * Cover: the 4 AM ticket alert. A twin-bell alarm clock stopped at four rings
- * in bursts while the phone beside it lights up with the ping; a ticket lies
- * in front. It polls, it rings, you buy.
- */
-
 const CLOCK: V3 = [-12, 0, 26];
 const R = 15;
 const PERIOD = 4;
@@ -23,7 +17,6 @@ export function alertScene(width = 400, height = 225): Scene {
   f.add(f.halo(DESK, -3, 6));
   f.add(S(k.slabOf(DESK, -3, 3, P, 4, 0.5), { tone: "lo", inner: L(k.planOutline(k.insetPlan(DESK, 4), 0, P, 4), { tone: "faint" }) }));
 
-  // Legs, the round body, then the bells and the carry handle above.
   const BODY = alongY(CLOCK);
   for (const side of [-1, 1]) {
     const foot: V3 = [CLOCK[0] + side * 9, -1, 2.2];
@@ -49,7 +42,6 @@ export function alertScene(width = 400, height = 225): Scene {
   f.add(S(disc(P, BODY, -5, 3.4, R), { tone: "mid", crease: "lo", inner: L(arc(P, BODY, -1, R), { tone: "faint" }) }));
   f.add(S(G.ringBand(3.4, 4.6, R - 2, R + 0.4, BODY, P), { tone: "hi", crease: "lo" }));
 
-  // The dial in the front plane: ticks, numerals as bars, hands at four, the second hand sweeping.
   const dial = f.sidePlane([CLOCK[0], 4.6], CLOCK[2], "left");
   const ticks = Array.from({ length: 60 }, (_, i) => {
     const a = (i / 60) * Math.PI * 2;
@@ -61,10 +53,8 @@ export function alertScene(width = 400, height = 225): Scene {
   f.add(f.inPlane(dial, hand(7.5, 1.1, (4 / 12) * Math.PI * 2) + hand(11, 0.8, 0)));
   const sweep = f.spinOf("second", Array.from({ length: 61 }, (_, i) => ({ t: i, angle: (i / 60) * Math.PI * 2 })), { period: 60, tolerance: 0.5 });
   f.add(f.inPlane(dial, `${L("M0 3L0 -11.8", { tone: "lit" })}${face(circleD(0, 0, 1, 12), "lit", "lit")}`, sweep));
-  // The alarm hand, set to four.
   f.add(f.inPlane(dial, `<g transform="rotate(120)">${L("M0 0L0 -5.4", { tone: "lit" })}${face(circleD(0, -5.4, 0.7, 10), "lit", "none")}</g>`));
 
-  // The hammer between the bells, shaking while it rings; the near bell over it.
   const shake = f.spinOf(
     "hammer",
     times.map((t) => ({ t, angle: ringing(t) ? Math.sin((t - RING[0]) * Math.PI * 2 * 11) * 0.35 : 0 })),
@@ -74,7 +64,6 @@ export function alertScene(width = 400, height = 225): Scene {
   f.add(f.inPlane(stalk, L("M0 0L0 -8.4", { tone: "hi" }) + face(circleD(0, -9.4, 1.4, 14), "top", "hi"), shake));
   bell(1);
 
-  // The phone face up beside it: the screen lights with the ping while the bells ring.
   const PHONE: Plan = { x: 14, y: -10, w: 18, d: 32, r: 3 };
   f.add(S(k.slabOf(PHONE, 0, 1.6, P, 4, 0.4), { tone: "mid" }));
   const screen = f.topPlane([PHONE.x + 1.4, PHONE.y + 3], 1.6);
@@ -83,7 +72,6 @@ export function alertScene(width = 400, height = 225): Scene {
   f.add(`<g class="${lit}" opacity="0">${f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "sheet", "lit") + face("M1.6 3h12v7.4h-12z", "lit", "lit") + L("M3.2 5.4h6M3.2 7.8h8.6", { tone: "lo", free: true }) + face(circleD(7.6, 21, 2.4, 16), "lit", "lit"))}</g>`);
   f.add(D([f.at([PHONE.x + 9, PHONE.y + 1.6, 1.6])], { size: 0.5, tone: "mid" }));
 
-  // A ticket with its stub, perforated, lying in front.
   const TICKET: Flat = [-22, 14];
   const ticket = f.topPlane(TICKET, 0.3);
   f.add(S(k.slabOf({ x: TICKET[0], y: TICKET[1], w: 26, d: 9, r: 0.6 }, 0, 0.3, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"'));

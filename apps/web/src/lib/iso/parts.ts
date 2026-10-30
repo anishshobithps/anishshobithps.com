@@ -2,13 +2,7 @@ import { byDepth, type Figure, type Flat, k, type Plan, type Projection, type To
 import * as G from "./lathe";
 import * as T from "./tube";
 
-/**
- * Small recipes every scene reuses: a base plate on feet, screws, a ruler
- * strip, a label plate, knurled knobs, and round parts lying on any axis.
- */
-
 type SolidPaths = ReturnType<typeof k.slabOf>;
-/** Anything the kit can paint as a solid: prisms, turned parts, balls. */
 interface AnySolid {
   fill: string;
   outline: string;
@@ -33,7 +27,6 @@ export const L = (d: string, style: { tone?: k.LineTone; free?: boolean | "start
 export const D = (points: Array<Flat | [number, number, number]>, style: { size?: number; tone?: Tone } = {}) =>
   k.dotsSvg(points, style) as string;
 
-/** A screw head: a faint ring and a dot, on a top face. */
 export function screwsOnTop(P: Projection, points: Flat[], z: number, r = 1.3) {
   return (
     L(points.map(([x, y]) => k.ring(x, y, r, z, P, 14)).join(""), { tone: "lo" }) +
@@ -41,7 +34,6 @@ export function screwsOnTop(P: Projection, points: Flat[], z: number, r = 1.3) {
   );
 }
 
-/** The heavy base: halo, four feet, a bevelled slab, a groove inset from the edge and corner screws. */
 export function basePlate(f: Figure, plan: Plan, z0: number, thick: number, { feet = 3.5, foot = 4.6 } = {}) {
   const P = f.P;
   const bottom = z0 - thick;
@@ -55,7 +47,6 @@ export function basePlate(f: Figure, plan: Plan, z0: number, thick: number, { fe
   f.add(screwsOnTop(P, k.corners(plan, 8.5) as Flat[], z0, 1.6));
 }
 
-/** A ruler strip lying on a top face, ticks hanging from its back edge. */
 export function rulerStrip(f: Figure, plan: Plan, z: number, step = 4, every = 5) {
   const P = f.P;
   f.add(S(k.slabOf(plan, z, 0.6, P, 3), { tone: "lo", crease: "none" }));
@@ -64,7 +55,6 @@ export function rulerStrip(f: Figure, plan: Plan, z: number, step = 4, every = 5
   f.add(D([f.at([plan.x + 1.6, plan.y + plan.d / 2, z + 0.6]), f.at([plan.x + plan.w - 1.6, plan.y + plan.d / 2, z + 0.6])], { size: 0.36 }));
 }
 
-/** A small engraved label plate: inset border, three rule lines standing for text, two screws. */
 export function labelPlate(f: Figure, plan: Plan, z: number) {
   const P = f.P;
   f.add(S(k.slabOf(plan, z, 0.8, P, 3, 0.4), { tone: "lo" }));
@@ -78,7 +68,6 @@ export function labelPlate(f: Figure, plan: Plan, z: number) {
   f.add(D([f.at([plan.x + 2.4, plan.y + plan.d / 2, z + 0.8]), f.at([plan.x + plan.w - 2.4, plan.y + plan.d / 2, z + 0.8])], { size: 0.38 }));
 }
 
-/** A knurled knob standing on a top face, with a pointer line. */
 export function knob(f: Figure, at: Flat, z: number, r: number, h: number, { pointer = true, tone = "mid" as Tone } = {}) {
   const P = f.P;
   f.add(S(k.cylinder(at[0], at[1], r, z, h, P, 28, 0.4), { tone }));
@@ -86,38 +75,30 @@ export function knob(f: Figure, at: Flat, z: number, r: number, h: number, { poi
   if (pointer) f.add(L(k.lineOnTop([at[0], at[1]], [at[0] + r * 0.75, at[1] - r * 0.35], z + h, P), { tone: "hi" }));
 }
 
-/** A frame for a round part on the x axis, with angle 0 pointing up (+z) and angle π/2 toward -y. */
 export const alongX = (o: V3) => G.frameOf(o, [1, 0, 0], [0, 0, 1], [0, -1, 0]);
-/** A frame for a round part on the y axis, angle 0 up. */
 export const alongY = (o: V3) => G.frameOf(o, [0, 1, 0], [0, 0, 1], [1, 0, 0]);
-/** A frame for a round part on the z axis, angle 0 along +x. */
 export const alongZ = (o: V3) => G.frameOf(o, [0, 0, 1], [1, 0, 0], [0, 1, 0]);
 
 type Frame3 = ReturnType<typeof alongX>;
 
-/** A disc on an axis, from s0 to s1. */
 export function disc(P: Projection, F: Frame3, s0: number, s1: number, r: number) {
   return G.disc(s0, s1, r, F, P);
 }
 
-/** A turned part from a profile `[s, r]` (or `[s, r, 1]` for a smooth knot). */
 export function turned(P: Projection, F: Frame3, profile: Array<[number, number] | [number, number, number]>) {
   return G.solidOf(profile, F, P);
 }
 
-/** The visible arc of a ring on a round surface (a seam or band), drawn under the outline. */
 export const arc = (P: Projection, F: Frame3, s: number, r: number, options: { slope?: number; least?: number } = {}) =>
   G.arcOf(F, s, r, P, options);
 
 export const circleOn = (P: Projection, F: Frame3, s: number, r: number) => G.circleOf(F, s, r, P);
 
-/** Knurl ribs on a round part along any axis, fading toward the limbs, with their two seams. */
 export function knurlOn(P: Projection, F: Frame3, s0: number, s1: number, r: number, count: number) {
   const ribs = G.ribsOf(F, s0, s1, r, count, P, { fade: [0.1, 0.55], seams: true });
   return k.fadedSvg(ribs, { tone: "lo" }) as string;
 }
 
-/** A coil spring standing on z, split so it can wrap a rod: back half, then the rod, then the front half. */
 export function coilZ(P: Projection, at: Flat, z0: number, z1: number, r: number, turns: number) {
   const count = Math.max(8, Math.round(turns * 18));
   const back: Flat[][] = [];
@@ -146,7 +127,6 @@ export function coilZ(P: Projection, at: Flat, z0: number, z1: number, r: number
   return { back: d(back), front: d(front) };
 }
 
-/** Vertical slots on a box face, as closed outlines in that face's plane. */
 export function slotsOnSide(f: Figure, face: "left" | "right", at: Flat, z: number, count: number, gap: number, w: number, h: number) {
   const paths: string[] = [];
   for (let i = 0; i < count; i++) {
@@ -160,23 +140,19 @@ const roundSlots = (paths: string[]) => paths.join("");
 
 export { G };
 
-/** A cable or hose through 3D waypoints, filleted, drawn as shaded tube chunks. */
 export function cable(P: Projection, points: V3[], r: number, { bend = 2.6, tone = "mid" as Tone, maxLength = 400 } = {}) {
   const route = G.fillet(points, r * bend, 7);
   const pieces = T.tubePieces(route, r, P, { maxLength });
   return pieces.map((piece) => T.tubeSvg(piece, { tone })).join("");
 }
 
-/** A flat filled shape (in whatever plane its group sets), outlined. */
 export function face(d: string, fill: "paper" | "top" | "0" | "1" | "2" | "3" | "lit" | "sheet" | "ink" = "top", tone: k.LineTone | "none" = "mid") {
   return `<path class="iso-face" data-fill="${fill}" d="${d}"/>` + (tone === "none" ? "" : L(d, { tone }));
 }
 
-/** A circle path in local plane coordinates. */
 export const circleD = (cx: number, cy: number, r: number, steps = 32) =>
   k.pathOf(Array.from({ length: steps }, (_, i) => [cx + Math.cos((i / steps) * Math.PI * 2) * r, cy + Math.sin((i / steps) * Math.PI * 2) * r]), true) as string;
 
-/** Spokes or radial lines in local plane coordinates, from r0 to r1. */
 export const radialD = (cx: number, cy: number, r0: number, r1: number, count: number, phase = 0) =>
   Array.from({ length: count }, (_, i) => {
     const a = phase + (i / count) * Math.PI * 2;
@@ -186,7 +162,6 @@ export const radialD = (cx: number, cy: number, r0: number, r1: number, count: n
     ]) as string;
   }).join("");
 
-/** A gear outline in local plane coordinates. */
 export function gearD(cx: number, cy: number, r: number, teeth: number, depth = 0.8) {
   const pts: Flat[] = [];
   for (let i = 0; i < teeth; i++) {

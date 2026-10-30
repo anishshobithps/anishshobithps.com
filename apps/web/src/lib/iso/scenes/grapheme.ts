@@ -1,13 +1,6 @@
 import { Figure, k, type Plan, type Projection, type Scene, smoothstep } from "../figure";
 import { circleD, D, face, knob, L, S } from "../parts";
 
-/**
- * Cover: one emoji, four code points. Four sorts stand in a composing stick:
- * the woman, the skin-tone modifier, a zero-width joiner (a hair-thin spacer,
- * the one that does the work) and the laptop. They slide together and lock up
- * as a single ligature sort: one grapheme on the page. Then they part again.
- */
-
 const SORTS = [
   { name: "U+1F469", w: 9 },
   { name: "U+1F3FB", w: 5 },
@@ -32,7 +25,6 @@ export function graphemeScene(width = 400, height = 225): Scene {
   f.add(f.halo(DESK, -3, 6));
   f.add(S(k.slabOf(DESK, -3, 3, P, 4, 0.5), { tone: "lo", inner: L(k.planOutline(k.insetPlan(DESK, 4), 0, P, 4), { tone: "faint" }) }));
 
-  // A type case behind, its compartments with a few sorts in them.
   const CASE: Plan = { x: -44, y: -26, w: 88, d: 18, r: 1.2 };
   f.add(S(k.slabOf(CASE, 0, 5, P, 2, 0.4), { tone: "mid" }));
   const cells: string[] = [];
@@ -40,7 +32,6 @@ export function graphemeScene(width = 400, height = 225): Scene {
   f.add(`<path class="iso-face" data-fill="0" d="${cells.join("")}"/>`, L(cells.join(""), { tone: "lo" }));
   f.add(D([0, 3, 5, 6, 9, 12, 14].map((i) => f.at([CASE.x + 6 + (i % 8) * 10.6, CASE.y + 5 + Math.floor(i / 8) * 7.2, 5])), { size: 0.7, tone: "mid" }));
 
-  // The composing stick: base, back wall, fixed knee at the left, the sliding knee with its thumbscrew.
   const STICK: Plan = { x: -40, y: -2, w: 80, d: 12, r: 1 };
   f.add(S(k.slabOf(STICK, 0, 2.4, P, 2, 0.4), { tone: "mid" }));
   f.add(S(k.slabOf({ x: STICK.x, y: STICK.y, w: STICK.w, d: 2, r: 0.5 }, 2.4, 10, P, 2, 0.3), { tone: "mid", inner: L(k.segment([STICK.x, STICK.y + 2, 7], [STICK.x + STICK.w, STICK.y + 2, 7], P), { tone: "faint" }) }));
@@ -48,7 +39,6 @@ export function graphemeScene(width = 400, height = 225): Scene {
   f.add(L(ruler, { tone: "lo" }));
   f.add(S(k.slabOf({ x: STICK.x, y: STICK.y + 2, w: 3, d: 10, r: 0.6 }, 2.4, 9, P, 2, 0.3), { tone: "mid" }));
 
-  // Sorts: their total line, where they start and where they close up.
   const total = SORTS.reduce((s, x) => s + x.w, 0);
   const x0 = -total / 2 - (GAP * (SORTS.length - 1)) / 2;
   let open = x0;
@@ -75,7 +65,6 @@ export function graphemeScene(width = 400, height = 225): Scene {
       `<g class="${shown}"><g class="${slide}" transform="${f.translate([s.open, 0, 0])}">${sortSolid(s.w, i === 2)}${nick}${f.inPlane(f.topPlane([0, STICK.y + 2.2], FACE_Z), face_(i, s.w))}</g></g>`,
     );
   });
-  // The ligature: one sort, one face.
   const fused = f.switchOf("fused", times.map((t) => ({ t, on: fusedAt(t) })));
   const ligFace =
     face(circleD(total / 2 - 3, 2.6, 1.6, 14), "1", "hi") +
@@ -87,7 +76,6 @@ export function graphemeScene(width = 400, height = 225): Scene {
     `<g class="${fused}" opacity="0"><g transform="${f.translate([-total / 2, 0, 0])}">${sortSolid(total, true)}${f.inPlane(f.topPlane([0, STICK.y + 2.2], FACE_Z), ligFace)}</g></g>`,
   );
 
-  // The sliding knee and its thumbscrew at the right, closing up behind the last sort.
   const knee = f.moveOf("knee", times.map((t) => ({ t, by: [placed.at(-1)!.open + placed.at(-1)!.w + ((placed.at(-1)!.shut - placed.at(-1)!.open) * joinAt(t)), 0, 0] })));
   f.add(`<g class="${knee}" transform="${f.translate([placed.at(-1)!.open + placed.at(-1)!.w, 0, 0])}">${S(k.slabOf({ x: 0, y: STICK.y + 2, w: 3, d: 10, r: 0.6 }, 2.4, 9, P, 2, 0.3), { tone: "mid" })}</g>`);
   knob(f, [STICK.x + STICK.w - 4, STICK.y + 6], 2.4, 2.6, 3);

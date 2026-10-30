@@ -1,10 +1,5 @@
 import { cn } from "@repo/ui/lib/cn";
 
-/**
- * The small projection helpers the OG images, the post-grid filler and the
- * git chart still use. Page figures are drawn by `@/lib/iso` instead.
- */
-
 export type Vec3 = readonly [number, number, number];
 type Vec2 = readonly [number, number];
 

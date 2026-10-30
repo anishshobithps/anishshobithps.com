@@ -1,12 +1,5 @@
 import * as k from "./iso-kit";
 
-/**
- * A scene is one drawn object: static SVG markup plus the CSS keyframes that
- * move it. Motion comes from a model sampled at build time, so every part
- * that moves and every number in the readout share one timeline. Nothing
- * here touches React or the DOM; the site and the README build both import it.
- */
-
 export type V3 = [number, number, number];
 export type Flat = [number, number];
 export interface Plan {
@@ -25,9 +18,7 @@ export interface Projection {
 export type Tone = "hi" | "mid" | "lo" | "faint";
 
 export interface Frame {
-  /** Seconds from the start of the loop. */
   t: number;
-  /** CSS declarations for this moment, e.g. `transform:translate(1px,2px)`. */
   css: string;
 }
 
@@ -35,17 +26,12 @@ export interface Scene {
   id: string;
   width: number;
   height: number;
-  /** Loop length in seconds. */
   period: number;
-  /** Inner SVG markup, painted back to front. */
   body: string;
-  /** Scoped keyframes and animation rules. */
   css: string;
-  /** Accessible description of the object and what it shows. */
   label: string;
 }
 
-/** Drop samples that a straight line between the kept neighbours reproduces. */
 function simplify(samples: Array<{ t: number; v: number[] }>, tolerance: number) {
   if (samples.length < 3) return samples;
   const out = [samples[0]!];
@@ -53,7 +39,6 @@ function simplify(samples: Array<{ t: number; v: number[] }>, tolerance: number)
   for (let i = 1; i < samples.length - 1; i++) {
     const a = samples[anchor]!;
     const next = samples[i + 1]!;
-    // Can the segment from the anchor to the next sample stand in for every sample in between?
     let fits = true;
     for (let j = anchor + 1; j <= i && fits; j++) {
       const m = samples[j]!;
@@ -70,7 +55,6 @@ function simplify(samples: Array<{ t: number; v: number[] }>, tolerance: number)
   return out;
 }
 
-/** For stepped tracks, keep only the samples where the value changes. */
 function dedupeSteps(samples: Array<{ t: number; v: number[] }>) {
   return samples.filter((s, i) => i === 0 || s.v.some((value, n) => value !== samples[i - 1]!.v[n]));
 }
@@ -81,10 +65,6 @@ const short = (n: number) => {
   return text.replace(/^(-?)0\./, "$1.");
 };
 
-/**
- * Rewrite absolute M/L/Z path data as relative steps with minimal
- * separators: about half the bytes. Paths with other commands pass through.
- */
 function compactPath(d: string) {
   if (/[^MLZ0-9.\-\s,]/.test(d)) return d;
   const tokens = d.match(/[MLZ]|-?[\d.]+/g);
@@ -123,7 +103,6 @@ function compactPath(d: string) {
       sy = y;
       mode = "m";
     } else {
-      // After "m", further pairs are implicit relative line-tos.
       if (mode !== "m" && mode !== "l") {
         out += "l";
         prev = "";
@@ -169,7 +148,6 @@ export class Figure {
     return k.iso(point, this.P) as Flat;
   }
 
-  /** The screen offset of a world offset, for groups built at rest and moved. */
   shift(by: V3): Flat {
     return k.axisVector(this.P, by) as Flat;
   }
@@ -184,10 +162,6 @@ export class Figure {
     return `transform:translate(${round(x, 3)}px,${round(y, 3)}px)`;
   }
 
-  /**
-   * One animated property. Frames are linear between samples, so sample a
-   * curve as densely as it needs. Returns the class the element carries.
-   */
   track(name: string, frames: Frame[], { steps = false, period = this.period } = {}) {
     const cls = `${this.id}-${name}-${this.tracks++}`;
     const sorted = [...frames].sort((a, b) => a.t - b.t);
@@ -202,12 +176,6 @@ export class Figure {
     return `iso-anim ${cls}`;
   }
 
-  /**
-   * A numeric track: samples of one or more numbers over time, formatted to
-   * CSS. Samples that lie on the straight line between their neighbours (to
-   * within `tolerance`) are dropped, so holds and constant-speed runs cost
-   * two keyframes instead of dozens.
-   */
   trackOf(
     name: string,
     samples: Array<{ t: number; v: number[] }>,
@@ -223,7 +191,6 @@ export class Figure {
     );
   }
 
-  /** A group moved by a world offset over time. */
   moveOf(name: string, samples: Array<{ t: number; by: V3 }>, { period = this.period, steps = false } = {}) {
     return this.trackOf(
       name,
@@ -233,7 +200,6 @@ export class Figure {
     );
   }
 
-  /** A group turned in its own plane (angle in radians) over time. */
   spinOf(name: string, samples: Array<{ t: number; angle: number }>, { period = this.period, steps = false, tolerance = 0.8 } = {}) {
     return this.trackOf(
       name,
@@ -243,7 +209,6 @@ export class Figure {
     );
   }
 
-  /** Opacity that switches between states (a lamp, a readout, a swapped part). */
   switchOf(name: string, samples: Array<{ t: number; on: boolean | number }>, { period = this.period, steps = true } = {}) {
     return this.trackOf(
       name,
@@ -253,12 +218,10 @@ export class Figure {
     );
   }
 
-  /** A group laid in a plane (a `topPlane`/`sidePlane` matrix), optionally turning about its local origin. */
   inPlane(matrix: string, content: string, spin = "") {
     return `<g transform="${matrix}">${spin ? `<g class="${spin}">${content}</g>` : content}</g>`;
   }
 
-  /** A group whose local x runs along world `u` and local y along world `v`, from `origin`: any plane at all. */
   planeOf(origin: V3, u: V3, v: V3) {
     const o = this.at(origin);
     const a = this.shift(u);
@@ -267,17 +230,14 @@ export class Figure {
     return `matrix(${r(a[0])} ${r(a[1])} ${r(b[0])} ${r(b[1])} ${r(o[0])} ${r(o[1])})`;
   }
 
-  /** A group whose local x, y are the floor plane at height z. */
   topPlane(at: Flat, z: number) {
     return k.topMatrix(at, z, this.P, "x");
   }
 
-  /** A group whose local x, y are a vertical face (`left`: normal +y, `right`: normal +x), y pointing down. */
   sidePlane(at: Flat, z: number, face: "left" | "right") {
     return k.sideMatrix(at, z, this.P, face);
   }
 
-  /** A soft shadow under a plan: stacked insets read as a blur without a filter. */
   halo(plan: Plan, z: number, spread = 6) {
     const layers = [1, 0.66, 0.33].map((share, index) => {
       const grown = k.insetPlan(plan, -spread * share);
@@ -288,7 +248,6 @@ export class Figure {
 
   build(meta: Omit<Scene, "id" | "body" | "css" | "period" | "width" | "height"> & { width: number; height: number }): Scene {
     const defs = this.defs.length ? `<defs>${this.defs.join("")}</defs>` : "";
-    // Keyframes, classes and clip ids are global on a page, so a scene drawn at two sizes needs two names.
     const id = `${this.id}${meta.width}x${meta.height}`;
     const rename = (text: string) => text.split(`${this.id}-`).join(`${id}-`);
     return {
@@ -301,12 +260,10 @@ export class Figure {
   }
 }
 
-/** Sort floor points far to near. */
 export function byDepth<T extends readonly number[]>(points: T[], P: Projection) {
   return [...points].sort((a, b) => k.depthOf([a[0]!, a[1]!, a[2] ?? 0], P) - k.depthOf([b[0]!, b[1]!, b[2] ?? 0], P));
 }
 
-/** Arc length of a screen polyline at each vertex. */
 export function lengths(points: Flat[]) {
   const out = [0];
   for (let i = 1; i < points.length; i++) {
@@ -319,7 +276,6 @@ export function pathOf(points: Flat[], closed = false) {
   return k.pathOf(points, closed) as string;
 }
 
-/** Sample a cubic Bézier. */
 export function cubic(a: Flat, b: Flat, c: Flat, d: Flat, count: number): Flat[] {
   return Array.from({ length: count + 1 }, (_, i) => {
     const t = i / count;
@@ -331,7 +287,6 @@ export function cubic(a: Flat, b: Flat, c: Flat, d: Flat, count: number): Flat[]
   });
 }
 
-/** A stadium (rounded slot) outline as a closed polyline, starting at the left end's top. */
 export function stadium(x0: number, x1: number, cy: number, r: number, perHalf = 10): Flat[] {
   const pts: Flat[] = [];
   for (let i = 0; i <= perHalf; i++) {
@@ -346,7 +301,6 @@ export function stadium(x0: number, x1: number, cy: number, r: number, perHalf =
   return pts;
 }
 
-/** The scene as SVG content: its keyframes, then its parts. */
 export function sceneMarkup(scene: Scene) {
   return `<style>${scene.css}</style>${scene.body}`;
 }

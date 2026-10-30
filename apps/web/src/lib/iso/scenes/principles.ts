@@ -18,38 +18,21 @@ import {
   turned,
 } from "../parts";
 
-/**
- * Fig 01: a watchmaker's bench. On the left a winder rocks an automatic
- * movement back and forth; its rotor hangs by gravity, so the movement turns
- * around it and winds itself (automate the repetitive part). On the right the
- * finished watch lies face up: a clean dial that hides all of that (simple on
- * the surface), with the second hand sweeping.
- */
-
 const MAT: Plan = { x: -104, y: -46, w: 210, d: 94, r: 8 };
 
-// The winder: the movement stands upright in a ring, facing the viewer (+y).
 const M: V3 = [-54, 0, 40];
 const BODY_R = 20;
 const RING_R = 23.5;
 
-// The finished watch, face up.
 const W: Flat = [42, -4];
 const CASE_R = 25;
 const DIAL_Z = 6.6;
 
-// Winder motion: the cradle rocks ±ROCK every WIND seconds.
 const WIND = 6;
 const ROCK = (38 * Math.PI) / 180;
-// Balance: 2.5 Hz, 5 beats a second; the escape wheel steps once a beat.
 const BALANCE = 0.4;
 const SWING = (220 * Math.PI) / 180;
 
-/**
- * The rotor is an eccentric weight on a bearing: gravity pulls it down, the
- * bearing's drag pulls it along with the rocking movement. Integrate until it
- * settles into the drive's period and sample one period.
- */
 function rotorSwing() {
   const w0 = (2 * Math.PI) / 1.3;
   const drag = 1.4;
@@ -81,18 +64,15 @@ export function principlesScene(width = 400, height = 225): Scene {
   const f = new Figure("bench", P, WIND);
   const at = (p: V3) => f.at(p);
 
-  // The mat, thin rubber with a groove inset from its edge.
   f.add(f.halo(MAT, -3, 6));
   f.add(S(k.slabOf(MAT, -3, 3, P, 8, 0.6), { tone: "lo" }));
   f.add(L(k.planOutline(k.insetPlan(MAT, 4), 0, P), { tone: "faint" }));
 
-  // A parts dish at the back right with a few screws in it.
   const DISH: Flat = [86, -30];
   f.add(S(k.cylinder(DISH[0], DISH[1], 10, 0, 2.4, P, 40, 0.4), { tone: "mid" }));
   f.add(L(k.ring(DISH[0], DISH[1], 8.4, 2.4, P, 40), { tone: "lo" }));
   f.add(D(([[84, -32], [88.5, -29], [86.4, -26.5], [82.6, -28.6]] as Flat[]).map(([x, y]) => at([x, y, 2.4])), { size: 0.55, tone: "hi" }));
 
-  // An oil pot with its oiler at the back left.
   const POT: Flat = [-90, -30];
   f.add(S(k.cylinder(POT[0], POT[1], 6.4, 0, 2.4, P, 36, 0.4), { tone: "mid" }));
   f.add(S(k.cylinder(POT[0], POT[1], 4.6, 2.4, 3.4, P, 32, 0.3), { tone: "mid" }));
@@ -101,7 +81,6 @@ export function principlesScene(width = 400, height = 225): Scene {
   const OILER = G.frameAlong([-80, -38, 1.1], [Math.cos(-0.5), Math.sin(-0.5), 0]);
   f.add(S(turned(P, OILER, [[0, 0.25], [5, 0.5], [6, 1.1], [17, 1.1], [17.6, 0.8]]), { tone: "mid", crease: "lo" }));
 
-  // Winder stand: base with a speed knob and a lamp, a post behind the movement.
   const BASE: Plan = { x: -84, y: -16, w: 60, d: 30, r: 3 };
   f.add(S(k.slabOf(BASE, 0, 9, P, 4, 0.6), { tone: "mid", inner: L(k.sideSeam(BASE, 2.5, P, 4), { tone: "faint" }) }));
   f.add(screwsOnTop(P, k.corners(BASE, 3) as Flat[], 9, 0.9));
@@ -113,8 +92,6 @@ export function principlesScene(width = 400, height = 225): Scene {
   f.add(S(k.slabOf(POST, 9, M[2] - 9, P, 3, 0.5), { tone: "mid" }));
   f.add(S(disc(P, alongY([M[0], -6, M[2]]), 0, 2.5, 3), { tone: "mid" }));
 
-  // The movement: a round body and its ring stay round as they rock, so they are drawn once;
-  // everything on the face turns with the cradle.
   const AXIS = alongY([M[0], 0, M[2]]);
   f.add(S(disc(P, AXIS, -3, 3, BODY_R), { tone: "mid", crease: "lo" }));
   f.add(S(G.ringBand(-3.6, 3.6, BODY_R, RING_R, AXIS, P), { tone: "mid", inner: L(arc(P, AXIS, 0, RING_R), { tone: "faint" }) }));
@@ -133,7 +110,6 @@ export function principlesScene(width = 400, height = 225): Scene {
   }).join("");
   f.add(f.inPlane(ringFace, screws, cradle));
 
-  // Movement face: bridges with Geneva stripes, jewels, screws, the balance and escape wheel in their openings.
   const BAL: Flat = [-9, -8];
   const ESC: Flat = [1.5, -15];
   f.defs.push(`<clipPath id="bench-plate"><path d="${circleD(0, 0, BODY_R - 0.6, 48)}"/></clipPath>`);
@@ -195,7 +171,6 @@ export function principlesScene(width = 400, height = 225): Scene {
       .join("");
   f.add(f.inPlane(f.sidePlane([M[0], 3], M[2], "left"), faceContent, cradle));
 
-  // The rotor: a half-disc weight on a centre bearing, hanging down. It turns on its own.
   const rotor = f.spinOf(
     "rotor",
     swing.map(({ t, rotor }) => ({ t, angle: -rotor })),
@@ -241,7 +216,6 @@ export function principlesScene(width = 400, height = 225): Scene {
     );
   f.add(f.inPlane(f.sidePlane([M[0], 4.4], M[2], "left"), rotorContent, rotor));
 
-  // The finished watch lies face up: straps, lugs, case, crown, then the dial and hands.
   const strap = (side: number) => {
     const y0 = side < 0 ? W[1] - CASE_R - 28 : W[1] + CASE_R - 2;
     const plan: Plan = { x: W[0] - 9.5, y: y0, w: 19, d: 30, r: side < 0 ? 4 : 4 };
@@ -284,7 +258,6 @@ export function principlesScene(width = 400, height = 225): Scene {
     );
     return f.inPlane(f.topPlane(W, z), face(d, fill, tone), turn);
   };
-  // 10:09:00, with the second hand sweeping once a minute.
   const hourAngle = ((10 + 9 / 60) / 12) * Math.PI * 2;
   const minAngle = (9 / 60) * Math.PI * 2;
   const handD = (len: number, w: number, tail: number) =>
@@ -305,7 +278,6 @@ export function principlesScene(width = 400, height = 225): Scene {
   f.add(hand("second", pathOf([[-0.35, 5], [0, -20.5], [0.35, 5]], true), (t) => (t / 60) * Math.PI * 2, 60, TOP + 0.9, "lit", "lit"));
   f.add(f.inPlane(f.topPlane(W, TOP + 1), face(circleD(0, 0, 1.1, 14), "top", "hi")));
 
-  // Tools on the mat: a screwdriver, tweezers and a loupe.
   const DRIVER = G.frameAlong([-26, 30, 2.6], [Math.cos(0.1), Math.sin(0.1), 0]);
   f.add(
     S(turned(P, DRIVER, [[0, 0.35], [3, 0.8], [18, 0.8], [18, 1.6], [20, 2.4], [40, 2.4], [41, 2.8], [44, 2.8], [44.6, 1.6]]), {
@@ -335,4 +307,3 @@ export function principlesScene(width = 400, height = 225): Scene {
       "A watchmaker's bench. A winder rocks an automatic movement back and forth while its rotor hangs by gravity, so the movement winds itself. Beside it, the finished watch lies face up with a plain dial and a sweeping second hand.",
   });
 }
-

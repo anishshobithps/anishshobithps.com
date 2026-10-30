@@ -8,7 +8,6 @@ import { IsoArt } from "./iso-art";
 
 type Make = (width: number, height: number) => Scene;
 
-/** A cover per post; anything new gets the typewriter until it has its own. */
 const covers: Record<string, Make> = {
   "rcb-tickets-are-broken-so-i-built-an-alert-system-at-4am": alertScene,
   "the-hidden-architecture-of-emoji": graphemeScene,
@@ -18,7 +17,6 @@ const covers: Record<string, Make> = {
 
 const built = new Map<string, Scene>();
 
-/** Cards show the cover at 16:9; the post's own header (`zoom`) at 4:3. */
 export function BlogCover({ slug, zoom = false }: { slug: string; zoom?: boolean }) {
   const key = `${slug}:${zoom ? "4:3" : "16:9"}`;
   let scene = built.get(key);

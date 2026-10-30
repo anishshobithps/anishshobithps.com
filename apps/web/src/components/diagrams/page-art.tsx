@@ -12,11 +12,6 @@ import { resumeScene } from "@/lib/iso/scenes/resume";
 import { tracesScene } from "@/lib/iso/scenes/traces";
 import { IsoArt } from "./iso-art";
 
-/**
- * Each page's figure: a real object whose working is the page's idea, built
- * once on the server. Pages sized 16:9 (the home page bands) and 4:3 (page
- * heroes, contact, 404) get scenes framed for that shape.
- */
 const scenes = {
   blogs: () => blogsScene(),
   projects: () => projectsScene(),

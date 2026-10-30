@@ -1,18 +1,12 @@
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { cable, D, face, G, L, S, screwsOnTop } from "../parts";
 
-/**
- * Fig 404: a claw machine. The claw rides its gantry over the prize pile,
- * drops, closes on nothing at all, carries the nothing back to the chute and
- * lets it go. The marquee says what happened.
- */
-
-const LOW_TOP = 34; // prize floor
+const LOW_TOP = 34;
 const PLAY_TOP = 84;
 const RAIL_Z = 73;
 const HOME: Flat = [-17, 15];
 const TARGET: Flat = [9, -5];
-const REST_DROP = 8; // claw hangs this far below the trolley
+const REST_DROP = 8;
 const DEEP_DROP = 24;
 const PERIOD = 8.5;
 
@@ -60,7 +54,6 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const at = (p: V3) => f.at(p);
   const poses = planGrab();
 
-  // Arcade floor and the cabinet's lower box with its coin door and control ledge.
   f.add(f.halo(FLOOR, -2, 6));
   f.add(S(k.slabOf(FLOOR, -2, 2, P, 3, 0.4), { tone: "lo", inner: L(k.lineOnTop([0, FLOOR.y], [0, FLOOR.y + FLOOR.d], 0, P) + k.lineOnTop([FLOOR.x, 4], [FLOOR.x + FLOOR.w, 4], 0, P), { tone: "faint" }) }));
   const LOW = k.insetPlan(CAB, 1);
@@ -70,7 +63,6 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const side = f.sidePlane([LOW.x + LOW.w, 10], 26, "right");
   f.add(f.inPlane(side, L(Array.from({ length: 6 }, (_, i) => `M${4 + i * 3.2} 0v12`).join(""), { tone: "lo" }) + L("M2.4 -1.2h17.6v14.4h-17.6z", { tone: "faint" })));
 
-  // Control ledge sticking out at the front: joystick, button.
   const LEDGE: Plan = { x: -20, y: LOW.y + LOW.d, w: 40, d: 9, r: 1.5 };
   f.add(S(k.slabOf(LEDGE, LOW_TOP - 8, 4, P, 2, 0.5), { tone: "mid" }));
   f.add(screwsOnTop(P, [[-17, LEDGE.y + 4.5], [17, LEDGE.y + 4.5]], LOW_TOP - 4, 0.7));
@@ -88,7 +80,6 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const press = f.switchOf("button", poses.map((p) => ({ t: p.t, on: p.drop > REST_DROP + 0.5 && p.drop < DEEP_DROP - 0.5 && p.open > 0.5 })));
   f.add(S(k.cylinder(btn[0], btn[1], 2, LOW_TOP - 3, 1.2, P, 18), { tone: "hi", crease: "lo" }), `<g class="${press}" opacity="0">${S(k.cylinder(btn[0], btn[1], 2, LOW_TOP - 3, 1.2, P, 18), { tone: "hi", lit: true })}</g>`);
 
-  // Play area: back and left glass, the prize floor, the chute, the pile.
   const POSTS: Flat[] = [
     [CAB.x + 1.5, CAB.y + 1.5],
     [CAB.x + CAB.w - 1.5, CAB.y + 1.5],
@@ -105,10 +96,8 @@ export function notFoundScene(width = 400, height = 300): Scene {
   f.add(pane([CAB.x + 1.5, CAB.y + 1.5], [CAB.x + 1.5, CAB.y + CAB.d - 1.5]));
   f.add(post(POSTS[1]!), post(POSTS[2]!));
   f.add(`<path class="iso-face" data-fill="top" d="${k.planOutline(k.insetPlan(CAB, 1.5), LOW_TOP, P, 2)}"/>`);
-  // Chute: an opening in the floor at the front left, with a clear guard around it.
   const CHUTE: Plan = { x: HOME[0] - 7, y: HOME[1] - 6, w: 14, d: 12, r: 1 };
   f.add(`<path class="iso-face" data-fill="0" d="${k.planOutline(CHUTE, LOW_TOP, P, 2)}"/>`, L(k.planOutline(CHUTE, LOW_TOP, P, 2), { tone: "lo" }));
-  // The prize pile: capsules in two layers, one of them green.
   const prizes: Array<[number, number, number, string]> = [];
   let seed = 11;
   const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
@@ -123,7 +112,6 @@ export function notFoundScene(width = 400, height = 300): Scene {
     f.add(L(G.arcOf(G.frameAlong([x, y, z], [0, 0, 1]), 0, 3.2, P), { tone: "faint" }));
   }
 
-  // Gantry: two rails, a bridge that runs along y, a trolley along x, the claw on its cable.
   for (const x of [CAB.x + 3.5, CAB.x + CAB.w - 3.5]) f.add(S(k.slabOf({ x: x - 1, y: CAB.y + 2, w: 2, d: CAB.d - 4, r: 0.4 }, RAIL_Z, 1.6, P, 2), { tone: "mid" }));
   const claw = (open: number) => {
     const out: string[] = [];
@@ -156,7 +144,6 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const ride = f.moveOf("bridge", poses.map((p) => ({ t: p.t, by: [0, p.y, 0] })));
   f.add(`<g class="${ride}" transform="${f.translate([0, HOME[1], 0])}">${bridge}<g class="${run}" transform="${f.translate([HOME[0], 0, 0])}">${hang}${trolley}</g></g>`);
 
-  // Front and right glass with glints, the last posts, the marquee box with its sign.
   f.add(pane([CAB.x + 1.5, CAB.y + CAB.d - 1.5], [CAB.x + CAB.w - 1.5, CAB.y + CAB.d - 1.5]), pane([CAB.x + CAB.w - 1.5, CAB.y + 1.5], [CAB.x + CAB.w - 1.5, CAB.y + CAB.d - 1.5]));
   f.add(L(pathOf([at([-6, CAB.y + CAB.d - 1.5, 76]), at([4, CAB.y + CAB.d - 1.5, 62])]) + pathOf([at([0, CAB.y + CAB.d - 1.5, 78]), at([8, CAB.y + CAB.d - 1.5, 67])]), { tone: "faint" }));
   f.add(post(POSTS[3]!));
