@@ -2,10 +2,10 @@
 
 import { ENV } from "varlock/env";
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
-import { db } from "@/lib/db";
+import { db } from "@repo/db";
 import { getClientIp, hashIp } from "@/lib/ip";
 import { safeQuery } from "@/lib/safe-query";
-import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@/lib/schema";
+import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@repo/db/schema";
 import { source } from "@/lib/source";
 import { sanitizeText, ValidationError, validateLength } from "@repo/core/text";
 import { auth } from "@clerk/nextjs/server";

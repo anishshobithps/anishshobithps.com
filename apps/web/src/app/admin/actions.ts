@@ -1,6 +1,6 @@
 "use server";
 
-import { db } from "@/lib/db";
+import { db } from "@repo/db";
 import {
     blogCommentLikes,
     blogComments,
@@ -10,7 +10,7 @@ import {
     guestbookEntries,
     guestbookLikes,
     projects,
-} from "@/lib/schema";
+} from "@repo/db/schema";
 import { adminMutation } from "@/lib/admin-action";
 import type { ActionResult } from "@repo/core/action-result";
 import { assertAdmin } from "@/lib/assert-admin";

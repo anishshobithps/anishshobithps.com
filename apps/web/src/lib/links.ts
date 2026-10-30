@@ -1,8 +1,8 @@
 import { cache } from "react";
 import { and, eq, ne, or, sql } from "drizzle-orm";
-import { db } from "@/lib/db";
+import { db } from "@repo/db";
 import { safeQuery } from "@/lib/safe-query";
-import { links, linkSlugs } from "@/lib/schema";
+import { links, linkSlugs } from "@repo/db/schema";
 import type { SlugPair } from "@repo/core/links-schema";
 
 export type ResolvedLink = {

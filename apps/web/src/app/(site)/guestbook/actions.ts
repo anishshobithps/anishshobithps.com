@@ -2,8 +2,8 @@
 
 import { ENV } from "varlock/env";
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
-import { db } from "@/lib/db";
-import { guestbookEntries, guestbookLikes } from "@/lib/schema";
+import { db } from "@repo/db";
+import { guestbookEntries, guestbookLikes } from "@repo/db/schema";
 import { resolvePagination } from "@repo/core/pagination";
 import { safeQuery } from "@/lib/safe-query";
 import { sanitizeText, ValidationError, validateLength } from "@repo/core/text";

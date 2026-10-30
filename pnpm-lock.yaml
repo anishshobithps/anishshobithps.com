@@ -106,6 +106,9 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@repo/diagrams':
         specifier: workspace:*
         version: link:../../packages/diagrams
@@ -254,9 +257,6 @@ importers:
       '@types/ws':
         specifier: ^8.18.2
         version: 8.18.2
-      drizzle-kit:
-        specifier: ^0.31.11
-        version: 0.31.11
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
@@ -315,6 +315,37 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.12(@types/node@25.9.9)(msw@2.15.0(@types/node@25.9.9)(typescript@6.0.3))(vite@8.1.4(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/db:
+    dependencies:
+      '@neondatabase/serverless':
+        specifier: ^1.2.0
+        version: 1.2.0
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.4(@neondatabase/serverless@1.2.0)
+      varlock:
+        specifier: ^1.24.0
+        version: 1.24.0
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.9
+      drizzle-kit:
+        specifier: ^0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
 
   packages/diagrams:
     dependencies:

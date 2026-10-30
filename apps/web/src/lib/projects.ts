@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { projects as projectsTable } from "@/lib/schema";
+import { db } from "@repo/db";
+import { projects as projectsTable } from "@repo/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 

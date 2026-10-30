@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { links, linkSlugs } from "@/lib/schema";
+import { db } from "@repo/db";
+import { links, linkSlugs } from "@repo/db/schema";
 import { adminMutation } from "@/lib/admin-action";
 import type { ActionResult } from "@repo/core/action-result";
 import { assertAdmin } from "@/lib/assert-admin";

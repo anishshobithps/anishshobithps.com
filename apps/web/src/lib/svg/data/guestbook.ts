@@ -1,7 +1,7 @@
 import { count, desc, eq } from "drizzle-orm";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
-import { db } from "@/lib/db";
-import { guestbookEntries } from "@/lib/schema";
+import { db } from "@repo/db";
+import { guestbookEntries } from "@repo/db/schema";
 import { toDataUri } from "@/lib/svg/data/image";
 
 const AVATAR_SIZE = 64;

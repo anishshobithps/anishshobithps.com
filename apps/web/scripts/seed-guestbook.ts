@@ -3,7 +3,7 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { inArray } from "drizzle-orm";
 import { faker } from "@faker-js/faker";
-import { guestbookEntries } from "@/lib/schema";
+import { guestbookEntries } from "@repo/db/schema";
 import { writeFileSync, readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";

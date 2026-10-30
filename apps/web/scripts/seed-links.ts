@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { and, eq } from "drizzle-orm";
-import { links, linkSlugs } from "@/lib/schema";
+import { links, linkSlugs } from "@repo/db/schema";
 
 function getDb() {
     const url = process.env.DATABASE_URL;

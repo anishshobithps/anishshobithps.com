@@ -1,4 +1,4 @@
-import { ENV } from "varlock/env";
+import { ENV } from "../env";
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 

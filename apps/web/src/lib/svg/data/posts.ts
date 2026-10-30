@@ -1,7 +1,7 @@
 import { eq, inArray, sql } from "drizzle-orm";
 import { toTimestamp } from "@repo/core/date";
-import { db } from "@/lib/db";
-import { blogPosts, blogReads } from "@/lib/schema";
+import { db } from "@repo/db";
+import { blogPosts, blogReads } from "@repo/db/schema";
 import { getLatestPost, source } from "@/lib/source";
 
 export interface PostCard {
