@@ -38,7 +38,6 @@
     "@repo/virtual": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-table": "catalog:",
-    "@tanstack/react-virtual": "catalog:",
     "@varlock/nextjs-integration": "^2.0.0",
     "@wojtekmaj/react-hooks": "^2.3.0",
     "class-variance-authority": "catalog:",

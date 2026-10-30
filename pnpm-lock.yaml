@@ -151,9 +151,6 @@ importers:
       '@tanstack/react-table':
         specifier: 'catalog:'
         version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@tanstack/react-virtual':
-        specifier: 'catalog:'
-        version: 3.14.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@varlock/nextjs-integration':
         specifier: ^2.0.0
         version: 2.0.0(next@16.4.2(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@25.9.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.24.0))(varlock@1.24.0)
