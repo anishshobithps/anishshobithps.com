@@ -63,9 +63,9 @@
   "devDependencies": {
     "@clerk/backend": "^3.24.0",
     "@faker-js/faker": "^10.6.0",
+    "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@repo/vitest-config": "workspace:*",
-    "@shadcn/lint": "^0.2.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/culori": "^4.0.1",
     "@types/mdast": "^4.0.4",
@@ -77,7 +77,6 @@
     "@types/ws": "^8.18.2",
     "drizzle-kit": "^0.31.11",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.1.6",
     "knip": "^6.41.0",
     "postcss": "^8.5.30",
     "shadcn": "^4.21.5",
