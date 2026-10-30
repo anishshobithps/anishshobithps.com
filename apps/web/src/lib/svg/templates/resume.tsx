@@ -2,7 +2,7 @@ import { z } from "zod";
 import { siteConfig } from "@repo/site-config";
 import { formatMonthYear, timeAgo } from "@repo/core/date";
 import { loadReleases, type ReleaseHistory } from "@/lib/svg/data/github";
-import { palette } from "@/lib/svg/palette";
+import { palette } from "@repo/svg-kit/palette";
 import {
   Body,
   CardHeader,
@@ -15,8 +15,8 @@ import {
   Label,
   Stats,
   STATS_HEIGHT,
-} from "@/lib/svg/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@/lib/svg/template";
+} from "@repo/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/svg-kit/template";
 
 const CHART_HEIGHT = 96;
 const MAX_BARS = 12;

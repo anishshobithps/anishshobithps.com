@@ -6,8 +6,8 @@ import {
   GUTTER,
   Label,
   truncate,
-} from "@/lib/svg/primitives";
-import { CARD_WIDTH, type Theme } from "@/lib/svg/template";
+} from "./primitives";
+import { CARD_WIDTH, type Theme } from "./template";
 
 export type SvgErrorKind =
   | "unknown-type"

@@ -24,8 +24,8 @@ import {
   Legend,
   Stats,
   STATS_HEIGHT,
-} from "@/lib/svg/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR } from "@/lib/svg/template";
+} from "@repo/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/svg-kit/template";
 
 const COMMIT_PAGES = 5;
 const WAKATIME_DAYS = 7;

@@ -11,8 +11,8 @@ import {
   Pill,
   Title,
   truncate,
-} from "@/lib/svg/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR } from "@/lib/svg/template";
+} from "@repo/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/svg-kit/template";
 
 const SIZE = { width: CARD_WIDTH, height: 256 };
 const MAX_TAGS = 3;

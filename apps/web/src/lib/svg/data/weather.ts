@@ -1,4 +1,4 @@
-import { SvgParamError } from "@/lib/svg/template";
+import { SvgParamError } from "@repo/svg-kit/template";
 
 const TIMEOUT_MS = 5000;
 

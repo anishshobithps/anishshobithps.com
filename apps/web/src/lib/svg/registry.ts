@@ -1,6 +1,6 @@
 import { ENV } from "varlock/env";
 import { unstable_cache } from "next/cache";
-import { type AnySvgTemplate, HOUR } from "@/lib/svg/template";
+import { type AnySvgTemplate, HOUR } from "@repo/svg-kit/template";
 import { activity } from "@/lib/svg/templates/activity";
 import { banner } from "@/lib/svg/templates/banner";
 import { calendar } from "@/lib/svg/templates/calendar";

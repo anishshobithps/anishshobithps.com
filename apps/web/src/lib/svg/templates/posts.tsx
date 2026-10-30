@@ -2,7 +2,7 @@ import { z } from "zod";
 import { formatShortDate } from "@repo/core/date";
 import { formatCount } from "@/lib/github";
 import { loadRecentPosts, type PostRow } from "@/lib/svg/data/posts";
-import { limit } from "@/lib/svg/params";
+import { limit } from "@repo/svg-kit/params";
 import {
   CardHeader,
   Frame,
@@ -15,8 +15,8 @@ import {
   plural,
   Row,
   truncate,
-} from "@/lib/svg/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@/lib/svg/template";
+} from "@repo/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/svg-kit/template";
 import { padIndex } from "@repo/core/text";
 
 function height(rows: number) {

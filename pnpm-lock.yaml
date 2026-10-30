@@ -130,6 +130,9 @@ importers:
       '@repo/styles':
         specifier: workspace:*
         version: link:../../packages/styles
+      '@repo/svg-kit':
+        specifier: workspace:*
+        version: link:../../packages/svg-kit
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -612,6 +615,46 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 4.1.12(@types/node@25.9.9)(msw@2.15.0(@types/node@25.9.9)(typescript@6.0.3))(vite@8.1.4(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+
+  packages/svg-kit:
+    dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
+      '@repo/site-config':
+        specifier: workspace:*
+        version: link:../site-config
+      '@repo/styles':
+        specifier: workspace:*
+        version: link:../styles
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      takumi-js:
+        specifier: ^2.16.2
+        version: 2.16.2(csstype@3.2.3)(react@19.3.1)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.9
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
 
   packages/tsconfig:
     dependencies:

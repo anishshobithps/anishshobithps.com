@@ -9,7 +9,7 @@ import {
 } from "@repo/diagrams/iso";
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { MASCOT_POINTS, MascotFigure } from "@/components/shared/logo-mascot";
-import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@/lib/svg/fonts";
+import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/svg-kit/fonts";
 import { themeColor } from "@repo/styles/theme-tokens";
 import type { CSSProperties, ReactNode } from "react";
 

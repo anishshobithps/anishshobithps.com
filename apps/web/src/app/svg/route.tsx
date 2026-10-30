@@ -1,9 +1,9 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { getTemplate, loadData } from "@/lib/svg/registry";
-import { renderError, renderTemplate } from "@/lib/svg/render";
-import { SvgParamError, type Theme } from "@/lib/svg/template";
-import type { SvgErrorKind } from "@/lib/svg/templates/error";
+import { renderError, renderTemplate } from "@repo/svg-kit/render";
+import { SvgParamError, type Theme } from "@repo/svg-kit/template";
+import type { SvgErrorKind } from "@repo/svg-kit/error";
 
 const HEADERS = {
   "Content-Type": "image/svg+xml",
