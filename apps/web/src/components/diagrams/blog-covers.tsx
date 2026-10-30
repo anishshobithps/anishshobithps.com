@@ -1,9 +1,9 @@
-import type { Scene } from "@/lib/iso/figure";
-import { alertScene } from "@/lib/iso/scenes/alert";
-import { blogsScene } from "@/lib/iso/scenes/blogs";
-import { graphemeScene } from "@/lib/iso/scenes/grapheme";
-import { resumeScene } from "@/lib/iso/scenes/resume";
-import { stairsScene } from "@/lib/iso/scenes/stairs";
+import type { Scene } from "@repo/iso/figure";
+import { alertScene } from "@repo/iso/scenes/alert";
+import { blogsScene } from "@repo/iso/scenes/blogs";
+import { graphemeScene } from "@repo/iso/scenes/grapheme";
+import { resumeScene } from "@repo/iso/scenes/resume";
+import { stairsScene } from "@repo/iso/scenes/stairs";
 import { IsoArt } from "./iso-art";
 
 type Make = (width: number, height: number) => Scene;

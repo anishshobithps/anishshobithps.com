@@ -1,5 +1,5 @@
-import type { Scene } from "@/lib/iso/figure";
-import { sceneMarkup } from "@/lib/iso/figure";
+import type { Scene } from "@repo/iso/figure";
+import { sceneMarkup } from "@repo/iso/figure";
 
 export function IsoArt({ scene }: { scene: Scene }) {
   return (

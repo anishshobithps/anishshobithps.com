@@ -1,15 +1,15 @@
-import type { Scene } from "@/lib/iso/figure";
-import { blogsScene } from "@/lib/iso/scenes/blogs";
-import { brandingScene } from "@/lib/iso/scenes/branding";
-import { contactScene } from "@/lib/iso/scenes/contact";
-import { guestbookScene } from "@/lib/iso/scenes/guestbook";
-import { lateNightScene } from "@/lib/iso/scenes/late-night";
-import { notFoundScene } from "@/lib/iso/scenes/not-found";
-import { principlesScene } from "@/lib/iso/scenes/principles";
-import { privacyScene } from "@/lib/iso/scenes/privacy";
-import { projectsScene } from "@/lib/iso/scenes/projects";
-import { resumeScene } from "@/lib/iso/scenes/resume";
-import { tracesScene } from "@/lib/iso/scenes/traces";
+import type { Scene } from "@repo/iso/figure";
+import { blogsScene } from "@repo/iso/scenes/blogs";
+import { brandingScene } from "@repo/iso/scenes/branding";
+import { contactScene } from "@repo/iso/scenes/contact";
+import { guestbookScene } from "@repo/iso/scenes/guestbook";
+import { lateNightScene } from "@repo/iso/scenes/late-night";
+import { notFoundScene } from "@repo/iso/scenes/not-found";
+import { principlesScene } from "@repo/iso/scenes/principles";
+import { privacyScene } from "@repo/iso/scenes/privacy";
+import { projectsScene } from "@repo/iso/scenes/projects";
+import { resumeScene } from "@repo/iso/scenes/resume";
+import { tracesScene } from "@repo/iso/scenes/traces";
 import { IsoArt } from "./iso-art";
 
 const scenes = {

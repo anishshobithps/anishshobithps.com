@@ -109,6 +109,9 @@ importers:
       '@repo/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@repo/iso':
+        specifier: workspace:*
+        version: link:../../packages/iso
       '@repo/media-player':
         specifier: workspace:*
         version: link:../../packages/media-player
@@ -341,6 +344,21 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 19.3.0
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/iso:
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)

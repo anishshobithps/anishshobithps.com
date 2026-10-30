@@ -7,9 +7,6 @@ const config = {
         "source.config.ts",
         "src/lib/source.ts",
         "src/lib/remarkReadingTime.ts",
-        "src/lib/iso/iso-kit.ts",
-        "src/lib/iso/lathe.ts",
-        "src/lib/iso/tube.ts",
         "scripts/get-spotify-refresh-token.ts",
       ],
       ignoreDependencies: [
