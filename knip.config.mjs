@@ -22,6 +22,9 @@ const config = {
     "packages/site-config": {
       ignore: ["env.ts"],
     },
+    "packages/db": {
+      ignore: ["env.ts"],
+    },
     "packages/*": {},
   },
 };
