@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
-import type { CueName } from "@/lib/sound-cues";
-import { playCue } from "@/lib/sound-player";
+import type { CueName } from "@repo/sounds/sound-cues";
+import { playCue } from "@repo/sounds/sound-player";
 
 export type ToastType = "error" | "warning" | "info" | "success";
 

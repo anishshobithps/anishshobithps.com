@@ -3,8 +3,8 @@
 import { MonitorIcon, MoonIcon, SunIcon } from "@repo/icons";
 import { ToggleGroup, ToggleGroupItem } from "@repo/ui/components/toggle-group";
 import { cn } from "@repo/ui/lib/cn";
-import { themeCue } from "@/lib/sound-cues";
-import { playCue } from "@/lib/sound-player";
+import { themeCue } from "@repo/sounds/sound-cues";
+import { playCue } from "@repo/sounds/sound-player";
 import { useTheme } from "next-themes";
 import {
   useSyncExternalStore,

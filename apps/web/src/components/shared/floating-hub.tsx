@@ -38,7 +38,7 @@ import { useDraggable } from "@/hooks/use-draggable";
 import { useEngagementAnchor } from "@/hooks/use-engagement-anchor";
 import { useIsMobile } from "@repo/ui/hooks/use-mobile";
 import { cn } from "@repo/ui/lib/cn";
-import { playCue } from "@/lib/sound-player";
+import { playCue } from "@repo/sounds/sound-player";
 
 const FAB_SIZE = 48;
 

@@ -16,7 +16,7 @@ import { TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
-import { playCue } from "@/lib/sound-player";
+import { playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import {
   ListIcon,

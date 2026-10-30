@@ -18,8 +18,8 @@ import {
 import { Panel, PanelRow } from "@/components/layouts/page";
 import { SectionLabel } from "@repo/ui/components/typography";
 import { nowISO } from "@repo/core/date";
-import { playCue } from "@/lib/sound-player";
-import type { CueName } from "@/lib/sound-cues";
+import { playCue } from "@repo/sounds/sound-player";
+import type { CueName } from "@repo/sounds/sound-cues";
 import { classifyError, typedToast } from "@/lib/toast";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

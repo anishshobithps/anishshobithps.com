@@ -37,10 +37,10 @@ import {
   toggleCommandMenu,
 } from "@/lib/command-menu-store";
 import { siteConfig } from "@repo/site-config";
-import { themeCue } from "@/lib/sound-cues";
-import { disableSound, enableSound, playCue } from "@/lib/sound-player";
+import { themeCue } from "@repo/sounds/sound-cues";
+import { disableSound, enableSound, playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
-import { useSoundPreferences } from "@/hooks/use-sound-preferences";
+import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 
 const NAV_ICONS = {
   "/projects": BriefcaseIcon,

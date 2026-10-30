@@ -3,8 +3,8 @@
 import { useCallback, useEffect } from "react";
 import { useTheme } from "next-themes";
 
-import { themeCue } from "@/lib/sound-cues";
-import { playCue } from "@/lib/sound-player";
+import { themeCue } from "@repo/sounds/sound-cues";
+import { playCue } from "@repo/sounds/sound-player";
 
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;

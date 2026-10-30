@@ -22,7 +22,7 @@ import { ScrollArea } from "@repo/ui/components/scroll-area";
 import { Spinner } from "@repo/ui/components/spinner";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { nowISO } from "@repo/core/date";
-import { playCue } from "@/lib/sound-player";
+import { playCue } from "@repo/sounds/sound-player";
 import { toastError, typedToast } from "@/lib/toast";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import {

@@ -3,9 +3,9 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-import { useSoundPreferences } from "@/hooks/use-sound-preferences";
-import { isCueName } from "@/lib/sound-cues";
-import { playCue, preloadSounds, unlockAudio } from "@/lib/sound-player";
+import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
+import { isCueName } from "@repo/sounds/sound-cues";
+import { playCue, preloadSounds, unlockAudio } from "@repo/sounds/sound-player";
 
 const PIN_DELAY_MS = 380;
 

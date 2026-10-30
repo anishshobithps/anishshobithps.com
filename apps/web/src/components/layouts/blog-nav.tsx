@@ -14,7 +14,7 @@ import {
   XLogoIcon,
   LinkedinLogoIcon,
 } from "@repo/icons";
-import { playCue } from "@/lib/sound-player";
+import { playCue } from "@repo/sounds/sound-player";
 import { toast } from "sonner";
 import type { Route } from "next";
 

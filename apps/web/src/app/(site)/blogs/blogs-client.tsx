@@ -38,7 +38,7 @@ import {
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { Reveal } from "@/components/shared/reveal";
 import { cn } from "@repo/ui/lib/cn";
-import { playCue } from "@/lib/sound-player";
+import { playCue } from "@repo/sounds/sound-player";
 import {
   MagnifyingGlassIcon,
   TagIcon,

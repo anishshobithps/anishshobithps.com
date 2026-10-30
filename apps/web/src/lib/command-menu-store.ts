@@ -1,4 +1,4 @@
-import { playCue } from "@/lib/sound-player";
+import { playCue } from "@repo/sounds/sound-player";
 
 let open = false;
 const listeners = new Set<() => void>();

@@ -16,9 +16,9 @@ import {
   TooltipTrigger,
 } from "@repo/ui/components/tooltip";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
-import { useSoundPreferences } from "@/hooks/use-sound-preferences";
-import { setSoundVolume } from "@/lib/sound-preferences";
-import { disableSound, enableSound, playCue } from "@/lib/sound-player";
+import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
+import { setSoundVolume } from "@repo/sounds/sound-preferences";
+import { disableSound, enableSound, playCue } from "@repo/sounds/sound-player";
 
 function setSoundOn(next: boolean) {
   if (next) void enableSound();
