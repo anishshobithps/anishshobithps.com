@@ -35,11 +35,12 @@ export async function POST(req: Request) {
     const wh = new Webhook(secret);
     let event: UserDeletedEvent;
     try {
-        event = wh.verify(payload, {
+        wh.verify(payload, {
             "svix-id": svixId,
             "svix-timestamp": svixTimestamp,
             "svix-signature": svixSignature,
-        }) as UserDeletedEvent;
+        });
+        event = JSON.parse(payload) as UserDeletedEvent;
     } catch {
         return new Response("Invalid webhook signature", { status: 400 });
     }

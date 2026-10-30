@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useId, useReducer } from "react";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
-import opentype from "opentype.js";
+import * as opentype from "opentype.js";
 
 interface SignatureProps {
   text?: string;
