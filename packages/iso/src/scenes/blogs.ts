@@ -87,9 +87,9 @@ export function blogsScene(width = 400, height = 300): Scene {
   const feed = f.trackOf("feed", poses.map((p) => ({ t: p.t, v: [p.feed * LINE_H] })), ([v]) => `transform:translate(0px,${v!.toFixed(2)}px)`, { tolerance: 0.02 });
   f.defs.push(`<clipPath id="type-paper"><path d="M0 0h44v30h-44z"/></clipPath>`);
   car.push(
-    `<g transform="${paperPlane}"><g clip-path="url(#type-paper)"><g class="${feed}">` +
+    `<g transform="${paperPlane}"><g clip-path="url(#type-paper)"><g ${feed}>` +
       `${[1, 2, 3, 4, 5, 6, 7].map((r) => `<path class="${TEXT}" ${TEXT_ATTRS} d="${lineD(r)}"/>`).join("")}` +
-      `<path class="${TEXT} ${reveal}" ${TEXT_ATTRS} d="${lineD(0)}" stroke-dasharray="${typedLen.toFixed(2)} ${(typedLen + 4).toFixed(2)}" stroke-dashoffset="${(typedLen + 0.6).toFixed(2)}"/>` +
+      `<path class="${TEXT}" ${reveal} ${TEXT_ATTRS} d="${lineD(0)}" stroke-dasharray="${typedLen.toFixed(2)} ${(typedLen + 4).toFixed(2)}" stroke-dashoffset="${(typedLen + 0.6).toFixed(2)}"/>` +
       `</g></g></g>`,
   );
   const BAIL = alongX([0, PRINT[1] + 0.6, PLATEN_Z + 5]);
@@ -107,7 +107,7 @@ export function blogsScene(width = 400, height = 300): Scene {
   car.push(S(k.slabOf({ x: -46, y: PLATEN_Y - 1, w: 2, d: 2, r: 0.5 }, PLATEN_Z, 4, P, 2), { tone: "mid" }));
   car.push(S(k.slabOf({ x: -46, y: PLATEN_Y - 1, w: 2, d: 12, r: 0.8 }, PLATEN_Z + 4, 1.6, P, 2, 0.3), { tone: "hi", crease: "lo" }));
   const carriage = f.moveOf("carriage", poses.map((p) => ({ t: p.t, by: [p.carriage, 0, 0] })));
-  f.add(`<g class="${carriage}" transform="${f.translate([X0, 0, 0])}">${car.join("")}</g>`);
+  f.add(`<g ${carriage} transform="${f.translate([X0, 0, 0])}">${car.join("")}</g>`);
 
   const spoolTurn = f.spinOf("spool", poses.map((p) => ({ t: p.t, angle: (X0 - p.carriage) * 0.08 })));
   for (const x of [-28, 28]) {
@@ -129,7 +129,7 @@ export function blogsScene(width = 400, height = 300): Scene {
   f.add(f.inPlane(fan, face("M-15 0a15 15 0 0 1 30 0z", "0", "lo") + L(bars, { tone: "mid" })));
   f.add(S(k.slabOf({ x: -2, y: PRINT[1] + 2, w: 4, d: 2, r: 0.5 }, 15, 3.4, P, 2), { tone: "mid" }));
   const strike = f.switchOf("strike", poses.map((p) => ({ t: p.t, on: p.bar })));
-  f.add(`<g class="${strike}" opacity="0">${L(pathOf([at([0, -2, 13.6]), at([0, PRINT[1] + 0.8, PRINT[2] - 0.4])]), { tone: "lit" })}${D([at([0, PRINT[1] + 0.8, PRINT[2] - 0.4])], { size: 0.8, tone: "hi" })}</g>`);
+  f.add(`<g ${strike} opacity="0">${L(pathOf([at([0, -2, 13.6]), at([0, PRINT[1] + 0.8, PRINT[2] - 0.4])]), { tone: "lit" })}${D([at([0, PRINT[1] + 0.8, PRINT[2] - 0.4])], { size: 0.8, tone: "hi" })}</g>`);
 
   const rows = [
     { y: 4, z: 13.2, n: 10, x0: -19 },
@@ -147,11 +147,11 @@ export function blogsScene(width = 400, height = 300): Scene {
         S(k.cylinder(x, row.y, 0.6, row.z - 2.6, 2.6, P, 10), { tone: "mid", crease: "none" }) +
         S(k.cylinder(x, row.y, 1.8, row.z, 1.1, P, 18, 0.3), { tone: "hi", crease: "lo" }) +
         L(k.ring(x, row.y, 1.2, row.z + 1.1, P, 14), { tone: "faint" });
-      f.add(`<g class="${dip}">${key}</g>`);
+      f.add(`<g ${dip}>${key}</g>`);
     }
   }
   const space = f.moveOf("space", poses.map((p) => ({ t: p.t, by: [0, 0, p.key === 27 ? -0.9 : 0] })));
-  f.add(`<g class="${space}">${S(k.slabOf({ x: -14, y: 22, w: 28, d: 3.2, r: 1.4 }, 8.6, 1.6, P, 3, 0.3), { tone: "hi", crease: "lo" })}</g>`);
+  f.add(`<g ${space}>${S(k.slabOf({ x: -14, y: 22, w: 28, d: 3.2, r: 1.4 }, 8.6, 1.6, P, 3, 0.3), { tone: "hi", crease: "lo" })}</g>`);
   f.add(screwsOnTop(P, [[-36, 26], [36, 26]], 8, 0.7));
 
   return f.build({

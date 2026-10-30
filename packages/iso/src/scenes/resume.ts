@@ -69,7 +69,7 @@ export function resumeScene(width = 400, height = 300): Scene {
     .map((n) => {
       const on = f.switchOf(`lcd${n}`, times.map((t, i) => ({ t, on: counts[i] === n })));
       const label = n === FIELDS ? "JSON OK" : `${String(n).padStart(2, "0")}/${FIELDS}`;
-      return `<g class="${on}"${n === counts[0] ? "" : ' opacity="0"'}><text class="${FACE_TEXT.lit}" x="9" y="4.9" font-size="3" text-anchor="middle">${label}</text></g>`;
+      return `<g ${on}${n === counts[0] ? "" : ' opacity="0"'}><text class="${FACE_TEXT.lit}" x="9" y="4.9" font-size="3" text-anchor="middle">${label}</text></g>`;
     })
     .join("");
   f.add(f.inPlane(screen, face("M0 0h18v7h-18z", "0", "mid") + lcd));
@@ -113,10 +113,10 @@ export function resumeScene(width = 400, height = 300): Scene {
   );
   const lit = ROWS.map(([y, len, w], i) => {
     const on = f.switchOf(`row${i}`, times.map((t) => ({ t, on: PAGE.y + y <= headAt(t) && t < 0.4 + SWEEP + 0.8 })));
-    return `<path class="${INK} ${on}" ${INK_ATTRS} opacity="0" style="stroke-width:${w === "head" ? 1.4 : w === "rule" ? 0.9 : 0.6};stroke-linecap:butt" d="${words([y, len, w])}"/>`;
+    return `<path class="${INK}" ${on} ${INK_ATTRS} opacity="0" style="stroke-width:${w === "head" ? 1.4 : w === "rule" ? 0.9 : 0.6};stroke-linecap:butt" d="${words([y, len, w])}"/>`;
   }).join("");
   const qrOn = f.switchOf("qr", times.map((t) => ({ t, on: PAGE.y + QR.y + QR.size <= headAt(t) && t < 0.4 + SWEEP + 0.8 })));
-  f.add(`<g transform="${top}">${lit}<path class="stroke-none ${FACE_FILL.ink} ${qrOn}" opacity="0" d="${qrCells}"/></g>`);
+  f.add(`<g transform="${top}">${lit}<path class="stroke-none ${FACE_FILL.ink}" ${qrOn} opacity="0" d="${qrCells}"/></g>`);
 
   const rail = (x: number) => {
     f.add(S(k.slabOf({ x: x - 2, y: -54, w: 4, d: 108, r: 1 }, 0, 4, P, 2, 0.4), { tone: "mid", inner: L(k.segment([x + 2, -54, 2], [x + 2, 54, 2], P), { tone: "faint" }) }));
@@ -149,7 +149,7 @@ export function resumeScene(width = 400, height = 300): Scene {
   g.push(screwsOnTop(P, [[-RAIL_X, 0], [RAIL_X, 0]], 29, 0.8));
   tower(RAIL_X);
   const ride = f.moveOf("gantry", times.map((t) => ({ t, by: [0, headAt(t), 0] })));
-  f.add(`<g class="${ride}" transform="${f.translate([0, Y_START, 0])}">${g.join("")}</g>`);
+  f.add(`<g ${ride} transform="${f.translate([0, Y_START, 0])}">${g.join("")}</g>`);
 
   return f.build({
     width,

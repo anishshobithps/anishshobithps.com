@@ -163,9 +163,9 @@ export function principlesScene(width = 400, height = 225): Scene {
       ),
       { tone: "lo" },
     ) +
-    `<g class="${balance}">${L(circleD(0, 0, 5.4, 32) + circleD(0, 0, 4.7, 32), { tone: "hi" })}${L(radialD(0, 0, 0.6, 4.8, 3, 0.4), { tone: "mid" })}</g></g>` +
+    `<g ${balance}>${L(circleD(0, 0, 5.4, 32) + circleD(0, 0, 4.7, 32), { tone: "hi" })}${L(radialD(0, 0, 0.6, 4.8, 3, 0.4), { tone: "mid" })}</g></g>` +
     face(circleD(ESC[0], ESC[1], 3.9, 24), "0", "lo") +
-    `<g transform="translate(${ESC[0]} ${ESC[1]})"><g class="${escape}">${L(gearD(0, 0, 3.3, 15, 0.9), { tone: "mid" })}${L(radialD(0, 0, 0.4, 2.3, 4), { tone: "lo" })}</g></g>` +
+    `<g transform="translate(${ESC[0]} ${ESC[1]})"><g ${escape}>${L(gearD(0, 0, 3.3, 15, 0.9), { tone: "mid" })}${L(radialD(0, 0, 0.4, 2.3, 4), { tone: "lo" })}</g></g>` +
     jewels +
     ([[14, -8], [-15, 4], [8, 15], [-4, 17.5]] as Flat[])
       .map(([x, y]) => L(circleD(x, y, 1.15, 14), { tone: "mid" }) + L(pathOf([[x - 0.85, y - 0.4], [x + 0.85, y + 0.4]]), { tone: "hi" }))

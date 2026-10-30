@@ -69,7 +69,7 @@ export function alertScene(width = 400, height = 225): Scene {
   const screen = f.topPlane([PHONE.x + 1.4, PHONE.y + 3], 1.6);
   f.add(f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "0", "lo")));
   const lit = f.switchOf("screen", times.map((t) => ({ t, on: t >= RING[0] && t <= RING[1] + 1.2 })));
-  f.add(`<g class="${lit}" opacity="0">${f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "sheet", "lit") + face("M1.6 3h12v7.4h-12z", "lit", "lit") + L("M3.2 5.4h6M3.2 7.8h8.6", { tone: "lo" }) + face(circleD(7.6, 21, 2.4, 16), "lit", "lit"))}</g>`);
+  f.add(`<g ${lit} opacity="0">${f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "sheet", "lit") + face("M1.6 3h12v7.4h-12z", "lit", "lit") + L("M3.2 5.4h6M3.2 7.8h8.6", { tone: "lo" }) + face(circleD(7.6, 21, 2.4, 16), "lit", "lit"))}</g>`);
   f.add(D([f.at([PHONE.x + 9, PHONE.y + 1.6, 1.6])], { size: 0.5, tone: "mid" }));
 
   const TICKET: Flat = [-22, 14];

@@ -155,7 +155,7 @@ export function privacyScene(width = 400, height = 300): Scene {
       const plane = f.planeOf([kx, FACE_Y + 4.8, kz], [-Math.sin(angle), 0, Math.cos(angle)], [0, 1, 0]);
       const bow = face("M-1 0h2v1a3.2 3.2 0 1 1 -2 0z", mine ? "lit" : "top", mine ? "lit" : "hi") + L("M0 4.4m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0", { tone: "lo" });
       const on = f.switchOf(`${which}${step}`, poses.map((p) => ({ t: p.t, on: Math.round(p[which] * 4) === step })));
-      out.push(`<g class="${on}"${step ? ' opacity="0"' : ""}><g transform="${plane}">${bow}</g></g>`);
+      out.push(`<g ${on}${step ? ' opacity="0"' : ""}><g transform="${plane}">${bow}</g></g>`);
     }
     return out.join("");
   };
@@ -166,7 +166,7 @@ export function privacyScene(width = 400, height = 300): Scene {
   const tunnel = hull([...hole, ...hole.map(([x, y]) => [x + back[0], y + back[1]] as Flat)]);
   f.defs.push(`<clipPath id="vault-out"><path clip-rule="evenodd" d="M-1000 -1000H2000V2000H-1000Z${pathOf(tunnel, true)}${pathOf(hole, true)}"/></clipPath>`);
   const slide = f.moveOf("drawer", poses.map((p) => ({ t: p.t, by: [0, PULL * p.pull, 0] })));
-  f.add(`<g clip-path="url(#vault-out)"><g class="${slide}">${tray.join("")}</g></g>`);
+  f.add(`<g clip-path="url(#vault-out)"><g ${slide}>${tray.join("")}</g></g>`);
 
   return f.build({
     width,

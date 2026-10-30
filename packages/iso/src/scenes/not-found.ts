@@ -75,11 +75,11 @@ export function notFoundScene(width = 400, height = 300): Scene {
     return { t: p.t, by: [dx, dy, 0] };
   }));
   f.add(S(k.cylinder(stick[0], stick[1], 2.4, LOW_TOP - 4, 0.8, P, 18), { tone: "mid" }));
-  f.add(`<g class="${lean}">${L(pathOf([at([stick[0], stick[1], LOW_TOP - 3.2]), at([stick[0], stick[1], LOW_TOP + 3])]), { tone: "hi" })}${S(G.sphereOf([stick[0], stick[1], LOW_TOP + 4.6], 2, P), { tone: "hi", lit: true })}</g>`);
+  f.add(`<g ${lean}>${L(pathOf([at([stick[0], stick[1], LOW_TOP - 3.2]), at([stick[0], stick[1], LOW_TOP + 3])]), { tone: "hi" })}${S(G.sphereOf([stick[0], stick[1], LOW_TOP + 4.6], 2, P), { tone: "hi", lit: true })}</g>`);
   const btn: Flat = [7, LEDGE.y + 4.5];
   f.add(S(k.cylinder(btn[0], btn[1], 2.8, LOW_TOP - 4, 1, P, 20), { tone: "mid" }));
   const press = f.switchOf("button", poses.map((p) => ({ t: p.t, on: p.drop > REST_DROP + 0.5 && p.drop < DEEP_DROP - 0.5 && p.open > 0.5 })));
-  f.add(S(k.cylinder(btn[0], btn[1], 2, LOW_TOP - 3, 1.2, P, 18), { tone: "hi", crease: "lo" }), `<g class="${press}" opacity="0">${S(k.cylinder(btn[0], btn[1], 2, LOW_TOP - 3, 1.2, P, 18), { tone: "hi", lit: true })}</g>`);
+  f.add(S(k.cylinder(btn[0], btn[1], 2, LOW_TOP - 3, 1.2, P, 18), { tone: "hi", crease: "lo" }), `<g ${press} opacity="0">${S(k.cylinder(btn[0], btn[1], 2, LOW_TOP - 3, 1.2, P, 18), { tone: "hi", lit: true })}</g>`);
 
   const POSTS: Flat[] = [
     [CAB.x + 1.5, CAB.y + 1.5],
@@ -136,14 +136,14 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const TROLLEY: Plan = { x: -4, y: -4, w: 8, d: 8, r: 1 };
   f.defs.push(`<clipPath id="claw-cable"><path d="${pathOf([at([-30, 0, RAIL_Z - 2]), at([30, 0, RAIL_Z - 2]), at([30, 0, -80]), at([-30, 0, -80])], true)}"/></clipPath>`);
   const hang =
-    `<g clip-path="url(#claw-cable)"><g class="${lower}" transform="${f.translate([0, 0, -REST_DROP])}"><g transform="${f.translate([0, 0, RAIL_Z - 2])}">${cableLine}</g></g></g>` +
-    `<g class="${lower}" transform="${f.translate([0, 0, -REST_DROP])}"><g transform="${f.translate([0, 0, RAIL_Z - 2])}"><g class="${grip(true)}" opacity="0">${claw(1)}</g><g class="${grip(false)}">${claw(0)}</g></g></g>`;
+    `<g clip-path="url(#claw-cable)"><g ${lower} transform="${f.translate([0, 0, -REST_DROP])}"><g transform="${f.translate([0, 0, RAIL_Z - 2])}">${cableLine}</g></g></g>` +
+    `<g ${lower} transform="${f.translate([0, 0, -REST_DROP])}"><g transform="${f.translate([0, 0, RAIL_Z - 2])}"><g ${grip(true)} opacity="0">${claw(1)}</g><g ${grip(false)}>${claw(0)}</g></g></g>`;
   const trolley = S(k.slabOf(TROLLEY, RAIL_Z - 2, 4, P, 2, 0.3), { tone: "mid", inner: L(k.sideSeam(TROLLEY, RAIL_Z, P, 2), { tone: "faint" }) });
   const run = f.moveOf("trolley", poses.map((p) => ({ t: p.t, by: [p.x, 0, 0] })));
   const BRIDGE: Plan = { x: CAB.x + 2.5, y: -2, w: CAB.w - 5, d: 4, r: 0.6 };
   const bridge = S(k.slabOf(BRIDGE, RAIL_Z + 1.6, 2.4, P, 2, 0.3), { tone: "mid" });
   const ride = f.moveOf("bridge", poses.map((p) => ({ t: p.t, by: [0, p.y, 0] })));
-  f.add(`<g class="${ride}" transform="${f.translate([0, HOME[1], 0])}">${bridge}<g class="${run}" transform="${f.translate([HOME[0], 0, 0])}">${hang}${trolley}</g></g>`);
+  f.add(`<g ${ride} transform="${f.translate([0, HOME[1], 0])}">${bridge}<g ${run} transform="${f.translate([HOME[0], 0, 0])}">${hang}${trolley}</g></g>`);
 
   f.add(pane([CAB.x + 1.5, CAB.y + CAB.d - 1.5], [CAB.x + CAB.w - 1.5, CAB.y + CAB.d - 1.5]), pane([CAB.x + CAB.w - 1.5, CAB.y + 1.5], [CAB.x + CAB.w - 1.5, CAB.y + CAB.d - 1.5]));
   f.add(L(pathOf([at([-6, CAB.y + CAB.d - 1.5, 76]), at([4, CAB.y + CAB.d - 1.5, 62])]) + pathOf([at([0, CAB.y + CAB.d - 1.5, 78]), at([8, CAB.y + CAB.d - 1.5, 67])]), { tone: "faint" }));

@@ -1,4 +1,4 @@
-import { HALO, HALO_OPACITY, PLAY } from "./classes";
+import { HALO, HALO_OPACITY } from "./classes";
 import * as k from "./iso-kit";
 
 export type { Tone } from "./classes";
@@ -24,13 +24,20 @@ export interface Frame {
   css: string;
 }
 
+export interface Track {
+  id: string;
+  duration: number;
+  easing: "linear" | "steps(1, end)";
+  keyframes: Array<Record<string, string | number>>;
+}
+
 export interface Scene {
   id: string;
   width: number;
   height: number;
   period: number;
   body: string;
-  css: string;
+  tracks: Track[];
   label: string;
 }
 
@@ -59,6 +66,17 @@ function simplify(samples: Array<{ t: number; v: number[] }>, tolerance: number)
 
 function dedupeSteps(samples: Array<{ t: number; v: number[] }>) {
   return samples.filter((s, i) => i === 0 || s.v.some((value, n) => value !== samples[i - 1]!.v[n]));
+}
+
+const camel = (name: string) => name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
+
+function declarationsOf(css: string) {
+  const out: Record<string, string> = {};
+  for (const part of css.split(";")) {
+    const at = part.indexOf(":");
+    if (at > 0) out[camel(part.slice(0, at).trim())] = part.slice(at + 1).trim();
+  }
+  return out;
 }
 
 const short = (n: number) => {
@@ -132,8 +150,7 @@ const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 export class Figure {
   readonly out: string[] = [];
   readonly defs: string[] = [];
-  readonly css: string[] = [];
-  private tracks = 0;
+  readonly tracks: Track[] = [];
 
   constructor(
     readonly id: string,
@@ -165,17 +182,17 @@ export class Figure {
   }
 
   track(name: string, frames: Frame[], { steps = false, period = this.period } = {}) {
-    const cls = `${this.id}-${name}-${this.tracks++}`;
+    const id = `${this.id}-${name}-${this.tracks.length}`;
     const sorted = [...frames].sort((a, b) => a.t - b.t);
     if (!sorted.length) return "";
     if (sorted[0]!.t > 0) sorted.unshift({ t: 0, css: sorted[0]!.css });
     if (sorted.at(-1)!.t < period) sorted.push({ t: period, css: sorted.at(-1)!.css });
-    const seen = new Map<string, string>();
-    for (const { t, css } of sorted) seen.set(`${round((clamp(t, 0, period) / period) * 100, 2)}`, css);
-    const body = [...seen].map(([pct, css]) => `${pct}%{${css}}`).join("");
-    const timing = steps ? "steps(1,end)" : "linear";
-    this.css.push(`@keyframes ${cls}{${body}}.${cls}{animation:${cls} ${period}s ${timing} infinite}`);
-    return `${PLAY} ${cls}`;
+    const seen = new Map<number, string>();
+    for (const { t, css } of sorted) seen.set(round((clamp(t, 0, period) / period) * 100, 2), css);
+    const easing = steps ? "steps(1, end)" : "linear";
+    const keyframes = [...seen].map(([pct, css]) => ({ offset: pct / 100, ...(steps ? { easing } : {}), ...declarationsOf(css) }));
+    this.tracks.push({ id, duration: period, easing, keyframes });
+    return `data-iso-track="${id}"`;
   }
 
   trackOf(
@@ -221,7 +238,7 @@ export class Figure {
   }
 
   inPlane(matrix: string, content: string, spin = "") {
-    return `<g transform="${matrix}">${spin ? `<g class="${spin}">${content}</g>` : content}</g>`;
+    return `<g transform="${matrix}">${spin ? `<g ${spin}>${content}</g>` : content}</g>`;
   }
 
   planeOf(origin: V3, u: V3, v: V3) {
@@ -248,7 +265,7 @@ export class Figure {
     return layers.join("");
   }
 
-  build(meta: Omit<Scene, "id" | "body" | "css" | "period" | "width" | "height"> & { width: number; height: number }): Scene {
+  build(meta: Omit<Scene, "id" | "body" | "tracks" | "period" | "width" | "height"> & { width: number; height: number }): Scene {
     const defs = this.defs.length ? `<defs>${this.defs.join("")}</defs>` : "";
     const id = `${this.id}${meta.width}x${meta.height}`;
     const rename = (text: string) => text.split(`${this.id}-`).join(`${id}-`);
@@ -256,7 +273,7 @@ export class Figure {
       id,
       period: this.period,
       body: rename(compactAll(defs + this.out.join(""))),
-      css: rename(this.css.join("")),
+      tracks: this.tracks.map((track) => ({ ...track, id: rename(track.id) })),
       ...meta,
     };
   }
@@ -304,7 +321,7 @@ export function stadium(x0: number, x1: number, cy: number, r: number, perHalf =
 }
 
 export function sceneMarkup(scene: Scene) {
-  return `<style>${scene.css}</style>${scene.body}`;
+  return scene.body;
 }
 
 export { k };

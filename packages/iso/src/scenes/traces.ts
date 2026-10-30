@@ -106,11 +106,11 @@ export function tracesScene(width = 400, height = 225): Scene {
 
   const hopper = f.moveOf("hopper", poses.map((p) => ({ t: p.t, by: [0, 0, p.hopper] })));
   const inStack = Array.from({ length: STACK }, (_, i) => card(IN_X, FEED_Z - (STACK - i) * THICK, false)).join("");
-  tray(IN_X, "right", `<g class="${hopper}">${inStack}</g>`);
+  tray(IN_X, "right", `<g ${hopper}>${inStack}</g>`);
 
   const sink = f.moveOf("tray", poses.map((p) => ({ t: p.t, by: [0, 0, -p.tray] })));
   const outStack = Array.from({ length: STACK }, (_, i) => card(OUT_X, FEED_Z - (STACK - i) * THICK, true)).join("");
-  tray(OUT_X, "left", `<g class="${sink}">${outStack}</g>`);
+  tray(OUT_X, "left", `<g ${sink}>${outStack}</g>`);
 
   const FEED_ROLL = alongY([IN_X + CARD.w / 2 + 4, 0, FEED_Z + THICK + 2.4]);
   const rollPost = (y: number) => S(k.slabOf({ x: FEED_ROLL.o[0] - 1.6, y, w: 3.2, d: 2.4, r: 0.6 }, 0, FEED_ROLL.o[2] + 2.2, P, 2, 0.3), { tone: "mid" });
@@ -131,7 +131,7 @@ export function tracesScene(width = 400, height = 225): Scene {
     true,
   );
   f.defs.push(`<clipPath id="post-printed"><path d="${clipOut}"/></clipPath>`);
-  f.add(`<g class="${travel}">${card(IN_X, FEED_Z, false)}</g><g clip-path="url(#post-printed)"><g class="${travel}">${card(IN_X, FEED_Z, true)}</g></g>`);
+  f.add(`<g ${travel}>${card(IN_X, FEED_Z, false)}</g><g clip-path="url(#post-printed)"><g ${travel}>${card(IN_X, FEED_Z, true)}</g></g>`);
 
   f.add(S(disc(P, FEED_ROLL, -CARD.d / 2 - 1.6, CARD.d / 2 + 1.6, 2.4), { tone: "mid", crease: "lo" }));
   f.add(rollPost(CARD.d / 2 + 1.6));

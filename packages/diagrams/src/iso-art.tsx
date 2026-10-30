@@ -1,8 +1,9 @@
 import type { Scene } from "@repo/iso/figure";
 import { sceneMarkup } from "@repo/iso/figure";
+import { IsoMotion } from "./iso-motion";
 
 export function IsoArt({ scene }: { scene: Scene }) {
-  return (
+  const art = (
     <svg
       viewBox={`0 0 ${scene.width} ${scene.height}`}
       aria-hidden="true"
@@ -12,4 +13,7 @@ export function IsoArt({ scene }: { scene: Scene }) {
       dangerouslySetInnerHTML={{ __html: sceneMarkup(scene) }}
     />
   );
+
+  if (scene.tracks.length === 0) return art;
+  return <IsoMotion tracks={scene.tracks}>{art}</IsoMotion>;
 }

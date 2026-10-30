@@ -171,7 +171,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
     "led",
     poses.map((pose) => ({ t: pose.t, on: pose.stroke >= 0 && pose.stroke < STROKES.length ? 1 : 0.3 })),
   );
-  f.add(`<g class="${busy}" opacity="0.3"><g class="${DOTS_GLOW}"><circle cx="${at([led[0], led[1], 13])[0]}" cy="${at([led[0], led[1], 13])[1]}" r="1.1"/></g></g>`);
+  f.add(`<g ${busy} opacity="0.3"><g class="${DOTS_GLOW}"><circle cx="${at([led[0], led[1], 13])[0]}" cy="${at([led[0], led[1], 13])[1]}" r="1.1"/></g></g>`);
   knob(f, [CTRL.x + 10, CTRL.y + 30], 13, 3.2, 3.4);
   f.add(`<g transform="${f.sidePlane([CTRL.x + CTRL.w, CTRL.y + 22], 7, "right")}">${L("M-3 -1.3h6v2.6h-6z", { tone: "lo" })}</g>`);
 
@@ -211,7 +211,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
   f.add(S(disc(P, KNOB_S, 0, 3.2, 4.2), { tone: "mid" }));
   f.add(knurlOn(P, KNOB_S, 0, 3.2, 4.2, 20));
   const supplySpin = spin("supply-spin", (pose) => (pose.f - F_START) / SUPPLY_R);
-  f.add(`<g transform="${f.sidePlane([65.2, SUPPLY[1]], SUPPLY[2], "right")}"><g class="${supplySpin}">${spinMark(3, 0.9)}</g></g>`);
+  f.add(`<g transform="${f.sidePlane([65.2, SUPPLY[1]], SUPPLY[2], "right")}"><g ${supplySpin}>${spinMark(3, 0.9)}</g></g>`);
 
   const towerSolid = (x: number) => {
     const plan: Plan = { x, y: -28, w: 10, d: 16, r: 1.5 };
@@ -274,12 +274,12 @@ export function guestbookScene(width = 400, height = 300): Scene {
         ([offset]) => `stroke-dashoffset:${offset!.toFixed(1)}`,
         { tolerance: 0.05 },
       );
-      return `<path class="${INK} ${cls}" ${INK_ATTRS} d="${d}" stroke-dasharray="${total.toFixed(2)} ${(total + 4).toFixed(2)}" stroke-dashoffset="${hidden}"/>`;
+      return `<path class="${INK}" ${cls} ${INK_ATTRS} d="${d}" stroke-dasharray="${total.toFixed(2)} ${(total + 4).toFixed(2)}" stroke-dashoffset="${hidden}"/>`;
     })
     .join("");
   const feed = f.moveOf("feed", poses.map((pose) => ({ t: pose.t, by: [0, pose.f, 0] })));
   f.add(
-    `<g clip-path="url(#plot-paper)"><g class="${feed}" transform="${f.translate([0, F_START, 0])}">` +
+    `<g clip-path="url(#plot-paper)"><g ${feed} transform="${f.translate([0, F_START, 0])}">` +
       `${entryMarks()}${current}<g transform="${f.translate([0, PITCH, 0])}">${entryMarks()}${previous}</g>` +
       `</g></g>`,
   );
@@ -322,7 +322,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
   const pulley = (x: number, name: string) => {
     f.add(S(k.cylinder(x, -22, 2.8, BELT_Z, 2.6, P, 24), { tone: "mid", crease: "lo", inner: L(k.sideArc(x, -22, 2.8, BELT_Z + 1.3, P, 16), { tone: "faint" }) }));
     const turn = spin(name, (pose) => (pose.x - X_HOME) / 2.8);
-    f.add(`<g transform="${f.topPlane([x, -22], BELT_Z + 2.6)}"><g class="${turn}">${spinMark(2.2, 1)}</g></g>`);
+    f.add(`<g transform="${f.topPlane([x, -22], BELT_Z + 2.6)}"><g ${turn}>${spinMark(2.2, 1)}</g></g>`);
   };
   pulley(68, "idler");
   pulley(-68, "pulley");
@@ -376,7 +376,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
     ),
   );
   const springHalf = (half: "back" | "front", tone: "lo" | "mid") =>
-    springs.map((coil, i) => `<g class="${springCls[i]}"${i ? ' opacity="0"' : ""}>${L(coil[half], { tone })}</g>`).join("");
+    springs.map((coil, i) => `<g ${springCls[i]}${i ? ' opacity="0"' : ""}>${L(coil[half], { tone })}</g>`).join("");
   car.push(springHalf("back", "lo"));
   for (const x of [-5.6, 5.6]) car.push(S(k.cylinder(x, ROD_Y, 0.55, 29.5, BAR_Z - 29.5, P, 10), { tone: "hi", crease: "none" }));
   car.push(springHalf("front", "mid"));
@@ -397,21 +397,21 @@ export function guestbookScene(width = 400, height = 300): Scene {
     }),
   ];
   const liftCls = f.moveOf("lift", poses.map((pose) => ({ t: pose.t, by: [0, 0, pose.lift] })));
-  car.push(`<g class="${liftCls}" transform="${f.translate([0, 0, LIFT])}">${lifted.join("")}</g>`);
+  car.push(`<g ${liftCls} transform="${f.translate([0, 0, LIFT])}">${lifted.join("")}</g>`);
   const BAR: Plan = { x: -7.2, y: PLATE_F, w: 14.4, d: 3.4, r: 0.8 };
   car.push(S(k.slabOf(BAR, BAR_Z, 1.8, P, 2, 0.3), { tone: "mid" }));
   car.push(D([at([-5.6, ROD_Y, BAR_Z + 1.8]), at([5.6, ROD_Y, BAR_Z + 1.8])], { size: 0.4 }));
   car.push(S(k.cylinder(0, ROD_Y + 0.4, 2.3, BAR_Z + 1.8, 4.2, P, 20, 0.3), { tone: "mid", inner: L(k.sideArc(0, ROD_Y + 0.4, 2.3, BAR_Z + 3.9, P, 14), { tone: "faint" }) }));
   car.push(L(k.ring(0, ROD_Y + 0.4, 0.9, BAR_Z + 6, P, 12), { tone: "lo" }));
   const carriageCls = f.moveOf("carriage", poses.map((pose) => ({ t: pose.t, by: [pose.x, 0, 0] })));
-  f.add(`<g class="${carriageCls}" transform="${f.translate([X_HOME, 0, 0])}">${car.join("")}</g>`);
+  f.add(`<g ${carriageCls} transform="${f.translate([X_HOME, 0, 0])}">${car.join("")}</g>`);
 
   const FEED = alongX([74, -20, 14]);
   f.add(S(disc(P, FEED, 0, 1.4, 5.6), { tone: "mid" }));
   f.add(D([0, 1, 2, 3].map((i) => at(G.pointOf(FEED, 1.4, 4.6, Math.PI / 4 + (i * Math.PI) / 2) as V3)), { size: 0.4 }));
   f.add(S(turned(P, FEED, [[1.4, 4.4], [11, 4.4], [11.6, 3.7]]), { tone: "mid", crease: "lo", inner: L(arc(P, FEED, 6.5, 4.4), { tone: "faint" }) }));
   const feedSpin = spin("feed-spin", (pose) => (pose.f - F_START) / 3.2);
-  f.add(`<g transform="${f.sidePlane([85.6, -20], 14, "right")}"><g class="${feedSpin}">${spinMark(2.4, 1.1)}</g></g>`);
+  f.add(`<g transform="${f.sidePlane([85.6, -20], 14, "right")}"><g ${feedSpin}>${spinMark(2.4, 1.1)}</g></g>`);
 
   const TAKE = alongX([0, TAKE_Y, TAKE_Z]);
   const post = (x: number) => {
@@ -427,7 +427,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
   f.add(S(disc(P, KNOB_T, 0, 3.4, 4.4), { tone: "mid" }));
   f.add(knurlOn(P, KNOB_T, 0, 3.4, 4.4, 20));
   const takeSpin = spin("take-spin", (pose) => -(pose.f - F_START) / TAKE_R);
-  f.add(`<g transform="${f.sidePlane([61.4, TAKE_Y], TAKE_Z, "right")}"><g class="${takeSpin}">${spinMark(3.2, 0.9)}</g></g>`);
+  f.add(`<g transform="${f.sidePlane([61.4, TAKE_Y], TAKE_Z, "right")}"><g ${takeSpin}>${spinMark(3.2, 0.9)}</g></g>`);
   const COVER: Plan = { x: -57, y: COVER_BACK, w: 114, d: 24, r: 1.5 };
   f.add(S(k.slabOf(COVER, PAPER + 0.3, 2.4, P, 3, 0.5), { tone: "mid" }));
   const teeth: Flat[] = [];

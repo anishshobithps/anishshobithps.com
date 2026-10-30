@@ -29,6 +29,7 @@ export function IsoStage({
   return (
     <div
       ref={ref}
+      data-iso-stage=""
       data-iso-ambient={ambient || undefined}
       className={className}
       {...props}

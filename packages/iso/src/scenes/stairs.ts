@@ -79,21 +79,21 @@ export function stairsScene(width = 400, height = 225): Scene {
   const inTrough = (t: number) => t >= (N - 1) * PHASE + 0.25 && t < PERIOD - 0.2;
   const back = f.switchOf("marble-back", times.map((t) => ({ t, on: inTrough(t) })));
   const front = f.switchOf("marble-front", times.map((t) => ({ t, on: !inTrough(t) })));
-  f.add(`<g class="${back}" opacity="0"><g class="${ride}">${marble}</g></g>`);
+  f.add(`<g ${back} opacity="0"><g ${ride}>${marble}</g></g>`);
 
   for (let i = 0; i < N; i++) {
     const plan: Plan = { x: slatX(i), y: -4, w: SLAT_W, d: 8, r: 0.6 };
     const h = H0 + i * STEP + STEP;
     const move = f.moveOf(`slat${i}`, times.map((t) => ({ t, by: [0, 0, topOf(i, t) - (H0 + i * STEP)] })));
     const solid = S(k.slabOf(plan, -STEP, h, P, 2, 0.4), { tone: i === N - 1 ? "hi" : "mid", crease: "lo", inner: L(k.sideSeam(plan, h - STEP - 3, P, 2), { tone: "faint" }) });
-    f.add(`<g class="${move}">${solid}${L(k.lineOnTop([plan.x + 1, 0], [plan.x + SLAT_W - 1, 0], h - STEP, P), { tone: "faint" })}</g>`);
+    f.add(`<g ${move}>${solid}${L(k.lineOnTop([plan.x + 1, 0], [plan.x + SLAT_W - 1, 0], h - STEP, P), { tone: "faint" })}</g>`);
   }
   f.add(
     T.tubePieces(TROUGH.slice(0, SPLIT), 1.5, P, { maxLength: 400 })
       .map((piece) => T.tubeSvg(piece, { tone: "mid" }))
       .join(""),
   );
-  f.add(`<g class="${front}"><g class="${ride}">${marble}</g></g>`);
+  f.add(`<g ${front}><g ${ride}>${marble}</g></g>`);
 
   const MOTOR: Plan = { x: 38, y: -12, w: 12, d: 14, r: 1.5 };
   f.add(S(k.slabOf(MOTOR, 0, 12, P, 3, 0.5), { tone: "mid", inner: L(k.sideSeam(MOTOR, 6, P, 3), { tone: "faint" }) }));

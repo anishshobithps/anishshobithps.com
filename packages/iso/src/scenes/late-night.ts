@@ -168,7 +168,7 @@ export function lateNightScene(width = 400, height = 225): Scene {
     ([u]) => `transform:translate(${u!.toFixed(2)}px,0)`,
     { tolerance: 0.03 },
   );
-  f.add(`<g transform="${plane}"><g clip-path="url(#ticker-out)"><g class="${feed}">${L(marks, { tone: "hi" })}</g></g></g>`);
+  f.add(`<g transform="${plane}"><g clip-path="url(#ticker-out)"><g ${feed}>${L(marks, { tone: "hi" })}</g></g></g>`);
 
   for (const x of [-3.6, 3.6]) {
     f.add(S(k.cylinder(x, 15, 2.6, TOP, 12, P, 24), { tone: "mid", inner: L([2, 4, 6, 8, 10].map((dz) => k.sideArc(x, 15, 2.6, TOP + dz, P, 16)).join(""), { tone: "lo" }) }));
@@ -180,7 +180,7 @@ export function lateNightScene(width = 400, height = 225): Scene {
     S(k.slabOf({ x: -6.5, y: 12, w: 13, d: 6, r: 1 }, 20.6, 1.4, P, 2, 0.3), { tone: "mid" }) +
     S(k.slabOf({ x: -1.2, y: TAPE_Y + 0.6, w: 2.4, d: 12, r: 0.6 }, 22.6, 2, P, 2, 0.2), { tone: "mid" }) +
     S(k.slabOf({ x: -1.6, y: TAPE_Y + 0.5, w: 3.2, d: 2.4, r: 0.6 }, 21.6, 4.4, P, 2, 0.3), { tone: "hi", crease: "lo" });
-  f.add(`<g class="${strike}">${lever}</g>`);
+  f.add(`<g ${strike}>${lever}</g>`);
   f.add(S(k.cylinder(PIVOT[0], PIVOT[1], 1.1, TOP + 15, 1.4, P, 12), { tone: "hi" }));
 
   f.add(ribbon([POSTS[1]![0] + 1, POSTS[1]![1] + 0.6], tangentFrom(TAKE, TAKE_R, POSTS[1]!, 1)));

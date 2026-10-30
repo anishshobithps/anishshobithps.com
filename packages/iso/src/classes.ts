@@ -105,8 +105,5 @@ export const TUBE = {
   shade: "fill-iso-shade-0 stroke-none",
 } as const;
 
-export const PLAY =
-  "[animation-play-state:paused]! in-data-iso-active:[animation-play-state:running]! motion-reduce:animate-none!";
-
 export const lineAttrs = (tone: LineTone, extra = "") =>
   `class="${TONE_STROKE[tone]}${extra ? ` ${extra}` : ""}" ${LINE_ATTRS}`;

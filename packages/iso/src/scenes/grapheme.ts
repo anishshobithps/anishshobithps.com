@@ -63,7 +63,7 @@ export function graphemeScene(width = 400, height = 225): Scene {
     const shown = f.switchOf(`sort${i}-on`, times.map((t) => ({ t, on: !fusedAt(t) })));
     const nick = L(k.segment([0, STICK.y + 2.2 + DEPTH, 8], [s.w, STICK.y + 2.2 + DEPTH, 8], P), { tone: "lo" });
     f.add(
-      `<g class="${shown}"><g class="${slide}" transform="${f.translate([s.open, 0, 0])}">${sortSolid(s.w, i === 2)}${nick}${f.inPlane(f.topPlane([0, STICK.y + 2.2], FACE_Z), face_(i, s.w))}</g></g>`,
+      `<g ${shown}><g ${slide} transform="${f.translate([s.open, 0, 0])}">${sortSolid(s.w, i === 2)}${nick}${f.inPlane(f.topPlane([0, STICK.y + 2.2], FACE_Z), face_(i, s.w))}</g></g>`,
     );
   });
   const fused = f.switchOf("fused", times.map((t) => ({ t, on: fusedAt(t) })));
@@ -74,11 +74,11 @@ export function graphemeScene(width = 400, height = 225): Scene {
     L(`M${total / 2 - 1.4} 7h8`, { tone: "hi" }) +
     L(`M${total / 2 - 3.4} 5.4l1 0.4`, { tone: "lit" });
   f.add(
-    `<g class="${fused}" opacity="0"><g transform="${f.translate([-total / 2, 0, 0])}">${sortSolid(total, true)}${f.inPlane(f.topPlane([0, STICK.y + 2.2], FACE_Z), ligFace)}</g></g>`,
+    `<g ${fused} opacity="0"><g transform="${f.translate([-total / 2, 0, 0])}">${sortSolid(total, true)}${f.inPlane(f.topPlane([0, STICK.y + 2.2], FACE_Z), ligFace)}</g></g>`,
   );
 
   const knee = f.moveOf("knee", times.map((t) => ({ t, by: [placed.at(-1)!.open + placed.at(-1)!.w + ((placed.at(-1)!.shut - placed.at(-1)!.open) * joinAt(t)), 0, 0] })));
-  f.add(`<g class="${knee}" transform="${f.translate([placed.at(-1)!.open + placed.at(-1)!.w, 0, 0])}">${S(k.slabOf({ x: 0, y: STICK.y + 2, w: 3, d: 10, r: 0.6 }, 2.4, 9, P, 2, 0.3), { tone: "mid" })}</g>`);
+  f.add(`<g ${knee} transform="${f.translate([placed.at(-1)!.open + placed.at(-1)!.w, 0, 0])}">${S(k.slabOf({ x: 0, y: STICK.y + 2, w: 3, d: 10, r: 0.6 }, 2.4, 9, P, 2, 0.3), { tone: "mid" })}</g>`);
   knob(f, [STICK.x + STICK.w - 4, STICK.y + 6], 2.4, 2.6, 3);
 
   return f.build({

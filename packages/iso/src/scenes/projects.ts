@@ -141,17 +141,17 @@ export function projectsScene(width = 400, height = 300): Scene {
   const states = Array.from({ length: LAYERS }, (_, i) => {
     const solid = S(k.extrude(A, BELT_Z, (i + 1) * LH, P, { convex: false }), { tone: "hi", crease: "lo", lit: true });
     const on = f.switchOf(`layer${i}`, poses.map((p) => ({ t: p.t, on: p.layer > i && p.fall === 0 })));
-    return `<g class="${on}" opacity="0">${solid}</g>`;
+    return `<g ${on} opacity="0">${solid}</g>`;
   }).join("");
   const laying = screens
     .map((pts, i) => {
       const total = totals[i]!;
       const hidden = total + 1;
       const reveal = f.trackOf(`lay${i}`, poses.map((p) => ({ t: p.t, v: [p.layer === i && p.ink[i]! > 0 ? total - p.ink[i]! : hidden] })), ([o]) => `stroke-dashoffset:${o!.toFixed(1)}`, { tolerance: 0.05 });
-      return `<path class="${INK} ${reveal}" ${INK_ATTRS} d="${pathOf(pts)}" stroke-dasharray="${total.toFixed(1)} ${(total + 4).toFixed(1)}" stroke-dashoffset="${hidden.toFixed(1)}"/>`;
+      return `<path class="${INK}" ${reveal} ${INK_ATTRS} d="${pathOf(pts)}" stroke-dasharray="${total.toFixed(1)} ${(total + 4).toFixed(1)}" stroke-dashoffset="${hidden.toFixed(1)}"/>`;
     })
     .join("");
-  f.add(`<g clip-path="url(#print-belt)"><g class="${belt}">${L(ribs, { tone: "faint" })}</g></g><g class="${belt}">${states}${laying}</g>`);
+  f.add(`<g clip-path="url(#print-belt)"><g ${belt}>${L(ribs, { tone: "faint" })}</g></g><g ${belt}>${states}${laying}</g>`);
 
   sidePlate(HALF + 2.5);
   upright(38);
@@ -174,8 +174,8 @@ export function projectsScene(width = 400, height = 300): Scene {
   h.push(L(k.ring(0, 6, 2.2, ZB + 16, P, 18), { tone: "lo" }));
   const fanFace = f.sidePlane([0, 11.4], ZB + 6, "left");
   h.push(f.inPlane(fanFace, face(`M-6.5 -3.2h13v9.5h-13z`, "1", "mid") + L(circleD(0, 1.5, 3.6, 24) + circleD(0, 1.5, 1.2, 12), { tone: "lo" }) + D([[-5.4, -2.1], [5.4, -2.1], [-5.4, 5.2], [5.4, 5.2]], { size: 0.35 })));
-  g.push(`<g class="${head}" transform="${f.translate([20, 0, 0])}">${h.join("")}</g>`);
-  f.add(`<g class="${gantry}">${g.join("")}</g>`);
+  g.push(`<g ${head} transform="${f.translate([20, 0, 0])}">${h.join("")}</g>`);
+  f.add(`<g ${gantry}>${g.join("")}</g>`);
 
   bar({ x: -41, y: -3, w: 82, d: 6, r: 0.6 }, 84, 6);
   f.add(screwsOnTop(P, [[-38, 0], [38, 0]], 90, 0.8));
@@ -194,7 +194,7 @@ export function projectsScene(width = 400, height = 300): Scene {
     poses.map((p) => ({ t: p.t, by: [0, (OFF_Y - LAND[1]) * (1 - p.fall), (BELT_Z - 0.8) * (1 - p.fall * p.fall)] })),
   );
   const shown = f.switchOf("drop-on", poses.map((p) => ({ t: p.t, on: p.fall > 0 })));
-  f.add(`<g class="${shown}" opacity="0"><g class="${drop}">${binPart(LAND[0], LAND[1])}</g></g>`);
+  f.add(`<g ${shown} opacity="0"><g ${drop}>${binPart(LAND[0], LAND[1])}</g></g>`);
   f.add(binPart(LAND[0], LAND[1]));
   f.add(wall({ x: BIN.x + BIN.w - 1.6, y: BIN.y, w: 1.6, d: BIN.d, r: 0.5 }), wall({ x: BIN.x, y: BIN.y + BIN.d - 1.6, w: BIN.w, d: 1.6, r: 0.5 }));
 
@@ -206,7 +206,7 @@ export function projectsScene(width = 400, height = 300): Scene {
   const texts = states2
     .map((phase) => {
       const on = f.switchOf(`lcd-${phase.replace(/\W+/g, "")}`, poses.map((p) => ({ t: p.t, on: p.phase === phase })));
-      return `<g class="${on}"${phase === poses[0]!.phase ? "" : ' opacity="0"'}><text class="${FACE_TEXT.lit}" x="7.5" y="5.2" font-size="2.3" text-anchor="middle">${phase.toUpperCase()}</text></g>`;
+      return `<g ${on}${phase === poses[0]!.phase ? "" : ' opacity="0"'}><text class="${FACE_TEXT.lit}" x="7.5" y="5.2" font-size="2.3" text-anchor="middle">${phase.toUpperCase()}</text></g>`;
     })
     .join("");
   f.add(f.inPlane(screen, face(`M0 0h15v8h-15z`, "0", "mid") + `<clipPath id="print-lcd"><path d="M0.6 0.6h13.8v6.8h-13.8z"/></clipPath><g clip-path="url(#print-lcd)">${texts}</g>`));

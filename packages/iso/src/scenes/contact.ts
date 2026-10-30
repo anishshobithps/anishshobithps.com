@@ -96,7 +96,7 @@ export function contactScene(width = 400, height = 300): Scene {
   }).join("");
   f.add(f.inPlane(gaugeFace, face(circleD(0, 0, 5.2, 36), "top", "hi") + L(circleD(0, 0, 4.6, 36), { tone: "lo" }) + L(ticks, { tone: "mid" })));
   const needle = f.spinOf("gauge", poses.map((p) => ({ t: p.t, angle: Math.PI * 1.5 * p.pressure })), { tolerance: 1 });
-  f.add(f.inPlane(gaugeFace, `<g transform="rotate(135)"><g class="${needle}">${L(pathOf([[-0.8, 0], [4, 0]]), { tone: "lit" })}</g></g>` + `<circle class="stroke-none ${FACE_FILL["2"]}" r="0.7"/>`));
+  f.add(f.inPlane(gaugeFace, `<g transform="rotate(135)"><g ${needle}>${L(pathOf([[-0.8, 0], [4, 0]]), { tone: "lit" })}</g></g>` + `<circle class="stroke-none ${FACE_FILL["2"]}" r="0.7"/>`));
   f.add(S(k.cylinder(-7, -20, 2.6, 20, 1.2, P, 18), { tone: "mid" }));
   f.add(T.tubePieces(G.fillet([[-7, -20, 21.2], [-7, -20, 25], [-44, -20, 25], [-44, -4, 25], [SX + 12 + 1.2, -4, 25]] as V3[], 4, 7) as V3[], 1.4, P, { maxLength: 400 }).map((piece) => T.tubeSvg(piece, { tone: "mid" })).join(""));
   const station = (cx: number, index: 0 | 1) => {
@@ -111,7 +111,7 @@ export function contactScene(width = 400, height = 300): Scene {
     f.add(S(k.cylinder(lampAt[0], lampAt[1], 2.4, CAB_TOP, 1.4, P, 20), { tone: "mid" }));
     f.add(S(turned(P, alongZ([lampAt[0], lampAt[1], CAB_TOP + 1.4]), [[0, 1.8], [2, 1.8, 1], [3, 1.2, 1], [3.5, 0, 1]]), { tone: "hi", crease: "lo", lit: false }));
     const lit = f.switchOf(`lamp${index}`, poses.map((p) => ({ t: p.t, on: p.lamp[index] })));
-    f.add(`<g class="${lit}" opacity="0">${S(turned(P, alongZ([lampAt[0], lampAt[1], CAB_TOP + 1.4]), [[0, 1.8], [2, 1.8, 1], [3, 1.2, 1], [3.5, 0, 1]]), { tone: "hi", lit: true })}</g>`);
+    f.add(`<g ${lit} opacity="0">${S(turned(P, alongZ([lampAt[0], lampAt[1], CAB_TOP + 1.4]), [[0, 1.8], [2, 1.8, 1], [3, 1.2, 1], [3.5, 0, 1]]), { tone: "hi", lit: true })}</g>`);
     const side = f.sidePlane([CAB.x + CAB.w, CAB.y + 8], TRAY_Z + 8, "right");
     const lever = f.spinOf(`lever${index}`, poses.map((p) => ({ t: p.t, angle: -0.7 * p.lever[index] })), { tolerance: 1 });
     f.add(f.inPlane(side, face(circleD(0, 0, 2.2, 18), "2", "mid")));
@@ -136,7 +136,7 @@ export function contactScene(width = 400, height = 300): Scene {
     S(turned(P, CAP, [[-6, 1.2, 1], [-5.5, 2.1, 1], [-4.6, 2.4], [4.6, 2.4], [5.5, 2.1, 1], [6, 1.2, 1]]), { tone: "hi", crease: "lo", inner: L(arc(P, CAP, -2.6, 2.4) + arc(P, CAP, 2.6, 2.4), { tone: "lit" }) });
   const ride = f.moveOf("capsule", poses.map((p) => ({ t: p.t, by: p.at })));
   const fade = f.trackOf("capsule-fade", poses.map((p) => ({ t: p.t, v: [p.shown] })), ([o]) => `opacity:${o!.toFixed(2)}`, { tolerance: 0.01 });
-  f.add(`<g class="${fade}"><g class="${ride}" transform="${f.translate([SX, TRAY_Y, TRAY_Z])}">${capsule}</g></g>`);
+  f.add(`<g ${fade}><g ${ride} transform="${f.translate([SX, TRAY_Y, TRAY_Z])}">${capsule}</g></g>`);
 
   const route = (pts: V3[]) => G.fillet(pts, TUBE_R * 3, 9) as V3[];
   const opaque = (pts: V3[]) => T.tubePieces(route(pts), TUBE_R, P, { maxLength: 400 }).map((piece) => T.tubeSvg(piece, { tone: "mid" })).join("");
