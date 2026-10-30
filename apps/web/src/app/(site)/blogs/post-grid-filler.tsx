@@ -1,4 +1,4 @@
-import { IsoBox, projector } from "@/components/diagrams/iso";
+import { IsoBox, projector } from "@repo/diagrams/iso";
 import { SectionLabel } from "@repo/ui/components/typography";
 
 const p = projector(24, 60, 40);

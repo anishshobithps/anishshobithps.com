@@ -10,12 +10,4 @@ export default createNextConfig({
     'src/app/global-error.tsx',
     'src/components/shared/flicker-text.tsx',
   ],
-  extra: [
-    {
-      files: ['src/components/diagrams/git-chaos.tsx'],
-      rules: {
-        'shadcn/no-inline-styles': 'off',
-      },
-    },
-  ],
 });

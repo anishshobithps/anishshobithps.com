@@ -2,7 +2,7 @@
 
 import { ArrowRightIcon } from "@repo/icons";
 import { cn } from "@repo/ui/lib/cn";
-import { isoType } from "@/components/diagrams/classes";
+import { isoType } from "@repo/diagrams/classes";
 import { useEffect, useState } from "react";
 
 const PHRASES = [

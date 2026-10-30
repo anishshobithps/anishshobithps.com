@@ -1,4 +1,4 @@
-import { BlogCover } from "@/components/diagrams/blog-covers";
+import { BlogCover } from "@repo/diagrams/blog-covers";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import {
   EndOfPost,

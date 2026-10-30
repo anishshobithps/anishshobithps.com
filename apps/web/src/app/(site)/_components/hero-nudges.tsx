@@ -1,5 +1,5 @@
-import { IsoStage } from "@/components/diagrams/iso-stage";
-import { isoCanvas, nudgeDraw } from "@/components/diagrams/classes";
+import { IsoStage } from "@repo/diagrams/iso-stage";
+import { isoCanvas, nudgeDraw } from "@repo/diagrams/classes";
 import { cn } from "@repo/ui/lib/cn";
 import { ArrowRightIcon } from "@repo/icons";
 import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";

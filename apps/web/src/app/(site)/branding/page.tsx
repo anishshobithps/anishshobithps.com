@@ -1,4 +1,4 @@
-import { PageArt } from "@/components/diagrams/page-art";
+import { PageArt } from "@repo/diagrams/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { SectionMargins } from "@/components/layouts/section-margins";
 import {

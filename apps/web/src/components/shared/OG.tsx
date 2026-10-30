@@ -6,7 +6,7 @@ import {
   projector,
   toPoints,
   type Vec3,
-} from "@/components/diagrams/iso";
+} from "@repo/diagrams/iso";
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { MASCOT_POINTS, MascotFigure } from "@/components/shared/logo-mascot";
 import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@/lib/svg/fonts";

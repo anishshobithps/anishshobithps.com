@@ -1,6 +1,6 @@
 "use client";
 
-import { isoCanvas } from "@/components/diagrams/classes";
+import { isoCanvas } from "@repo/diagrams/classes";
 import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
 import { cn } from "@repo/ui/lib/cn";
 

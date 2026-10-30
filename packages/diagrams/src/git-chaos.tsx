@@ -8,7 +8,7 @@ import {
   isoRipple,
   isoTwinkle,
   isoType,
-} from "@/components/diagrams/classes";
+} from "./classes";
 
 const COLS = 42;
 const ROWS = 7;

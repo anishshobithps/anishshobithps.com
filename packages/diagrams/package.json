@@ -1,0 +1,29 @@
+{
+  "name": "@repo/diagrams",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./classes": "./src/classes.ts",
+    "./*": "./src/*.tsx"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "types:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/iso": "workspace:*",
+    "@repo/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

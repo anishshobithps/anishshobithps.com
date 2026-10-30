@@ -1,4 +1,4 @@
-import { PageArt } from "@/components/diagrams/page-art";
+import { PageArt } from "@repo/diagrams/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { getGuestbookEntries } from "@/app/(site)/guestbook/actions";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";

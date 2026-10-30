@@ -1,7 +1,7 @@
 import { Section } from "@/components/layouts/page";
 import { Reveal } from "@/components/shared/reveal";
 import { ArtStage } from "@/components/layouts/hero-art";
-import { PageArt } from "@/components/diagrams/page-art";
+import { PageArt } from "@repo/diagrams/page-art";
 import {
   TypographyH2,
   TypographyH3,
