@@ -7,7 +7,7 @@
     "./next": "./src/next.mjs"
   },
   "dependencies": {
-    "@shadcn/lint": "^0.2.1",
+    "@shadcn/lint": "^0.2.3",
     "eslint-config-next": "16.1.6"
   },
   "peerDependencies": {
