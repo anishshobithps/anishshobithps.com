@@ -12,7 +12,8 @@
   },
   "scripts": {
     "lint": "eslint",
-    "types:check": "tsc --noEmit"
+    "types:check": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
