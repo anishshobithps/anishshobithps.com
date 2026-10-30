@@ -32,10 +32,6 @@ export const CARD_WIDTH = 840;
 
 export const HOUR = 60 * 60;
 
-/**
- * Thrown by a loader when the options were well-formed but name something that
- * doesn't exist (a city nobody has heard of). The route answers 400, not 500.
- */
 export class SvgParamError extends Error {
   name = "SvgParamError";
 }
