@@ -4,6 +4,66 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@tailwindcss/postcss':
+      specifier: ^4.3.3
+      version: 4.3.3
+    '@tanstack/react-query':
+      specifier: ^5.104.3
+      version: 5.104.3
+    '@tanstack/react-table':
+      specifier: ^9.3.1
+      version: 9.3.1
+    '@tanstack/react-virtual':
+      specifier: ^3.14.20
+      version: 3.14.20
+    '@types/node':
+      specifier: ^25.9.9
+      version: 25.9.9
+    '@types/react':
+      specifier: ^19.3.0
+      version: 19.3.0
+    '@types/react-dom':
+      specifier: ^19.3.0
+      version: 19.3.0
+    class-variance-authority:
+      specifier: ^0.7.1
+      version: 0.7.1
+    drizzle-orm:
+      specifier: ^0.45.4
+      version: 0.45.4
+    eslint:
+      specifier: ^9.39.5
+      version: 9.39.5
+    next:
+      specifier: ^16.4.2
+      version: 16.4.2
+    radix-ui:
+      specifier: ^1.8.1
+      version: 1.8.1
+    react:
+      specifier: ^19.3.1
+      version: 19.3.1
+    react-dom:
+      specifier: ^19.3.1
+      version: 19.3.1
+    tailwindcss:
+      specifier: ^4.3.3
+      version: 4.3.3
+    tsx:
+      specifier: ^4.23.15
+      version: 4.23.15
+    typescript:
+      specifier: ^6.0.3
+      version: 6.0.3
+    vitest:
+      specifier: ^4.1.12
+      version: 4.1.12
+    zod:
+      specifier: ^4.6.7
+      version: 4.6.7
+
 overrides:
   '@esbuild-kit/esm-loader': npm:tsx@^4
   postcss@<8.5.10: ^8.5.10
@@ -34,19 +94,19 @@ importers:
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/react-query':
-        specifier: ^5.104.3
+        specifier: 'catalog:'
         version: 5.104.3(react@19.3.1)
       '@tanstack/react-table':
-        specifier: ^9.3.1
+        specifier: 'catalog:'
         version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/react-virtual':
-        specifier: ^3.14.20
+        specifier: 'catalog:'
         version: 3.14.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@wojtekmaj/react-hooks':
         specifier: ^2.3.0
         version: 2.3.0(@types/react@19.3.0)(react@19.3.1)
       class-variance-authority:
-        specifier: ^0.7.1
+        specifier: 'catalog:'
         version: 0.7.1
       cmdk:
         specifier: ^1.1.1
@@ -58,7 +118,7 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       drizzle-orm:
-        specifier: ^0.45.4
+        specifier: 'catalog:'
         version: 0.45.4(@neondatabase/serverless@1.2.0)
       fumadocs-core:
         specifier: 16.11.1
@@ -76,7 +136,7 @@ importers:
         specifier: ^12.43.0
         version: 12.43.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next:
-        specifier: ^16.4.2
+        specifier: 'catalog:'
         version: 16.4.2(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@25.9.9)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next-themes:
         specifier: ^0.4.6
@@ -91,13 +151,13 @@ importers:
         specifier: 5.4.296
         version: 5.4.296
       radix-ui:
-        specifier: ^1.8.1
+        specifier: 'catalog:'
         version: 1.8.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react:
-        specifier: ^19.3.1
+        specifier: 'catalog:'
         version: 19.3.1
       react-dom:
-        specifier: ^19.3.1
+        specifier: 'catalog:'
         version: 19.3.1(react@19.3.1)
       react-hook-form:
         specifier: ^7.90.0
@@ -130,7 +190,7 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       zod:
-        specifier: ^4.6.7
+        specifier: 'catalog:'
         version: 4.6.7
     devDependencies:
       '@clerk/backend':
@@ -149,7 +209,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/vitest-config
       '@tailwindcss/postcss':
-        specifier: ^4.3.3
+        specifier: 'catalog:'
         version: 4.3.3
       '@types/culori':
         specifier: ^4.0.1
@@ -161,16 +221,16 @@ importers:
         specifier: ^2.0.14
         version: 2.0.14
       '@types/node':
-        specifier: ^25.9.9
+        specifier: 'catalog:'
         version: 25.9.9
       '@types/opentype.js':
         specifier: ^1.3.10
         version: 1.3.10
       '@types/react':
-        specifier: ^19.3.0
+        specifier: 'catalog:'
         version: 19.3.0
       '@types/react-dom':
-        specifier: ^19.3.0
+        specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
       '@types/ws':
         specifier: ^8.18.2
@@ -179,7 +239,7 @@ importers:
         specifier: ^0.31.11
         version: 0.31.11
       eslint:
-        specifier: ^9.39.5
+        specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
       knip:
         specifier: ^6.41.0
@@ -197,19 +257,19 @@ importers:
         specifier: ^16.35.0
         version: 16.35.0
       tailwindcss:
-        specifier: ^4.3.3
+        specifier: 'catalog:'
         version: 4.3.3
       tsx:
-        specifier: ^4.23.15
+        specifier: 'catalog:'
         version: 4.23.15
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
       typescript:
-        specifier: ^6.0.3
+        specifier: 'catalog:'
         version: 6.0.3
       vitest:
-        specifier: ^4.1.12
+        specifier: 'catalog:'
         version: 4.1.12(@types/node@25.9.9)(msw@2.15.0(@types/node@25.9.9)(typescript@6.0.3))(vite@8.1.4(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
       ws:
         specifier: ^8.22.0
@@ -225,7 +285,7 @@ importers:
         version: 16.1.6(@typescript-eslint/parser@8.71.2(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
     devDependencies:
       eslint:
-        specifier: ^9.39.5
+        specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
 
   packages/tsconfig: {}
@@ -233,7 +293,7 @@ importers:
   packages/vitest-config:
     devDependencies:
       vitest:
-        specifier: ^4.1.12
+        specifier: 'catalog:'
         version: 4.1.12(@types/node@25.9.9)(msw@2.15.0(@types/node@25.9.9)(typescript@6.0.3))(vite@8.1.4(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
 packages:

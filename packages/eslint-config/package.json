@@ -11,9 +11,9 @@
     "eslint-config-next": "16.1.6"
   },
   "peerDependencies": {
-    "eslint": "^9.39.5"
+    "eslint": "catalog:"
   },
   "devDependencies": {
-    "eslint": "^9.39.5"
+    "eslint": "catalog:"
   }
 }

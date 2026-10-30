@@ -7,9 +7,9 @@
     ".": "./src/index.ts"
   },
   "peerDependencies": {
-    "vitest": "^4.1.12"
+    "vitest": "catalog:"
   },
   "devDependencies": {
-    "vitest": "^4.1.12"
+    "vitest": "catalog:"
   }
 }
