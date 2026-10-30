@@ -1,6 +1,6 @@
 export type Tokens = Record<string, string>;
 
-export function declarations(css: string, selector: string): Tokens {
+function declarations(css: string, selector: string): Tokens {
   const escaped = selector.replace(".", "\\.");
   const block =
     css.match(new RegExp(`^${escaped} \\{([^}]*)\\}`, "m"))?.[1] ?? "";
