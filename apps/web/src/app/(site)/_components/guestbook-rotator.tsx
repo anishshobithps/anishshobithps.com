@@ -3,8 +3,8 @@
 import { useState } from "react";
 import type { GuestbookPreviewEntry } from "@/app/(site)/guestbook/actions";
 import { PauseIcon, PlayIcon } from "@repo/icons";
-import { Button } from "@/components/ui/button";
-import { TypographyMuted } from "@/components/ui/typography";
+import { Button } from "@repo/ui/components/button";
+import { TypographyMuted } from "@repo/ui/components/typography";
 import { formatShortDate } from "@repo/core/date";
 
 function isClerkImageHost(url: string): boolean {

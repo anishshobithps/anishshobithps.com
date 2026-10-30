@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@repo/ui/components/badge";
 import { PanelRow } from "@/components/layouts/page";
-import { SectionLabel } from "@/components/ui/typography";
+import { SectionLabel } from "@repo/ui/components/typography";
 
 export function PanelHeader({ label, count }: { label: string; count: number }) {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
-import { Text } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+import { Text } from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const TRACK = "M4 15 C40 10, 80 19, 120 14 S170 11, 184 15";

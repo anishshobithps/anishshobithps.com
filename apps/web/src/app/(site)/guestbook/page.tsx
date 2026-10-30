@@ -11,7 +11,7 @@ import {
   TypographyH1,
   TypographyLead,
   TypographyMark,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import { auth } from "@clerk/nextjs/server";

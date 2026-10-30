@@ -7,7 +7,7 @@ import {
   TypographyH1,
   TypographyH2,
   TypographyMuted,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { templates } from "@/lib/svg/registry";
 import { renderError, renderTemplate } from "@/lib/svg/render";
 import type { AnySvgTemplate, Query, Theme } from "@/lib/svg/template";

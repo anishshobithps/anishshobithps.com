@@ -1,8 +1,8 @@
 "use client";
 
-import { SectionLabel } from "@/components/ui/typography";
-import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-import { cn } from "@/lib/cn";
+import { SectionLabel } from "@repo/ui/components/typography";
+import { usePrefersReducedMotion } from "@repo/ui/hooks/use-prefers-reduced-motion";
+import { cn } from "@repo/ui/lib/cn";
 import { useEffect, useId, useState, type SVGProps } from "react";
 
 type Point = [number, number];

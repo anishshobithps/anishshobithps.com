@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
+import { Button } from "@repo/ui/components/button";
+import { Empty, EmptyContent, EmptyHeader } from "@repo/ui/components/empty";
 import { HouseIcon } from "@repo/icons";
 import { PageArt } from "@/components/diagrams/page-art";
 import { ArtStage } from "@/components/layouts/hero-art";
@@ -7,7 +7,7 @@ import {
   Text,
   TypographyMuted,
   TypographyMark,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import Link from "next/link";
 
 export default function NotFound() {

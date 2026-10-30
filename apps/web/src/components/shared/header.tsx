@@ -3,18 +3,18 @@
 import { Logo } from "@/components/shared/logo";
 import { SoundSwitch, SoundToggle } from "@/components/shared/sound-controls";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Kbd } from "@/components/ui/kbd";
+import { Button } from "@repo/ui/components/button";
+import { ButtonGroup } from "@repo/ui/components/button-group";
+import { Kbd } from "@repo/ui/components/kbd";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { TypographySmall } from "@/components/ui/typography";
+} from "@repo/ui/components/navigation-menu";
+import { TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
 import { playCue } from "@/lib/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";

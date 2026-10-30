@@ -17,12 +17,12 @@ import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Signature } from "@/components/ui/signature";
+import { Signature } from "@repo/ui/components/signature";
 import {
   TypographyH1,
   TypographyLead,
   TypographyMuted,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import {
   formatLongDate,

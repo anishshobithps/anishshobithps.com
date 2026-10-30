@@ -7,7 +7,7 @@ import { EngagementEmptyState } from "@/components/engagement/empty-state";
 import { EngagementNudge } from "@/components/engagement/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
 import { PanelRow, panelListItem } from "@/components/layouts/page";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@repo/ui/components/scroll-area";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef } from "react";
 

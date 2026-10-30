@@ -2,16 +2,16 @@
 
 import { BouncingLogos } from "@/components/shared/bouncing-logo";
 import { HouseIcon, SignOutIcon, WarningIcon } from "@repo/icons";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+} from "@repo/ui/components/button-group";
 import {
   TypographyH1,
   TypographyMark,
   TypographyMuted,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRef } from "react";

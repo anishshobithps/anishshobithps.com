@@ -4,10 +4,10 @@ import Link from "next/link";
 import {
   PaginationPrevious,
   PaginationNext,
-} from "@/components/ui/pagination";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { TypographySmall } from "@/components/ui/typography";
+} from "@repo/ui/components/pagination";
+import { Button } from "@repo/ui/components/button";
+import { ButtonGroup } from "@repo/ui/components/button-group";
+import { TypographySmall } from "@repo/ui/components/typography";
 import {
   ArrowLeftIcon,
   LinkIcon,

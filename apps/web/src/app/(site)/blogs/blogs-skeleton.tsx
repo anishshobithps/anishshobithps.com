@@ -1,6 +1,6 @@
-import { Divider } from "@/components/ui/divider";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/cn";
+import { Divider } from "@repo/ui/components/divider";
+import { Skeleton } from "@repo/ui/components/skeleton";
+import { cn } from "@repo/ui/lib/cn";
 import { postGrid } from "./post-grid";
 
 export function BlogsSkeleton({ count }: { count: number }) {

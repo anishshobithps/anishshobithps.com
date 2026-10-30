@@ -1,8 +1,8 @@
 "use client";
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@repo/ui/components/sidebar";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { TypographySmall } from "@/components/ui/typography";
+import { TypographySmall } from "@repo/ui/components/typography";
 import { usePathname } from "next/navigation";
 
 export function AdminHeader() {

@@ -1,11 +1,11 @@
 import NextImage from "next/image";
 import Link from "next/link";
 import { FileTextIcon, EnvelopeIcon } from "@repo/icons";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+} from "@repo/ui/components/button-group";
 import { Section } from "@/components/layouts/page";
 import { siteConfig } from "@repo/site-config";
 import {
@@ -13,8 +13,8 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-} from "@/components/ui/typography";
-import { LocationTag } from "@/components/ui/location";
+} from "@repo/ui/components/typography";
+import { LocationTag } from "@repo/ui/components/location";
 import { HireSign } from "@/app/(site)/_components/hire-sign";
 import { HeroNudges } from "@/app/(site)/_components/hero-nudges";
 import { IceCreamNote, PhotoCallout } from "@/components/shared/doodles";

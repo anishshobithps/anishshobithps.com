@@ -1,7 +1,7 @@
 "use client";
 
-import { SectionLabel } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+import { SectionLabel } from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { useEffect, useId, useRef, useState } from "react";
 
 const RULER_STEP = 80;

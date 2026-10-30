@@ -1,8 +1,8 @@
 import type { Route } from "next";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { SectionLabel } from "@/components/ui/typography";
+import { Button } from "@repo/ui/components/button";
+import { ButtonGroup } from "@repo/ui/components/button-group";
+import { SectionLabel } from "@repo/ui/components/typography";
 
 interface Option {
   label: string;

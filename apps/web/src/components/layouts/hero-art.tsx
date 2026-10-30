@@ -1,6 +1,6 @@
 import { IsoStage } from "@/components/diagrams/iso-stage";
 import { isoCanvas } from "@/components/diagrams/classes";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import type { ReactNode } from "react";
 
 interface ArtStageProps {

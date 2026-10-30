@@ -10,13 +10,13 @@ import {
   deleteGuestbookEntry,
   togglePinEntry,
 } from "@/app/(site)/guestbook/actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+} from "@repo/ui/components/button-group";
+import { Badge } from "@repo/ui/components/badge";
+import { Input } from "@repo/ui/components/input";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@repo/ui/components/alert-dialog";
 import {
   TrashIcon,
   PushPinSimpleIcon,
@@ -43,10 +43,10 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import { TypographySmall, TypographyMuted } from "@/components/ui/typography";
+} from "@repo/ui/components/empty";
+import { TypographySmall, TypographyMuted } from "@repo/ui/components/typography";
 import { formatShortDate } from "@repo/core/date";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),

@@ -8,15 +8,15 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "@repo/ui/components/drawer";
 import {
   Popover,
   PopoverAnchor,
   PopoverContent,
-} from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Text, TypographyMuted } from "@/components/ui/typography";
+} from "@repo/ui/components/popover";
+import { ScrollArea } from "@repo/ui/components/scroll-area";
+import { Button } from "@repo/ui/components/button";
+import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import {
   ArrowDownIcon,
   DownloadIcon,
@@ -36,8 +36,8 @@ import { Avatar } from "@/components/engagement/avatar";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
 import { useDraggable } from "@/hooks/use-draggable";
 import { useEngagementAnchor } from "@/hooks/use-engagement-anchor";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/cn";
+import { useIsMobile } from "@repo/ui/hooks/use-mobile";
+import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@/lib/sound-player";
 
 const FAB_SIZE = 48;

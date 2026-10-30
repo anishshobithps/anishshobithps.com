@@ -2,7 +2,7 @@
 
 import { isoCanvas } from "@/components/diagrams/classes";
 import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 export default function Loading() {
   return (

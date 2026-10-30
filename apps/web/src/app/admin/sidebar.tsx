@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
+} from "@repo/ui/components/sidebar";
 import {
   BookOpenIcon,
   ChatCircleIcon,

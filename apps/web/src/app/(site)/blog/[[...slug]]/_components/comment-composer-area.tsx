@@ -7,8 +7,8 @@ import {
 } from "@/components/engagement/composer";
 import { TypingBubble } from "@/components/shared/doodles";
 import { SignInIcon, SignOutIcon } from "@repo/icons";
-import { Button } from "@/components/ui/button";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+import { Button } from "@repo/ui/components/button";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 

@@ -15,7 +15,7 @@ import {
   TypographyH1,
   TypographyH2,
   TypographyMuted,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { getTemplate } from "@/lib/svg/registry";
 import { renderTemplate } from "@/lib/svg/render";
 import type { Query, Theme } from "@/lib/svg/template";

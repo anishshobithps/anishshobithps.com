@@ -9,7 +9,7 @@ import {
   TypographyMuted,
   TypographyMark,
   SectionLabel,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { padIndex } from "@repo/core/text";
 
 export function RulesIFollow() {

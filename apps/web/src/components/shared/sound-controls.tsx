@@ -6,16 +6,16 @@ import {
   SpeakerHighIcon,
   SpeakerSlashIcon,
 } from "@repo/icons";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
+import { Button } from "@repo/ui/components/button";
+import { Label } from "@repo/ui/components/label";
+import { Slider } from "@repo/ui/components/slider";
+import { Switch } from "@repo/ui/components/switch";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Text, TypographyMuted } from "@/components/ui/typography";
+} from "@repo/ui/components/tooltip";
+import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import { useSoundPreferences } from "@/hooks/use-sound-preferences";
 import { setSoundVolume } from "@/lib/sound-preferences";
 import { disableSound, enableSound, playCue } from "@/lib/sound-player";

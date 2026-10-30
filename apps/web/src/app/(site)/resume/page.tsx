@@ -6,7 +6,7 @@ import {
   TypographyLead,
   TypographyMark,
   TypographyMuted,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import {
   PdfViewer,
   PdfViewerControls,
@@ -18,7 +18,7 @@ import {
   PdfViewerReload,
   PdfViewerToolbar,
   PdfViewerZoom,
-} from "@/components/ui/pdf-viewer";
+} from "@repo/pdf-viewer";
 import { getResumeFilename } from "@/lib/resume";
 import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
 import { Reveal } from "@/components/shared/reveal";

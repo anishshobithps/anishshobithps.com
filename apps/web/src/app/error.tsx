@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
+import { Button } from "@repo/ui/components/button";
+import { Empty, EmptyContent, EmptyHeader } from "@repo/ui/components/empty";
 import {
   HouseIcon,
   ArrowCounterClockwiseIcon,
@@ -10,7 +10,7 @@ import {
   Text,
   TypographyMuted,
   TypographyMark,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import Link from "next/link";
 import { useRef } from "react";
 import { BouncingLogos } from "@/components/shared/bouncing-logo";

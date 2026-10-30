@@ -1,19 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Divider } from "@/components/ui/divider";
-import { Label } from "@/components/ui/label";
+} from "@repo/ui/components/button-group";
+import { Checkbox } from "@repo/ui/components/checkbox";
+import { Divider } from "@repo/ui/components/divider";
+import { Label } from "@repo/ui/components/label";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group";
+} from "@repo/ui/components/input-group";
 import {
   Pagination,
   PaginationContent,
@@ -22,22 +22,22 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@repo/ui/components/pagination";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@repo/ui/components/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+} from "@repo/ui/components/select";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { Reveal } from "@/components/shared/reveal";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@/lib/sound-player";
 import {
   MagnifyingGlassIcon,

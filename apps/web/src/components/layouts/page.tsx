@@ -1,5 +1,5 @@
 import { SectionMargins } from "@/components/layouts/section-margins";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import { ComponentPropsWithRef, forwardRef } from "react";
 
 export const PageLayout = forwardRef<

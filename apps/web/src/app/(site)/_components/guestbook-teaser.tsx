@@ -5,11 +5,11 @@ import {
   TypographyH2,
   TypographyLead,
   TypographyMark,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { Reveal } from "@/components/shared/reveal";
 import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@/components/diagrams/page-art";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import { CaretRightIcon } from "@repo/icons";
 import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";

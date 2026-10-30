@@ -1,5 +1,5 @@
 import { CardGrid, CardGridItem } from "@/components/layouts/page";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@repo/ui/components/skeleton";
 
 export function ProjectsSkeleton({ count = 4 }: { count?: number }) {
   return (

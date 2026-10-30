@@ -2,8 +2,8 @@
 
 import { refreshResume } from "@/app/admin/actions";
 import { useActionMutation } from "@/hooks/use-action-mutation";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@repo/ui/components/button";
+import { Spinner } from "@repo/ui/components/spinner";
 import {
   ArrowClockwiseIcon,
   FileTextIcon,
@@ -11,7 +11,7 @@ import {
 import {
   TypographySmall,
   TypographyMuted,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 
 export function ResumeRefresh() {
   const { mutate: refresh, isPending: pending } = useActionMutation({

@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { hash } from "./iso";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import {
   gitDraw,
   gitFade,

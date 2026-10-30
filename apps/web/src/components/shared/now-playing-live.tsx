@@ -1,8 +1,8 @@
 "use client";
 
 import { fetchNowPlaying } from "@/app/(site)/actions";
-import { TypographyMuted } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+import { TypographyMuted } from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { queryKeys } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 

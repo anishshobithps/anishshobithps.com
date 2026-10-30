@@ -1,12 +1,12 @@
 "use client";
 
 import { PaperPlaneTiltIcon } from "@repo/icons";
-import { Spinner } from "@/components/ui/spinner";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { TypographyMuted } from "@/components/ui/typography";
+import { Spinner } from "@repo/ui/components/spinner";
+import { Button } from "@repo/ui/components/button";
+import { Textarea } from "@repo/ui/components/textarea";
+import { TypographyMuted } from "@repo/ui/components/typography";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@/lib/sound-player";
 import { useEffect, useId, useRef, useState } from "react";
 

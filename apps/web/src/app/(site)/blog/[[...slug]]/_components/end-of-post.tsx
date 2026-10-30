@@ -3,10 +3,10 @@
 import { CaretDownIcon, ChatCircleIcon } from "@repo/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
 import { Reveal } from "@/components/shared/reveal";
-import { Button } from "@/components/ui/button";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+import { Button } from "@repo/ui/components/button";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { gitDraw, gitPop } from "@/components/diagrams/classes";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import type { CSSProperties } from "react";
 
 function FinishLine() {

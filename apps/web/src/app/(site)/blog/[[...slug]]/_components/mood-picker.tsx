@@ -11,9 +11,9 @@ import {
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "@repo/icons";
-import { Button } from "@/components/ui/button";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+import { Button } from "@repo/ui/components/button";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { useState } from "react";
 
 export interface MoodState {

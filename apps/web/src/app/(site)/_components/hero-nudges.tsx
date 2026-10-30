@@ -1,8 +1,8 @@
 import { IsoStage } from "@/components/diagrams/iso-stage";
 import { isoCanvas, nudgeDraw } from "@/components/diagrams/classes";
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import { ArrowRightIcon } from "@repo/icons";
-import { SectionLabel, TypographySmall } from "@/components/ui/typography";
+import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";
 import type { Route } from "next";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";

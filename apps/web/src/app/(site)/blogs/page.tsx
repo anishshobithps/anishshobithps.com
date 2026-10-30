@@ -10,7 +10,7 @@ import {
   TypographyH1,
   TypographyLead,
   TypographyMark,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";

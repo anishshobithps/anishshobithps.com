@@ -9,12 +9,12 @@ import {
   TypographyLead,
   TypographyMuted,
   TypographyMark,
-} from "@/components/ui/typography";
-import { Button } from "@/components/ui/button";
+} from "@repo/ui/components/typography";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+} from "@repo/ui/components/button-group";
 import { siteConfig } from "@repo/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { Fragment } from "react";

@@ -35,16 +35,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+} from "@repo/ui/components/form";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+} from "@repo/ui/components/button-group";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+import { Textarea } from "@repo/ui/components/textarea";
+import { Switch } from "@repo/ui/components/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,7 +55,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@repo/ui/components/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -63,7 +63,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@repo/ui/components/dialog";
 import {
   Table,
   TableBody,
@@ -71,7 +71,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@repo/ui/components/table";
 import {
   createSortedRowModel,
   rowSortingFeature,
@@ -80,7 +80,7 @@ import {
   useTable,
   type ColumnDef,
 } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@repo/ui/components/badge";
 import {
   PencilIcon,
   TrashIcon,
@@ -97,9 +97,9 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import { cn } from "@/lib/cn";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+} from "@repo/ui/components/empty";
+import { cn } from "@repo/ui/lib/cn";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 
 const linkTableFeatures = tableFeatures({
   rowSortingFeature,

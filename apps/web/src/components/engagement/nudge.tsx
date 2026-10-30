@@ -1,7 +1,7 @@
 "use client";
 
-import { TypographyMuted } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+import { TypographyMuted } from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { useSyncExternalStore } from "react";
 
 const POOLS = {

@@ -9,19 +9,19 @@ import {
   PushPinSimpleIcon,
   TrashIcon,
 } from "@repo/icons";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@repo/ui/components/badge";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+} from "@repo/ui/components/button-group";
 import {
   Text,
   TypographyMuted,
   TypographySmall,
-} from "@/components/ui/typography";
-import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/cn";
+} from "@repo/ui/components/typography";
+import { Spinner } from "@repo/ui/components/spinner";
+import { cn } from "@repo/ui/lib/cn";
 import { timeAgo } from "@repo/core/date";
 import { SignInButton } from "@clerk/nextjs";
 import { useEffect, useRef, useState, useTransition } from "react";

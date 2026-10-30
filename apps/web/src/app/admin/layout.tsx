@@ -1,7 +1,7 @@
 import { ENV } from "varlock/env";
 import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@repo/ui/components/sidebar";
 import { AdminSidebar } from "@/app/admin/sidebar";
 import { AdminHeader } from "@/app/admin/admin-header";
 import { AdminUnauthorized } from "@/app/admin/unauthorized";

@@ -13,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Spinner } from "@/components/ui/spinner";
+} from "@repo/ui/components/form";
+import { Spinner } from "@repo/ui/components/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useActionMutation } from "@/hooks/use-action-mutation";
 import { queryKeys } from "@/lib/query-keys";
@@ -28,14 +28,14 @@ import {
   moveProject,
   type ProjectRow,
 } from "@/app/admin/actions";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+} from "@repo/ui/components/button-group";
+import { Input } from "@repo/ui/components/input";
+import { Textarea } from "@repo/ui/components/textarea";
+import { Switch } from "@repo/ui/components/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,7 +46,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@repo/ui/components/alert-dialog";
 import {
   Dialog,
   DialogContent,
@@ -54,7 +54,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@repo/ui/components/dialog";
 import {
   ArrowUpIcon,
   ArrowDownIcon,
@@ -70,7 +70,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
+} from "@repo/ui/components/empty";
 import {
   Table,
   TableBody,
@@ -78,10 +78,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/cn";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+} from "@repo/ui/components/table";
+import { Badge } from "@repo/ui/components/badge";
+import { cn } from "@repo/ui/lib/cn";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 
 const optionalUrlField = z
   .string()

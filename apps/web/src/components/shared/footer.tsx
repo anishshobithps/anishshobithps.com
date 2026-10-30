@@ -7,12 +7,12 @@ import {
 import { Logo } from "@/components/shared/logo";
 import { NowPlaying } from "@/components/shared/now-playing";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   SectionLabel,
   TypographyMuted,
   TypographySmall,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { currentYear } from "@repo/core/date";

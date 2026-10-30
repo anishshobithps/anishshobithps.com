@@ -3,14 +3,14 @@
 import { useReducer, useState } from "react";
 import NextImage from "next/image";
 import { useDebouncedValue } from "@wojtekmaj/react-hooks";
-import { TypographyMuted } from "@/components/ui/typography";
-import { Switch } from "@/components/ui/switch";
+import { TypographyMuted } from "@repo/ui/components/typography";
+import { Switch } from "@repo/ui/components/switch";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group";
-import { cn } from "@/lib/cn";
+} from "@repo/ui/components/input-group";
+import { cn } from "@repo/ui/lib/cn";
 import { siteConfig } from "@repo/site-config";
 import { buildOGPath } from "@/lib/metadata";
 import {

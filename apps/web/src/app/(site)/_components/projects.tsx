@@ -3,12 +3,12 @@ import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
 import { Reveal } from "@/components/shared/reveal";
 import { GitChaos } from "@/components/diagrams/git-chaos";
 import { IsoStage } from "@/components/diagrams/iso-stage";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@repo/ui/components/badge";
+import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
   ButtonGroupSeparator,
-} from "@/components/ui/button-group";
+} from "@repo/ui/components/button-group";
 import {
   Heading,
   TypographyH2,
@@ -16,7 +16,7 @@ import {
   TypographyMark,
   TypographyMuted,
   SectionLabel,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { GithubLogoIcon, ArrowUpRightIcon } from "@repo/icons";
 import Link from "next/link";
 import { padIndex } from "@repo/core/text";

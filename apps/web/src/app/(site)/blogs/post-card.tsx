@@ -5,8 +5,8 @@ import {
   Heading,
   SectionLabel,
   TypographyMuted,
-} from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+} from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { formatShortDate } from "@repo/core/date";
 import { padIndex } from "@repo/core/text";
 import { postTransitionName } from "@/lib/view-transition";

@@ -10,7 +10,7 @@ import {
   TypographyMuted,
   TypographySmall,
   Text,
-} from "@/components/ui/typography";
+} from "@repo/ui/components/typography";
 import { getAdminStats } from "@/app/admin/actions";
 import { ResumeRefresh } from "@/app/admin/resume-refresh";
 

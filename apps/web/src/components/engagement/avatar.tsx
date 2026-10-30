@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import NextImage from "next/image";
 import { memo } from "react";
 

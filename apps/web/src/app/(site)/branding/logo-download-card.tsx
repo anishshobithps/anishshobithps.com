@@ -1,15 +1,15 @@
 "use client";
 
 import { Logo, type LogoProps } from "@/components/shared/logo";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+} from "@repo/ui/components/select";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { CodeIcon, ImageIcon } from "@repo/icons";
 import { useRef, useState } from "react";

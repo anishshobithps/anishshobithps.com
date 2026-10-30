@@ -1,9 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import { forwardRef, SVGProps, useEffect, useRef, useState } from "react";
 import { LogoIcon } from "@/components/shared/logo-icon";
-import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+import { usePrefersReducedMotion } from "@repo/ui/hooks/use-prefers-reduced-motion";
 
 export interface LogoProps extends SVGProps<SVGSVGElement> {
   size?: number;

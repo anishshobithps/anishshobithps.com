@@ -40,8 +40,8 @@ import {
   TypographyMark,
   SectionLabel,
   SectionHeader,
-} from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+} from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { siteConfig } from "@repo/site-config";
 import type { ReactNode } from "react";
 

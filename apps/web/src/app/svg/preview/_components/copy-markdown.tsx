@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { CopyIcon } from "@repo/icons";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui/components/button";
 
 export function CopyMarkdown({ markdown }: { markdown: string }) {
   const copy = async () => {

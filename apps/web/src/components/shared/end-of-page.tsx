@@ -4,8 +4,8 @@ import {
   SectionLabel,
   TypographyLarge,
   TypographyMuted,
-} from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+} from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import { Signpost } from "@/components/shared/doodles";
 import type { Route } from "next";
 import Link from "next/link";

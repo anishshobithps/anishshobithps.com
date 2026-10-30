@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 /**
  * The small projection helpers the OG images, the post-grid filler and the

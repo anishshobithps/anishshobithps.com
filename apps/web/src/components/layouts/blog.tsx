@@ -5,9 +5,9 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { TypographySmall } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
+} from "@repo/ui/components/collapsible";
+import { TypographySmall } from "@repo/ui/components/typography";
+import { cn } from "@repo/ui/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
 import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
 import { TOCItem, TOCItems } from "fumadocs-ui/components/toc/clerk";

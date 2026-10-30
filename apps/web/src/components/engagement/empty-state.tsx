@@ -1,7 +1,7 @@
 "use client";
 
 import { ChatCircleIcon } from "@repo/icons";
-import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
+import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import type { ComponentType, ReactNode } from "react";
 
 export function EngagementEmptyState({

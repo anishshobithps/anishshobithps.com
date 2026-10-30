@@ -13,7 +13,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
+} from "@repo/ui/components/command";
 import {
   BookOpenIcon,
   BriefcaseIcon,
