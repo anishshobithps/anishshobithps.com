@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toISOString, toRFC822 } from "@/lib/date";
+import { toISOString, toRFC822 } from "../src/date";
 
 describe("toRFC822", () => {
     it("formats a Date as RFC-822/1123", () => {

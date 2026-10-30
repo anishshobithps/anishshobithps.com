@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatMonthYear } from "@/lib/date";
+import { formatMonthYear } from "@repo/core/date";
 import {
   bucketTimestamps,
   combine,

@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { links, linkSlugs } from "@/lib/schema";
 import { adminMutation } from "@/lib/admin-action";
-import type { ActionResult } from "@/lib/action-result";
+import type { ActionResult } from "@repo/core/action-result";
 import { assertAdmin } from "@/lib/assert-admin";
 import { findSlugConflicts } from "@/lib/links";
 import {
@@ -11,7 +11,7 @@ import {
   linkInputSchema,
   type LinkInput,
   type SlugPair,
-} from "@/lib/links-schema";
+} from "@repo/core/links-schema";
 import { safeQuery } from "@/lib/safe-query";
 import { desc, eq, inArray, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";

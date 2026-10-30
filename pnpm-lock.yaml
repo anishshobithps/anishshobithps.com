@@ -103,6 +103,9 @@ importers:
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@repo/icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -290,6 +293,31 @@ importers:
       ws:
         specifier: ^8.22.0
         version: 8.22.0
+
+  packages/core:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@repo/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.12(@types/node@25.9.9)(msw@2.15.0(@types/node@25.9.9)(typescript@6.0.3))(vite@8.1.4(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/eslint-config:
     dependencies:

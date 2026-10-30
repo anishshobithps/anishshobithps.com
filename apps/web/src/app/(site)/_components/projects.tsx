@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/typography";
 import { GithubLogoIcon, ArrowUpRightIcon } from "@repo/icons";
 import Link from "next/link";
-import { padIndex } from "@/lib/text";
+import { padIndex } from "@repo/core/text";
 import type { Route } from "next";
 import { Suspense } from "react";
 import { getPublicProjects } from "@/lib/projects";

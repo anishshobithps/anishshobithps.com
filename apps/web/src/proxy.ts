@@ -6,7 +6,7 @@ import {
     type NextRequest,
 } from "next/server";
 import { siteConfig } from "@/lib/config";
-import { RESERVED_SEGMENTS } from "@/lib/reserved-segments";
+import { RESERVED_SEGMENTS } from "@repo/core/reserved-segments";
 
 const withClerk = clerkMiddleware();
 

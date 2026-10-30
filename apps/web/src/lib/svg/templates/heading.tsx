@@ -3,7 +3,7 @@ import { FONT_STACK, FONTS } from "@/lib/svg/fonts";
 import { palette } from "@/lib/svg/palette";
 import { Hairline, Label, truncate } from "@/lib/svg/primitives";
 import { CARD_WIDTH, defineTemplate, type Theme } from "@/lib/svg/template";
-import { padIndex } from "@/lib/text";
+import { padIndex } from "@repo/core/text";
 
 const BADGE = 24;
 const ROW = { height: 40, badge: 32 };

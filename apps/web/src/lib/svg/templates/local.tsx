@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatTimeInZone, statusForHour } from "@/lib/date";
+import { formatTimeInZone, statusForHour } from "@repo/core/date";
 import {
   describeWeather,
   hourOf,

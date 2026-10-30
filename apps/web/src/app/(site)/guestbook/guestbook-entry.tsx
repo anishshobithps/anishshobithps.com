@@ -18,7 +18,7 @@ import {
   TypographySmall,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { timeAgo } from "@/lib/date";
+import { timeAgo } from "@repo/core/date";
 import { memo, useEffect, useRef, useState } from "react";
 
 export const GuestbookEntry = memo(function GuestbookEntry({

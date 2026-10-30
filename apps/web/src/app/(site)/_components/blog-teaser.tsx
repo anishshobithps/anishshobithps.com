@@ -11,7 +11,7 @@ import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@/components/diagrams/page-art";
 import { Button } from "@/components/ui/button";
 import { CaretRightIcon } from "@repo/icons";
-import { formatShortDate, toISOString } from "@/lib/date";
+import { formatShortDate, toISOString } from "@repo/core/date";
 import Link from "next/link";
 import type { Route } from "next";
 

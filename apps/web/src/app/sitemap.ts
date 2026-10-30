@@ -1,7 +1,7 @@
 import { siteConfig } from "@/lib/config";
 import { source } from "@/lib/source";
 import type { MetadataRoute } from "next";
-import { toISOString } from "@/lib/date";
+import { toISOString } from "@repo/core/date";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date();

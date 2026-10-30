@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/typography";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
-import { timeAgo } from "@/lib/date";
+import { timeAgo } from "@repo/core/date";
 import { SignInButton } from "@clerk/nextjs";
 import { useEffect, useRef, useState, useTransition } from "react";
 

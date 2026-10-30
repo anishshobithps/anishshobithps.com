@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatMonthDay, formatMonthYear } from "@/lib/date";
+import { formatMonthDay, formatMonthYear } from "@repo/core/date";
 import {
   type Calendar,
   type CalendarDay,

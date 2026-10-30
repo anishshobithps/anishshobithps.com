@@ -1,5 +1,5 @@
 import { assertAdmin } from "@/lib/assert-admin";
-import type { ActionResult } from "@/lib/action-result";
+import type { ActionResult } from "@repo/core/action-result";
 
 export async function adminMutation(
   action: string,

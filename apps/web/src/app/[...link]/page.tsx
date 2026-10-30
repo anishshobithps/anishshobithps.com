@@ -1,8 +1,8 @@
 import { recordClick, resolveLink } from "@/lib/links";
-import { hasPreview, type SlugPair } from "@/lib/links-schema";
+import { hasPreview, type SlugPair } from "@repo/core/links-schema";
 import { buildOGUrl } from "@/lib/metadata";
 import { siteConfig } from "@/lib/config";
-import { escapeInlineScript } from "@/lib/inline-script";
+import { escapeInlineScript } from "@repo/core/inline-script";
 import { Text, TypographyMuted } from "@/components/ui/typography";
 import type { Metadata, Route } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";

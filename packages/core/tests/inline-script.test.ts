@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { escapeInlineScript } from "@/lib/inline-script";
+import { escapeInlineScript } from "../src/inline-script";
 
 const LINE_SEPARATOR = String.fromCharCode(0x2028);
 const PARAGRAPH_SEPARATOR = String.fromCharCode(0x2029);

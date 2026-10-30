@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolvePagination } from "@/lib/pagination";
+import { resolvePagination } from "../src/pagination";
 
 const bounds = { defaultLimit: 20, maxLimit: 50 };
 

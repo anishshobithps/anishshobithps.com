@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
-import { currentYear } from "@/lib/date";
+import { currentYear } from "@repo/core/date";
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Route } from "next";

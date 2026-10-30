@@ -1,4 +1,4 @@
-import { escapeXml } from "@/lib/xml";
+import { escapeXml } from "@repo/core/xml";
 import {
   Body,
   Cell,

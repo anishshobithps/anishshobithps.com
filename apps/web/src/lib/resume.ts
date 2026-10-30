@@ -1,6 +1,6 @@
 
 import { siteConfig } from "@/lib/config";
-import { formatFileDate } from "@/lib/date";
+import { formatFileDate } from "@repo/core/date";
 
 export const RESUME_CACHE_TAG = "resume-pdf";
 

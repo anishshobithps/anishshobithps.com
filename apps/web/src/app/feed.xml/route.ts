@@ -1,7 +1,7 @@
 import { siteConfig } from "@/lib/config";
-import { toRFC822, toTimestamp } from "@/lib/date";
+import { toRFC822, toTimestamp } from "@repo/core/date";
 import { source } from "@/lib/source";
-import { escapeXml } from "@/lib/xml";
+import { escapeXml } from "@repo/core/xml";
 
 export const revalidate = false;
 

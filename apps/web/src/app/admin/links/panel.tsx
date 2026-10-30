@@ -24,8 +24,8 @@ import {
   linkFormSchema,
   type LinkFormValues,
   type SlugPair,
-} from "@/lib/links-schema";
-import { slugify } from "@/lib/text";
+} from "@repo/core/links-schema";
+import { slugify } from "@repo/core/text";
 import { siteConfig } from "@/lib/config";
 import {
   Form,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatShortDate } from "@/lib/date";
+import { formatShortDate } from "@repo/core/date";
 import { findPost, loadPostCard, type PostCard } from "@/lib/svg/data/posts";
 import {
   Body,

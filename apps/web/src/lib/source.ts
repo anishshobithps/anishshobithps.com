@@ -2,7 +2,7 @@ import { docs } from 'fumadocs-mdx:collections/server';
 import { type InferPageType, loader } from 'fumadocs-core/source';
 import { buildOGUrl } from '@/lib/metadata';
 import { siteConfig } from '@/lib/config';
-import { toTimestamp } from '@/lib/date';
+import { toTimestamp } from '@repo/core/date';
 
 export const source = loader({
     baseUrl: '/blog',

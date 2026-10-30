@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeText, slugify, ValidationError, validateLength } from "@/lib/text";
+import { sanitizeText, slugify, ValidationError, validateLength } from "../src/text";
 
 describe("slugify", () => {
     it.each([

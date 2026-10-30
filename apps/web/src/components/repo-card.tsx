@@ -6,7 +6,7 @@ import {
   formatCount,
   type GitHubRepoData,
 } from "@/lib/github"
-import { formatRelativeDate } from "@/lib/date"
+import { formatRelativeDate } from "@repo/core/date"
 import {
   ArchiveIcon,
   ClockIcon,

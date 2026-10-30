@@ -1,5 +1,5 @@
 import { eq, inArray, sql } from "drizzle-orm";
-import { toTimestamp } from "@/lib/date";
+import { toTimestamp } from "@repo/core/date";
 import { db } from "@/lib/db";
 import { blogPosts, blogReads } from "@/lib/schema";
 import { getLatestPost, source } from "@/lib/source";

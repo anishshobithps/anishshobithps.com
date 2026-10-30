@@ -3,7 +3,7 @@ import { and, eq, ne, or, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { safeQuery } from "@/lib/safe-query";
 import { links, linkSlugs } from "@/lib/schema";
-import type { SlugPair } from "@/lib/links-schema";
+import type { SlugPair } from "@repo/core/links-schema";
 
 export type ResolvedLink = {
   id: number;

@@ -29,7 +29,7 @@ import {
   formatShortDate,
   toISOString,
   toTimestamp,
-} from "@/lib/date";
+} from "@repo/core/date";
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";

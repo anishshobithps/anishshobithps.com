@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { RESERVED_SEGMENTS } from "@/lib/reserved-segments";
-import { slugify } from "@/lib/text";
+import { RESERVED_SEGMENTS } from "./reserved-segments";
+import { slugify } from "./text";
 
 
 const SEGMENT_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

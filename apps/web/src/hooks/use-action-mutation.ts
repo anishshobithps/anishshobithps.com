@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import type { ActionResult } from "@/lib/action-result";
+import type { ActionResult } from "@repo/core/action-result";
 import { toastError } from "@/lib/toast";
 import { toast } from "sonner";
 

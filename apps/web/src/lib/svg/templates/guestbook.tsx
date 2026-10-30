@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatRelativeDate } from "@/lib/date";
+import { formatRelativeDate } from "@repo/core/date";
 import { type Guestbook, loadGuestbook } from "@/lib/svg/data/guestbook";
 import { FONT_STACK, FONTS } from "@/lib/svg/fonts";
 import { palette } from "@/lib/svg/palette";
@@ -18,7 +18,7 @@ import {
   truncate,
 } from "@/lib/svg/primitives";
 import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@/lib/svg/template";
-import { sanitizeText } from "@/lib/text";
+import { sanitizeText } from "@repo/core/text";
 
 const ROW_HEIGHT = 72;
 const AVATAR = 36;

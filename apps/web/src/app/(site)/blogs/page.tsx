@@ -16,7 +16,7 @@ import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { toISOString, toTimestamp } from "@/lib/date";
+import { toISOString, toTimestamp } from "@repo/core/date";
 
 export const metadata: Metadata = buildMeta({
   title: "Blogs",

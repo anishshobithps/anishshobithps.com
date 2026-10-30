@@ -45,7 +45,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { TypographySmall, TypographyMuted } from "@/components/ui/typography";
-import { formatShortDate } from "@/lib/date";
+import { formatShortDate } from "@repo/core/date";
 import { cn } from "@/lib/cn";
 
 const searchParsers = {

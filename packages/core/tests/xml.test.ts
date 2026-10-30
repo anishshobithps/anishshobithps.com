@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { escapeXml } from "@/lib/xml";
+import { escapeXml } from "../src/xml";
 
 describe("escapeXml", () => {
     it("escapes an ampersand", () => {

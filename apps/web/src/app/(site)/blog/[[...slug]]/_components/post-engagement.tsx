@@ -17,7 +17,7 @@ import {
 } from "@/app/(site)/blog/[[...slug]]/_components/mood-picker";
 import { Panel, PanelRow } from "@/components/layouts/page";
 import { SectionLabel } from "@/components/ui/typography";
-import { nowISO } from "@/lib/date";
+import { nowISO } from "@repo/core/date";
 import { playCue } from "@/lib/sound-player";
 import type { CueName } from "@/lib/sound-cues";
 import { classifyError, typedToast } from "@/lib/toast";

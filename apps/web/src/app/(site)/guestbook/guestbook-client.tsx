@@ -21,7 +21,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
-import { nowISO } from "@/lib/date";
+import { nowISO } from "@repo/core/date";
 import { playCue } from "@/lib/sound-player";
 import { toastError, typedToast } from "@/lib/toast";
 import { SignInButton, useClerk, useUser } from "@clerk/nextjs";

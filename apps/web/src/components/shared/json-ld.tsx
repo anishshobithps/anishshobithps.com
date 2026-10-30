@@ -1,5 +1,5 @@
 import { siteConfig } from "@/lib/config";
-import { escapeInlineScript } from "@/lib/inline-script";
+import { escapeInlineScript } from "@repo/core/inline-script";
 import type {
   Person,
   WebSite,

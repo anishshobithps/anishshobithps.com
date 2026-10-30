@@ -6,7 +6,7 @@ import {
   isValidTarget,
   linkInputSchema,
   slugPairSchema,
-} from "@/lib/links-schema";
+} from "../src/links-schema";
 
 describe("isHttpUrl", () => {
   it.each([

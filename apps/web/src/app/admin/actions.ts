@@ -12,12 +12,12 @@ import {
     projects,
 } from "@/lib/schema";
 import { adminMutation } from "@/lib/admin-action";
-import type { ActionResult } from "@/lib/action-result";
+import type { ActionResult } from "@repo/core/action-result";
 import { assertAdmin } from "@/lib/assert-admin";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
 import { PROJECTS_CACHE_TAG } from "@/lib/projects";
 import { safeQuery } from "@/lib/safe-query";
-import { projectInputSchema, type ProjectInput } from "@/lib/projects-schema";
+import { projectInputSchema, type ProjectInput } from "@repo/core/projects-schema";
 import { RESUME_CACHE_TAG } from "@/lib/resume";
 import { asc, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath, updateTag } from "next/cache";

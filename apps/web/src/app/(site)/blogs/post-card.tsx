@@ -7,8 +7,8 @@ import {
   TypographyMuted,
 } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";
-import { formatShortDate } from "@/lib/date";
-import { padIndex } from "@/lib/text";
+import { formatShortDate } from "@repo/core/date";
+import { padIndex } from "@repo/core/text";
 import { postTransitionName } from "@/lib/view-transition";
 import type { Route } from "next";
 import Link from "next/link";

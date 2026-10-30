@@ -5,7 +5,7 @@ import type { GuestbookPreviewEntry } from "@/app/(site)/guestbook/actions";
 import { PauseIcon, PlayIcon } from "@repo/icons";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted } from "@/components/ui/typography";
-import { formatShortDate } from "@/lib/date";
+import { formatShortDate } from "@repo/core/date";
 
 function isClerkImageHost(url: string): boolean {
   try {

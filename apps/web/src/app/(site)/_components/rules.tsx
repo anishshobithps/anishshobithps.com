@@ -10,7 +10,7 @@ import {
   TypographyMark,
   SectionLabel,
 } from "@/components/ui/typography";
-import { padIndex } from "@/lib/text";
+import { padIndex } from "@repo/core/text";
 
 export function RulesIFollow() {
   return (

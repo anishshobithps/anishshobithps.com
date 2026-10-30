@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useForm, type Control } from "react-hook-form";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { z } from "zod";
-import { isHttpUrl } from "@/lib/links-schema";
-import { projectInputSchema } from "@/lib/projects-schema";
+import { isHttpUrl } from "@repo/core/links-schema";
+import { projectInputSchema } from "@repo/core/projects-schema";
 import {
   Form,
   FormControl,

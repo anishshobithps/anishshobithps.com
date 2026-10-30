@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatShortDate } from "@/lib/date";
+import { formatShortDate } from "@repo/core/date";
 import { formatCount } from "@/lib/github";
 import { loadRecentPosts, type PostRow } from "@/lib/svg/data/posts";
 import { limit } from "@/lib/svg/params";
@@ -17,7 +17,7 @@ import {
   truncate,
 } from "@/lib/svg/primitives";
 import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@/lib/svg/template";
-import { padIndex } from "@/lib/text";
+import { padIndex } from "@repo/core/text";
 
 function height(rows: number) {
   return 3 * HAIRLINE + HEADER_HEIGHT + listHeight(rows);
