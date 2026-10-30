@@ -7,6 +7,7 @@ export function IsoArt({ scene }: { scene: Scene }) {
       viewBox={`0 0 ${scene.width} ${scene.height}`}
       aria-hidden="true"
       focusable="false"
+      data-iso-art=""
       className="iso-art absolute inset-0 size-full"
       dangerouslySetInnerHTML={{ __html: sceneMarkup(scene) }}
     />
