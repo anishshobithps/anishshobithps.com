@@ -1,4 +1,4 @@
-import { themeColor } from "@/lib/theme-tokens";
+import { themeColor } from "@repo/styles/theme-tokens";
 import type { Theme } from "@/lib/svg/template";
 
 function build(theme: Theme) {

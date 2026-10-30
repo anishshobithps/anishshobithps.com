@@ -12,7 +12,7 @@ import { templates } from "@/lib/svg/registry";
 import { renderError, renderTemplate } from "@/lib/svg/render";
 import type { AnySvgTemplate, Query, Theme } from "@/lib/svg/template";
 import { ERROR_SIZE, type SvgErrorKind } from "@/lib/svg/templates/error";
-import { themeColor } from "@/lib/theme-tokens";
+import { themeColor } from "@repo/styles/theme-tokens";
 
 export const dynamic = "force-dynamic";
 

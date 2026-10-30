@@ -112,6 +112,9 @@ importers:
       '@repo/site-config':
         specifier: workspace:*
         version: link:../../packages/site-config
+      '@repo/styles':
+        specifier: workspace:*
+        version: link:../../packages/styles
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.104.3(react@19.3.1)
@@ -136,9 +139,6 @@ importers:
       cn:
         specifier: ^0.3.3
         version: 0.3.3
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.4(@neondatabase/serverless@1.2.0)
@@ -236,9 +236,6 @@ importers:
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.3.3
-      '@types/culori':
-        specifier: ^4.0.1
-        version: 4.0.1
       '@types/mdast':
         specifier: ^4.0.4
         version: 4.0.4
@@ -378,6 +375,40 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+
+  packages/styles:
+    dependencies:
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@repo/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      '@types/culori':
+        specifier: ^4.0.1
+        version: 4.0.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.9
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.12(@types/node@25.9.9)(msw@2.15.0(@types/node@25.9.9)(typescript@6.0.3))(vite@8.1.4(@types/node@25.9.9)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/tsconfig:
     dependencies:

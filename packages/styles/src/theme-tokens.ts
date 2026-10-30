@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   type Color,
   formatHex,
@@ -8,30 +6,14 @@ import {
   parse,
   toGamut,
 } from "culori";
+import { DARK_TOKENS, ROOT_TOKENS } from "./tokens.generated";
 
 type Theme = "light" | "dark";
 type Tokens = Record<string, string>;
 
-const globalCss = readFileSync(
-  join(process.cwd(), "src/app/global.css"),
-  "utf8",
-);
-
-function declarations(selector: string): Tokens {
-  const escaped = selector.replace(".", "\\.");
-  const block =
-    globalCss.match(new RegExp(`^${escaped} \\{([^}]*)\\}`, "m"))?.[1] ?? "";
-  const entries = block.matchAll(/--([\w-]+):\s*([^;]+);/g);
-  return Object.fromEntries(
-    Array.from(entries, ([, name, value]) => [name, value.trim()]),
-  );
-}
-
-const rootTokens = declarations(":root");
-
 const THEMES: Record<Theme, Tokens> = {
-  light: rootTokens,
-  dark: { ...rootTokens, ...declarations(".dark") },
+  light: ROOT_TOKENS,
+  dark: { ...ROOT_TOKENS, ...DARK_TOKENS },
 };
 
 const toSrgb = toGamut("rgb", "oklch");

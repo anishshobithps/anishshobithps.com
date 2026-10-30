@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { themeColor } from "@/lib/theme-tokens";
+import { themeColor } from "../src/theme-tokens";
 
 describe("themeColor", () => {
   it("converts dark theme tokens to hex", () => {
