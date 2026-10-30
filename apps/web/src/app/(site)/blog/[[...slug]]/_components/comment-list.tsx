@@ -8,8 +8,7 @@ import { EngagementNudge } from "@/components/engagement/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
 import { PanelRow, panelListItem } from "@/components/layouts/page";
 import { ScrollArea } from "@repo/ui/components/scroll-area";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { useRef } from "react";
+import { useVirtualList } from "@repo/virtual/use-virtual-list";
 
 export interface CommentListProps {
   comments: CommentWithMeta[];
@@ -32,11 +31,9 @@ export function CommentList({
   onReply,
   pendingLikes,
 }: CommentListProps) {
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const commentVirtualizer = useVirtualizer({
+  const commentList = useVirtualList({
     count: comments.length,
-    getScrollElement: () => viewportRef.current,
-    estimateSize: () => 180,
+    estimateSize: 180,
     overscan: 5,
   });
 
@@ -55,28 +52,21 @@ export function CommentList({
           </EngagementEmptyState>
         </PanelRow>
       ) : (
-        <ScrollArea className="max-h-[60vh]" viewportRef={viewportRef}>
+        <ScrollArea className="max-h-[60vh]" viewportRef={commentList.viewportRef}>
           <div className="max-h-[60vh]">
             <ul
               role="list"
               aria-label="Comments"
               className="relative"
-              style={{ height: commentVirtualizer.getTotalSize() }}
+              style={{ height: commentList.totalSize }}
             >
-              {commentVirtualizer.getVirtualItems().map((row) => {
+              {commentList.items.map((row) => {
                 const comment = comments[row.index]!;
                 return (
                   <CommentCard
                     key={comment.id}
-                    ref={commentVirtualizer.measureElement}
-                    data-index={row.index}
+                    {...commentList.itemProps(row)}
                     className={panelListItem}
-                    style={{
-                      position: "absolute",
-                      insetInline: 0,
-                      top: 0,
-                      transform: `translateY(${row.start}px)`,
-                    }}
                     comment={comment}
                     currentUserId={currentUserId}
                     depth={0}

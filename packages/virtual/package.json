@@ -1,0 +1,26 @@
+{
+  "name": "@repo/virtual",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./use-virtual-list": "./src/use-virtual-list.ts"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "types:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-virtual": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

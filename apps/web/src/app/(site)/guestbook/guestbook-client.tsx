@@ -31,7 +31,7 @@ import {
   useQueryClient,
   type InfiniteData,
 } from "@tanstack/react-query";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { useVirtualList } from "@repo/virtual/use-virtual-list";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -112,7 +112,6 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
     [setPages],
   );
 
-  const viewportRef = useRef<HTMLDivElement>(null);
   const likeGuard = useRef<Set<number>>(new Set());
   const [pendingLikes, setPendingLikes] = useState<ReadonlySet<number>>(
     () => new Set(),
@@ -279,10 +278,9 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
     });
   }, [removeEntry]);
 
-  const entryVirtualizer = useVirtualizer({
+  const entryList = useVirtualList({
     count: entries.length,
-    getScrollElement: () => viewportRef.current,
-    estimateSize: () => 132,
+    estimateSize: 132,
     overscan: 8,
   });
 
@@ -380,28 +378,21 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
           </EngagementEmptyState>
         </PanelRow>
       ) : (
-        <ScrollArea className="max-h-[60vh]" viewportRef={viewportRef}>
+        <ScrollArea className="max-h-[60vh]" viewportRef={entryList.viewportRef}>
           <div className="max-h-[60vh]">
             <ul
               role="list"
               aria-label="Guestbook messages"
               className="relative"
-              style={{ height: entryVirtualizer.getTotalSize() }}
+              style={{ height: entryList.totalSize }}
             >
-              {entryVirtualizer.getVirtualItems().map((row) => {
+              {entryList.items.map((row) => {
                 const entry = entries[row.index]!;
                 return (
                   <GuestbookEntry
                     key={entry.id}
-                    ref={entryVirtualizer.measureElement}
-                    data-index={row.index}
+                    {...entryList.itemProps(row)}
                     className={panelListItem}
-                    style={{
-                      position: "absolute",
-                      insetInline: 0,
-                      top: 0,
-                      transform: `translateY(${row.start}px)`,
-                    }}
                     entry={entry}
                     currentUserId={currentUserId}
                     onLike={handleLike}

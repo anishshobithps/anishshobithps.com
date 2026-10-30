@@ -139,6 +139,9 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@repo/virtual':
+        specifier: workspace:*
+        version: link:../../packages/virtual
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.104.3(react@19.3.1)
@@ -762,6 +765,31 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/virtual:
+    dependencies:
+      '@tanstack/react-virtual':
+        specifier: 'catalog:'
+        version: 3.14.20(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
