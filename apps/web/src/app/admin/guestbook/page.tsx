@@ -1,22 +1,15 @@
 import { getAllAdminGuestbookEntries } from "@/app/admin/actions";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getQueryClient } from "@repo/query/client";
+import { Prefetch } from "@repo/query/prefetch";
 import { queryKeys } from "@/lib/query-keys";
 import { GuestbookPanel } from "@/app/admin/guestbook/panel";
 
-export default async function AdminGuestbookPage() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.admin.guestbook,
-    queryFn: getAllAdminGuestbookEntries,
-  });
-
+export default function AdminGuestbookPage() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col gap-6 p-6">
-        <HydrationBoundary state={dehydrate(queryClient)}>
+        <Prefetch queryKey={queryKeys.admin.guestbook} queryFn={getAllAdminGuestbookEntries}>
           <GuestbookPanel />
-        </HydrationBoundary>
+        </Prefetch>
       </div>
     </div>
   );

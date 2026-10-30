@@ -1,22 +1,15 @@
 import { getAdminProjects } from "@/app/admin/actions";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getQueryClient } from "@repo/query/client";
+import { Prefetch } from "@repo/query/prefetch";
 import { queryKeys } from "@/lib/query-keys";
 import { ProjectsPanel } from "@/app/admin/projects/panel";
 
-export default async function AdminProjectsPage() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.admin.projects,
-    queryFn: getAdminProjects,
-  });
-
+export default function AdminProjectsPage() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col gap-6 p-6">
-        <HydrationBoundary state={dehydrate(queryClient)}>
+        <Prefetch queryKey={queryKeys.admin.projects} queryFn={getAdminProjects}>
           <ProjectsPanel />
-        </HydrationBoundary>
+        </Prefetch>
       </div>
     </div>
   );

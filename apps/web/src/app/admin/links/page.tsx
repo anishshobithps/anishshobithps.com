@@ -1,22 +1,15 @@
 import { getAdminLinks } from "@/app/admin/links/actions";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getQueryClient } from "@repo/query/client";
+import { Prefetch } from "@repo/query/prefetch";
 import { queryKeys } from "@/lib/query-keys";
 import { LinksPanel } from "@/app/admin/links/panel";
 
-export default async function AdminLinksPage() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.admin.links,
-    queryFn: getAdminLinks,
-  });
-
+export default function AdminLinksPage() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col gap-6 p-6">
-        <HydrationBoundary state={dehydrate(queryClient)}>
+        <Prefetch queryKey={queryKeys.admin.links} queryFn={getAdminLinks}>
           <LinksPanel />
-        </HydrationBoundary>
+        </Prefetch>
       </div>
     </div>
   );

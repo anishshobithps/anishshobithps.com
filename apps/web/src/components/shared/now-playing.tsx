@@ -1,19 +1,12 @@
 import { NowPlayingLive } from "@/components/shared/now-playing-live";
-import { getQueryClient } from "@repo/query/client";
 import { queryKeys } from "@/lib/query-keys";
 import { getNowPlaying } from "@/lib/spotify";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { Prefetch } from "@repo/query/prefetch";
 
-export async function NowPlaying() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.nowPlaying,
-    queryFn: getNowPlaying,
-  });
-
+export function NowPlaying() {
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <Prefetch queryKey={queryKeys.nowPlaying} queryFn={getNowPlaying}>
       <NowPlayingLive />
-    </HydrationBoundary>
+    </Prefetch>
   );
 }

@@ -1,22 +1,15 @@
 import { getAllAdminComments } from "@/app/admin/actions";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getQueryClient } from "@repo/query/client";
+import { Prefetch } from "@repo/query/prefetch";
 import { queryKeys } from "@/lib/query-keys";
 import { CommentsPanel } from "@/app/admin/comments/panel";
 
-export default async function AdminCommentsPage() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: queryKeys.admin.comments,
-    queryFn: getAllAdminComments,
-  });
-
+export default function AdminCommentsPage() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col gap-6 p-6">
-        <HydrationBoundary state={dehydrate(queryClient)}>
+        <Prefetch queryKey={queryKeys.admin.comments} queryFn={getAllAdminComments}>
           <CommentsPanel />
-        </HydrationBoundary>
+        </Prefetch>
       </div>
     </div>
   );

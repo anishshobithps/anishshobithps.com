@@ -6,6 +6,7 @@
   "exports": {
     "./client": "./src/client.ts",
     "./notify": "./src/notify.tsx",
+    "./prefetch": "./src/prefetch.tsx",
     "./provider": "./src/provider.tsx",
     "./use-action-mutation": "./src/use-action-mutation.ts"
   },
