@@ -6,6 +6,7 @@ export function createNextConfig({
   vendoredFiles = [],
   noTailwindFiles = [],
   uiGlob = 'src/components/ui/**',
+  uiImport = '@repo/ui/components',
   extra = [],
 } = {}) {
   return defineConfig([
@@ -35,6 +36,7 @@ export function createNextConfig({
     {
       files: ['src/**/*.{ts,tsx}'],
       plugins: { shadcn },
+      settings: { shadcn: { ui: uiImport } },
       rules: {
         'shadcn/no-restyle': ['error', { allow: ['layout'] }],
         'shadcn/no-raw-colors': 'error',
@@ -81,81 +83,81 @@ export function createNextConfig({
           'error',
           {
             selector: "JSXOpeningElement[name.name='button']",
-            message: 'Use <Button> from "@/components/ui/button" instead of a raw <button>.',
+            message: 'Use <Button> from "@repo/ui/components/button" instead of a raw <button>.',
           },
           {
             selector:
               "JSXOpeningElement[name.name='input']:has(JSXAttribute[name.name='type'][value.value='checkbox'])",
-            message: 'Use <Checkbox> from "@/components/ui/checkbox" instead of a raw <input type="checkbox">.',
+            message: 'Use <Checkbox> from "@repo/ui/components/checkbox" instead of a raw <input type="checkbox">.',
           },
           {
             selector:
               "JSXOpeningElement[name.name='input']:not(:has(JSXAttribute[name.name='type'][value.value='checkbox']))",
-            message: 'Use <Input> from "@/components/ui/input" instead of a raw <input>.',
+            message: 'Use <Input> from "@repo/ui/components/input" instead of a raw <input>.',
           },
           {
             selector: "JSXOpeningElement[name.name='select']",
-            message: 'Use <Select> from "@/components/ui/select" instead of a raw <select>.',
+            message: 'Use <Select> from "@repo/ui/components/select" instead of a raw <select>.',
           },
           {
             selector: "JSXOpeningElement[name.name='textarea']",
-            message: 'Use <Textarea> from "@/components/ui/textarea" instead of a raw <textarea>.',
+            message: 'Use <Textarea> from "@repo/ui/components/textarea" instead of a raw <textarea>.',
           },
           {
             selector: "JSXOpeningElement[name.name='label']",
-            message: 'Use <Label> from "@/components/ui/label" instead of a raw <label>.',
+            message: 'Use <Label> from "@repo/ui/components/label" instead of a raw <label>.',
           },
           {
             selector: "JSXOpeningElement[name.name='hr']",
-            message: 'Use <Separator> from "@/components/ui/separator" instead of a raw <hr>.',
+            message: 'Use <Separator> from "@repo/ui/components/separator" instead of a raw <hr>.',
           },
           {
             selector: "JSXOpeningElement[name.name='kbd']",
-            message: 'Use <Kbd> from "@/components/ui/kbd" instead of a raw <kbd>.',
+            message: 'Use <Kbd> from "@repo/ui/components/kbd" instead of a raw <kbd>.',
           },
           {
             selector: "JSXOpeningElement[name.name='dialog']",
-            message: 'Use <Dialog> from "@/components/ui/dialog" instead of a raw <dialog>.',
+            message: 'Use <Dialog> from "@repo/ui/components/dialog" instead of a raw <dialog>.',
           },
           {
             selector: "JSXOpeningElement[name.name='details']",
-            message: 'Use <Collapsible> from "@/components/ui/collapsible" instead of a raw <details>.',
+            message: 'Use <Collapsible> from "@repo/ui/components/collapsible" instead of a raw <details>.',
           },
           {
             selector: "JSXOpeningElement[name.name='summary']",
-            message: 'Use <CollapsibleTrigger> from "@/components/ui/collapsible" instead of a raw <summary>.',
+            message: 'Use <CollapsibleTrigger> from "@repo/ui/components/collapsible" instead of a raw <summary>.',
           },
           {
             selector: "JSXOpeningElement[name.name='table']",
-            message: 'Use <Table> from "@/components/ui/table" instead of a raw <table>.',
+            message: 'Use <Table> from "@repo/ui/components/table" instead of a raw <table>.',
           },
           {
             selector: "JSXOpeningElement[name.name='thead']",
-            message: 'Use <TableHeader> from "@/components/ui/table" instead of a raw <thead>.',
+            message: 'Use <TableHeader> from "@repo/ui/components/table" instead of a raw <thead>.',
           },
           {
             selector: "JSXOpeningElement[name.name='tbody']",
-            message: 'Use <TableBody> from "@/components/ui/table" instead of a raw <tbody>.',
+            message: 'Use <TableBody> from "@repo/ui/components/table" instead of a raw <tbody>.',
           },
           {
             selector: "JSXOpeningElement[name.name='tfoot']",
-            message: 'Use <TableFooter> from "@/components/ui/table" instead of a raw <tfoot>.',
+            message: 'Use <TableFooter> from "@repo/ui/components/table" instead of a raw <tfoot>.',
           },
           {
             selector: "JSXOpeningElement[name.name='tr']",
-            message: 'Use <TableRow> from "@/components/ui/table" instead of a raw <tr>.',
+            message: 'Use <TableRow> from "@repo/ui/components/table" instead of a raw <tr>.',
           },
           {
             selector: "JSXOpeningElement[name.name='th']",
-            message: 'Use <TableHead> from "@/components/ui/table" instead of a raw <th>.',
+            message: 'Use <TableHead> from "@repo/ui/components/table" instead of a raw <th>.',
           },
           {
             selector: "JSXOpeningElement[name.name='td']",
-            message: 'Use <TableCell> from "@/components/ui/table" instead of a raw <td>.',
+            message: 'Use <TableCell> from "@repo/ui/components/table" instead of a raw <td>.',
           },
           {
             selector: "JSXOpeningElement[name.name='caption']",
-            message: 'Use <TableCaption> from "@/components/ui/table" instead of a raw <caption>.',
+            message: 'Use <TableCaption> from "@repo/ui/components/table" instead of a raw <caption>.',
           },
         ],
       },
