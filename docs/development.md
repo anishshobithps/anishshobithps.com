@@ -29,7 +29,7 @@ pnpm db:seed:links              # seed short links
 pnpm spotify:token              # get a Spotify refresh token
 ```
 
-The database and seed commands need `.env.local`. See [Getting started](getting-started.md).
+The database and seed commands need `apps/web/.env.local`. See [Getting started](getting-started.md).
 
 `next dev` and `next build` use separate output folders (`.next/dev` and `.next`), so you can build while the dev server is running.
 

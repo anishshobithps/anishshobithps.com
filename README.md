@@ -53,15 +53,16 @@ The full route list is in [Architecture](docs/architecture.md#routes).
 
 ## Quick start
 
-Node 22+ and pnpm 11 (the repo pins `packageManager`, so `corepack enable` is enough).
+Node 24+ and pnpm 11 (the repo pins `packageManager`, so `corepack enable` is enough).
 
 ```bash
 pnpm install
+pnpm --filter web exec varlock load   # checks apps/web/.env.local against the schema
 pnpm db:migrate         # applies the committed migrations in packages/db/drizzle/
 pnpm dev                # http://localhost:3000
 ```
 
-Create `.env.local` first. `DATABASE_URL` (a [Neon](https://neon.tech) database) and `IP_HASH_SALT` are the two you can't skip, and sign-in needs [Clerk](https://clerk.com) keys. [Getting started](docs/getting-started.md) has the full variable list, the Clerk webhook, and the Spotify token script.
+Create `apps/web/.env.local` first. [varlock](https://varlock.dev) checks it against `apps/web/.env.schema`, and six variables are required: `DATABASE_URL` (a [Neon](https://neon.tech) database), `IP_HASH_SALT`, and the [Clerk](https://clerk.com) keys, webhook secret, and owner ID. [Getting started](docs/getting-started.md) has the full variable list, the Clerk webhook, and the Spotify token script.
 
 ---
 

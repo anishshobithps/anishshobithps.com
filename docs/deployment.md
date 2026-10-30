@@ -14,11 +14,12 @@ The site runs on Vercel, with Neon for the database, Clerk for sign-in, and a fe
 
 ## Steps
 
-1. Import the repository into Vercel. It's a standard Next.js project, so the defaults work.
+1. Import the repository into Vercel. Set the Root Directory to `apps/web` and leave "Include source files outside of the Root Directory" on, so the workspace packages are available to the build.
 2. Add the environment variables from [Getting started](getting-started.md#environment-variables) for the Production environment. `NEXT_PUBLIC_*` values are inlined at build time, so changing one needs a new deploy.
 3. Point `DATABASE_URL` at your Neon database, then run the migrations against it yourself (see below).
-4. In Clerk, create a production instance, set its keys, and add the webhook for `user.deleted` at `https://<your-domain>/api/webhooks/clerk`.
-5. Deploy, then run through the [checklist](#after-the-first-deploy).
+4. Run `pnpm --filter web exec varlock generate-key` and add the result as `_VARLOCK_ENV_KEY` to both the build and the runtime environments, for Production and Preview. varlock decrypts its schema with it, so without the key the build fails on purpose.
+5. In Clerk, create a production instance, set its keys, and add the webhook for `user.deleted` at `https://<your-domain>/api/webhooks/clerk`.
+6. Deploy, then run through the [checklist](#after-the-first-deploy).
 
 ## Migrations
 

@@ -48,7 +48,7 @@ Reads degrade rather than fail. Loaders wrap queries in `safeQuery`, which logs 
 
 ## Migrations
 
-Migrations are SQL files in `packages/db/drizzle/` with their snapshots in `packages/db/drizzle/meta/`. They're committed, and the config is [`packages/db/drizzle.config.ts`](../packages/db/drizzle.config.ts). It reads `DATABASE_URL`, and loads `.env.local` itself when the variable isn't already set.
+Migrations are SQL files in `packages/db/drizzle/` with their snapshots in `packages/db/drizzle/meta/`. They're committed, and the config is [`packages/db/drizzle.config.ts`](../packages/db/drizzle.config.ts). It reads `DATABASE_URL`, and the `db:*` scripts run it through varlock, which reads `apps/web/.env.local`.
 
 ```bash
 pnpm db:migrate         # apply the committed migrations

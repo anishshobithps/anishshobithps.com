@@ -8,7 +8,7 @@ Run the site locally, with the services it talks to.
 
 ## Requirements
 
-- Node 22 or newer. CI runs on 22.
+- Node 24 or newer. CI runs on 24.
 - pnpm 11. The repo pins `packageManager`, so `corepack enable` is enough.
 - A Postgres database on [Neon](https://neon.tech). The free tier works. The app uses Neon's serverless HTTP driver (`packages/db/src/index.ts`), so a plain local Postgres won't connect.
 - A [Clerk](https://clerk.com) application for sign-in. It powers the guestbook, comments, and admin.
@@ -19,17 +19,18 @@ Spotify, WakaTime, a GitHub token, and Umami are optional. See [Environment vari
 
 ```bash
 pnpm install
+pnpm --filter web exec varlock load   # checks apps/web/.env.local against the schema
 pnpm db:migrate         # applies the committed migrations in packages/db/drizzle/
 pnpm dev                # http://localhost:3000
 ```
 
-`pnpm install` also runs `fumadocs-mdx`, which generates the `.source/` folder the blog reads from. `pnpm db:migrate` needs `DATABASE_URL`, so create `.env.local` first.
+`pnpm install` also runs `fumadocs-mdx`, which generates the `.source/` folder the blog reads from. `pnpm db:migrate` needs `DATABASE_URL`, so create `apps/web/.env.local` first.
 
 Only one `next dev` can run per project at a time. Next takes a lock and a second one exits.
 
 ## Environment variables
 
-Create `.env.local` at the root:
+Create `apps/web/.env.local`. [varlock](https://varlock.dev) validates it against `apps/web/.env.schema`, which also imports the schemas in `packages/site-config` and `packages/db`. `pnpm --filter web exec varlock load` names anything that is missing or malformed, and the build and `pnpm dev` stop for the same reason. Six variables are required: `DATABASE_URL`, `IP_HASH_SALT`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, and `OWNER_CLERK_USER_ID`.
 
 ```env
 DATABASE_URL=postgresql://...
@@ -71,7 +72,7 @@ SHORTLINK_DOMAIN=
 ### Clerk
 
 1. Create an application and turn on the sign-in providers you want. The privacy policy page lists GitHub, Google, and Discord, so edit it if yours differ.
-2. Copy the publishable and secret keys into `.env.local`.
+2. Copy the publishable and secret keys into `apps/web/.env.local`.
 3. Sign in once, then copy your user ID from the Clerk dashboard into `OWNER_CLERK_USER_ID`. That account gets `/admin`.
 4. Add a webhook that points at `https://<your-domain>/api/webhooks/clerk` and listens for `user.deleted`. Copy its signing secret into `CLERK_WEBHOOK_SECRET`.
 
@@ -81,7 +82,7 @@ The webhook keeps the database clean. When someone deletes their Clerk account, 
 
 1. Create an app in the [Spotify dashboard](https://developer.spotify.com/dashboard).
 2. Register `http://127.0.0.1:3000` as a redirect URI. The token exchange fails without it.
-3. Put the client ID and secret in `.env.local`.
+3. Put the client ID and secret in `apps/web/.env.local`.
 4. Run `pnpm spotify:token`. It prints an authorize URL. Open it and approve. Spotify redirects to `http://127.0.0.1:3000/?code=...`, and that page won't load, which is expected. Paste the `code` value back into the prompt and it prints a refresh token.
 5. Put the refresh token in `SPOTIFY_REFRESH_TOKEN`.
 
@@ -102,7 +103,7 @@ pnpm db:seed:guestbook:cleanup      # removes what the script made
 
 ## When something is off
 
-- **`IP_HASH_SALT is not set`**: add it to `.env.local`. Counting a read and recording a reaction both need it.
+- **`IP_HASH_SALT is not set`**: add it to `apps/web/.env.local`. Counting a read and recording a reaction both need it.
 - **Types or MDX imports are missing**: run `pnpm types:check`, which regenerates `.source/` and the route types.
 - **A second `next dev` exits immediately**: one is already running on the project.
 - **The resume doesn't update**: the PDF is cached for up to an hour. Admin has a button to clear it. See [Admin](admin.md).
