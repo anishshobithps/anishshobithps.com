@@ -31,8 +31,6 @@ const DEPLOYMENT = ENV.VERCEL_DEPLOYMENT_ID ?? "local";
 
 type Loader = (params: unknown) => Promise<unknown>;
 
-// Built once from the table above and keyed by template, so a request's `type`
-// never chooses which function gets called.
 const loaders = new Map<AnySvgTemplate, Loader>();
 
 for (const [type, template] of Object.entries(templates)) {

@@ -37,7 +37,6 @@ function Avatar({ theme, src, name }: { theme: Theme; src: string | null; name: 
     border: `1px solid ${c.line}`,
   };
   return src ? (
-    // takumi draws this into the SVG; next/image has no say here.
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} width={AVATAR} height={AVATAR} alt="" style={{ ...frame, objectFit: "cover" }} />
   ) : (

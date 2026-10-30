@@ -35,7 +35,6 @@ const SIZE = {
 
 const HOUR_MARKS = [0, 6, 12, 18];
 
-/** Coordinates to two decimals (about a kilometre) so nearby requests share a cache entry. */
 const coordinate = (limit: number) =>
   z.coerce
     .number()
@@ -74,7 +73,6 @@ const PARAMS = z
   )
   .refine(({ city, country }) => !country || city, "country only narrows a city.");
 
-/** The hour on the place's wall clock, with minutes as a fraction. */
 function localHours(timeZone: string, now: Date) {
   const parts = Object.fromEntries(
     new Intl.DateTimeFormat("en-US", {
@@ -97,7 +95,6 @@ function clock(stamp: string) {
   return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
 }
 
-/** One cell per hour of today: night, daylight, the hours the sun crosses, and now. */
 function dayLevels(weather: Weather, now: number) {
   const rise = hourOf(weather.sunrise) ?? 6;
   const set = hourOf(weather.sunset) ?? 18;

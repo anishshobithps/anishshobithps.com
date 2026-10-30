@@ -158,11 +158,6 @@ async function calendarFromGraphQL(): Promise<Calendar> {
 const TOOLTIP = /<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([^<]*)<\/tool-tip>/g;
 const DAY_CELL = /<td\b[^>]*\bdata-date="[^"]+"[^>]*>/g;
 
-/**
- * Reads the contribution graph GitHub renders on profile pages: one cell per
- * day with its date and level, and a tooltip per cell with the count
- * ("12 contributions on March 4th.", "No contributions on …").
- */
 export function parseContributionsPage(html: string): Calendar {
   const counts = new Map<string, number>();
   for (const [, id = "", text = ""] of html.matchAll(TOOLTIP)) {
@@ -205,10 +200,6 @@ async function calendarFromProfile(): Promise<Calendar> {
   return parseContributionsPage(await res.text());
 }
 
-/**
- * GraphQL when a token is set, since it's the documented API. Without one, or
- * if the token is rejected, the public profile graph has the same numbers.
- */
 export async function loadCalendar(): Promise<Calendar> {
   if (ENV.GITHUB_TOKEN) {
     try {
@@ -220,10 +211,6 @@ export async function loadCalendar(): Promise<Calendar> {
   return calendarFromProfile();
 }
 
-/**
- * Streaks over a calendar that ends today. An empty today doesn't break the
- * current streak, since the day isn't over yet.
- */
 export function summarizeCalendar(days: CalendarDay[]) {
   let longest = 0;
   let run = 0;

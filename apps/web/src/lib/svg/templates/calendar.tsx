@@ -33,7 +33,6 @@ const SIZE = {
   height: 4 * HAIRLINE + HEADER_HEIGHT + BODY_HEIGHT + STATS_HEIGHT,
 };
 
-/** GitHub's own rows run Sunday to Saturday and only label these three. */
 const WEEKDAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
 function levels(weeks: CalendarDay[][]) {
@@ -44,7 +43,6 @@ function levels(weeks: CalendarDay[][]) {
 
 const MONTH = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
 
-/** Each month gets the columns its weeks start in; one-column months stay unlabeled. */
 function months(weeks: CalendarDay[][]) {
   const spans: { label: string; columns: number }[] = [];
   for (const week of weeks) {

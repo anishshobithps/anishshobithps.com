@@ -26,7 +26,6 @@ const SIZE = {
   height: 4 * HAIRLINE + HEADER_HEIGHT + BODY_HEIGHT + STATS_HEIGHT,
 };
 
-/** owner/name of the repo behind the résumé's "latest release" download link. */
 const RESUME_REPO =
   siteConfig.resumeURL.match(/github\.com\/([^/]+\/[^/]+)\/releases/)?.[1] ?? "";
 
