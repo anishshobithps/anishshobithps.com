@@ -8,7 +8,7 @@ export function IsoArt({ scene }: { scene: Scene }) {
       aria-hidden="true"
       focusable="false"
       data-iso-art=""
-      className="iso-art absolute inset-0 size-full"
+      className="absolute inset-0 size-full overflow-visible"
       dangerouslySetInnerHTML={{ __html: sceneMarkup(scene) }}
     />
   );
