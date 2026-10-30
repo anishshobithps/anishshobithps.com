@@ -13,7 +13,7 @@
   "dependencies": {
     "@repo/icons": "workspace:*",
     "@repo/ui": "workspace:*",
-    "media-chrome": "^4.19.3",
+    "media-chrome": "^4.19.4",
     "radix-ui": "catalog:"
   },
   "peerDependencies": {

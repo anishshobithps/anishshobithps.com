@@ -14,9 +14,9 @@
     "@repo/icons": "workspace:*",
     "@repo/ui": "workspace:*",
     "@wojtekmaj/react-hooks": "^2.3.0",
-    "pdfjs-dist": "5.4.296",
+    "pdfjs-dist": "6.3.289",
     "radix-ui": "catalog:",
-    "react-pdf": "^10.5.0"
+    "react-pdf": "^11.0.0"
   },
   "peerDependencies": {
     "next": "catalog:",

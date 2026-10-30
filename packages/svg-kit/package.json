@@ -20,7 +20,7 @@
     "@repo/core": "workspace:*",
     "@repo/site-config": "workspace:*",
     "@repo/styles": "workspace:*",
-    "takumi-js": "^2.16.2",
+    "takumi-js": "^2.18.2",
     "zod": "catalog:"
   },
   "peerDependencies": {

@@ -217,7 +217,6 @@ export function OnlinePing() {
         cy="8"
         r="5"
         strokeWidth="1"
-        // eslint-disable-next-line shadcn/no-raw-colors
         className="fill-none stroke-(--brand) [transform-box:fill-box] origin-center animate-iso-ripple"
       />
       <circle

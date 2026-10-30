@@ -7,8 +7,8 @@
     "./next": "./src/next.mjs"
   },
   "dependencies": {
-    "@shadcn/lint": "^0.2.1",
-    "eslint-config-next": "16.1.6"
+    "@shadcn/lint": "^0.2.3",
+    "eslint-config-next": "16.4.3"
   },
   "peerDependencies": {
     "eslint": "catalog:"
