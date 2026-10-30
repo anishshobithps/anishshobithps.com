@@ -17,7 +17,7 @@ catalog:
   '@tanstack/react-virtual': ^3.14.24
   drizzle-orm: ^0.45.4
   vitest: ^5.0.5
-  eslint: ^9.39.5
+  eslint: ^10.13.0
   tsx: ^4.23.15
   radix-ui: ^1.8.1
   class-variance-authority: ^0.7.1
@@ -34,3 +34,8 @@ overrides:
   fast-uri@<3.1.8: ^3.1.8
   'brace-expansion@>=4.0.0 <5.0.12': ^5.0.12
   mdast-util-to-markdown: 2.1.2
+peerDependencyRules:
+  allowedVersions:
+    eslint-plugin-import>eslint: '10'
+    eslint-plugin-jsx-a11y>eslint: '10'
+    eslint-plugin-react>eslint: '10'
