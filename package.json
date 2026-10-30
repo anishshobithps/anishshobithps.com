@@ -15,7 +15,7 @@
     "test": "turbo run test",
     "test:watch": "pnpm --filter web run test:watch",
     "types:check": "turbo run types:check",
-    "knip": "pnpm --filter web run knip",
+    "knip": "knip --config knip.config.mjs",
     "db:migrate": "pnpm --filter web run db:migrate",
     "db:push": "pnpm --filter web run db:push",
     "db:studio": "pnpm --filter web run db:studio",
@@ -26,6 +26,7 @@
     "banners": "pnpm --filter web run banners"
   },
   "devDependencies": {
+    "knip": "^6.41.0",
     "sherif": "^1.13.0",
     "turbo": "^2.11.10"
   }
