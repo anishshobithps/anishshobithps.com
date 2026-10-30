@@ -18,6 +18,8 @@ jobs:
       CLERK_WEBHOOK_SECRET: ci-placeholder
       OWNER_CLERK_USER_ID: ci-placeholder
       IP_HASH_SALT: ci-placeholder
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v7
 
