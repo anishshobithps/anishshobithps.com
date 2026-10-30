@@ -68,18 +68,11 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@repo/ui/components/table";
-import {
-  createSortedRowModel,
-  rowSortingFeature,
-  sortFns,
-  tableFeatures,
-  useTable,
-  type ColumnDef,
-} from "@tanstack/react-table";
+import { sortableTableFeatures } from "@repo/data-table/features";
+import { SortableTableHeader } from "@repo/data-table/sortable-header";
+import { useTable, type ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@repo/ui/components/badge";
 import {
   PencilIcon,
@@ -87,7 +80,6 @@ import {
   PlusIcon,
   ImageIcon,
   ArrowSquareOutIcon,
-  CaretUpDownIcon,
   LinkIcon,
 } from "@repo/icons";
 import {
@@ -101,13 +93,7 @@ import {
 import { cn } from "@repo/ui/lib/cn";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 
-const linkTableFeatures = tableFeatures({
-  rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
-  sortFns,
-});
-
-const linkColumns: ColumnDef<typeof linkTableFeatures, AdminLink>[] = [
+const linkColumns: ColumnDef<typeof sortableTableFeatures, AdminLink>[] = [
   {
     id: "path",
     header: "Path",
@@ -505,7 +491,7 @@ export function LinksPanel() {
 
   const table = useTable({
     key: "admin-links",
-    features: linkTableFeatures,
+    features: sortableTableFeatures,
     columns: linkColumns,
     data: links,
   });
@@ -611,49 +597,7 @@ export function LinksPanel() {
       ) : (
         <div className="rounded-lg border overflow-hidden">
           <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    const label = String(header.column.columnDef.header);
-                    const sortable = header.column.getCanSort();
-                    const direction = header.column.getIsSorted();
-                    return (
-                      <TableHead
-                        key={header.id}
-                        // eslint-disable-next-line shadcn/require-static-classes
-                        className={HEAD_CLASS[header.id]}
-                        aria-sort={
-                          direction === "asc"
-                            ? "ascending"
-                            : direction === "desc"
-                              ? "descending"
-                              : undefined
-                        }
-                      >
-                        {sortable ? (
-                          <Button
-                            type="button"
-                            variant="muted"
-                            size="xs"
-                            onClick={header.column.getToggleSortingHandler()}
-                            className="-mx-1.5"
-                          >
-                            {label}
-                            <CaretUpDownIcon
-                              className="size-3 opacity-60"
-                              aria-hidden="true"
-                            />
-                          </Button>
-                        ) : (
-                          label
-                        )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
+            <SortableTableHeader table={table} headClassName={HEAD_CLASS} />
             <TableBody>
               {table.getRowModel().rows.map((row) => {
                 const link = row.original;
