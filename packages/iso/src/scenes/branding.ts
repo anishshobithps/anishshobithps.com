@@ -1,3 +1,4 @@
+import { FACE_FILL } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep } from "../figure";
 import { alongZ, arc, face, L, rulerStrip, S, turned } from "../parts";
 
@@ -55,7 +56,7 @@ export function brandingScene(width = 400, height = 300): Scene {
 
   const PAD: Plan = { x: 50, y: -18, w: 24, d: 16, r: 2 };
   f.add(S(k.slabOf(PAD, 0, 3, P, 3, 0.4), { tone: "mid" }));
-  f.add(`<path class="iso-face" data-fill="lit" d="${k.planOutline(k.insetPlan(PAD, 2), 3, P, 3)}"/>`, L(k.planOutline(k.insetPlan(PAD, 2), 3, P, 3), { tone: "lit" }));
+  f.add(`<path class="stroke-none ${FACE_FILL.lit}" d="${k.planOutline(k.insetPlan(PAD, 2), 3, P, 3)}"/>`, L(k.planOutline(k.insetPlan(PAD, 2), 3, P, 3), { tone: "lit" }));
   const STAMP = alongZ([66, 12, 0]);
   f.add(S(k.slabOf({ x: 58, y: 4, w: 16, d: 16, r: 1.4 }, 0, 1.4, P, 2), { tone: "hi", lit: true }));
   f.add(S(k.slabOf({ x: 58.6, y: 4.6, w: 14.8, d: 14.8, r: 1.4 }, 1.4, 5, P, 2, 0.4), { tone: "mid", inner: L(k.sideSeam({ x: 58.6, y: 4.6, w: 14.8, d: 14.8, r: 1.4 }, 3.8, P, 2), { tone: "faint" }) }));
@@ -63,12 +64,12 @@ export function brandingScene(width = 400, height = 300): Scene {
   f.add(f.inPlane(f.topPlane([58.6, 4.6], 6.4), face(pathOf(MASCOT.map(([x, y]) => [3 + (x - 16) * 0.27, 2 + (y - 4) * 0.18] as Flat), true), "top", "lo")));
 
   const CARD: Plan = { x: 14, y: 16, w: 34, d: 22, r: 0.8 };
-  f.add(S(k.slabOf(CARD, 0, 0.4, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"'));
+  f.add(S(k.slabOf(CARD, 0, 0.4, P, 2), { tone: "lo", crease: "none", card: true }));
   f.add(
     f.inPlane(
       f.topPlane([CARD.x, CARD.y], 0.4),
       face(pathOf(MASCOT.map(([x, y]) => [3.4 + (x - 16) * 0.3, 3.4 + (y - 4) * 0.27] as Flat), true), "ink", "lit") +
-        L("M17 7h13M17 10.4h9M17 13.8h11", { tone: "lo", free: true }),
+        L("M17 7h13M17 10.4h9M17 13.8h11", { tone: "lo" }),
     ),
   );
 
@@ -77,7 +78,7 @@ export function brandingScene(width = 400, height = 300): Scene {
     for (let c = 0; c < 6; c++) {
       const x0 = 8 + c * 9.4;
       const d = `M${x0} ${-WIDE / 2 + 1.2}h8.2v${WIDE - 2.4}h-8.2z`;
-      if (i === BRAND) chips.push(`<path class="iso-face" data-fill="ink" style="opacity:${(0.25 + c * 0.15).toFixed(2)}" d="${d}"/>`);
+      if (i === BRAND) chips.push(`<path class="stroke-none ${FACE_FILL.ink}" style="opacity:${(0.25 + c * 0.15).toFixed(2)}" d="${d}"/>`);
       else chips.push(face(d, (["top", "3", "2", "1", "0", "0"] as const)[(c + i) % 6]!, "none"));
     }
     return chips.join("");
@@ -93,7 +94,7 @@ export function brandingScene(width = 400, height = 300): Scene {
     const edge = f.inPlane(f.topPlane(PIVOT, z - 0.45), face(strip, "0", "lo"), turn);
     const top = f.inPlane(
       f.topPlane(PIVOT, z),
-      face(strip, i === BRAND ? "lit" : "top", i === BRAND ? "lit" : "mid") + ramp(i) + L("M1 -2.2h4M1 0h3", { tone: "lo", free: true }),
+      face(strip, i === BRAND ? "lit" : "top", i === BRAND ? "lit" : "mid") + ramp(i) + L("M1 -2.2h4M1 0h3", { tone: "lo" }),
       turn,
     );
     f.add(edge, top);

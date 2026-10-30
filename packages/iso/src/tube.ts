@@ -1,3 +1,4 @@
+import { lineAttrs, TUBE, type LineTone } from "./classes";
 import { iso, pathOf, type Flat, type Point3, type Projection } from "./iso-kit";
 import * as G from "./lathe";
 
@@ -58,7 +59,6 @@ export interface TubeOptions {
 
 export interface TubePiece {
   rings: G.Faded[];
-  ringTone: string;
   mid: V3;
   body: string;
   shine: string;
@@ -344,7 +344,6 @@ export function tubePieces(points3: V3[], radius: number | ((t: number) => numbe
     const ringSpan: RingSpan = Object.assign([openStart ? piece.from - 2 * lead : piece.from, openEnd ? piece.to + 2 * lead : piece.to] as [number, number], { real0: !openStart, real1: !openEnd });
     out.push({
       rings: rings ? ringsOf(dense, total, radiusAt, P, ringSpan, rings) : [],
-      ringTone: rings?.tone ?? "lo",
       mid: G.pointAlong(dense, (piece.from + piece.to) / 2),
       body: bodyPath,
       shine: band(bands.shineA, bands.shineB, shineOffsets),
@@ -361,17 +360,17 @@ export function tubePieces(points3: V3[], radius: number | ((t: number) => numbe
   return out;
 }
 
-export function ringsSvg(rings: G.Faded[] | null | undefined, tone = "lo") {
+export function ringsSvg(rings: G.Faded[] | null | undefined) {
   const groups = new Map<number, string>();
   for (const { d, alpha } of rings ?? []) {
     const level = Math.min(1, Math.round(alpha * 20) / 20);
     if (level <= 0) continue;
     groups.set(level, (groups.get(level) ?? "") + d);
   }
-  return [...groups].map(([alpha, d]) => `<path class="tb-ring" data-tone="${tone}" d="${d}"${alpha < 1 ? ` opacity="${alpha.toFixed(2)}"` : ""}/>`).join("");
+  return [...groups].map(([alpha, d]) => `<path d="${d}"${alpha < 1 ? ` opacity="${alpha.toFixed(2)}"` : ""}/>`).join("");
 }
 
-export function tubeSvg(piece: TubePiece, { tone = "hi" }: { tone?: string } = {}) {
-  const shine = piece.wide ? `<path class="tb-shine" d="${piece.shine}"/><path class="tb-shade" d="${piece.shade}"/>` : "";
-  return `<g class="tb"><path class="tb-body" d="${piece.body}"/>${shine}${ringsSvg(piece.rings, piece.ringTone)}<path class="iso-line tb-edge" data-tone="${tone}" d="${piece.edges}"/></g>`;
+export function tubeSvg(piece: TubePiece, { tone = "hi" }: { tone?: LineTone } = {}) {
+  const shine = piece.wide ? `<path class="${TUBE.shine}" d="${piece.shine}"/><path class="${TUBE.shade}" d="${piece.shade}"/>` : "";
+  return `<g><path class="${TUBE.body}" d="${piece.body}"/>${shine}${ringsSvg(piece.rings)}<path ${lineAttrs(tone)} d="${piece.edges}"/></g>`;
 }

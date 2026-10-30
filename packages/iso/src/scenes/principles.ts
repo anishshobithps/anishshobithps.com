@@ -1,3 +1,4 @@
+import { DOTS_GLOW, FACE_FILL } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, type V3 } from "../figure";
 import {
   alongX,
@@ -87,7 +88,7 @@ export function principlesScene(width = 400, height = 225): Scene {
   knob(f, [-31, 8], 9, 2.8, 3);
   const led: V3 = [-38, 8, 9];
   f.add(L(k.ring(led[0], led[1], 1.5, 9, P, 14), { tone: "lo" }));
-  f.add(`<g class="iso-dots iso-glow"><circle cx="${at(led)[0].toFixed(1)}" cy="${at(led)[1].toFixed(1)}" r="0.9"/></g>`);
+  f.add(`<g class="${DOTS_GLOW}"><circle cx="${at(led)[0].toFixed(1)}" cy="${at(led)[1].toFixed(1)}" r="0.9"/></g>`);
   const POST: Plan = { x: M[0] - 7, y: -14, w: 14, d: 8, r: 2 };
   f.add(S(k.slabOf(POST, 9, M[2] - 9, P, 3, 0.5), { tone: "mid" }));
   f.add(S(disc(P, alongY([M[0], -6, M[2]]), 0, 2.5, 3), { tone: "mid" }));
@@ -131,7 +132,7 @@ export function principlesScene(width = 400, height = 225): Scene {
     { period: 15 * BALANCE, steps: true },
   );
   const jewels = ([[0, 0], BAL, ESC, [6, -10], [11, 4], [-12, 9], [4, 13]] as Flat[])
-    .map(([x, y]) => L(circleD(x, y, 1, 12), { tone: "mid" }) + `<circle class="iso-face" data-fill="lit" cx="${x}" cy="${y}" r="0.5"/>`)
+    .map(([x, y]) => L(circleD(x, y, 1, 12), { tone: "mid" }) + `<circle class="stroke-none ${FACE_FILL.lit}" cx="${x}" cy="${y}" r="0.5"/>`)
     .join("");
   const bridgeLines = L(
     pathOf([

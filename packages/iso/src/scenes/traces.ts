@@ -1,3 +1,4 @@
+import { FACE_FILL } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import {
   alongY,
@@ -80,16 +81,16 @@ export function tracesScene(width = 400, height = 225): Scene {
       .join("");
     const stamp = `M${CARD.w - 9.5} 2.6h6.4v8h-6.4z`;
     const mark = marked
-      ? `<g class="iso-ink-mark">${L(circleD(CARD.w - 11.4, 9.4, 4.2, 28), { tone: "lit" })}${L(
+      ? `<g>${L(circleD(CARD.w - 11.4, 9.4, 4.2, 28), { tone: "lit" })}${L(
           [0, 1, 2, 3].map((i) => pathOf(Array.from({ length: 13 }, (_, j) => [CARD.w - 22 + j * 1.5, 4.6 + i * 2.6 + Math.sin(j * 0.9) * 0.8] as Flat))).join(""),
           { tone: "lit" },
         )}${L(pathOf([[CARD.w - 11.4, 6.6], [CARD.w - 9.7, 11.6], [CARD.w - 13.1, 11.6], [CARD.w - 11.4, 6.6]], true), { tone: "lit" })}</g>`
       : "";
-    return L(lines, { tone: "lo", free: true }) + face(stamp, "2", "lo") + L(`M${CARD.w - 8.7} 3.4h4.8v6.4h-4.8z`, { tone: "faint" }) + mark;
+    return L(lines, { tone: "lo" }) + face(stamp, "2", "lo") + L(`M${CARD.w - 8.7} 3.4h4.8v6.4h-4.8z`, { tone: "faint" }) + mark;
   };
   const card = (cx: number, z: number, marked: boolean) => {
     const plan: Plan = { x: cx - CARD.w / 2, y: -CARD.d / 2, w: CARD.w, d: CARD.d, r: 0.8 };
-    return S(k.slabOf(plan, z, THICK, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"') + `<g transform="${f.topPlane([cx - CARD.w / 2, -CARD.d / 2], z + THICK)}">${cardFace(marked)}</g>`;
+    return S(k.slabOf(plan, z, THICK, P, 2), { tone: "lo", crease: "none", card: true }) + `<g transform="${f.topPlane([cx - CARD.w / 2, -CARD.d / 2], z + THICK)}">${cardFace(marked)}</g>`;
   };
 
   const tray = (cx: number, opens: "right" | "left", cards: string) => {
@@ -153,9 +154,9 @@ export function tracesScene(width = 400, height = 225): Scene {
   f.add(screwsOnTop(P, [[DRUM_X, -14.5], [DRUM_X, 14.5]], DRUM_Z + 11, 0.7));
   f.add(S(disc(P, alongY([DRUM_X, 16, DRUM_Z]), 0, 1.8, 3), { tone: "mid" }));
   const crank =
-    `<path class="iso-face" data-fill="2" d="M-1.4 0a1.4 1.4 0 0 1 2.8 0v-9a1.4 1.4 0 0 1-2.8 0z"/>` +
+    `<path class="stroke-none ${FACE_FILL["2"]}" d="M-1.4 0a1.4 1.4 0 0 1 2.8 0v-9a1.4 1.4 0 0 1-2.8 0z"/>` +
     L("M-1.4 0a1.4 1.4 0 0 1 2.8 0v-9a1.4 1.4 0 0 1-2.8 0z", { tone: "mid" }) +
-    `<path class="iso-face" data-fill="top" d="${circleD(0, -9, 1.7, 16)}"/>` +
+    `<path class="stroke-none ${FACE_FILL.top}" d="${circleD(0, -9, 1.7, 16)}"/>` +
     L(circleD(0, -9, 1.7, 16), { tone: "hi" });
   f.add(onDrumFace(17.8, crank));
   f.add(D([at([DRUM_X, 17.8, DRUM_Z])], { size: 0.6, tone: "hi" }));

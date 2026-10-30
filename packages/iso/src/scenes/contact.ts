@@ -1,3 +1,4 @@
+import { FACE_FILL, GLASS_FILL } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import {
   alongX,
@@ -95,7 +96,7 @@ export function contactScene(width = 400, height = 300): Scene {
   }).join("");
   f.add(f.inPlane(gaugeFace, face(circleD(0, 0, 5.2, 36), "top", "hi") + L(circleD(0, 0, 4.6, 36), { tone: "lo" }) + L(ticks, { tone: "mid" })));
   const needle = f.spinOf("gauge", poses.map((p) => ({ t: p.t, angle: Math.PI * 1.5 * p.pressure })), { tolerance: 1 });
-  f.add(f.inPlane(gaugeFace, `<g transform="rotate(135)"><g class="${needle}">${L(pathOf([[-0.8, 0], [4, 0]]), { tone: "lit" })}</g></g>` + `<circle class="iso-face" data-fill="2" r="0.7"/>`));
+  f.add(f.inPlane(gaugeFace, `<g transform="rotate(135)"><g class="${needle}">${L(pathOf([[-0.8, 0], [4, 0]]), { tone: "lit" })}</g></g>` + `<circle class="stroke-none ${FACE_FILL["2"]}" r="0.7"/>`));
   f.add(S(k.cylinder(-7, -20, 2.6, 20, 1.2, P, 18), { tone: "mid" }));
   f.add(T.tubePieces(G.fillet([[-7, -20, 21.2], [-7, -20, 25], [-44, -20, 25], [-44, -4, 25], [SX + 12 + 1.2, -4, 25]] as V3[], 4, 7) as V3[], 1.4, P, { maxLength: 400 }).map((piece) => T.tubeSvg(piece, { tone: "mid" })).join(""));
   const station = (cx: number, index: 0 | 1) => {
@@ -141,7 +142,7 @@ export function contactScene(width = 400, height = 300): Scene {
   const opaque = (pts: V3[]) => T.tubePieces(route(pts), TUBE_R, P, { maxLength: 400 }).map((piece) => T.tubeSvg(piece, { tone: "mid" })).join("");
   f.add(opaque([[SX, 0, CAB_TOP + 1.4], [SX, 0, RUN_Z], [GLASS[0]!, 0, RUN_Z]]));
   const glassPieces = T.tubePieces([[GLASS[0]!, 0, RUN_Z], [GLASS[1]!, 0, RUN_Z]], TUBE_R, P, { maxLength: 400, caps: false }) as Array<{ body: string; edges: string }>;
-  f.add(glassPieces.map((g) => `<path class="iso-glass" d="${g.body}"/>${L(g.edges, { tone: "mid" })}`).join(""));
+  f.add(glassPieces.map((g) => `<path class="${GLASS_FILL}" d="${g.body}"/>${L(g.edges, { tone: "mid" })}`).join(""));
   const glassRun = alongX([0, 0, RUN_Z]);
   f.add(L([-14, 0, 14].map((s) => arc(P, glassRun, s, TUBE_R)).join(""), { tone: "faint" }));
   f.add(opaque([[GLASS[1]!, 0, RUN_Z], [RX, 0, RUN_Z], [RX, 0, CAB_TOP + 1.4]]));

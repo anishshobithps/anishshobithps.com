@@ -1,3 +1,4 @@
+import { FACE_FILL, FACE_TEXT, INK, INK_ATTRS } from "../classes";
 import { Figure, type Flat, k, lengths, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { alongX, arc, circleD, D, disc, face, knob, L, S, screwsOnTop, turned } from "../parts";
 
@@ -132,7 +133,7 @@ export function projectsScene(width = 400, height = 300): Scene {
     P,
     true,
   );
-  f.add(`<path class="iso-face" data-fill="1" d="${beltTop}"/>`, L(beltTop, { tone: "lo" }));
+  f.add(`<path class="stroke-none ${FACE_FILL["1"]}" d="${beltTop}"/>`, L(beltTop, { tone: "lo" }));
   f.defs.push(`<clipPath id="print-belt"><path d="${beltTop}"/></clipPath>`);
   const ribs = Array.from({ length: 40 }, (_, i) => k.lineOnTop([-HALF, BACK_ROLL - PITCH + i * 5], [HALF, BACK_ROLL - PITCH + i * 5], BELT_Z, P)).join("");
   const belt = f.moveOf("belt", poses.map((p) => ({ t: p.t, by: [0, p.f, 0] })));
@@ -147,7 +148,7 @@ export function projectsScene(width = 400, height = 300): Scene {
       const total = totals[i]!;
       const hidden = total + 1;
       const reveal = f.trackOf(`lay${i}`, poses.map((p) => ({ t: p.t, v: [p.layer === i && p.ink[i]! > 0 ? total - p.ink[i]! : hidden] })), ([o]) => `stroke-dashoffset:${o!.toFixed(1)}`, { tolerance: 0.05 });
-      return `<path class="iso-ink ${reveal}" d="${pathOf(pts)}" stroke-dasharray="${total.toFixed(1)} ${(total + 4).toFixed(1)}" stroke-dashoffset="${hidden.toFixed(1)}"/>`;
+      return `<path class="${INK} ${reveal}" ${INK_ATTRS} d="${pathOf(pts)}" stroke-dasharray="${total.toFixed(1)} ${(total + 4).toFixed(1)}" stroke-dashoffset="${hidden.toFixed(1)}"/>`;
     })
     .join("");
   f.add(`<g clip-path="url(#print-belt)"><g class="${belt}">${L(ribs, { tone: "faint" })}</g></g><g class="${belt}">${states}${laying}</g>`);
@@ -194,7 +195,7 @@ export function projectsScene(width = 400, height = 300): Scene {
   );
   const shown = f.switchOf("drop-on", poses.map((p) => ({ t: p.t, on: p.fall > 0 })));
   f.add(`<g class="${shown}" opacity="0"><g class="${drop}">${binPart(LAND[0], LAND[1])}</g></g>`);
-  f.add(binPart(LAND[0], LAND[1]).replace('<g class="iso-solid"', '<g class="iso-solid" data-rest'));
+  f.add(binPart(LAND[0], LAND[1]));
   f.add(wall({ x: BIN.x + BIN.w - 1.6, y: BIN.y, w: 1.6, d: BIN.d, r: 0.5 }), wall({ x: BIN.x, y: BIN.y + BIN.d - 1.6, w: BIN.w, d: 1.6, r: 0.5 }));
 
   const CTRL: Plan = { x: 46, y: 22, w: 18, d: 24, r: 2 };
@@ -205,7 +206,7 @@ export function projectsScene(width = 400, height = 300): Scene {
   const texts = states2
     .map((phase) => {
       const on = f.switchOf(`lcd-${phase.replace(/\W+/g, "")}`, poses.map((p) => ({ t: p.t, on: p.phase === phase })));
-      return `<g class="${on}"${phase === poses[0]!.phase ? "" : ' opacity="0"'}><text class="iso-face-text" data-tone="lit" x="7.5" y="5.2" font-size="2.3" text-anchor="middle">${phase.toUpperCase()}</text></g>`;
+      return `<g class="${on}"${phase === poses[0]!.phase ? "" : ' opacity="0"'}><text class="${FACE_TEXT.lit}" x="7.5" y="5.2" font-size="2.3" text-anchor="middle">${phase.toUpperCase()}</text></g>`;
     })
     .join("");
   f.add(f.inPlane(screen, face(`M0 0h15v8h-15z`, "0", "mid") + `<clipPath id="print-lcd"><path d="M0.6 0.6h13.8v6.8h-13.8z"/></clipPath><g clip-path="url(#print-lcd)">${texts}</g>`));

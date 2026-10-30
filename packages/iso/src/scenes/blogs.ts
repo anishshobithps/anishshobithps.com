@@ -1,3 +1,4 @@
+import { SHEET, SHEET_ATTRS, TEXT, TEXT_ATTRS } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { alongX, arc, circleD, D, disc, face, knurlOn, L, radialD, S, screwsOnTop, turned } from "../parts";
 
@@ -87,8 +88,8 @@ export function blogsScene(width = 400, height = 300): Scene {
   f.defs.push(`<clipPath id="type-paper"><path d="M0 0h44v30h-44z"/></clipPath>`);
   car.push(
     `<g transform="${paperPlane}"><g clip-path="url(#type-paper)"><g class="${feed}">` +
-      `${[1, 2, 3, 4, 5, 6, 7].map((r) => `<path class="iso-text" d="${lineD(r)}"/>`).join("")}` +
-      `<path class="iso-text ${reveal}" d="${lineD(0)}" stroke-dasharray="${typedLen.toFixed(2)} ${(typedLen + 4).toFixed(2)}" stroke-dashoffset="${(typedLen + 0.6).toFixed(2)}"/>` +
+      `${[1, 2, 3, 4, 5, 6, 7].map((r) => `<path class="${TEXT}" ${TEXT_ATTRS} d="${lineD(r)}"/>`).join("")}` +
+      `<path class="${TEXT} ${reveal}" ${TEXT_ATTRS} d="${lineD(0)}" stroke-dasharray="${typedLen.toFixed(2)} ${(typedLen + 4).toFixed(2)}" stroke-dashoffset="${(typedLen + 0.6).toFixed(2)}"/>` +
       `</g></g></g>`,
   );
   const BAIL = alongX([0, PRINT[1] + 0.6, PLATEN_Z + 5]);
@@ -114,7 +115,7 @@ export function blogsScene(width = 400, height = 300): Scene {
     f.add(S(k.cylinder(x, -9, 5.6, 16, 3, P, 32), { tone: "lo", crease: "lo", inner: L(k.sideArc(x, -9, 5.6, 17.5, P, 20), { tone: "lit" }) }));
     f.add(f.inPlane(f.topPlane([x, -9], 19), L(radialD(0, 0, 1.4, 5.4, 4) + circleD(0, 0, 1.4, 12), { tone: "lo" }), spoolTurn));
   }
-  f.add(`<path class="iso-sheet" d="${pathOf([at([-24, PRINT[1] + 1.4, 17]), at([24, PRINT[1] + 1.4, 17]), at([24, PRINT[1] + 1.4, 19.6]), at([-24, PRINT[1] + 1.4, 19.6])], true)}"/>`);
+  f.add(`<path class="${SHEET}" ${SHEET_ATTRS} d="${pathOf([at([-24, PRINT[1] + 1.4, 17]), at([24, PRINT[1] + 1.4, 17]), at([24, PRINT[1] + 1.4, 19.6]), at([-24, PRINT[1] + 1.4, 19.6])], true)}"/>`);
   f.add(L(k.segment([-24, PRINT[1] + 1.4, 18.3], [24, PRINT[1] + 1.4, 18.3], P), { tone: "lit" }));
 
   const fan = f.topPlane([0, -2], 13.4);

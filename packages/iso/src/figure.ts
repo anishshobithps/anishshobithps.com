@@ -1,4 +1,7 @@
+import { HALO, HALO_OPACITY, PLAY } from "./classes";
 import * as k from "./iso-kit";
+
+export type { Tone } from "./classes";
 
 export type V3 = [number, number, number];
 export type Flat = [number, number];
@@ -15,7 +18,6 @@ export interface Projection {
   azimuth: number;
   elevation: number;
 }
-export type Tone = "hi" | "mid" | "lo" | "faint";
 
 export interface Frame {
   t: number;
@@ -173,7 +175,7 @@ export class Figure {
     const body = [...seen].map(([pct, css]) => `${pct}%{${css}}`).join("");
     const timing = steps ? "steps(1,end)" : "linear";
     this.css.push(`@keyframes ${cls}{${body}}.${cls}{animation:${cls} ${period}s ${timing} infinite}`);
-    return `iso-anim ${cls}`;
+    return `${PLAY} ${cls}`;
   }
 
   trackOf(
@@ -241,7 +243,7 @@ export class Figure {
   halo(plan: Plan, z: number, spread = 6) {
     const layers = [1, 0.66, 0.33].map((share, index) => {
       const grown = k.insetPlan(plan, -spread * share);
-      return `<path class="iso-halo" style="opacity:calc(var(--anatomy-halo-opacity) * ${round(0.34 + index * 0.33)})" d="${k.haloOf(grown, z, 0.01, this.P)}"/>`;
+      return `<path class="${HALO} ${HALO_OPACITY[index]!}" d="${k.haloOf(grown, z, 0.01, this.P)}"/>`;
     });
     return layers.join("");
   }

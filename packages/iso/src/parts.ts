@@ -1,3 +1,4 @@
+import { FACE_FILL, type FaceFill } from "./classes";
 import { byDepth, type Figure, type Flat, k, type Plan, type Projection, type Tone, type V3 } from "./figure";
 import * as G from "./lathe";
 import * as T from "./tube";
@@ -18,11 +19,12 @@ export interface SolidStyle {
   crease?: Tone | "none";
   lit?: boolean;
   flat?: boolean;
+  card?: boolean;
   inner?: string;
 }
 
 export const S = (paths: AnySolid, style: SolidStyle = {}) => k.solidSvg(paths as SolidPaths, style) as string;
-export const L = (d: string, style: { tone?: k.LineTone; free?: boolean | "start" | "end" } = {}) =>
+export const L = (d: string, style: { tone?: k.LineTone } = {}) =>
   k.lineSvg(d, style);
 export const D = (points: Array<Flat | [number, number, number]>, style: { size?: number; tone?: Tone } = {}) =>
   k.dotsSvg(points, style) as string;
@@ -63,7 +65,7 @@ export function labelPlate(f: Figure, plan: Plan, z: number) {
   const rows = [0.62, 0.42, 0.52];
   rows.forEach((share, i) => {
     const y = plan.y + 3.6 + i * ((plan.d - 7.2) / (rows.length - 1));
-    f.add(L(k.lineOnTop([x0, y], [x0 + (plan.w - 9) * share, y], z + 0.8, P), { tone: "lo", free: true }));
+    f.add(L(k.lineOnTop([x0, y], [x0 + (plan.w - 9) * share, y], z + 0.8, P), { tone: "lo" }));
   });
   f.add(D([f.at([plan.x + 2.4, plan.y + plan.d / 2, z + 0.8]), f.at([plan.x + plan.w - 2.4, plan.y + plan.d / 2, z + 0.8])], { size: 0.38 }));
 }
@@ -146,8 +148,8 @@ export function cable(P: Projection, points: V3[], r: number, { bend = 2.6, tone
   return pieces.map((piece) => T.tubeSvg(piece, { tone })).join("");
 }
 
-export function face(d: string, fill: "paper" | "top" | "0" | "1" | "2" | "3" | "lit" | "sheet" | "ink" = "top", tone: k.LineTone | "none" = "mid") {
-  return `<path class="iso-face" data-fill="${fill}" d="${d}"/>` + (tone === "none" ? "" : L(d, { tone }));
+export function face(d: string, fill: FaceFill = "top", tone: k.LineTone | "none" = "mid") {
+  return `<path class="stroke-none ${FACE_FILL[fill]}" d="${d}"/>` + (tone === "none" ? "" : L(d, { tone }));
 }
 
 export const circleD = (cx: number, cy: number, r: number, steps = 32) =>

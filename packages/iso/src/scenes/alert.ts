@@ -69,13 +69,13 @@ export function alertScene(width = 400, height = 225): Scene {
   const screen = f.topPlane([PHONE.x + 1.4, PHONE.y + 3], 1.6);
   f.add(f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "0", "lo")));
   const lit = f.switchOf("screen", times.map((t) => ({ t, on: t >= RING[0] && t <= RING[1] + 1.2 })));
-  f.add(`<g class="${lit}" opacity="0">${f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "sheet", "lit") + face("M1.6 3h12v7.4h-12z", "lit", "lit") + L("M3.2 5.4h6M3.2 7.8h8.6", { tone: "lo", free: true }) + face(circleD(7.6, 21, 2.4, 16), "lit", "lit"))}</g>`);
+  f.add(`<g class="${lit}" opacity="0">${f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "sheet", "lit") + face("M1.6 3h12v7.4h-12z", "lit", "lit") + L("M3.2 5.4h6M3.2 7.8h8.6", { tone: "lo" }) + face(circleD(7.6, 21, 2.4, 16), "lit", "lit"))}</g>`);
   f.add(D([f.at([PHONE.x + 9, PHONE.y + 1.6, 1.6])], { size: 0.5, tone: "mid" }));
 
   const TICKET: Flat = [-22, 14];
   const ticket = f.topPlane(TICKET, 0.3);
-  f.add(S(k.slabOf({ x: TICKET[0], y: TICKET[1], w: 26, d: 9, r: 0.6 }, 0, 0.3, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"'));
-  f.add(f.inPlane(ticket, face("M0 0h4v9h-4z", "lit", "none") + D(Array.from({ length: 7 }, (_, i) => [19, 1 + i * 1.2] as Flat), { size: 0.3, tone: "lo" }) + L("M6.4 3h9M6.4 5.6h6", { tone: "lo", free: true })));
+  f.add(S(k.slabOf({ x: TICKET[0], y: TICKET[1], w: 26, d: 9, r: 0.6 }, 0, 0.3, P, 2), { tone: "lo", crease: "none", card: true }));
+  f.add(f.inPlane(ticket, face("M0 0h4v9h-4z", "lit", "none") + D(Array.from({ length: 7 }, (_, i) => [19, 1 + i * 1.2] as Flat), { size: 0.3, tone: "lo" }) + L("M6.4 3h9M6.4 5.6h6", { tone: "lo" })));
 
   return f.build({
     width,

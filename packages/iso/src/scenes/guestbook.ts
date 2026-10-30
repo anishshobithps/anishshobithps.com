@@ -1,3 +1,4 @@
+import { DOTS_GLOW, INK, INK_ATTRS, SHEET, SHEET_ATTRS } from "../classes";
 import {
   byDepth,
   cubic,
@@ -170,7 +171,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
     "led",
     poses.map((pose) => ({ t: pose.t, on: pose.stroke >= 0 && pose.stroke < STROKES.length ? 1 : 0.3 })),
   );
-  f.add(`<g class="${busy}" opacity="0.3"><g class="iso-dots iso-glow"><circle cx="${at([led[0], led[1], 13])[0]}" cy="${at([led[0], led[1], 13])[1]}" r="1.1"/></g></g>`);
+  f.add(`<g class="${busy}" opacity="0.3"><g class="${DOTS_GLOW}"><circle cx="${at([led[0], led[1], 13])[0]}" cy="${at([led[0], led[1], 13])[1]}" r="1.1"/></g></g>`);
   knob(f, [CTRL.x + 10, CTRL.y + 30], 13, 3.2, 3.4);
   f.add(`<g transform="${f.sidePlane([CTRL.x + CTRL.w, CTRL.y + 22], 7, "right")}">${L("M-3 -1.3h6v2.6h-6z", { tone: "lo" })}</g>`);
 
@@ -194,7 +195,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
     [PAPER_HALF, tangent[0], tangent[1]],
     [-PAPER_HALF, tangent[0], tangent[1]],
   ] as V3[];
-  f.add(`<path class="iso-sheet" d="${pathOf(slope.map(at), true)}"/>`);
+  f.add(`<path class="${SHEET}" ${SHEET_ATTRS} d="${pathOf(slope.map(at), true)}"/>`);
   const ROLL = alongX(SUPPLY);
   f.add(S(disc(P, ROLL, -56, 56, 2.6), { tone: "mid" }));
   f.add(
@@ -228,7 +229,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
     [PAPER_HALF, COVER_BACK + 4],
     [-PAPER_HALF, COVER_BACK + 4],
   ] as Flat[];
-  f.add(`<path class="iso-sheet" d="${k.onTop(flat, PAPER, P, true)}"/>`);
+  f.add(`<path class="${SHEET}" ${SHEET_ATTRS} d="${k.onTop(flat, PAPER, P, true)}"/>`);
 
   const clip = k.onTop(
     [
@@ -257,12 +258,12 @@ export function guestbookScene(width = 400, height = 300): Scene {
         ],
       ] as Flat[][]
     )
-      .map((pts) => L(k.onTop(pts, PAPER, P), { tone: "lo", free: true }))
+      .map((pts) => L(k.onTop(pts, PAPER, P), { tone: "lo" }))
       .join("");
     return D(perf, { size: 0.32, tone: "lo" }) + rules;
   };
   const strokeD = screens.map((pts) => pathOf(pts));
-  const previous = strokeD.map((d) => `<path class="iso-ink" d="${d}"/>`).join("");
+  const previous = strokeD.map((d) => `<path class="${INK}" ${INK_ATTRS} d="${d}"/>`).join("");
   const current = strokeD
     .map((d, s) => {
       const total = totals[s]!;
@@ -273,7 +274,7 @@ export function guestbookScene(width = 400, height = 300): Scene {
         ([offset]) => `stroke-dashoffset:${offset!.toFixed(1)}`,
         { tolerance: 0.05 },
       );
-      return `<path class="iso-ink ${cls}" d="${d}" stroke-dasharray="${total.toFixed(2)} ${(total + 4).toFixed(2)}" stroke-dashoffset="${hidden}"/>`;
+      return `<path class="${INK} ${cls}" ${INK_ATTRS} d="${d}" stroke-dasharray="${total.toFixed(2)} ${(total + 4).toFixed(2)}" stroke-dashoffset="${hidden}"/>`;
     })
     .join("");
   const feed = f.moveOf("feed", poses.map((pose) => ({ t: pose.t, by: [0, pose.f, 0] })));

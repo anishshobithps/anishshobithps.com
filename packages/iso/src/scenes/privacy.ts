@@ -1,3 +1,4 @@
+import { FACE_FILL, FACE_TEXT } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { alongY, D, disc, face, L, S } from "../parts";
 
@@ -84,7 +85,7 @@ export function privacyScene(width = 400, height = 300): Scene {
   const CORNICE = k.insetPlan(CAB, -1.5);
   f.add(S(k.slabOf(CORNICE, TOP, 4, P, 2, 0.6), { tone: "mid" }));
   f.add(L(k.planOutline(k.insetPlan(CORNICE, 5), TOP + 4, P, 2), { tone: "faint" }));
-  f.add(f.inPlane(f.sidePlane([-14, CORNICE.y + CORNICE.d], TOP + 3.4, "left"), face("M0 0h28v2.8h-28z", "top", "lo") + L("M3 1.4h14", { tone: "lo", free: true }) + D([[1.4, 1.4], [26.6, 1.4]], { size: 0.35 })));
+  f.add(f.inPlane(f.sidePlane([-14, CORNICE.y + CORNICE.d], TOP + 3.4, "left"), face("M0 0h28v2.8h-28z", "top", "lo") + L("M3 1.4h14", { tone: "lo" }) + D([[1.4, 1.4], [26.6, 1.4]], { size: 0.35 })));
   f.add(D([0, 1, 2, 3].flatMap((i) => [at([CAB.x + CAB.w, -26 + i * 7.3, BOTTOM + 2]), at([CAB.x + CAB.w, -26 + i * 7.3, TOP - 3])]), { size: 0.45 }));
 
   const x0 = LEFT + BOX.col * CELL_W;
@@ -97,9 +98,9 @@ export function privacyScene(width = 400, height = 300): Scene {
   ];
   const mouth = open(0.6);
   const deep = mouth.map(([x, , z]) => [x, FACE_Y - DEPTH, z] as V3);
-  f.add(`<path class="iso-face" data-fill="0" d="${pathOf(mouth.map(at), true)}"/>`);
-  f.add(`<path class="iso-face" data-fill="1" d="${pathOf([mouth[3]!, mouth[2]!, deep[2]!, deep[3]!].map(at), true)}"/>`);
-  f.add(`<path class="iso-face" data-fill="2" d="${pathOf([mouth[0]!, mouth[3]!, deep[3]!, deep[0]!].map(at), true)}"/>`);
+  f.add(`<path class="stroke-none ${FACE_FILL["0"]}" d="${pathOf(mouth.map(at), true)}"/>`);
+  f.add(`<path class="stroke-none ${FACE_FILL["1"]}" d="${pathOf([mouth[3]!, mouth[2]!, deep[2]!, deep[3]!].map(at), true)}"/>`);
+  f.add(`<path class="stroke-none ${FACE_FILL["2"]}" d="${pathOf([mouth[0]!, mouth[3]!, deep[3]!, deep[0]!].map(at), true)}"/>`);
 
   const front = (col: number, row: number, lit = false) => {
     const fx = LEFT + col * CELL_W;
@@ -109,8 +110,8 @@ export function privacyScene(width = 400, height = 300): Scene {
     out.push(S(k.slabOf(plate, fz + 0.6, CELL_H - 1.2, P, 2, 0.3), { tone: lit ? "hi" : "mid", lit, crease: "lo" }));
     const plane = f.sidePlane([fx, FACE_Y + 1.4], fz + CELL_H, "left");
     const label = lit
-      ? `<text class="iso-face-text" data-tone="hi" x="5.6" y="5.3" font-size="3" text-anchor="middle">07</text>`
-      : L("M3.4 4.3h4.4", { tone: "lo", free: true });
+      ? `<text class="${FACE_TEXT.hi}" x="5.6" y="5.3" font-size="3" text-anchor="middle">07</text>`
+      : L("M3.4 4.3h4.4", { tone: "lo" });
     const escutcheon = (x: number) => face(`M${x} 4.4m-1.5 0a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0`, "top", "mid") + L(`M${x} 3.8v1.4`, { tone: "hi" });
     out.push(f.inPlane(plane, face("M2.4 2.4h6.4v3.8h-6.4z", "top", "lo") + label + escutcheon(14) + escutcheon(21)));
     for (const px of [fx + 9, fx + CELL_W - 9]) out.push(S(k.slabOf({ x: px - 0.6, y: FACE_Y + 1.4, w: 1.2, d: 2.4, r: 0.4 }, fz + 3.4, 1.2, P, 2), { tone: "mid", crease: "none" }));
@@ -136,7 +137,7 @@ export function privacyScene(width = 400, height = 300): Scene {
       f.inPlane(
         f.sidePlane([card.x, y + 0.6], tz + 10.2, "left"),
         face(`M0 0h${card.w}v9.4h${-card.w}z`, "sheet", "lo") +
-          L(`M2.4 3.2h${10 + i * 2}M2.4 5.6h${14 - i * 3}`, { tone: "lo", free: true }) +
+          L(`M2.4 3.2h${10 + i * 2}M2.4 5.6h${14 - i * 3}`, { tone: "lo" }) +
           face(`M${4 + i * 6} -2h5v2h-5z`, i === 1 ? "lit" : "sheet", i === 1 ? "lit" : "lo"),
       ),
     );

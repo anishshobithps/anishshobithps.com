@@ -1,3 +1,24 @@
+import {
+  DOT_TONE,
+  DOTS,
+  FACE_TEXT,
+  FILL_FACE,
+  FILL_PAPER,
+  HALO,
+  lineAttrs,
+  SEAM_ATTRS,
+  SHADE_FILL,
+  SHADE_LIT,
+  SHADE_LIT_SEAM,
+  SHADE_STROKE,
+  TOP,
+  TOP_SEAM,
+  type LineTone,
+  type Tone,
+} from "./classes";
+
+export type { LineTone, Tone };
+
 export type Flat = [number, number];
 export type Point3 = [number, number, number];
 export type Plane = [number, number];
@@ -27,8 +48,7 @@ export interface SolidPaths {
   seamless?: boolean;
 }
 
-export type Tone = "hi" | "mid" | "lo" | "faint";
-export type LineTone = Tone | "lit" | "red" | "green" | "blue";
+
 
 export const AZIMUTH = 45;
 export const ELEVATION = 30;
@@ -501,66 +521,63 @@ export function fitProjection(points: Point3[], width: number, height: number, {
 
 const escape = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const attrs = (pairs: Record<string, string | number | undefined | false>) =>
-  Object.entries(pairs)
-    .filter(([, value]) => value !== undefined && value !== false)
-    .map(([key, value]) => ` ${key}="${escape(String(value))}"`)
-    .join("");
-
 export interface SolidStyle {
   tone?: Tone;
   crease?: Tone | "none";
   halo?: boolean;
   lit?: boolean;
   flat?: boolean;
+  card?: boolean;
   className?: string;
   inner?: string;
 }
 
-export function solidSvg(paths: SolidPaths, { tone = "hi", crease = "faint", halo = false, lit = false, flat = false, className, inner = "" }: SolidStyle = {}) {
+function shadeSvg(d: string, shade: number, lit: boolean, seamless: boolean) {
+  const fill = lit ? SHADE_LIT : SHADE_FILL[shade]!;
+  if (!seamless) return `<path class="${fill} stroke-none" d="${d}"/>`;
+  const stroke = lit ? SHADE_LIT_SEAM : SHADE_STROKE[shade]!;
+  return `<path class="${fill} ${stroke}" ${SEAM_ATTRS} d="${d}"/>`;
+}
+
+function topSvg(d: string, lit: boolean, card: boolean, seamless: boolean) {
+  const fill = lit ? TOP.lit : card ? TOP.card : TOP.plain;
+  if (!seamless) return `<path class="${fill} stroke-none" d="${d}"/>`;
+  return `<path class="${fill} ${lit ? TOP_SEAM.lit : TOP_SEAM.plain}" ${SEAM_ATTRS} d="${d}"/>`;
+}
+
+export function solidSvg(paths: SolidPaths, { tone = "hi", crease = "faint", halo = false, lit = false, flat = false, card = false, className, inner = "" }: SolidStyle = {}) {
+  const seamless = Boolean(paths.seamless);
   const parts: string[] = [];
-  if (halo) parts.push(`<path class="iso-halo" d="${paths.fill}"/>`);
-  parts.push(`<path class="iso-fill" d="${paths.fill}"/>`);
+  if (halo) parts.push(`<path class="${HALO}" d="${paths.fill}"/>`);
+  parts.push(`<path class="${lit ? FILL_FACE : FILL_PAPER}" d="${paths.fill}"/>`);
   if (!flat) {
     paths.shades.forEach((d, shade) => {
-      if (d) parts.push(`<path class="iso-shade" data-shade="${shade}" d="${d}"/>`);
+      if (d) parts.push(shadeSvg(d, shade, lit, seamless));
     });
-    parts.push(`<path class="iso-top" d="${paths.top}"/>`);
+    parts.push(topSvg(paths.top, lit, card, seamless));
   }
-  if (crease !== "none" && paths.crease) parts.push(`<path class="iso-line iso-crease" data-tone="${crease}" d="${paths.crease}"/>`);
-  if (crease !== "none" && paths.bevel) parts.push(`<path class="iso-line iso-bevel" data-tone="${crease}" d="${paths.bevel}"/>`);
+  if (crease !== "none" && paths.crease) parts.push(`<path ${lineAttrs(crease)} d="${paths.crease}"/>`);
+  if (crease !== "none" && paths.bevel) parts.push(`<path ${lineAttrs(crease)} d="${paths.bevel}"/>`);
   if (inner) parts.push(inner);
-  parts.push(`<path class="iso-line iso-edge" data-tone="${tone}" d="${paths.outline}"/>`);
-  return `<g${attrs({ class: className ? `iso-solid ${className}` : "iso-solid", "data-lit": lit ? "" : undefined, "data-seamless": paths.seamless ? "" : undefined })}>${parts.join("")}</g>`;
+  parts.push(`<path ${lineAttrs(lit ? "lit" : tone)} d="${paths.outline}"/>`);
+  return `<g${className ? ` class="${escape(className)}"` : ""}>${parts.join("")}</g>`;
 }
 
 export interface LineStyle {
   tone?: LineTone;
-  dotted?: boolean;
-  dashed?: boolean;
-  flow?: boolean;
   className?: string;
-  free?: boolean | "start" | "end";
 }
 
-export function lineSvg(d: string, { tone = "lo", dotted = false, dashed = false, flow = false, className, free }: LineStyle = {}) {
+export function lineSvg(d: string, { tone = "lo", className }: LineStyle = {}) {
   if (!d) return "";
-  return `<path${attrs({
-    class: className ? `iso-line ${className}` : "iso-line",
-    "data-tone": tone,
-    "data-free": free === true ? "" : free || undefined,
-    "data-dotted": dotted ? "" : undefined,
-    "data-dashed": dashed ? "" : undefined,
-    "data-flow": flow ? "" : undefined,
-    d,
-  })}/>`;
+  return `<path ${lineAttrs(tone, className)} d="${d}"/>`;
 }
 
-export function dotsSvg(points: Array<Flat | [number, number, number]>, { size = 0.5, tone = "mid", pulse = false }: { size?: number; tone?: Tone; pulse?: boolean } = {}) {
+export function dotsSvg(points: Array<Flat | [number, number, number]>, { size = 0.5, tone = "mid" }: { size?: number; tone?: Tone } = {}) {
   const dots = points
-    .map(([x, y, alpha]: number[], index) => `<circle cx="${tenth(x!)}" cy="${tenth(y!)}" r="${size}"${alpha !== undefined && alpha < 1 ? ` fill-opacity="${Math.max(0, alpha).toFixed(2)}"` : ""}${pulse ? ` data-pulse="" style="--pulse-at:${(index * 137) % 1600}ms"` : ""}/>`)
+    .map(([x, y, alpha]: number[]) => `<circle cx="${tenth(x!)}" cy="${tenth(y!)}" r="${size}"${alpha !== undefined && alpha < 1 ? ` fill-opacity="${Math.max(0, alpha).toFixed(2)}"` : ""}/>`)
     .join("");
-  return `<g class="iso-dots" data-tone="${tone}">${dots}</g>`;
+  return `<g class="${DOTS} ${DOT_TONE[tone]}">${dots}</g>`;
 }
 
 export type Faded = { d: string; alpha: number } | [string, number];
@@ -576,267 +593,6 @@ export function fadedSvg(list: Faded[], style: LineStyle = {}) {
   return [...groups].map(([alpha, d]) => (alpha >= 1 ? lineSvg(d, style) : `<g opacity="${alpha.toFixed(2)}">${lineSvg(d, style)}</g>`)).join("");
 }
 
-export interface FadeLineStyle {
-  fade?: number | [number, number];
-  tone?: LineTone;
-  className?: string;
-  stops?: number;
-}
-
-export function fadeLineSvg(points: Flat[], { fade = [0, 0], tone = "lo", className, stops = 6 }: FadeLineStyle = {}) {
-  if (points.length < 2) return "";
-  const ease = (t: number) => t * t * (3 - 2 * t);
-  const hashOf = (text: string) => {
-    let hash = 2166136261;
-    for (let index = 0; index < text.length; index++) hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
-    return (hash >>> 0).toString(36);
-  };
-  const lengths = [0];
-  for (let index = 1; index < points.length; index++) lengths.push(lengths[index - 1]! + Math.hypot(points[index]![0] - points[index - 1]![0], points[index]![1] - points[index - 1]![1]));
-  const at = (length: number): Flat => {
-    let index = 1;
-    while (index < points.length - 1 && lengths[index]! < length) index++;
-    const span = lengths[index]! - lengths[index - 1]! || 1;
-    const t = Math.max(0, Math.min(1, (length - lengths[index - 1]!) / span));
-    return [points[index - 1]![0] + (points[index]![0] - points[index - 1]![0]) * t, points[index - 1]![1] + (points[index]![1] - points[index - 1]![1]) * t];
-  };
-  const pieceOf = (from: number, to: number): Flat[] => [at(from), ...points.filter((_, index) => lengths[index]! > from + 1e-6 && lengths[index]! < to - 1e-6), at(to)];
-  const total = lengths[lengths.length - 1]!;
-  if (total < 1e-6) return "";
-  let [start, end] = Array.isArray(fade) ? fade : ([fade, fade] as [number, number]);
-  if (start + end > total) {
-    const share = total / (start + end);
-    start *= share;
-    end *= share;
-  }
-  const paint = `var(--anatomy-${tone})`;
-  const ramp = (piece: Flat[], rising: boolean) => {
-    const d = pathOf(piece);
-    const [x1, y1] = piece[0]!;
-    const [x2, y2] = piece[piece.length - 1]!;
-    const id = `iso-fade-${hashOf(`${d}|${tone}|${rising}`)}`;
-    const marks = Array.from({ length: stops + 1 }, (_, index) => {
-      const t = index / stops;
-      const alpha = ease(rising ? t : 1 - t);
-      return `<stop offset="${t.toFixed(3)}" stop-opacity="${alpha.toFixed(3)}" style="stop-color:${paint}"/>`;
-    }).join("");
-    const gradient = `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${tenth(x1)}" y1="${tenth(y1)}" x2="${tenth(x2)}" y2="${tenth(y2)}">${marks}</linearGradient>`;
-    return `<defs>${gradient}</defs><path${attrs({ class: className ? `iso-line ${className}` : "iso-line", "data-tone": tone, "data-free": rising ? "start" : "end", d, style: `stroke:url(#${id})` })}/>`;
-  };
-  const parts: string[] = [];
-  if (start > 0.05) parts.push(ramp(pieceOf(0, start), true));
-  if (total - end - start > 0.05) parts.push(lineSvg(pathOf(pieceOf(start, total - end)), { tone, className }));
-  if (end > 0.05) parts.push(ramp(pieceOf(total - end, total), false));
-  return `<g class="iso-fade">${parts.join("")}</g>`;
-}
-
-export interface WireStyle {
-  via?: Flat[];
-  tone?: LineTone;
-  dotted?: boolean;
-  dashed?: boolean;
-  flow?: boolean;
-  ends?: "both" | "from" | "to" | "none";
-  size?: number;
-}
-
-export function wireSvg(from: Flat, to: Flat, { via = [], tone = "lo", dotted = false, dashed = false, flow = false, ends = "both", size = 1.2 }: WireStyle = {}) {
-  const d = pathOf([from, ...via, to]);
-  const end = ([x, y]: Flat) => `<circle class="iso-wire-end" cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"/>`;
-  return `<g class="iso-wire" data-tone="${tone}">${lineSvg(d, { tone, dotted, dashed, flow })}${ends === "both" || ends === "from" ? end(from) : ""}${ends === "both" || ends === "to" ? end(to) : ""}</g>`;
-}
-
 export function faceTextSvg(transform: string, text: string, { size = 3, tone = "mid", anchor = "start" }: { size?: number; tone?: Tone; anchor?: "start" | "middle" | "end" } = {}) {
-  return `<text class="iso-face-text" data-tone="${tone}" transform="${transform}" font-size="${size}" text-anchor="${anchor}">${escape(text)}</text>`;
+  return `<text class="${FACE_TEXT[tone]}" transform="${transform}" font-size="${size}" text-anchor="${anchor}">${escape(text)}</text>`;
 }
-
-export function groupSvg(children: string | string[], extra: Record<string, string | number | undefined | false> = {}) {
-  return `<g${attrs(extra)}>${Array.isArray(children) ? children.join("") : children}</g>`;
-}
-
-export type Theme = "dark" | "light";
-
-export interface FigureOptions {
-  width: number;
-  height: number;
-  label: string;
-  body: string | string[];
-  standalone?: Theme | false;
-  className?: string;
-}
-
-export function figureSvg({ width, height, label, body, standalone = false, className }: FigureOptions) {
-  const style = standalone ? `<style>${ISO_CSS}</style>` : "";
-  return `<svg${attrs({
-    xmlns: "http://www.w3.org/2000/svg",
-    class: `iso-svg${standalone ? " iso" : ""}${className ? ` ${className}` : ""}`,
-    "data-theme": standalone || undefined,
-    viewBox: `0 0 ${width} ${height}`,
-    role: "img",
-    "aria-label": label,
-  })}>${style}${Array.isArray(body) ? body.join("") : body}</svg>`;
-}
-
-export type KeyMark = "raised" | "flat" | "lit" | "edge" | "dim" | "dotted" | "dashed" | "red" | "green" | "blue";
-
-export interface LegendKey {
-  mark: KeyMark;
-  label: string;
-}
-
-function swatchSvg(mark: KeyMark) {
-  if (mark === "raised" || mark === "flat" || mark === "lit") {
-    const body = mark === "flat" ? "M2 6.5 8 3.5 14 6.5 8 9.5Z" : "M2 4.5 8 1.5 14 4.5 14 6 8 9 2 6Z";
-    const crease = mark === "flat" ? "" : `<path class="iso-swatch-crease" d="M2 4.5 8 7.5 14 4.5"/>`;
-    return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="${body}"/>${crease}</svg>`;
-  }
-  return `<svg class="iso-swatch" data-mark="${mark}" viewBox="0 0 16 10" aria-hidden="true"><path d="M1.5 5h13"/></svg>`;
-}
-
-export interface PlateOptions {
-  fig: string;
-  title?: string;
-  hint?: string;
-  readout?: string;
-  keys?: LegendKey[];
-  caption?: string;
-  body: string;
-}
-
-export function plateHtml({ fig, title, hint, readout = "", keys = [], caption, body }: PlateOptions) {
-  const corner = (name: string, text: string, extra = "") => `<span class="iso-plate-corner" data-corner="${name}"${extra}>${escape(text)}</span>`;
-  const legend =
-    keys.length || caption
-      ? `<figcaption class="iso-legend">${keys.length ? `<span class="iso-keys">${keys.map((key) => `<span class="iso-key">${swatchSvg(key.mark)}${escape(key.label)}</span>`).join("")}</span>` : ""}${caption ? `<span class="iso-caption">${escape(caption)}</span>` : ""}</figcaption>`
-      : "";
-  return `<figure class="iso-figure"><div class="iso-plate"><div class="iso-plate-corners" aria-hidden="true">${corner("fig", fig)}${title ? corner("title", title) : ""}${hint ? corner("hint", hint) : ""}${corner("readout", readout, " data-readout")}</div>${body}</div>${legend}</figure>`;
-}
-
-export interface PageOptions {
-  title: string;
-  theme?: Theme;
-  body: string;
-  script?: string;
-  width?: number;
-}
-
-export function pageHtml({ title, theme = "dark", body, script = "", width = 650 }: PageOptions) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escape(title)}</title><style>${ISO_CSS}${PAGE_CSS.replace("__WIDTH__", String(width))}</style></head><body class="iso" data-theme="${theme}"><main class="iso-page">${body}</main>${script ? `<script type="module">${script.replace(/<\/(script)/gi, "<\\/$1")}</script>` : ""}</body></html>`;
-}
-
-const PAGE_CSS = `
-*{box-sizing:border-box}
-html{color-scheme:dark}
-body[data-theme="light"]{color-scheme:light}
-body{margin:0;background:var(--anatomy-page);color:var(--anatomy-text);font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-.iso-page{width:min(__WIDTH__px,100% - 32px);margin:64px auto 96px}
-`;
-
-export const ISO_CSS = `
-.iso{
-  --anatomy-page:#0b0b0b;--anatomy-card:#131313;--anatomy-text:#a3a3a3;--anatomy-strong:#e6e6e6;--anatomy-muted:#6e6e6e;
-  --anatomy-paper:#131313;--anatomy-face:#1b1b1b;--anatomy-top:#1c1c1c;
-  --anatomy-shade-0:#0f0f0f;--anatomy-shade-1:#121212;--anatomy-shade-2:#151515;--anatomy-shade-3:#181818;
-  --anatomy-lit-top:#262626;--anatomy-lit-shade:#1d1d1d;
-  --anatomy-hi:#d4d4d4;--anatomy-mid:#6a6a6a;--anatomy-lo:#3e3e3e;--anatomy-faint:#2a2a2a;--anatomy-lit:#ffffff;
-  --anatomy-halo:#050505;--anatomy-halo-opacity:.9;--anatomy-dot:#e6e6e6;
-  --anatomy-red:#ff6b6b;--anatomy-green:#6be0a0;--anatomy-blue:#6b9bff;
-  --anatomy-weight:.6px;--anatomy-ease:cubic-bezier(.32,.72,0,1);
-  --anatomy-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  --anatomy-lift:inset 0 1px 0 0 #ffffff0a,inset 0 0 0 1px #ffffff06,0 0 0 1px #00000026,0 1px 1px -.5px #00000014,0 3px 3px -1.5px #00000014,0 6px 6px -3px #00000014,0 12px 12px -6px #00000014;
-}
-.iso[data-theme="light"]{
-  --anatomy-page:#f2f2ef;--anatomy-card:#fbfbfa;--anatomy-text:#57575a;--anatomy-strong:#18181a;--anatomy-muted:#8c8c90;
-  --anatomy-paper:#fbfbfa;--anatomy-face:#ffffff;--anatomy-top:#ffffff;
-  --anatomy-shade-0:#dcdcd9;--anatomy-shade-1:#e5e5e2;--anatomy-shade-2:#ededea;--anatomy-shade-3:#f4f4f1;
-  --anatomy-lit-top:#ffffff;--anatomy-lit-shade:#eeeeeb;
-  --anatomy-hi:#26262a;--anatomy-mid:#8a8a8f;--anatomy-lo:#b4b4b8;--anatomy-faint:#d4d4d6;--anatomy-lit:#000000;
-  --anatomy-halo:#8a8a80;--anatomy-halo-opacity:.32;--anatomy-dot:#3a3a3e;
-  --anatomy-red:#e5484d;--anatomy-green:#30a46c;--anatomy-blue:#3e63dd;
-  --anatomy-lift:inset 0 1px 0 0 #ffffff,0 0 0 1px #0000000f,0 1px 1px -.5px #0000000a,0 3px 3px -1.5px #0000000a,0 6px 6px -3px #0000000a,0 12px 12px -6px #0000000a;
-}
-.iso-svg{display:block;width:100%;height:auto;overflow:visible}
-.iso-svg path,.iso-svg circle{vector-effect:non-scaling-stroke}
-.iso-fill{fill:var(--anatomy-paper);stroke:none}
-.iso-solid[data-lit]>.iso-fill{fill:var(--anatomy-face)}
-.iso-shade,.iso-top{stroke:none}
-.iso-shade[data-shade="0"]{fill:var(--anatomy-shade-0)}
-.iso-shade[data-shade="1"]{fill:var(--anatomy-shade-1)}
-.iso-shade[data-shade="2"]{fill:var(--anatomy-shade-2)}
-.iso-shade[data-shade="3"]{fill:var(--anatomy-shade-3)}
-.iso-top{fill:var(--anatomy-top)}
-.iso-solid[data-lit]>.iso-top{fill:var(--anatomy-lit-top)}
-.iso-solid[data-lit]>.iso-shade{fill:var(--anatomy-lit-shade)}
-.iso-solid[data-seamless]>.iso-shade,.iso-solid[data-seamless]>.iso-top{stroke-width:.4;stroke-linejoin:round}
-.iso-solid[data-seamless]>.iso-shade[data-shade="0"]{stroke:var(--anatomy-shade-0)}
-.iso-solid[data-seamless]>.iso-shade[data-shade="1"]{stroke:var(--anatomy-shade-1)}
-.iso-solid[data-seamless]>.iso-shade[data-shade="2"]{stroke:var(--anatomy-shade-2)}
-.iso-solid[data-seamless]>.iso-shade[data-shade="3"]{stroke:var(--anatomy-shade-3)}
-.iso-solid[data-seamless]>.iso-top{stroke:var(--anatomy-top)}
-.iso-solid[data-seamless][data-lit]>.iso-top{stroke:var(--anatomy-lit-top)}
-.iso-solid[data-seamless][data-lit]>.iso-shade{stroke:var(--anatomy-lit-shade)}
-.iso-solid[data-lit]>.iso-edge{stroke:var(--anatomy-lit)}
-.iso-halo{fill:var(--anatomy-halo);stroke:none;filter:blur(9px);opacity:var(--anatomy-halo-opacity);transform:translateY(3px)}
-.iso-line{fill:none;stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight);stroke-linecap:round;stroke-linejoin:round}
-.iso-line[data-tone="hi"]{stroke:var(--anatomy-hi)}
-.iso-line[data-tone="mid"]{stroke:var(--anatomy-mid)}
-.iso-line[data-tone="lo"]{stroke:var(--anatomy-lo)}
-.iso-line[data-tone="faint"]{stroke:var(--anatomy-faint)}
-.iso-line[data-tone="lit"]{stroke:var(--anatomy-lit)}
-.iso-line[data-tone="red"]{stroke:var(--anatomy-red)}
-.iso-line[data-tone="green"]{stroke:var(--anatomy-green)}
-.iso-line[data-tone="blue"]{stroke:var(--anatomy-blue)}
-.iso-line[data-dotted]{stroke-dasharray:.01 3.5;stroke-width:1}
-.iso-line[data-dashed]{stroke-dasharray:3 3}
-.iso-line[data-flow]{stroke-dasharray:2 6}
-.iso-wire-end{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:var(--anatomy-weight)}
-.iso-wire[data-tone="hi"] .iso-wire-end{stroke:var(--anatomy-hi)}
-.iso-wire[data-tone="mid"] .iso-wire-end{stroke:var(--anatomy-mid)}
-.iso-wire[data-tone="faint"] .iso-wire-end{stroke:var(--anatomy-faint)}
-.iso-wire[data-tone="lit"] .iso-wire-end{stroke:var(--anatomy-lit)}
-.iso-dots circle{fill:var(--anatomy-dot);stroke:none;opacity:.32}
-.iso-dots[data-tone="hi"] circle{opacity:.85}
-.iso-dots[data-tone="mid"] circle{opacity:.45}
-.iso-dots[data-tone="lo"] circle{opacity:.22}
-.iso-dots[data-tone="faint"] circle{opacity:.12}
-.iso-face-text{fill:var(--anatomy-mid);font-family:var(--anatomy-mono);letter-spacing:.04em}
-.iso-face-text[data-tone="hi"]{fill:var(--anatomy-hi)}
-.iso-face-text[data-tone="lo"]{fill:var(--anatomy-lo)}
-.iso-face-text[data-tone="faint"]{fill:var(--anatomy-faint)}
-.tb-body{fill:var(--anatomy-shade-2);stroke:none}
-.tb-shine{fill:var(--anatomy-top);stroke:none}
-.tb-shade{fill:var(--anatomy-shade-0);stroke:none}
-.tb-ring{fill:none;stroke:var(--anatomy-lo);stroke-width:.45;stroke-linecap:butt;stroke-linejoin:round}
-.tb-ring[data-tone="mid"]{stroke:var(--anatomy-mid)}
-.tb-ring[data-tone="faint"]{stroke:var(--anatomy-faint)}
-.tb-ring[data-tone="hi"]{stroke:var(--anatomy-hi)}
-@keyframes iso-flow{to{stroke-dashoffset:-32}}
-@keyframes iso-pulse{0%,100%{opacity:.18}12%{opacity:1}40%{opacity:.18}}
-.iso-line[data-flow]{animation:iso-flow 1600ms linear infinite}
-.iso-dots circle[data-pulse]{animation:iso-pulse 1600ms steps(1,end) infinite;animation-delay:var(--pulse-at,0ms)}
-.iso-figure{margin:32px 0 36px}
-.iso-plate{position:relative;padding:52px 24px;border-radius:0;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-mid);--anatomy-paper:var(--anatomy-card)}
-.iso-plate-corners{position:absolute;inset:18px 20px;pointer-events:none}
-.iso-plate-corner{position:absolute;color:var(--anatomy-muted);font-family:var(--anatomy-mono);font-size:10.5px;line-height:1;letter-spacing:.04em;white-space:nowrap}
-.iso-plate-corner[data-corner="fig"]{top:0;left:0;color:var(--anatomy-text)}
-.iso-plate-corner[data-corner="title"]{top:0;right:0;text-transform:uppercase;letter-spacing:.1em}
-.iso-plate-corner[data-corner="hint"]{bottom:0;left:0;text-transform:uppercase;letter-spacing:.1em}
-.iso-plate-corner[data-corner="readout"]{right:0;bottom:0;color:var(--anatomy-text);font-variant-numeric:tabular-nums}
-.iso-plate .iso-svg{margin:0 auto}
-.iso-legend{display:grid;gap:8px;margin-top:12px;color:var(--anatomy-muted);font-size:13px;line-height:1.55}
-.iso-keys{display:flex;flex-wrap:wrap;gap:6px 18px}
-.iso-key{display:inline-flex;align-items:center;gap:7px}
-.iso-swatch{width:16px;height:10px;flex:none;overflow:visible}
-.iso-swatch path{fill:none;stroke:var(--anatomy-hi);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
-.iso-swatch[data-mark="raised"] path,.iso-swatch[data-mark="flat"] path{stroke:var(--anatomy-mid)}
-.iso-swatch[data-mark="lit"] path{stroke:var(--anatomy-lit)}
-.iso-swatch[data-mark="dim"] path{stroke:var(--anatomy-lo)}
-.iso-swatch[data-mark="dotted"] path{stroke-dasharray:.01 3;stroke-width:1.4}
-.iso-swatch[data-mark="dashed"] path{stroke-dasharray:3 2.5}
-.iso-swatch[data-mark="red"] path{stroke:var(--anatomy-red)}
-.iso-swatch[data-mark="green"] path{stroke:var(--anatomy-green)}
-.iso-swatch[data-mark="blue"] path{stroke:var(--anatomy-blue)}
-.iso-swatch-crease{stroke:var(--anatomy-lo)!important}
-@media (max-width:560px){.iso-plate{padding:48px 12px 70px}.iso-plate-corner[data-corner="hint"]{bottom:18px}}
-@media (prefers-reduced-motion:reduce){.iso-line[data-flow],.iso-dots circle[data-pulse]{animation:none}}
-`;

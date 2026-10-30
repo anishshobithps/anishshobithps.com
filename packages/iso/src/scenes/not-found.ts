@@ -1,3 +1,4 @@
+import { FACE_FILL, FACE_TEXT, GLASS_FILL } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { cable, D, face, G, L, S, screwsOnTop } from "../parts";
 
@@ -89,15 +90,15 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const post = (p: Flat) => S(k.slabOf({ x: p[0] - 1.5, y: p[1] - 1.5, w: 3, d: 3, r: 0.5 }, LOW_TOP, PLAY_TOP - LOW_TOP, P, 2, 0.3), { tone: "mid" });
   const pane = (a: Flat, b: Flat) => {
     const quad = [at([a[0], a[1], LOW_TOP]), at([b[0], b[1], LOW_TOP]), at([b[0], b[1], PLAY_TOP]), at([a[0], a[1], PLAY_TOP])];
-    return `<path class="iso-glass" d="${pathOf(quad, true)}"/>`;
+    return `<path class="${GLASS_FILL}" d="${pathOf(quad, true)}"/>`;
   };
   f.add(post(POSTS[0]!));
-  f.add(`<path class="iso-face" data-fill="1" d="${pathOf([[CAB.x, CAB.y, LOW_TOP], [CAB.x + CAB.w, CAB.y, LOW_TOP], [CAB.x + CAB.w, CAB.y, PLAY_TOP], [CAB.x, CAB.y, PLAY_TOP]].map((p) => at(p as V3)), true)}"/>`);
+  f.add(`<path class="stroke-none ${FACE_FILL["1"]}" d="${pathOf([[CAB.x, CAB.y, LOW_TOP], [CAB.x + CAB.w, CAB.y, LOW_TOP], [CAB.x + CAB.w, CAB.y, PLAY_TOP], [CAB.x, CAB.y, PLAY_TOP]].map((p) => at(p as V3)), true)}"/>`);
   f.add(pane([CAB.x + 1.5, CAB.y + 1.5], [CAB.x + 1.5, CAB.y + CAB.d - 1.5]));
   f.add(post(POSTS[1]!), post(POSTS[2]!));
-  f.add(`<path class="iso-face" data-fill="top" d="${k.planOutline(k.insetPlan(CAB, 1.5), LOW_TOP, P, 2)}"/>`);
+  f.add(`<path class="stroke-none ${FACE_FILL.top}" d="${k.planOutline(k.insetPlan(CAB, 1.5), LOW_TOP, P, 2)}"/>`);
   const CHUTE: Plan = { x: HOME[0] - 7, y: HOME[1] - 6, w: 14, d: 12, r: 1 };
-  f.add(`<path class="iso-face" data-fill="0" d="${k.planOutline(CHUTE, LOW_TOP, P, 2)}"/>`, L(k.planOutline(CHUTE, LOW_TOP, P, 2), { tone: "lo" }));
+  f.add(`<path class="stroke-none ${FACE_FILL["0"]}" d="${k.planOutline(CHUTE, LOW_TOP, P, 2)}"/>`, L(k.planOutline(CHUTE, LOW_TOP, P, 2), { tone: "lo" }));
   const prizes: Array<[number, number, number, string]> = [];
   let seed = 11;
   const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
@@ -150,7 +151,7 @@ export function notFoundScene(width = 400, height = 300): Scene {
   const TOPBOX = k.insetPlan(CAB, -0.5);
   f.add(S(k.slabOf(TOPBOX, PLAY_TOP, 13, P, 2, 0.6), { tone: "mid", inner: L(k.sideSeam(TOPBOX, PLAY_TOP + 2.4, P, 2), { tone: "faint" }) }));
   const sign = f.sidePlane([TOPBOX.x + 6, TOPBOX.y + TOPBOX.d], PLAY_TOP + 11.4, "left");
-  f.add(f.inPlane(sign, face("M0 0h43v8.4h-43z", "0", "mid") + `<text class="iso-face-text" data-tone="lit" x="21.5" y="6.6" font-size="7.2" text-anchor="middle">404</text>` + D(Array.from({ length: 12 }, (_, i) => [1.8 + i * 3.6, 1.2] as Flat), { size: 0.3, tone: "hi" })));
+  f.add(f.inPlane(sign, face("M0 0h43v8.4h-43z", "0", "mid") + `<text class="${FACE_TEXT.lit}" x="21.5" y="6.6" font-size="7.2" text-anchor="middle">404</text>` + D(Array.from({ length: 12 }, (_, i) => [1.8 + i * 3.6, 1.2] as Flat), { size: 0.3, tone: "hi" })));
 
   return f.build({
     width,

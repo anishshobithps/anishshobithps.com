@@ -1,3 +1,4 @@
+import { FACE_FILL } from "../classes";
 import { Figure, k, type Plan, type Projection, type Scene, smoothstep } from "../figure";
 import { circleD, D, face, knob, L, S } from "../parts";
 
@@ -29,7 +30,7 @@ export function graphemeScene(width = 400, height = 225): Scene {
   f.add(S(k.slabOf(CASE, 0, 5, P, 2, 0.4), { tone: "mid" }));
   const cells: string[] = [];
   for (let c = 0; c < 8; c++) for (let r = 0; r < 2; r++) cells.push(k.planOutline({ x: CASE.x + 2 + c * 10.6, y: CASE.y + 2 + r * 7.2, w: 9.6, d: 6.2, r: 0.4 }, 5, P, 2));
-  f.add(`<path class="iso-face" data-fill="0" d="${cells.join("")}"/>`, L(cells.join(""), { tone: "lo" }));
+  f.add(`<path class="stroke-none ${FACE_FILL["0"]}" d="${cells.join("")}"/>`, L(cells.join(""), { tone: "lo" }));
   f.add(D([0, 3, 5, 6, 9, 12, 14].map((i) => f.at([CASE.x + 6 + (i % 8) * 10.6, CASE.y + 5 + Math.floor(i / 8) * 7.2, 5])), { size: 0.7, tone: "mid" }));
 
   const STICK: Plan = { x: -40, y: -2, w: 80, d: 12, r: 1 };

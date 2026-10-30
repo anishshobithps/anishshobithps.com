@@ -1,3 +1,4 @@
+import { SHEET, SHEET_ATTRS } from "../classes";
 import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { circleD, D, knob, L, radialD, S, screwsOnTop } from "../parts";
 
@@ -97,7 +98,7 @@ export function lateNightScene(width = 400, height = 225): Scene {
   reel(SUPPLY, SUPPLY_R, "supply", 1);
 
   const ribbon = (a: Flat, b: Flat) =>
-    `<path class="iso-sheet" d="${pathOf([at([a[0], a[1], TAPE_Z0]), at([b[0], b[1], TAPE_Z0]), at([b[0], b[1], TAPE_Z1]), at([a[0], a[1], TAPE_Z1])], true)}"/>`;
+    `<path class="${SHEET}" ${SHEET_ATTRS} d="${pathOf([at([a[0], a[1], TAPE_Z0]), at([b[0], b[1], TAPE_Z0]), at([b[0], b[1], TAPE_Z1]), at([a[0], a[1], TAPE_Z1])], true)}"/>`;
   const tangentFrom = (c: Flat, r: number, p: Flat, side: number): Flat => {
     const dx = p[0] - c[0];
     const dy = p[1] - c[1];
@@ -167,7 +168,7 @@ export function lateNightScene(width = 400, height = 225): Scene {
     ([u]) => `transform:translate(${u!.toFixed(2)}px,0)`,
     { tolerance: 0.03 },
   );
-  f.add(`<g transform="${plane}"><g clip-path="url(#ticker-out)"><g class="${feed}">${L(marks, { tone: "hi", free: true })}</g></g></g>`);
+  f.add(`<g transform="${plane}"><g clip-path="url(#ticker-out)"><g class="${feed}">${L(marks, { tone: "hi" })}</g></g></g>`);
 
   for (const x of [-3.6, 3.6]) {
     f.add(S(k.cylinder(x, 15, 2.6, TOP, 12, P, 24), { tone: "mid", inner: L([2, 4, 6, 8, 10].map((dz) => k.sideArc(x, 15, 2.6, TOP + dz, P, 16)).join(""), { tone: "lo" }) }));

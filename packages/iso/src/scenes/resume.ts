@@ -1,3 +1,4 @@
+import { BEAM, DOTS_GLOW, FACE_FILL, FACE_TEXT, INK, INK_ATTRS, TEXT, TEXT_ATTRS } from "../classes";
 import { Figure, type Flat, k, type Plan, type Projection, type Scene, smoothstep, type V3 } from "../figure";
 import { cable, face, knob, L, rulerStrip, S, screwsOnTop } from "../parts";
 
@@ -60,7 +61,7 @@ export function resumeScene(width = 400, height = 300): Scene {
   knob(f, [72, 0], 12, 2.4, 2.2);
   const lamp: V3 = [62, 0, 12];
   f.add(L(k.ring(lamp[0], lamp[1], 1.4, 12, P, 14), { tone: "lo" }));
-  f.add(`<g class="iso-dots iso-glow"><circle cx="${at(lamp)[0].toFixed(1)}" cy="${at(lamp)[1].toFixed(1)}" r="0.8"/></g>`);
+  f.add(`<g class="${DOTS_GLOW}"><circle cx="${at(lamp)[0].toFixed(1)}" cy="${at(lamp)[1].toFixed(1)}" r="0.8"/></g>`);
   const screen = f.sidePlane([UNIT.x + 2, UNIT.y + UNIT.d], 10, "left");
   const counts = times.map((t) => ROWS.filter(([y]) => PAGE.y + y <= headAt(t) && t < 0.4 + SWEEP + 0.8).length + (PAGE.y + QR.y + QR.size <= headAt(t) && t < 0.4 + SWEEP + 0.8 ? 1 : 0));
   const states = [...new Set(counts)];
@@ -68,7 +69,7 @@ export function resumeScene(width = 400, height = 300): Scene {
     .map((n) => {
       const on = f.switchOf(`lcd${n}`, times.map((t, i) => ({ t, on: counts[i] === n })));
       const label = n === FIELDS ? "JSON OK" : `${String(n).padStart(2, "0")}/${FIELDS}`;
-      return `<g class="${on}"${n === counts[0] ? "" : ' opacity="0"'}><text class="iso-face-text" data-tone="lit" x="9" y="4.9" font-size="3" text-anchor="middle">${label}</text></g>`;
+      return `<g class="${on}"${n === counts[0] ? "" : ' opacity="0"'}><text class="${FACE_TEXT.lit}" x="9" y="4.9" font-size="3" text-anchor="middle">${label}</text></g>`;
     })
     .join("");
   f.add(f.inPlane(screen, face("M0 0h18v7h-18z", "0", "mid") + lcd));
@@ -101,21 +102,21 @@ export function resumeScene(width = 400, height = 300): Scene {
       }
     return cells.join("");
   })();
-  f.add(S(k.slabOf(PAGE, 0, 0.3, P, 2), { tone: "lo", crease: "none" }).replace('class="iso-top"', 'class="iso-top iso-card"'));
+  f.add(S(k.slabOf(PAGE, 0, 0.3, P, 2), { tone: "lo", crease: "none", card: true }));
   f.add(
     `<g transform="${top}">` +
-      `<path class="iso-text" style="stroke-width:0.6" d="${rowD(([, , w]) => w === "text")}"/>` +
-      `<path class="iso-text" style="stroke-width:1.4" d="${rowD(([, , w]) => w === "head")}"/>` +
-      `<path class="iso-text" style="stroke-width:0.9" d="${rowD(([, , w]) => w === "rule")}"/>` +
-      `<path class="iso-face" data-fill="2" d="${qrCells}"/>` +
+      `<path class="${TEXT}" ${TEXT_ATTRS} style="stroke-width:0.6" d="${rowD(([, , w]) => w === "text")}"/>` +
+      `<path class="${TEXT}" ${TEXT_ATTRS} style="stroke-width:1.4" d="${rowD(([, , w]) => w === "head")}"/>` +
+      `<path class="${TEXT}" ${TEXT_ATTRS} style="stroke-width:0.9" d="${rowD(([, , w]) => w === "rule")}"/>` +
+      `<path class="stroke-none ${FACE_FILL["2"]}" d="${qrCells}"/>` +
       `</g>`,
   );
   const lit = ROWS.map(([y, len, w], i) => {
     const on = f.switchOf(`row${i}`, times.map((t) => ({ t, on: PAGE.y + y <= headAt(t) && t < 0.4 + SWEEP + 0.8 })));
-    return `<path class="iso-ink ${on}" opacity="0" style="stroke-width:${w === "head" ? 1.4 : w === "rule" ? 0.9 : 0.6};stroke-linecap:butt" d="${words([y, len, w])}"/>`;
+    return `<path class="${INK} ${on}" ${INK_ATTRS} opacity="0" style="stroke-width:${w === "head" ? 1.4 : w === "rule" ? 0.9 : 0.6};stroke-linecap:butt" d="${words([y, len, w])}"/>`;
   }).join("");
   const qrOn = f.switchOf("qr", times.map((t) => ({ t, on: PAGE.y + QR.y + QR.size <= headAt(t) && t < 0.4 + SWEEP + 0.8 })));
-  f.add(`<g transform="${top}">${lit}<path class="iso-face ${qrOn}" data-fill="ink" opacity="0" d="${qrCells}"/></g>`);
+  f.add(`<g transform="${top}">${lit}<path class="stroke-none ${FACE_FILL.ink} ${qrOn}" opacity="0" d="${qrCells}"/></g>`);
 
   const rail = (x: number) => {
     f.add(S(k.slabOf({ x: x - 2, y: -54, w: 4, d: 108, r: 1 }, 0, 4, P, 2, 0.4), { tone: "mid", inner: L(k.segment([x + 2, -54, 2], [x + 2, 54, 2], P), { tone: "faint" }) }));
@@ -140,7 +141,7 @@ export function resumeScene(width = 400, height = 300): Scene {
     P,
     true,
   );
-  g.push(`<path class="iso-beam" d="${glow}"/>`);
+  g.push(`<path class="${BEAM}" d="${glow}"/>`);
   g.push(L(k.lineOnTop([PAGE.x - 1, 0], [PAGE.x + PAGE.w + 1, 0], 0.4, P), { tone: "lit" }));
   tower(-RAIL_X);
   g.push(S(k.slabOf({ x: -RAIL_X + 2, y: -2, w: RAIL_X * 2 - 4, d: 4, r: 1 }, BAR_Z - 2, 4, P, 2, 0.4), { tone: "mid", inner: L(k.segment([-RAIL_X + 2, 2, BAR_Z - 0.6], [RAIL_X - 2, 2, BAR_Z - 0.6], P), { tone: "lit" }) }));
