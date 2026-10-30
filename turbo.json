@@ -24,6 +24,8 @@
         "SHORTLINK_DOMAIN",
         "VERCEL_DEPLOYMENT_ID",
         "_VARLOCK_ENV_KEY",
+        "_VARLOCK_ALLOW_PLAINTEXT_FROZEN_ENV",
+        "ENABLE_EXPERIMENTAL_COREPACK",
         "CI",
         "VERCEL"
       ],
