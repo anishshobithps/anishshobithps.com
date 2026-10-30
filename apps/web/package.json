@@ -28,6 +28,7 @@
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-table": "catalog:",
     "@tanstack/react-virtual": "catalog:",
+    "@varlock/nextjs-integration": "^2.0.0",
     "@wojtekmaj/react-hooks": "^2.3.0",
     "class-variance-authority": "catalog:",
     "cmdk": "^1.1.1",
@@ -55,6 +56,7 @@
     "svix": "^1.99.1",
     "takumi-js": "^2.16.2",
     "unist-util-visit": "^5.1.0",
+    "varlock": "^1.24.0",
     "vaul": "^1.1.2",
     "vfile": "^6.0.3",
     "zod": "catalog:"

@@ -28,6 +28,7 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 overrides:
+  '@next/env': 'npm:@varlock/nextjs-integration'
   '@esbuild-kit/esm-loader': 'npm:tsx@^4'
   postcss@<8.5.10: ^8.5.10
   fast-uri@<3.1.8: ^3.1.8
