@@ -16,7 +16,7 @@ catalog:
   '@tanstack/react-table': ^9.3.1
   '@tanstack/react-virtual': ^3.14.24
   drizzle-orm: ^0.45.4
-  vitest: ^4.1.12
+  vitest: ^5.0.5
   eslint: ^9.39.5
   tsx: ^4.23.15
   radix-ui: ^1.8.1
