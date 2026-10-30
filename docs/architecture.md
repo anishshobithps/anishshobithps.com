@@ -105,7 +105,7 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/data-table` | `packages/data-table` | TanStack Table features and the sortable header | icons, ui |
 | `@repo/db` | `packages/db` | Drizzle schema, client, and committed migrations | none |
 | `@repo/diagrams` | `packages/diagrams` | React components that draw the iso scenes, page art, and blog covers | iso, ui |
-| `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint 9 config with the shadcn rules | none |
+| `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
 | `@repo/icons` | `packages/icons` | Phosphor icon re-exports | none |
 | `@repo/iso` | `packages/iso` | Isometric SVG engine and every scene | none |
 | `@repo/media-player` | `packages/media-player` | The video player and media-chrome | icons, ui |

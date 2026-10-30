@@ -47,7 +47,7 @@ Path aliases work in tests, so import from `@/lib/...` like the app does. For co
 
 ### Lint
 
-`pnpm lint` runs ESLint 9 with Next's `core-web-vitals` config and the `@shadcn/lint` rules on `apps/web/src/**`:
+`pnpm lint` runs ESLint 10 with Next's `core-web-vitals` config and the `@shadcn/lint` rules on `apps/web/src/**`:
 
 - `no-restyle`: a shadcn component owns its colour, spacing, shape, and typography. Pick a variant or size instead of passing classes that fight it. Layout classes are allowed.
 - `no-raw-colors`, `no-arbitrary-values`, `no-inline-styles`, `no-unknown-classes`, `require-static-classes`: use tokens and static class names.
@@ -55,7 +55,7 @@ Path aliases work in tests, so import from `@/lib/...` like the app does. For co
 
 `packages/ui/src/components/**` is exempt from the restyle rules, and a few files that render without Tailwind (the OG card, the `/svg` templates, the generated icons) are exempt from the class rules. The shared config is in `packages/eslint-config`.
 
-ESLint is pinned to 9. Version 10 crashes inside the parser that `eslint-config-next` wraps, and that needs a fix upstream. Lint is not part of CI because the codebase still has existing violations, so a red `pnpm lint` isn't necessarily yours. Compare against `main`, and keep the files you touch clean.
+ESLint is on 10. `eslint-plugin-import`, `eslint-plugin-jsx-a11y` and `eslint-plugin-react` have not widened their peer ranges yet, so `pnpm-workspace.yaml` allows ESLint 10 for them. Lint is not part of CI because the codebase still has existing violations, so a red `pnpm lint` isn't necessarily yours. Compare against `main`, and keep the files you touch clean.
 
 ### Knip
 
