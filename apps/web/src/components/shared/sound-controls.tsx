@@ -5,7 +5,7 @@ import { useId, type ComponentProps } from "react";
 import {
   SpeakerHighIcon,
   SpeakerSlashIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";

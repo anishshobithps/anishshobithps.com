@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
-import { CopyIcon } from "@/components/shared/icons";
+import { CopyIcon } from "@repo/icons";
 import { Button } from "@/components/ui/button";
 
 export function CopyMarkdown({ markdown }: { markdown: string }) {

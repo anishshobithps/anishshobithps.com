@@ -30,7 +30,7 @@ import {
   ArrowClockwiseIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";

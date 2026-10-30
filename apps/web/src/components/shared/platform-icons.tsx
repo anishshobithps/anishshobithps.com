@@ -2,7 +2,7 @@ import {
   GithubLogoIcon,
   LinkedinLogoIcon,
   XLogoIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import type { ReactNode } from "react";
 
 const iconMap: Record<string, (className?: string) => ReactNode> = {

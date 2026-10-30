@@ -1,6 +1,6 @@
 import NextImage from "next/image";
 import Link from "next/link";
-import { FileTextIcon, EnvelopeIcon } from "@/components/shared/icons";
+import { FileTextIcon, EnvelopeIcon } from "@repo/icons";
 import { Button } from "@/components/ui/button";
 import {
   ButtonGroup,

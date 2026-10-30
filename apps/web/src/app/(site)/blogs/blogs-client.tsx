@@ -43,7 +43,7 @@ import {
   MagnifyingGlassIcon,
   TagIcon,
   XIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   parseAsArrayOf,
   parseAsInteger,

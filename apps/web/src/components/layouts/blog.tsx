@@ -16,7 +16,7 @@ import {
   TOCScrollArea,
   useTOCItems,
 } from "fumadocs-ui/components/toc";
-import { CaretDownIcon, TextAlignLeftIcon } from "@/components/shared/icons";
+import { CaretDownIcon, TextAlignLeftIcon } from "@repo/icons";
 import {
   type ComponentProps,
   type ReactNode,

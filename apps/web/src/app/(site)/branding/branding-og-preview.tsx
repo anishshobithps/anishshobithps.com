@@ -20,7 +20,7 @@ import {
   GlobeIcon,
   TagIcon,
   AlignLeftIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 
 export function BrandingOGPreview() {
   const defaultTitle = siteConfig.name;

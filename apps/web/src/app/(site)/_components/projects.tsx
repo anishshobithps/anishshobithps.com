@@ -17,7 +17,7 @@ import {
   TypographyMuted,
   SectionLabel,
 } from "@/components/ui/typography";
-import { GithubLogoIcon, ArrowUpRightIcon } from "@/components/shared/icons";
+import { GithubLogoIcon, ArrowUpRightIcon } from "@repo/icons";
 import Link from "next/link";
 import { padIndex } from "@/lib/text";
 import type { Route } from "next";

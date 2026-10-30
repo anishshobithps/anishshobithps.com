@@ -1,6 +1,6 @@
 import { IsoStage } from "@/components/diagrams/iso-stage";
 import { isoCanvas } from "@/components/diagrams/classes";
-import { ArrowRightIcon } from "@/components/shared/icons";
+import { ArrowRightIcon } from "@repo/icons";
 import {
   Heading,
   SectionLabel,

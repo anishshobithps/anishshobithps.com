@@ -6,7 +6,7 @@ import {
   type ComposerSubmitHandler,
 } from "@/components/engagement/composer";
 import { TypingBubble } from "@/components/shared/doodles";
-import { SignInIcon, SignOutIcon } from "@/components/shared/icons";
+import { SignInIcon, SignOutIcon } from "@repo/icons";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { SignInButton } from "@clerk/nextjs";

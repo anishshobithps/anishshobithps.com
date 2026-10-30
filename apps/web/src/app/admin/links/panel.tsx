@@ -89,7 +89,7 @@ import {
   ArrowSquareOutIcon,
   CaretUpDownIcon,
   LinkIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   Empty,
   EmptyContent,

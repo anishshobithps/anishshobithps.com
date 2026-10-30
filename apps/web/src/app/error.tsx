@@ -5,7 +5,7 @@ import { Empty, EmptyContent, EmptyHeader } from "@/components/ui/empty";
 import {
   HouseIcon,
   ArrowCounterClockwiseIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   Text,
   TypographyMuted,

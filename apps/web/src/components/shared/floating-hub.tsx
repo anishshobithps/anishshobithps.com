@@ -23,7 +23,7 @@ import {
   SignInIcon,
   SignOutIcon,
   XIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
 import { SoundPanel } from "@/components/shared/sound-controls";
 import {

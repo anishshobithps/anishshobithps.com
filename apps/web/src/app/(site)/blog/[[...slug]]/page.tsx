@@ -39,7 +39,7 @@ import {
   GitCommitIcon,
   ClockIcon,
   EyeIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata, Route } from "next";
 import Link from "next/link";

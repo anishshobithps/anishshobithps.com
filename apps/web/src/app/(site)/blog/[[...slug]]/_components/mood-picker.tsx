@@ -10,7 +10,7 @@ import {
   SmileyMehIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { Button } from "@/components/ui/button";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { cn } from "@/lib/cn";

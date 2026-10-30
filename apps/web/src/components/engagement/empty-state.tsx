@@ -1,6 +1,6 @@
 "use client";
 
-import { ChatCircleIcon } from "@/components/shared/icons";
+import { ChatCircleIcon } from "@repo/icons";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import type { ComponentType, ReactNode } from "react";
 

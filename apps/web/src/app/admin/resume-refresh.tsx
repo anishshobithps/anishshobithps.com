@@ -7,7 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowClockwiseIcon,
   FileTextIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   TypographySmall,
   TypographyMuted,

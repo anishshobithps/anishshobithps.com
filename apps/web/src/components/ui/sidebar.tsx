@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { SidebarSimpleIcon } from "@/components/shared/icons";
+import { SidebarSimpleIcon } from "@repo/icons";
 import { Slot } from "radix-ui";
 
 import { useIsMobile } from "@/hooks/use-mobile";

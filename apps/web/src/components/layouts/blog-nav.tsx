@@ -13,7 +13,7 @@ import {
   LinkIcon,
   XLogoIcon,
   LinkedinLogoIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { playCue } from "@/lib/sound-player";
 import { toast } from "sonner";
 import type { Route } from "next";

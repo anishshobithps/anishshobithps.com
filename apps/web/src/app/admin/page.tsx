@@ -3,7 +3,7 @@ import {
   ChatCircleIcon,
   EyeIcon,
   HeartIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   TypographyH1,
   TypographyLead,

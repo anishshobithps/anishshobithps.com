@@ -1,6 +1,6 @@
 "use client";
 
-import { MonitorIcon, MoonIcon, SunIcon } from "@/components/shared/icons";
+import { MonitorIcon, MoonIcon, SunIcon } from "@repo/icons";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/cn";
 import { themeCue } from "@/lib/sound-cues";

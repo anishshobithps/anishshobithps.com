@@ -20,7 +20,7 @@ import {
   ListIcon,
   SignOutIcon,
   FolderOpenIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";

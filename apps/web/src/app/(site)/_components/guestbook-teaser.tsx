@@ -10,7 +10,7 @@ import { Reveal } from "@/components/shared/reveal";
 import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@/components/diagrams/page-art";
 import { Button } from "@/components/ui/button";
-import { CaretRightIcon } from "@/components/shared/icons";
+import { CaretRightIcon } from "@repo/icons";
 import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
 import { connection } from "next/server";

@@ -8,7 +8,7 @@ import {
   HeartIcon,
   PushPinSimpleIcon,
   TrashIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

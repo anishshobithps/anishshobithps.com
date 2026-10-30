@@ -28,7 +28,7 @@ import {
   SpeakerSlashIcon,
   SunIcon,
   XLogoIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   getCommandMenuOpen,
   getCommandMenuServerSnapshot,

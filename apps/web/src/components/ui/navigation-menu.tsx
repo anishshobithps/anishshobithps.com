@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cva } from "class-variance-authority";
-import { CaretDownIcon } from "@/components/shared/icons";
+import { CaretDownIcon } from "@repo/icons";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/cn";

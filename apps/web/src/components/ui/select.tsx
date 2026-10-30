@@ -5,7 +5,7 @@ import {
   CheckIcon,
   CaretUpIcon,
   CaretDownIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import { Select as SelectPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/cn";

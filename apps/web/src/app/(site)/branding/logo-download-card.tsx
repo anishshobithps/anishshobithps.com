@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { TypographyMuted, TypographySmall } from "@/components/ui/typography";
 import { siteConfig } from "@/lib/config";
-import { CodeIcon, ImageIcon } from "@/components/shared/icons";
+import { CodeIcon, ImageIcon } from "@repo/icons";
 import { useRef, useState } from "react";
 
 const DOWNLOAD_SIZES = [16, 32, 64, 128, 256, 512] as const;

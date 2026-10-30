@@ -19,7 +19,7 @@ import {
   SubtitlesIcon,
   SubtitlesSlashIcon,
   WarningIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   MediaActionTypes,
   MediaProvider,

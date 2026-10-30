@@ -38,7 +38,7 @@ import {
   ArrowBendDownRightIcon,
   MagnifyingGlassIcon,
   ChatCircleIcon,
-} from "@/components/shared/icons";
+} from "@repo/icons";
 import {
   Empty,
   EmptyContent,

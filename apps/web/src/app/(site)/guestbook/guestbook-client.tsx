@@ -15,7 +15,7 @@ import { EngagementEmptyState } from "@/components/engagement/empty-state";
 import { EngagementNudge } from "@/components/engagement/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
 import { Panel, PanelRow, panelListItem } from "@/components/layouts/page";
-import { BookOpenIcon, SignOutIcon } from "@/components/shared/icons";
+import { BookOpenIcon, SignOutIcon } from "@repo/icons";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { ScrollArea } from "@/components/ui/scroll-area";

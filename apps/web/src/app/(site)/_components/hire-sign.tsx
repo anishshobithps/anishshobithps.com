@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon } from "@/components/shared/icons";
+import { ArrowRightIcon } from "@repo/icons";
 import { cn } from "@/lib/cn";
 import { isoType } from "@/components/diagrams/classes";
 import { useEffect, useState } from "react";
