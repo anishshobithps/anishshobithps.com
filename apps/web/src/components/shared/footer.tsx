@@ -1,4 +1,6 @@
+import { ArtStage } from "@/components/layouts/hero-art";
 import { EndOfPage } from "@/components/shared/end-of-page";
+import { StripArt } from "@repo/diagrams/strip-art";
 import {
   GroupGlyph,
   OnlinePing,
@@ -123,6 +125,10 @@ export function Footer() {
               ))}
             </div>
           </div>
+
+          <ArtStage className="-mx-gutter -mb-6 h-32 overflow-hidden sm:h-auto sm:aspect-shelf">
+            <StripArt name="nightShelf" />
+          </ArtStage>
 
           <div className="flex flex-col gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
             <TypographyMuted className="font-mono tabular-nums">

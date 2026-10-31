@@ -129,7 +129,7 @@ export async function ProjectGrid({
 
 export function BuiltThings() {
   return (
-    <Section aria-label="Things I've Built">
+    <Section aria-label="Things I've Built" doodle="bot">
       <TypographyH2 className="sr-only">Things I&apos;ve built</TypographyH2>
       <Reveal>
         <div className="mb-12 max-w-3xl">

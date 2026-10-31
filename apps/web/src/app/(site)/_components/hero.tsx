@@ -6,7 +6,9 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@repo/ui/components/button-group";
+import { ArtStage } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
+import { StripArt } from "@repo/diagrams/strip-art";
 import { siteConfig } from "@repo/site-config";
 import {
   TypographyH1,
@@ -113,6 +115,10 @@ export function Hero() {
             latest={latest && { url: latest.url, title: latest.data.title }}
           />
         </div>
+
+        <ArtStage className="-mx-gutter mt-4 h-36 overflow-hidden sm:h-auto sm:aspect-bench">
+          <StripArt name="workbench" />
+        </ArtStage>
       </div>
     </Section>
   );

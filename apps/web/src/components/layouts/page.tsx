@@ -1,4 +1,8 @@
 import { SectionMargins } from "@/components/layouts/section-margins";
+import {
+  BandDoodle,
+  type BandDoodleName,
+} from "@/components/shared/band-doodle";
 import { cn } from "@repo/ui/lib/cn";
 import { ComponentPropsWithRef, forwardRef } from "react";
 
@@ -53,16 +57,18 @@ const sectionVariants = {
 
 interface SectionProps extends ComponentPropsWithRef<"section"> {
   variant?: keyof typeof sectionVariants;
+  doodle?: BandDoodleName;
 }
 
 export const Section = forwardRef<HTMLElement, SectionProps>(
-  ({ variant = "default", children, className, ...props }, ref) => (
+  ({ variant = "default", doodle, children, className, ...props }, ref) => (
     <section
       ref={ref}
       data-slot="section"
       className="section-gap group/section relative border border-line bg-line"
       {...props}
     >
+      {doodle && <BandDoodle name={doodle} />}
       <SectionMargins label={props["aria-label"]} />
       <div
         className={cn(

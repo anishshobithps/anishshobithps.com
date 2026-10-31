@@ -22,7 +22,7 @@ import { SocialsNudge } from "@/components/shared/doodles";
 
 export function Contact() {
   return (
-    <Section aria-label="Contact" id="contact">
+    <Section aria-label="Contact" id="contact" doodle="cone">
       <Reveal className="w-full max-w-5xl">
         <div className="group/iso @container grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_18rem] lg:grid-cols-[minmax(0,1fr)_22rem]">
           <div className="min-w-0 space-y-8">

@@ -28,7 +28,7 @@ export async function GuestbookTeaser() {
   }
 
   return (
-    <Section aria-label="Guestbook preview">
+    <Section aria-label="Guestbook preview" doodle="balloon">
       <TypographyH2 className="sr-only">From the guestbook</TypographyH2>
       <Reveal className="group/iso">
         <div className="mb-8 grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_24rem]">

@@ -14,7 +14,7 @@ import { padIndex } from "@repo/core/text";
 
 export function RulesIFollow() {
   return (
-    <Section aria-label="Rules I Follow">
+    <Section aria-label="Rules I Follow" doodle="snail">
       <TypographyH2 className="sr-only">Rules I follow</TypographyH2>
       <div className="group/iso grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_24rem]">
         <TypographyLead className="max-w-3xl">

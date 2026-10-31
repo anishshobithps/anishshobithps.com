@@ -151,6 +151,24 @@
   background-image: radial-gradient(closest-side, var(--glow), transparent);
 }
 
+@utility section-band {
+  pointer-events: none;
+  position: absolute;
+  top: calc(-1 * var(--section-gap) - 2px);
+  right: 0;
+  left: 0;
+  height: calc(var(--section-gap) + 2px);
+  container-type: inline-size;
+}
+
+@utility aspect-bench {
+  aspect-ratio: 960 / 230;
+}
+
+@utility aspect-shelf {
+  aspect-ratio: 960 / 200;
+}
+
 @utility object-subject {
   object-position: 50% 35%;
 }
@@ -439,7 +457,12 @@ html[data-theme-transition]::view-transition-new(root) {
   --animate-nudge-blink: nudge-blink 1s steps(1) infinite;
   --animate-git-draw: nudge-draw 0.9s cubic-bezier(0.6, 0, 0.2, 1) var(--git-delay, 0ms) forwards;
   --animate-git-pop: nudge-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) var(--git-delay, 0ms) forwards;
-  --animate-git-fade: git-fade 0.6s ease-out var(--git-delay, 0ms) forwards;  --animate-neon-sway: neon-sway 4s ease-in-out infinite;
+  --animate-git-fade: git-fade 0.6s ease-out var(--git-delay, 0ms) forwards;
+  --animate-band-glide: band-glide 26s linear infinite;
+  --animate-band-walk: band-glide 38s linear infinite;
+  --animate-band-crawl: band-glide 70s linear infinite;
+  --animate-band-bob: band-bob 3.6s ease-in-out infinite;
+  --animate-band-step: band-step 0.5s ease-in-out infinite alternate;  --animate-neon-sway: neon-sway 4s ease-in-out infinite;
   --animate-neon-swing: neon-swing 0.9s ease-in-out infinite;
   --animate-neon-flicker: neon-flicker 1.4s steps(1) 0.6s both;
   --animate-plank-nudge: plank-nudge 5s ease-in-out 2s infinite;
@@ -453,6 +476,44 @@ html[data-theme-transition]::view-transition-new(root) {
   --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
   --animate-pin-drop: nav-pin-drop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.15s backwards;
   --animate-note-swing: nav-note-swing 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) 0.3s backwards;
+
+  @keyframes band-bob {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+
+    50% {
+      translate: 0 -3px;
+    }
+  }
+
+  @keyframes band-glide {
+    0% {
+      translate: -2rem 0;
+      opacity: 0;
+    }
+
+    6%,
+    94% {
+      opacity: 1;
+    }
+
+    100% {
+      translate: 100cqw 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes band-step {
+    from {
+      rotate: -24deg;
+    }
+
+    to {
+      rotate: 24deg;
+    }
+  }
 
   @keyframes chirp {
     0%,

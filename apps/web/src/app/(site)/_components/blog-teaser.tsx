@@ -28,7 +28,7 @@ export function BlogTeaser() {
   if (posts.length === 0) return null;
 
   return (
-    <Section aria-label="Recent writing">
+    <Section aria-label="Recent writing" doodle="plane">
       <TypographyH2 className="sr-only">Recent writing</TypographyH2>
       <Reveal className="group/iso">
         <div className="mb-8 grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_20rem] lg:grid-cols-[minmax(0,1fr)_24rem]">
