@@ -1,6 +1,10 @@
 import { createMDX } from "fumadocs-mdx/next";
 import { varlockNextConfigPlugin } from "@varlock/nextjs-integration/plugin";
 
+if (process.env.VERCEL && !process.env._VARLOCK_ENV_KEY) {
+  process.env._VARLOCK_ALLOW_PLAINTEXT_FROZEN_ENV = "1";
+}
+
 const withMDX = createMDX();
 const withVarlock = varlockNextConfigPlugin();
 
