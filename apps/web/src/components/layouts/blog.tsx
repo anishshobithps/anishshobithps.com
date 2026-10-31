@@ -212,7 +212,7 @@ function MobileTOC() {
               >
                 {selected !== -1 ? items[selected]?.title : "On this page"}
               </span>
-              <span className="shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
+              <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                 {selected !== -1 ? selected + 1 : 0}
                 <span className="mx-0.5" aria-hidden="true">/</span>
                 <span className="sr-only"> of </span>

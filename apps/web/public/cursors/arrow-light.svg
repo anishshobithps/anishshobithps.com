@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+<g transform="translate(3 3) rotate(-22) scale(0.44) translate(-32 -4)">
+<polygon points="32,4 50,56 40,56 32,32 24,56 14,56" fill="#ffffff" stroke="#ffffff" stroke-width="6.818181818181818" stroke-linejoin="round"/>
+<polygon points="32,4 50,56 40,56 32,32 24,56 14,56" fill="#09090b"/>
+<polygon points="32,4 50,56 40,56 32,32" fill="#0e9254"/>
+</g>
+</svg>

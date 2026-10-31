@@ -115,7 +115,7 @@ export function LogoDownloadCard({
     >
       <div>
         <TypographyMuted
-          className="text-xs uppercase tracking-wider"
+          className="text-xs"
           aria-hidden="true"
         >
           {label}

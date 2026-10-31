@@ -28,7 +28,7 @@ export function Hero() {
       <div className="w-full max-w-5xl flex flex-col gap-8">
         <div className="relative">
           <PhotoCallout />
-          <div className="relative w-full border rounded-md overflow-hidden lg:max-h-95">
+          <div className="relative w-full border rounded-md overflow-hidden lg:max-h-60">
             <NextImage
               src="/profile.avif"
               alt={`Profile photo of ${siteConfig.name}`}
@@ -36,7 +36,7 @@ export function Hero() {
               height={4000}
               priority
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="w-full h-auto lg:h-95 lg:object-cover lg:object-center"
+              className="w-full h-auto lg:h-60 lg:object-cover lg:object-subject"
             />
           </div>
         </div>

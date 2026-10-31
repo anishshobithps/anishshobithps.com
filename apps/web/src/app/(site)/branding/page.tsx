@@ -1,3 +1,4 @@
+import NextImage from "next/image";
 import { PageArt } from "@repo/diagrams/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { SectionMargins } from "@/components/layouts/section-margins";
@@ -81,7 +82,7 @@ function ShowcaseCard({
     <CardGridItem aria-label={`${title} example`} className={className}>
       <div className="space-y-3">
         <TypographyMuted
-          className="text-xs uppercase tracking-wider"
+          className="text-xs"
           aria-hidden="true"
         >
           {title}
@@ -94,6 +95,109 @@ function ShowcaseCard({
     </CardGridItem>
   );
 }
+
+function CursorGlyph({ name }: { name: string }) {
+  return (
+    <>
+      <NextImage
+        src={`/cursors/${name}-light.svg`}
+        alt=""
+        width={32}
+        height={32}
+        unoptimized
+        aria-hidden="true"
+        className="size-16 dark:hidden"
+      />
+      <NextImage
+        src={`/cursors/${name}-dark.svg`}
+        alt=""
+        width={32}
+        height={32}
+        unoptimized
+        aria-hidden="true"
+        className="hidden size-16 dark:block"
+      />
+    </>
+  );
+}
+
+function CursorPad({
+  steps,
+  className,
+}: {
+  steps: { name: string; label: string }[];
+  className: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "hatch flex h-40 items-center justify-center gap-10 rounded-lg border border-line",
+        className,
+      )}
+    >
+      {steps.map((step) => (
+        <div key={step.name} className="flex flex-col items-center gap-2">
+          <CursorGlyph name={step.name} />
+          <div className="bg-background px-1.5">
+            <TypographyMuted>{step.label}</TypographyMuted>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const cursors: ShowcaseItem[] = [
+  {
+    title: "Arrow",
+    description:
+      "The default. The logo's A, leaned over like a cursor: half ink, half brand green. Hover the pad to wear it.",
+    component: (
+      <CursorPad
+        className="cursor-(--cursor-arrow)"
+        steps={[{ name: "arrow", label: "Default" }]}
+      />
+    ),
+  },
+  {
+    title: "Pointer",
+    description:
+      "Over anything clickable the arrow turns green and the logo's eyes open. Press and it drops back to the arrow.",
+    component: (
+      <CursorPad
+        className="cursor-(--cursor-pointer) active:cursor-(--cursor-arrow)"
+        steps={[
+          { name: "pointer", label: "Hover" },
+          { name: "arrow", label: "Press" },
+        ]}
+      />
+    ),
+  },
+  {
+    title: "Text",
+    description: "Anything you can type in gets an I-beam. No personality, all serifs.",
+    component: (
+      <CursorPad
+        className="cursor-(--cursor-text)"
+        steps={[{ name: "text", label: "Type" }]}
+      />
+    ),
+  },
+  {
+    title: "Grab",
+    description:
+      "The floating menu uses these. Open hand to pick it up, green fist while you drag.",
+    component: (
+      <CursorPad
+        className="cursor-(--cursor-grab) active:cursor-(--cursor-grabbing)"
+        steps={[
+          { name: "grab", label: "Hover" },
+          { name: "grabbing", label: "Press" },
+        ]}
+      />
+    ),
+  },
+];
 
 const moods = ["", "terrible", "bad", "good", "amazing"] as const;
 
@@ -270,7 +374,7 @@ export default function BrandingPage() {
             <CardGridItem key={item.title} aria-label={`${item.title} example`}>
               <div className="space-y-3">
                 <TypographyMuted
-                  className="text-xs uppercase tracking-wider"
+                  className="text-xs"
                   aria-hidden="true"
                 >
                   {item.title}
@@ -423,13 +527,13 @@ export default function BrandingPage() {
                   <div className="flex items-center gap-8">
                     <div className="flex flex-col items-center gap-2">
                       <GroupGlyph variant="pages" />
-                      <TypographyMuted className="text-3xs uppercase tracking-wider">
+                      <TypographyMuted className="text-xs">
                         Pages
                       </TypographyMuted>
                     </div>
                     <div className="flex flex-col items-center gap-2">
                       <GroupGlyph variant="site" />
-                      <TypographyMuted className="text-3xs uppercase tracking-wider">
+                      <TypographyMuted className="text-xs">
                         Site
                       </TypographyMuted>
                     </div>
@@ -480,7 +584,7 @@ export default function BrandingPage() {
                         className="flex flex-col items-center gap-1.5"
                       >
                         <ReactionMascot mood={mood} />
-                        <TypographyMuted className="text-3xs uppercase tracking-wider">
+                        <TypographyMuted className="text-xs">
                           {mood || "neutral"}
                         </TypographyMuted>
                       </div>
@@ -516,6 +620,25 @@ export default function BrandingPage() {
             The bits that move.{" "}
             <TypographyMark>Every one of them sits still</TypographyMark> when
             your system asks for reduced motion.
+          </TypographyLead>
+        </div>
+      </Section>
+
+      <Section aria-label="Cursors">
+        <SectionHeader>Cursors</SectionHeader>
+        <CardGrid>
+          {cursors.map((item) => (
+            <ShowcaseCard key={item.title} {...item} />
+          ))}
+        </CardGrid>
+
+        <div className="mt-14 max-w-3xl">
+          <TypographyLead>
+            Drawn in code from the theme tokens, so they match in light and
+            dark.{" "}
+            <TypographyMark>Your OS cursor never stood a chance</TypographyMark>.{" "}
+            <TypographyInlineCode>pnpm cursors</TypographyInlineCode> redraws
+            the set whenever a colour changes.
           </TypographyLead>
         </div>
       </Section>

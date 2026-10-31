@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "postinstall": "fumadocs-mdx",
     "lint": "eslint",
-    "banners": "varlock run -- tsx scripts/banners/generate.ts"
+    "banners": "varlock run -- tsx scripts/banners/generate.ts",
+    "cursors": "tsx scripts/cursors/generate.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.9.22",

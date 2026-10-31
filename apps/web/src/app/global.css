@@ -4,6 +4,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@repo/styles/tokens.css";
+@import "./cursors.css";
 
 @source "../../../../packages";
 
@@ -37,15 +38,43 @@
   }
   body {
     @apply bg-background text-foreground;
-    cursor:
-      url("/cursors/default.cur") 4 4,
-      auto;
+    overflow-x: clip;
+    cursor: var(--cursor-arrow);
   }
 
   *:where(a, button, [role="button"], .cursor-pointer) {
-    cursor:
-      url("/cursors/pointer.cur") 6 6,
-      pointer !important;
+    cursor: var(--cursor-pointer) !important;
+  }
+
+  *:where(a, button, [role="button"], .cursor-pointer):active {
+    cursor: var(--cursor-arrow) !important;
+  }
+
+  .cursor-grab {
+    cursor: var(--cursor-grab) !important;
+  }
+
+  .cursor-grabbing,
+  .cursor-grab:active {
+    cursor: var(--cursor-grabbing) !important;
+  }
+
+  :where(
+    input:not(
+      [type="button"],
+      [type="checkbox"],
+      [type="color"],
+      [type="file"],
+      [type="image"],
+      [type="radio"],
+      [type="range"],
+      [type="reset"],
+      [type="submit"]
+    ),
+    textarea,
+    [contenteditable]:not([contenteditable="false"])
+  ) {
+    cursor: var(--cursor-text);
   }
 
   *:where(
@@ -116,6 +145,14 @@
     transparent 50%
   );
   background-size: 10px 10px;
+}
+
+@utility cursor-glow {
+  background-image: radial-gradient(closest-side, var(--glow), transparent);
+}
+
+@utility object-subject {
+  object-position: 50% 35%;
 }
 
 @utility section-gap {
@@ -265,6 +302,7 @@
 }
 
 html {
+  overflow-x: clip;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 1.5rem);
 }
@@ -401,8 +439,7 @@ html[data-theme-transition]::view-transition-new(root) {
   --animate-nudge-blink: nudge-blink 1s steps(1) infinite;
   --animate-git-draw: nudge-draw 0.9s cubic-bezier(0.6, 0, 0.2, 1) var(--git-delay, 0ms) forwards;
   --animate-git-pop: nudge-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) var(--git-delay, 0ms) forwards;
-  --animate-git-fade: git-fade 0.6s ease-out var(--git-delay, 0ms) forwards;
-  --animate-neon-sway: neon-sway 4s ease-in-out infinite;
+  --animate-git-fade: git-fade 0.6s ease-out var(--git-delay, 0ms) forwards;  --animate-neon-sway: neon-sway 4s ease-in-out infinite;
   --animate-neon-swing: neon-swing 0.9s ease-in-out infinite;
   --animate-neon-flicker: neon-flicker 1.4s steps(1) 0.6s both;
   --animate-plank-nudge: plank-nudge 5s ease-in-out 2s infinite;
@@ -748,23 +785,4 @@ html[data-theme-transition]::view-transition-new(root) {
       opacity: 1;
     }
   }
-}
-
-/* /svg/preview/readme: GitHub's own markdown palette, so cards are judged on the canvas they ship on. */
-[data-github-theme] {
-  --gh-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
-}
-[data-github-theme="light"] {
-  --gh-canvas: #ffffff;
-  --gh-fg: #1f2328;
-  --gh-muted: #59636e;
-  --gh-border: #d1d9e0;
-  --gh-link: #0969da;
-}
-[data-github-theme="dark"] {
-  --gh-canvas: #0d1117;
-  --gh-fg: #f0f6fc;
-  --gh-muted: #9198a1;
-  --gh-border: #3d444d;
-  --gh-link: #4493f8;
 }

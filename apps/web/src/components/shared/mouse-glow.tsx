@@ -93,7 +93,7 @@ export function MouseGlow() {
     <div
       ref={glowRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 h-25 w-25 rounded-full bg-(--glow) blur-3xl will-change-transform"
+      className="cursor-glow pointer-events-none fixed top-0 left-0 z-20 size-88 rounded-full mix-blend-multiply transition-opacity duration-500 will-change-transform dark:mix-blend-screen"
       style={{
         transform: "translate(-9999px, -9999px)",
         opacity: isVisible ? 1 : 0,

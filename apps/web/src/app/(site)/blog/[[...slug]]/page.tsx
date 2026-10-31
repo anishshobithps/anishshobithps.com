@@ -129,7 +129,7 @@ export default async function Page(props: {
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 -mt-2">
             <address className="not-italic contents">
-              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
+              <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
                 <Link
                   href={siteConfig.baseUrl as Route}
                   className="hover:text-foreground transition-colors"
@@ -140,7 +140,7 @@ export default async function Page(props: {
               </TypographyMuted>
             </address>
             {page.data.date && (
-              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
+              <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
                 <CalendarIcon className="size-3.5 shrink-0" aria-hidden="true" />
                 <span className="sr-only">Published </span>
 
@@ -150,7 +150,7 @@ export default async function Page(props: {
               </TypographyMuted>
             )}
             {page.data.lastModified && (
-              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
+              <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
                 <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
                 Updated{" "}
                 <time dateTime={toISOString(page.data.lastModified)}>
@@ -159,12 +159,12 @@ export default async function Page(props: {
               </TypographyMuted>
             )}
             {readingTime && (
-              <TypographyMuted className="font-mono text-xs flex items-center gap-1.5">
+              <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
                 <ClockIcon className="size-3.5 shrink-0" aria-hidden="true" />
                 {readingTime.text}
               </TypographyMuted>
             )}
-            <TypographyMuted className="font-mono tabular-nums text-xs flex items-center gap-1.5">
+            <TypographyMuted className="tabular-nums text-xs flex items-center gap-1.5">
               <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
               {reads} {reads === 1 ? "read" : "reads"}
             </TypographyMuted>

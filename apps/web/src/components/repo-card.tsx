@@ -143,7 +143,10 @@ async function RepoCard({
           <span className="inline-flex items-center gap-1.5">
             <span
               className="size-2.5 rounded-full shrink-0"
-              style={{ backgroundColor: repoData.languageColor ?? "#8b8b8b" }}
+              style={{
+                backgroundColor:
+                  repoData.languageColor ?? "var(--muted-foreground)",
+              }}
               aria-hidden="true"
             />
             {repoData.language}

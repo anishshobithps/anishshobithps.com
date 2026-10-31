@@ -25,7 +25,8 @@
     "db:seed:guestbook:cleanup": "pnpm --filter web run db:seed:guestbook:cleanup",
     "db:seed:links": "pnpm --filter web run db:seed:links",
     "spotify:token": "pnpm --filter web run spotify:token",
-    "banners": "pnpm --filter web run banners"
+    "banners": "pnpm --filter web run banners",
+    "cursors": "pnpm --filter web run cursors"
   },
   "devDependencies": {
     "knip": "^6.43.0",

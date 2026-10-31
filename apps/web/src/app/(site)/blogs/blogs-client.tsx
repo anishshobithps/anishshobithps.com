@@ -232,7 +232,7 @@ export function BlogsClient({
                               });
                             }}
                           />
-                          <TypographySmall className="font-semibold uppercase">
+                          <TypographySmall className="font-semibold">
                             {tag}
                           </TypographySmall>
                         </Label>
@@ -369,7 +369,7 @@ export function BlogsClient({
           <Divider />
           <div className="flex flex-col items-center gap-3 pt-6">
             <TypographyMuted className="text-xs tabular-nums">
-              Showing {(currentPage - 1) * per + 1}–
+              Showing {(currentPage - 1) * per + 1} to{" "}
               {Math.min(currentPage * per, filtered.length)} of{" "}
               {filtered.length} post{filtered.length !== 1 ? "s" : ""}
             </TypographyMuted>

@@ -67,7 +67,7 @@ export function BlogTeaser() {
                   aria-hidden="true"
                 />
               </span>
-              <TypographyMuted asChild className="shrink-0 font-mono text-xs">
+              <TypographyMuted asChild className="shrink-0 text-xs tabular-nums">
                 <time dateTime={toISOString(post.data.date!)}>
                   {formatShortDate(post.data.date!)}
                 </time>

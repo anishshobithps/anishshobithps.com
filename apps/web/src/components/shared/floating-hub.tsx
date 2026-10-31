@@ -47,7 +47,7 @@ const CARD_CLASS =
 
 function HubLabel({ children }: { children: React.ReactNode }) {
   return (
-    <TypographyMuted className="font-mono text-2xs uppercase tracking-widest">
+    <TypographyMuted className="text-xs">
       {children}
     </TypographyMuted>
   );
@@ -78,7 +78,7 @@ function HubHeader() {
         <Text
           as="p"
           variant="small"
-          className="font-pixel text-xs uppercase tracking-widest text-(--brand-text)"
+          className="font-pixel text-xs text-(--brand-text)"
         >
           {title}
         </Text>

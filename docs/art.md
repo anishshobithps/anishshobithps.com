@@ -20,8 +20,10 @@ None of the illustrations are image exports. They're all drawn in code, so they 
 | Doodles and nudges | [`apps/web/src/components/shared/doodles.tsx`](../apps/web/src/components/shared/doodles.tsx) |
 | Logo and mascot | `logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx` in `apps/web/src/components/shared/` |
 | OpenGraph card | [`apps/web/src/components/shared/OG.tsx`](../apps/web/src/components/shared/OG.tsx), rendered by `/og` |
+| Cursors | [`apps/web/scripts/cursors/generate.ts`](../apps/web/scripts/cursors/generate.ts) draws five cursors in light and dark from the theme tokens: an arrow made from the logo's A, the same arrow awake in brand green, an I-beam, an open hand and a fist. Each one is inlined as a data URI in the `--cursor-*` variables of `apps/web/src/app/cursors.css`, hotspots included, so the first hover costs no request and never flashes the system cursor. The standalone `apps/web/public/cursors/*.svg` copies are for the `/branding` page. `pnpm cursors` regenerates both |
+| Cursor glow | [`mouse-glow.tsx`](../apps/web/src/components/shared/mouse-glow.tsx) lights a soft brand-green spotlight that follows the pointer, using the `--glow` token in both themes. It multiplies on light and screens on dark |
 
-The `/branding` page shows the type scale, logos, doodles, and a live OG preview in one place.
+The `/branding` page shows the type scale, logos, doodles, the cursors (each pad wears its own), and a live OG preview in one place.
 
 ## How a scene works
 

@@ -240,7 +240,7 @@ export const SectionLabel = forwardRef<HTMLParagraphElement, SectionLabelProps>(
         ref={ref}
         aria-hidden="true"
         className={cn(
-          "text-sm font-mono font-medium tracking-widest text-muted-foreground uppercase",
+          "text-sm font-medium text-muted-foreground",
           pixel && "font-pixel text-[11px]",
           accent && "text-(--brand-text)",
           className,
@@ -259,7 +259,11 @@ export function SectionHeader({
 }: HTMLAttributes<HTMLDivElement> & { as?: "h2" | "p" }) {
   return (
     <div className={cn("flex items-center gap-3 mb-10", className)}>
-      <SectionLabel asChild aria-hidden={undefined}>
+      <SectionLabel
+        asChild
+        aria-hidden={undefined}
+        className="font-semibold text-foreground"
+      >
         <Tag>{children}</Tag>
       </SectionLabel>
       <div aria-hidden="true" className="flex-1 h-px bg-border/40" />
