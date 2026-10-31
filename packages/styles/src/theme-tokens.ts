@@ -34,10 +34,25 @@ function splitArguments(list: string) {
   return parts;
 }
 
+const MIX_HEAD = /^color-mix\(in (oklab|oklch),/;
+
+function isAmount(text: string) {
+  return (
+    /^[0-9.]+$/.test(text) &&
+    text.split(".").length <= 2 &&
+    /[0-9]$/.test(text)
+  );
+}
+
 function mixStop(stop: string) {
-  const match = stop.match(/^(.+?)\s+(\d*\.?\d+)%$/);
-  return match
-    ? { color: match[1], amount: Number(match[2]) / 100 }
+  if (!stop.endsWith("%")) return { color: stop, amount: undefined };
+  const body = stop.slice(0, -1);
+  let start = body.length;
+  while (start > 0 && !/\s/.test(body[start - 1])) start--;
+  const color = body.slice(0, start).trimEnd();
+  const amount = body.slice(start);
+  return color && start < body.length && isAmount(amount)
+    ? { color, amount: Number(amount) / 100 }
     : { color: stop, amount: undefined };
 }
 
@@ -49,13 +64,17 @@ function resolve(expression: string, tokens: Tokens): Color {
     return resolve(value, tokens);
   }
 
-  const mix = expression.match(/^color-mix\(in (oklab|oklch),\s*(.+)\)$/);
-  if (mix) {
-    const [first, second] = splitArguments(mix[2]).map(mixStop);
+  const mixHead = MIX_HEAD.exec(expression);
+  const mixArguments =
+    mixHead && expression.endsWith(")")
+      ? expression.slice(mixHead[0].length, -1).trim()
+      : "";
+  if (mixHead && mixArguments) {
+    const [first, second] = splitArguments(mixArguments).map(mixStop);
     const amount = first.amount ?? 1 - (second.amount ?? 0.5);
     const interpolate = interpolateWithPremultipliedAlpha(
       [resolve(first.color, tokens), resolve(second.color, tokens)],
-      mix[1] as "oklab" | "oklch",
+      mixHead[1] as "oklab" | "oklch",
     );
     return interpolate(1 - amount);
   }

@@ -31,4 +31,22 @@ describe("themeColor", () => {
   it("throws on unknown tokens", () => {
     expect(() => themeColor("var(--missing)")).toThrow("--missing");
   });
+
+  it("reads fractional and missing mix amounts", () => {
+    expect(themeColor("color-mix(in oklab, #ffffff 25.5%, #000000)")).toBe(
+      themeColor("color-mix(in oklab, #ffffff 25.5%, #000000 74.5%)"),
+    );
+    expect(themeColor("color-mix(in oklab, #ffffff, #000000)")).toBe("#636363");
+  });
+
+  it("rejects pathological color-mix input without backtracking", () => {
+    const started = performance.now();
+    expect(() =>
+      themeColor(`color-mix(in oklab,${" ".repeat(100_000)})x`),
+    ).toThrow("Unsupported color");
+    expect(() =>
+      themeColor(`color-mix(in oklab, ${"1".repeat(100_000)}x%)`),
+    ).toThrow();
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
 });
