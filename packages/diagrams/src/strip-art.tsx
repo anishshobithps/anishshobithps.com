@@ -1,12 +1,10 @@
 import type { Scene } from "@repo/iso/figure";
 import { nightShelfScene } from "@repo/iso/scenes/night-shelf";
-import { workbenchScene } from "@repo/iso/scenes/workbench";
 import { IsoArt } from "./iso-art";
 
 type Make = (width: number, height: number) => Scene;
 
 const strips = {
-  workbench: { make: workbenchScene, width: 960, height: 230 },
   nightShelf: { make: nightShelfScene, width: 960, height: 200 },
 } satisfies Record<string, { make: Make; width: number; height: number }>;
 

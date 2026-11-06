@@ -1,5 +1,5 @@
 import { getGuestbookPreview } from "@/app/(site)/guestbook/actions";
-import { GuestbookRotator } from "@/app/(site)/_components/guestbook-rotator";
+import { GuestbookPreview } from "@/app/(site)/_components/guestbook-preview";
 import { Section } from "@/components/layouts/page";
 import {
   TypographyH2,
@@ -53,7 +53,7 @@ export async function GuestbookTeaser() {
           </ArtStage>
         </div>
 
-        <GuestbookRotator entries={entries} />
+        <GuestbookPreview entries={entries} />
       </Reveal>
     </Section>
   );

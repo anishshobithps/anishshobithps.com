@@ -8,7 +8,8 @@ import {
 } from "@repo/ui/components/button-group";
 import { ArtStage } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
-import { StripArt } from "@repo/diagrams/strip-art";
+import { IsoArt } from "@repo/diagrams/iso-art";
+import { workbenchScene } from "@repo/iso/scenes/workbench";
 import { siteConfig } from "@repo/site-config";
 import {
   TypographyH1,
@@ -19,8 +20,11 @@ import {
 import { LocationTag } from "@repo/ui/components/location";
 import { HireSign } from "@/app/(site)/_components/hire-sign";
 import { HeroNudges } from "@/app/(site)/_components/hero-nudges";
+import { Workbench } from "@/app/(site)/_components/workbench";
 import { IceCreamNote, PhotoCallout } from "@/components/shared/doodles";
 import { getLatestPost } from "@/lib/source";
+
+const { scene, ...workbench } = workbenchScene();
 
 export function Hero() {
   const latest = getLatestPost();
@@ -116,9 +120,11 @@ export function Hero() {
           />
         </div>
 
-        <ArtStage className="-mx-gutter mt-4 h-36 overflow-hidden sm:h-auto sm:aspect-bench">
-          <StripArt name="workbench" />
-        </ArtStage>
+        <Workbench width={scene.width} height={scene.height} {...workbench}>
+          <ArtStage className="h-full">
+            <IsoArt scene={scene} />
+          </ArtStage>
+        </Workbench>
       </div>
     </Section>
   );

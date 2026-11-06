@@ -352,10 +352,7 @@ html {
   }
 }
 
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
+@keyframes guestbook-marquee {
   to {
     transform: translateX(-50%);
   }
