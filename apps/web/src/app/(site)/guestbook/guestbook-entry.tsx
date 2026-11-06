@@ -5,8 +5,10 @@ import { Avatar } from "@/components/engagement/avatar";
 import {
   HeartIcon,
   PushPinSimpleIcon,
+  RepeatIcon,
   TrashIcon,
 } from "@repo/icons";
+import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
@@ -20,6 +22,21 @@ import {
 import { cn } from "@repo/ui/lib/cn";
 import { timeAgo } from "@repo/core/date";
 import { memo, useEffect, useRef, useState } from "react";
+
+const ORDINAL_SUFFIX: Record<Intl.LDMLPluralRule, string> = {
+  zero: "th",
+  one: "st",
+  two: "nd",
+  few: "rd",
+  many: "th",
+  other: "th",
+};
+
+const ordinalRules = new Intl.PluralRules("en", { type: "ordinal" });
+
+function ordinal(n: number): string {
+  return `${n}${ORDINAL_SUFFIX[ordinalRules.select(n)]}`;
+}
 
 export const GuestbookEntry = memo(function GuestbookEntry({
   entry,
@@ -38,6 +55,8 @@ export const GuestbookEntry = memo(function GuestbookEntry({
   const canDelete = currentUserId === entry.user.id;
   const isOptimistic = entry.id < 0;
   const isLikePending = pendingLikes.has(entry.id);
+  const visit = entry.visit ?? 1;
+  const isReturning = visit > 1;
 
   const [expanded, setExpanded] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
@@ -71,9 +90,22 @@ export const GuestbookEntry = memo(function GuestbookEntry({
           className="absolute left-0 top-0 h-full w-px bg-primary/60"
         />
       )}
+      {isReturning && !entry.isPinned && (
+        <span
+          aria-hidden="true"
+          className="absolute left-0 top-0 h-full border-l border-dashed border-primary/50"
+        />
+      )}
 
       <div className="flex gap-2.5 sm:gap-3">
-        <Avatar imageUrl={entry.user.imageUrl} name={entry.user.name} />
+        <Avatar
+          imageUrl={entry.user.imageUrl}
+          name={entry.user.name}
+          className={cn(
+            isReturning &&
+              "ring-2 ring-primary/50 ring-offset-2 ring-offset-background",
+          )}
+        />
 
         <div className="flex-1 min-w-0 space-y-1 sm:space-y-1.5">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -86,6 +118,22 @@ export const GuestbookEntry = memo(function GuestbookEntry({
                 {timeAgo(entry.createdAt)}
               </time>
             </TypographyMuted>
+            {isReturning && (
+              <Badge
+                variant="outline"
+                title={`${ordinal(visit)} message from ${entry.user.name}`}
+              >
+                <RepeatIcon
+                  size={12}
+                  weight="bold"
+                  className="text-primary"
+                  aria-hidden="true"
+                />
+                <span>
+                  {visit === 2 ? "Back again" : `${ordinal(visit)} visit`}
+                </span>
+              </Badge>
+            )}
             {entry.isPinned && (
               <PushPinSimpleIcon size={14} weight="fill" aria-label="Pinned" />
             )}

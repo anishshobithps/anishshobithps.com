@@ -123,11 +123,13 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
     mutationFn: async ({ message }: { message: string; tempId: number }) => {
       const result = await submitGuestbookEntry(message);
       if (!result.success) throw new Error(result.error);
-      return result.id;
+      return { id: result.id, visit: result.visit };
     },
-    onSuccess: (id, { tempId }) =>
+    onSuccess: ({ id, visit }, { tempId }) =>
       patchEntries((list) =>
-        list.map((entry) => (entry.id === tempId ? { ...entry, id } : entry)),
+        list.map((entry) =>
+          entry.id === tempId ? { ...entry, id, visit } : entry,
+        ),
       ),
     onError: (error, { tempId }) => {
       patchEntries((list) => list.filter((entry) => entry.id !== tempId));
@@ -180,6 +182,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
         likeCount: 0,
         likedByMe: false,
         number: count + 1,
+        visit: entries.filter((entry) => entry.user.id === user.id).length + 1,
         user: {
           id: user.id,
           name: user.fullName || user.username || "You",
@@ -202,7 +205,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
         .then(() => true)
         .catch(() => false);
     },
-    [user, count, setPages, bumpTotal, submitEntry],
+    [user, count, entries, setPages, bumpTotal, submitEntry],
   );
 
   const handleLike = useCallback(

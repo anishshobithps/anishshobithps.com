@@ -26,6 +26,7 @@ export interface GuestbookEntryWithMeta {
     likedByMe: boolean;
     user: PublicUser;
     number?: number;
+    visit?: number;
 }
 
 export interface GetEntriesResult {
@@ -64,6 +65,7 @@ async function loadGuestbookEntries(
                 createdAt: guestbookEntries.createdAt,
                 likeCount: sql<number>`count(${guestbookLikes.entryId})::int`,
                 number: sql<number>`(row_number() over (order by ${guestbookEntries.createdAt}, ${guestbookEntries.id}))::int`,
+                visit: sql<number>`(row_number() over (partition by ${guestbookEntries.clerkUserId} order by ${guestbookEntries.createdAt}, ${guestbookEntries.id}))::int`,
             })
             .from(guestbookEntries)
             .leftJoin(guestbookLikes, eq(guestbookEntries.id, guestbookLikes.entryId))
@@ -103,6 +105,7 @@ async function loadGuestbookEntries(
         likedByMe: likedEntryIds.has(row.id),
         user: resolveUser(userMap, row.clerkUserId),
         number: row.number,
+        visit: row.visit,
     }));
 
     return { entries, total, hasMore: page.offset + entries.length < total };
@@ -159,7 +162,7 @@ async function loadGuestbookPreview(limit: number): Promise<GuestbookPreviewEntr
 
 export async function submitGuestbookEntry(
     rawMessage: string,
-): Promise<{ success: true; id: number } | { success: false; error: string }> {
+): Promise<{ success: true; id: number; visit: number } | { success: false; error: string }> {
     try {
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to leave a message." };
@@ -172,8 +175,13 @@ export async function submitGuestbookEntry(
             .values({ clerkUserId: userId, message })
             .returning({ id: guestbookEntries.id });
 
+        const [visits] = await db
+            .select({ count: count() })
+            .from(guestbookEntries)
+            .where(and(eq(guestbookEntries.clerkUserId, userId), eq(guestbookEntries.isDeleted, false)));
+
         revalidatePath("/guestbook");
-        return { success: true, id: inserted.id };
+        return { success: true, id: inserted.id, visit: visits?.count ?? 1 };
     } catch (err) {
         if (err instanceof ValidationError) return { success: false, error: err.message };
         console.error("[submitGuestbookEntry]", err);
