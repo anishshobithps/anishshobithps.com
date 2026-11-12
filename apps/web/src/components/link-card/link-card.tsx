@@ -192,19 +192,28 @@ function LinkCardView({ preview, variant = "default", label, note, className }: 
   const description = note ?? model.description;
 
   if (variant === "row") {
-    const trailing = model.stats.find((stat) => stat.key === "stars");
+    const stars = model.stats.find((stat) => stat.key === "stars");
     return (
       <Shell model={model} variant={variant} label={title} className={className}>
         {model.icon}
-        <Title>{title}</Title>
-        {trailing && (
-          <span className="ml-auto inline-flex shrink-0 items-center gap-1 tabular-nums">
-            {trailing.icon}
-            <Text as="span" variant="caption">
-              {trailing.text}
-            </Text>
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <Title>{title}</Title>
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="block min-w-0 truncate *:text-nowrap">
+              <Text as="span" variant="caption">
+                {model.eyebrow}
+              </Text>
+            </span>
+            {stars && (
+              <span className="inline-flex shrink-0 items-center gap-1 tabular-nums">
+                {stars.icon}
+                <Text as="span" variant="caption">
+                  {stars.text}
+                </Text>
+              </span>
+            )}
           </span>
-        )}
+        </span>
         <Arrow external={model.external} />
       </Shell>
     );

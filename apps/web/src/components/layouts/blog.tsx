@@ -6,7 +6,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@repo/ui/components/collapsible";
-import { TypographySmall } from "@repo/ui/components/typography";
+import { Button } from "@repo/ui/components/button";
+import { Text, TypographySmall } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
 import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
@@ -16,7 +17,7 @@ import {
   TOCScrollArea,
   useTOCItems,
 } from "fumadocs-ui/components/toc";
-import { CaretDownIcon, TextAlignLeftIcon } from "@repo/icons";
+import { CaretDownIcon, LinkIcon, TextAlignLeftIcon } from "@repo/icons";
 import {
   type ComponentProps,
   type ReactNode,
@@ -114,10 +115,34 @@ function ProgressCircle({
   );
 }
 
-function MobileTOC({ rail }: { rail?: ReactNode }) {
+function DrawerTab({
+  selected,
+  onClick,
+  children,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <Button
+      type="button"
+      variant={selected ? "outline" : "muted"}
+      size="sm"
+      aria-pressed={selected}
+      onClick={onClick}
+      className="flex-1"
+    >
+      {children}
+    </Button>
+  );
+}
+
+function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: number }) {
   const items = useTOCItems();
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<"contents" | "links">("contents");
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -185,15 +210,22 @@ function MobileTOC({ rail }: { rail?: ReactNode }) {
         ref={rootRef}
         className="sticky top-14 z-40 -mt-px border border-line bg-background xl:hidden"
       >
-        <Collapsible open={open} onOpenChange={setOpen}>
+        <Collapsible
+          open={open}
+          onOpenChange={(next) => {
+            setOpen(next);
+            if (next) setTab("contents");
+          }}
+        >
           <header
             className={cn(
               "transition-shadow",
               open && "shadow-lg",
             )}
           >
+            <div className="flex items-stretch">
             <CollapsibleTrigger
-              className="flex w-full h-10 items-center text-sm gap-2.5 px-gutter cursor-pointer"
+              className="flex min-w-0 flex-1 h-10 items-center text-sm gap-2.5 px-gutter cursor-pointer"
             >
               <ProgressCircle
                 value={(selected + 1) / Math.max(1, items.length)}
@@ -226,6 +258,29 @@ function MobileTOC({ rail }: { rail?: ReactNode }) {
                 )}
               />
             </CollapsibleTrigger>
+            {rail && (
+              <div className="flex shrink-0 border-l border-line">
+                <Button
+                  type="button"
+                  variant={open && tab === "links" ? "ghost" : "muted"}
+                  size="lg"
+                  aria-expanded={open && tab === "links"}
+                  aria-label={`Links from this post, ${railCount}`}
+                  onClick={() => {
+                    if (open && tab === "links") {
+                      setOpen(false);
+                      return;
+                    }
+                    setTab("links");
+                    setOpen(true);
+                  }}
+                >
+                  <LinkIcon aria-hidden="true" />
+                  {railCount}
+                </Button>
+              </div>
+            )}
+            </div>
 
             <CollapsibleContent
               className={cn(
@@ -238,15 +293,33 @@ function MobileTOC({ rail }: { rail?: ReactNode }) {
                 className="px-gutter pb-3"
                 ref={scrollContainerRef}
               >
-                <TOCScrollArea
-                  ref={viewportRef}
-                  className="overscroll-contain max-h-[50svh]"
-                >
-                  <ScrollProvider containerRef={disabledAutoScrollRef}>
-                    <TOCList />
-                  </ScrollProvider>
-                </TOCScrollArea>
-                {rail && <div className="mt-2 border-t border-line pt-3">{rail}</div>}
+                {rail && (
+                  <div className="mb-2 flex gap-1 rounded-md bg-muted p-0.5">
+                    <DrawerTab
+                      selected={tab === "contents"}
+                      onClick={() => setTab("contents")}
+                    >
+                      Contents
+                    </DrawerTab>
+                    <DrawerTab selected={tab === "links"} onClick={() => setTab("links")}>
+                      Links {railCount}
+                    </DrawerTab>
+                  </div>
+                )}
+                {tab === "links" && rail ? (
+                  <div className="-mx-2.5 max-h-[50svh] overflow-y-auto overscroll-contain py-1">
+                    {rail}
+                  </div>
+                ) : (
+                  <TOCScrollArea
+                    ref={viewportRef}
+                    className="overscroll-contain max-h-[50svh]"
+                  >
+                    <ScrollProvider containerRef={disabledAutoScrollRef}>
+                      <TOCList />
+                    </ScrollProvider>
+                  </TOCScrollArea>
+                )}
               </div>
             </CollapsibleContent>
           </header>
@@ -259,13 +332,14 @@ function MobileTOC({ rail }: { rail?: ReactNode }) {
 interface BlogBodyProps {
   toc: TOCItemType[];
   rail?: ReactNode;
+  railCount?: number;
   children: ReactNode;
 }
 
-export function BlogBody({ toc, rail, children }: BlogBodyProps) {
+export function BlogBody({ toc, rail, railCount, children }: BlogBodyProps) {
   return (
     <TOCProvider toc={toc}>
-      <MobileTOC rail={rail} />
+      <MobileTOC rail={rail} railCount={railCount} />
 
       <Section variant="article">
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
@@ -282,7 +356,30 @@ export function BlogBody({ toc, rail, children }: BlogBodyProps) {
                   <TOCList />
                 </TOCScrollArea>
               </nav>
-              {rail}
+              {rail && (
+                <section
+                  aria-labelledby="post-links-rail-heading"
+                  className="shrink-0 border-t border-line pt-4"
+                >
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5">
+                      <LinkIcon
+                        aria-hidden="true"
+                        className="size-3.5 shrink-0 text-muted-foreground"
+                      />
+                      <Text as="h2" id="post-links-rail-heading" variant="caption">
+                        Links from this post
+                      </Text>
+                    </span>
+                    <span className="tabular-nums">
+                      <Text as="span" variant="caption">
+                        {railCount}
+                      </Text>
+                    </span>
+                  </div>
+                  <div className="-mx-2.5">{rail}</div>
+                </section>
+              )}
             </div>
           </div>
         </div>

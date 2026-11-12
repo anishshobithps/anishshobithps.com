@@ -26,21 +26,13 @@ export function PostSourceCard({ links }: { links: PostLink[] }) {
 export function PostLinksRail({ links }: { links: PostLink[] }) {
   if (links.length === 0) return null;
   return (
-    <section aria-labelledby="post-links-rail-heading" className="min-h-0 shrink-0">
-      <div className="mb-2 flex items-center gap-1.5">
-        <LinkIcon aria-hidden="true" className="size-3.5 shrink-0 text-muted-foreground" />
-        <Text as="h2" id="post-links-rail-heading" variant="caption">
-          Links
-        </Text>
-      </div>
-      <ul role="list" className="-mx-2.5 flex flex-col gap-0.5">
-        {links.map((link) => (
-          <li key={link.url} className="min-w-0">
-            <LinkCard url={link.url} label={link.label} variant="row" />
-          </li>
-        ))}
-      </ul>
-    </section>
+    <ul role="list" aria-label="Links from this post" className="flex flex-col gap-0.5">
+      {links.map((link) => (
+        <li key={link.url} className="min-w-0">
+          <LinkCard url={link.url} label={link.label} variant="row" />
+        </li>
+      ))}
+    </ul>
   );
 }
 

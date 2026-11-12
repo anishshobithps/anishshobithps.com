@@ -206,6 +206,7 @@ export default async function Page(props: {
       <BlogBody
         toc={page.data.toc}
         rail={links.length > 0 ? <PostLinksRail links={links} /> : undefined}
+        railCount={links.length}
       >
         <PostSourceCard links={links} />
         <MDX
