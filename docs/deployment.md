@@ -49,8 +49,9 @@ What the browser contacts, because the CSP has to allow it:
 | --- | --- |
 | Clerk | Sign-in scripts, from your Clerk frontend domain, plus profile pictures from `img.clerk.com` |
 | Cloudinary | Video in posts, only when it's played |
+| Linked sites | Thumbnails and favicons in post link cards, loaded by the browser from the linked site without a referrer |
 
-Everything else is fetched on the server: Spotify, the GitHub API, the resume PDF, Open-Meteo, and WakaTime. Fonts are self-hosted. The [privacy policy](https://anishshobithps.com/privacy-policy) describes this from a visitor's side, so keep it accurate if you add a service.
+Everything else is fetched on the server: Spotify, the GitHub API, the resume PDF, Open-Meteo, WakaTime, and the page metadata, npm, YouTube, Wikipedia, and Discord lookups behind post link cards (cached for an hour or a day). Fonts are self-hosted. The [privacy policy](https://anishshobithps.com/privacy-policy) describes this from a visitor's side, so keep it accurate if you add a service.
 
 ## After the first deploy
 

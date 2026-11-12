@@ -2,12 +2,29 @@
 title: I Never Thought I'd Code, Until This One Moment Changed Everything
 description: From dreaming about architecture to building software. How curiosity, games, Discord bots, and one exam moment led me to a career in Computer Science.
 date: 2025-03-22
+updates:
+  - date: 2026-11-12
+    kind: correction
+    note: I wrote Clash With Code. The game is called Clash of Code.
+  - date: 2026-11-12
+    kind: addition
+    note: The Discord invite is now a live card with the server name and how many people are in it. The T3 Tools interview got a card too.
+  - date: 2026-11-12
+    kind: sources
+    note: The links that sat inside sentences are now 13 numbered sources at the bottom.
 tags:
   - programming
   - journey
   - computer-science
   - career
   - learning
+links:
+  - url: https://discord.gg/ZJJgq6nZNr
+    label: Join the Discord
+    note: Ask me anything about learning to code, building projects and breaking into the industry.
+  - url: https://t3-tools.notion.site/Technical-Interview-Dan-Abramov-9aa6d8e9292e4bd1ae67b44aeeaabf88
+    label: Interviews, by T3 Tools
+    note: A look at different ways to run a technical interview.
 ---
 
 
@@ -29,7 +46,7 @@ By the end of 6th grade I finally got proper access to the PC at home. It had al
 
 ### Gaming and problem-solving
 
-My brother and I played Dragon City on Facebook, then Clash of Clans. Those games stayed with me for the strategy and planning they demanded, not just the entertainment. <TypographyMark>They shaped the way I look at problems, and I often spot solutions other people walk past.</TypographyMark>
+My brother and I played Dragon City[^dragon-city] on Facebook, then Clash of Clans[^coc]. Those games stayed with me for the strategy and planning they demanded, not just the entertainment. <TypographyMark>They shaped the way I look at problems, and I often spot solutions other people walk past.</TypographyMark>
 
 ### Curiosity, and falling for CS
 
@@ -66,15 +83,15 @@ I joined Discord for a Clash of Clans clan, and later joined r/ClashofClans, one
 
 I was into graphic design around then but lost interest quickly, and put that time into building a bot instead. I had no idea how to host it, so like every beginner I went to YouTube. That's where I found \{TheSourceCode\}, which helped me enormously. I also joined various Discord servers run by YouTubers, where I met people with real industry experience. <TypographyMark>Those conversations taught me far more than any textbook did.</TypographyMark>
 
-### Clash With Code
+### Clash of Code
 
-Around this time a few Discord friends and I started playing Clash With Code, a competitive programming game where you solve a problem in 15 minutes. You could optimise for fastest code, shortest code, or reverse mode, where you're given the answer and have to guess the problem statement.
+Around this time a few Discord friends and I started playing Clash of Code[^clash], a competitive programming game where you solve a problem in 15 minutes[^clash-time]. You could optimise for fastest code, shortest code, or reverse mode, where you're given the answer and have to guess the problem statement.
 
 <TypographyMark>That game did more for me than most tutorials.</TypographyMark> My problem-solving got faster, I picked up tricks I'd never have found alone, and it was genuinely fun. We argued about approaches constantly and pushed each other to improve.
 
 ### College and entrance exams
 
-By 12th grade I was certain about CS. Getting into a top-tier university in India is another matter. I had to sit competitive exams: JEE for the IITs, NITs, and top engineering colleges, then KCET, COMEDK, and others for state and private universities.
+By 12th grade I was certain about CS. Getting into a top-tier university in India is another matter. I had to sit competitive exams: JEE[^jee] for the IITs, NITs, and top engineering colleges, then KCET[^kcet], COMEDK[^comedk], and others for state and private universities.
 
 I had no proper guidance and didn't do well. With those results I enrolled in a private college in my city for a bachelor's in CS.
 
@@ -88,7 +105,7 @@ My friends and I kept building Discord bots, challenging each other in coding ba
 
 ### University
 
-I graduated in 2024 with a Computer Science Engineering degree from St. Joseph Engineering College. I never obsessed over CGPA. I spent the time on hackathons and tech events, on meeting people, and on building projects.
+I graduated in 2024 with a Computer Science Engineering degree from St. Joseph Engineering College[^sjec]. I never obsessed over CGPA. I spent the time on hackathons and tech events, on meeting people, and on building projects.
 
 Discord had already dealt with my fear of talking to people, though moving that to in-person conversations took a while longer. With practice the fear faded and I took whatever opportunities came.
 
@@ -120,7 +137,7 @@ Use official documentation and guides, because accuracy matters more than conven
 
 ### The learning pyramid
 
-The learning pyramid suggests different retention rates for different learning methods:
+The learning pyramid suggests different retention rates for different learning methods[^pyramid]:
 
 | Method | Retention |
 | --- | --- |
@@ -138,7 +155,7 @@ If you want to learn efficiently, practise and teach. Those two hold up over the
 
 Describe the problem clearly. Skip "doesn't work" and "it gives a bug", and say what you were trying to achieve, what specifically went wrong, and any context or error messages that go with it.
 
-Use visuals responsibly. Don't send phone photos of a screen, use a screenshot tool. Only include an image when it actually adds clarity, like a GUI issue. For code, copy terminal output into [Sourcebin](https://sourceb.in/) or [Pastebin](https://pastebin.com/).
+Use visuals responsibly. Don't send phone photos of a screen, use a screenshot tool. Only include an image when it actually adds clarity, like a GUI issue. For code, copy terminal output into Sourcebin[^sourcebin] or Pastebin[^pastebin].
 
 Share what you're working from. If you're following a tutorial, link it and give the timestamp.
 
@@ -154,11 +171,19 @@ Progress is slow at the start. With experience you build faster and make better 
 
 When I take on a problem, I work in three passes:
 
-1. Just code it, however messy, until it works.
-2. Improve the performance: better methods, better approaches.
-3. Refactor and clean up: readability, variable names, formatting.
+<Steps>
+  <Step>
+    Just code it, however messy, until it works.
+  </Step>
+  <Step>
+    Improve the performance: better methods, better approaches.
+  </Step>
+  <Step>
+    Refactor and clean up: readability, variable names, formatting.
+  </Step>
+</Steps>
 
-I automate most of the third pass with linters and Prettier.
+I automate most of the third pass with linters and Prettier[^prettier].
 
 ### My process for building projects
 
@@ -186,7 +211,9 @@ I kept building real projects anyway, picking up industry-relevant skills. <Typo
 
 ## A few things I'd like people to consider
 
-Companies should listen to applicants. If someone struggles with DSA rounds, or simply dislikes them, there should be other ways to assess what they can do. There's a [good post by T3 Tools about different types of interviews](https://t3-tools.notion.site/Technical-Interview-Dan-Abramov-9aa6d8e9292e4bd1ae67b44aeeaabf88) worth reading on this. Give applicants a choice and they'll show you their strengths.
+Companies should listen to applicants. If someone struggles with DSA rounds, or simply dislikes them, there should be other ways to assess what they can do. There's a good post by T3 Tools about different types of interviews[^t3-interview] worth reading on this. Give applicants a choice and they'll show you their strengths.
+
+<LinkCard url="https://t3-tools.notion.site/Technical-Interview-Dan-Abramov-9aa6d8e9292e4bd1ae67b44aeeaabf88" />
 
 For anyone reading this: work on your skills and keep practising. Keeping up with everything happening in this industry feels impossible, and you don't have to. <TypographyMark>Be yourself and get good at what you do.</TypographyMark>
 
@@ -202,8 +229,20 @@ A connection I made there led to a Software Development Engineer internship. A g
 
 If you have questions or want advice, join my Discord server and ask me anything.
 
-<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-  [![Join our Discord](https://discord.com/api/guilds/541657776313729068/widget.png?style=banner2)](https://discord.gg/ZJJgq6nZNr)
-</div>
+<LinkCard url="https://discord.gg/ZJJgq6nZNr" />
 
 That's the journey so far, from a kid staring at a dome to someone who writes software for a living.
+
+[^sourcebin]: [SourceBin](https://sourceb.in/).
+[^pastebin]: [Pastebin](https://pastebin.com/).
+[^t3-interview]: t3-tools on Notion, [Technical Interview - Dan Abramov](https://t3-tools.notion.site/Technical-Interview-Dan-Abramov-9aa6d8e9292e4bd1ae67b44aeeaabf88).
+[^dragon-city]: Wikipedia, [Dragon City](https://en.wikipedia.org/wiki/Dragon_City).
+[^coc]: Wikipedia, [Clash of Clans](https://en.wikipedia.org/wiki/Clash_of_Clans).
+[^jee]: Wikipedia, [Joint Entrance Examination](https://en.wikipedia.org/wiki/Joint_Entrance_Examination).
+[^kcet]: Karnataka Examinations Authority, [KEA](https://cetonline.karnataka.gov.in/kea).
+[^comedk]: COMEDK, [Consortium of Medical, Engineering and Dental Colleges of Karnataka](https://www.comedk.org/).
+[^clash]: CodinGame, [Clash of Code](https://www.codingame.com/multiplayer/clashofcode).
+[^pyramid]: Wikipedia, [Learning pyramid](https://en.wikipedia.org/wiki/Learning_pyramid).
+[^prettier]: Prettier, [Prettier](https://prettier.io/).
+[^sjec]: St Joseph Engineering College, [sjec.ac.in](https://sjec.ac.in/).
+[^clash-time]: CodinGame Forum, [Out of date information regarding CoC on main page](https://forum.codingame.com/t/out-of-date-information-regarding-coc-on-main-page/205635).

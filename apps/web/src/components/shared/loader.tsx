@@ -206,7 +206,7 @@ export function LogoLoader({
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={animate ? 1 : undefined}
-          strokeDashoffset={animate ? 1 : undefined}
+          strokeDashoffset={0}
           className="stroke-(--brand)/55"
         >
           {animate && (
@@ -227,7 +227,7 @@ export function LogoLoader({
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={animate ? 1 : undefined}
-          strokeDashoffset={animate ? 1 : undefined}
+          strokeDashoffset={0}
           className="stroke-foreground"
         >
           {animate && (
@@ -264,7 +264,7 @@ export function LogoLoader({
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeDasharray={animate ? 1 : undefined}
-            strokeDashoffset={animate ? 1 : undefined}
+            strokeDashoffset={0}
             className="stroke-(--brand)"
           >
             {animate && (
@@ -289,7 +289,7 @@ export function LogoLoader({
             keySplines={`${EASE};${HOLD};${EASE};${HOLD}`}
             {...loop}
           />
-          <g>
+          <g opacity={0}>
             <animateTransform
               attributeName="transform"
               type="translate"
