@@ -120,7 +120,7 @@ Video goes through the media player in `packages/media-player/src/index.tsx`. Im
 
 ## The cover
 
-Every post gets an isometric cover. To give a post its own scene, add its slug to the `covers` map in [`packages/diagrams/src/blog-covers.tsx`](../packages/diagrams/src/blog-covers.tsx), pointing at a scene from `packages/iso/src/scenes/`. A post without an entry gets the typewriter scene (`blogsScene`) until it has its own. See [The art](art.md) for how scenes are built.
+Every post gets a cover. A post without an entry gets the numbered sheet, with its post number and a swipe of green that is different for every slug. To give a post its own scene, add its slug to the `covers` map in [`packages/diagrams/src/blog-covers.tsx`](../packages/diagrams/src/blog-covers.tsx), pointing at a scene from `packages/iso/src/scenes/`. See [The art](art.md) for how scenes are built.
 
 ## What a post gets for free
 

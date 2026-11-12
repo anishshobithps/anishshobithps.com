@@ -20,7 +20,7 @@ What's in the site, where it lives, and how a request moves through it.
 | Route | What it does |
 | --- | --- |
 | `/` | Hero with doodles, project teasers, latest post, guestbook rotator |
-| `/blogs`, `/blog/*` | MDX posts, isometric covers, reading time, anonymous reactions, view counts, threaded comments |
+| `/blogs`, `/blog/*` | MDX posts, printed covers, reading time, anonymous reactions, view counts, threaded comments |
 | `/projects` | Pulled from the database, not a hardcoded array. Ordered and toggled from the admin |
 | `/resume` | PDF rendered inline with react-pdf, streamed from the latest GitHub release. `/api/resume/download` saves it |
 | `/guestbook` | Clerk-authenticated messages with likes, pinning, and soft delete |
@@ -104,10 +104,10 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/core` | `packages/core` | Pure TypeScript: text, date, xml, pagination, schemas | none |
 | `@repo/data-table` | `packages/data-table` | TanStack Table features and the sortable header | icons, ui |
 | `@repo/db` | `packages/db` | Drizzle schema, client, and committed migrations | none |
-| `@repo/diagrams` | `packages/diagrams` | React components that draw the iso scenes, page art, and blog covers | iso, ui |
+| `@repo/diagrams` | `packages/diagrams` | React components that draw the print scenes, page art, and blog covers | iso, ui |
 | `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
 | `@repo/icons` | `packages/icons` | Phosphor icon re-exports | none |
-| `@repo/iso` | `packages/iso` | Isometric SVG engine and every scene | none |
+| `@repo/iso` | `packages/iso` | Two-plate print SVG engine and every scene | none |
 | `@repo/media-player` | `packages/media-player` | The video player and media-chrome | icons, ui |
 | `@repo/pdf-viewer` | `packages/pdf-viewer` | react-pdf viewer | icons, ui |
 | `@repo/query` | `packages/query` | TanStack Query client, provider, prefetch, and mutation hook | core |

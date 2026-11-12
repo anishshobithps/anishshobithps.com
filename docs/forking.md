@@ -17,7 +17,7 @@ A fork can keep, modify, and redistribute the MIT code. It can't publish modifie
 - [ ] Delete `apps/web/content/blog/` and write your own posts. See [Writing posts](writing-posts.md).
 - [ ] Update [`packages/site-config/src/index.ts`](../packages/site-config/src/index.ts): name, domain, email, socials, repo, resume URL, `availableForHire`.
 - [ ] Replace the logo and mascot (`logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx`) and `apps/web/public/favicon-*.svg`.
-- [ ] Replace or remove the doodles, page scenes, blog covers, and the OG card design. The isometric engine in `packages/iso/src/` stays, so draw your own with it. See [The art](art.md).
+- [ ] Replace or remove the doodles, page scenes, blog covers, and the OG card design. The print engine in `packages/iso/src/` stays, so draw your own with it. See [The art](art.md).
 - [ ] Change the fallback name, domain, and role in [`apps/web/src/app/og/route.tsx`](../apps/web/src/app/og/route.tsx).
 - [ ] Remove the photographs: `apps/web/public/profile.avif`, and `apps/web/src/lib/svg/media/profile-banner.webp`, which the `/svg` banner card uses.
 - [ ] Remove the README artwork in `.github/` (`banner-*.svg`, `license-*.svg`).

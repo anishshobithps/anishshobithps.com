@@ -39,12 +39,12 @@ Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, b
 
 ## What's in here
 
-- A portfolio and a blog. Posts are MDX with isometric covers, reading time, anonymous reactions, view counts, and threaded comments.
+- A portfolio and a blog. Posts are MDX with printed covers, reading time, anonymous reactions, view counts, and threaded comments.
 - A guestbook and blog comments behind Clerk sign-in, with likes, pinning, and soft delete.
 - Projects and short links that live in Postgres and are managed from an owner-only admin.
 - A resume rendered inline from the latest GitHub release.
 - `/svg` cards for GitHub READMEs, `/og` cards for link previews, and an RSS feed.
-- Artwork drawn in code rather than exported: the isometric scenes, mascot, doodles, and OG card.
+- Artwork drawn in code rather than exported: the print scenes, mascot, doodles, and OG card.
 - A command palette, a draggable quick menu, and optional UI sounds that stay off until a visitor turns them on.
 
 The full route list is in [Architecture](docs/architecture.md#routes).
@@ -78,7 +78,7 @@ Create `apps/web/.env.local` first. [varlock](https://varlock.dev) checks it aga
 | [Admin](docs/admin.md) | Access, moderation, projects, links, the resume cache |
 | [Short links](docs/short-links.md) | Shapes, previews, reserved paths, a second domain |
 | [SVG cards](docs/svg-cards.md) | The `/svg` endpoint, every template, how it's built |
-| [The art](docs/art.md) | The isometric engine, scenes, mascot, OG cards, colour tokens |
+| [The art](docs/art.md) | The print engine, scenes, mascot, OG cards, colour tokens |
 | [Sound](docs/sound.md) | Opt-in UI sounds: principles, the sound map, adding a sound |
 | [Deployment](docs/deployment.md) | Vercel, Neon, Clerk, headers, the first-deploy checklist |
 | [Forking](docs/forking.md) | What a fork can keep and what to replace before going live |
