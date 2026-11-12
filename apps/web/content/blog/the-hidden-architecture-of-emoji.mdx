@@ -28,7 +28,7 @@ Most people think of emojis as digital stickers. That framing undersells them.
 This post references emoji from Unicode 14.0–15.1 (2021–2023). If your <abbr title="Operating System">OS</abbr> or browser font hasn't been updated recently, newer characters will render as empty rectangles. That's tofu. We'll cover it in detail later.
 </TypographyMuted>
 
-Emojis are a rigorously engineered symbolic layer on top of text, governed by international standards, shaped by corporate interests, and loaded with cultural context most Western users never think about. The body that standardises them, the <TypographyMark>[Unicode Consortium](https://home.unicode.org/)</TypographyMark>, includes representatives from Apple, Google, Microsoft, and Meta. Every emoji on your keyboard survived a vote, a naming debate, and a usage-frequency argument before it got there.
+Emojis are a rigorously engineered symbolic layer on top of text, governed by international standards, shaped by corporate interests, and loaded with cultural context most Western users never think about. The body that standardises them, the <TypographyMark>Unicode Consortium</TypographyMark>[^unicode], includes representatives from Apple, Google, Microsoft, and Meta. Every emoji on your keyboard survived a vote, a naming debate, and a usage-frequency argument before it got there.
 
 This post covers the corporate Easter eggs hiding in plain sight, the emojis you've been misreading for years, why the pregnant man exists, why no new flags are coming, and how the rendering pipeline actually works.
 
@@ -52,9 +52,9 @@ Kurita's original 176 emoji are now in the collection of the Museum of Modern Ar
 
 Open your calendar emoji 📅 on iOS, Google, or Samsung. It shows <TypographyMark>July 17</TypographyMark>, a date chosen deliberately more than two decades ago.
 
-On July 17, 2002, Apple unveiled <TypographyMark>iCal</TypographyMark> at the [Macworld Expo in New York](https://www.apple.com/newsroom/2002/07/17Apple-Introduces-iCal/), their first desktop calendar app. When Apple designed their original emoji set, designers chose that date as a quiet memorial to the product's launch. The original iCal product manager confirmed the date was tied directly to the announcement day.
+On July 17, 2002, Apple unveiled <TypographyMark>iCal</TypographyMark> at the Macworld Expo in New York[^ical], their first desktop calendar app. When Apple designed their original emoji set, designers chose that date as a quiet memorial to the product's launch. The original iCal product manager confirmed the date was tied directly to the announcement day.
 
-In 2014, <TypographyMark>[Jeremy Burge](https://emojipedia.org/)</TypographyMark>, the founder of Emojipedia, declared July 17 [World Emoji Day](https://worldemojiday.com/), specifically because of the Apple icon. Once it became a global event, other platforms had reason to fall in line. Google switched in 2016. Samsung and Twitter followed to avoid user confusion on the day itself.
+In 2014, <TypographyMark>Jeremy Burge</TypographyMark>[^emojipedia], the founder of Emojipedia, declared July 17 World Emoji Day[^worldemojiday], specifically because of the Apple icon. Once it became a global event, other platforms had reason to fall in line. Google switched in 2016. Samsung and Twitter followed to avoid user confusion on the day itself.
 
 Not everyone complied. <TypographyMark>WhatsApp</TypographyMark> shows <TypographyMark>February 24</TypographyMark>, the day the company incorporated in 2009. <TypographyMark>Facebook</TypographyMark> traditionally shows <TypographyMark>May 14</TypographyMark>, Mark Zuckerberg's birthday.
 
@@ -65,7 +65,7 @@ The same logic applies to Apple's clock emoji 🕐. It consistently shows <Typog
 
 Apple embeds nearly unreadable text into several of its symbols.
 
-[Apple's Page Facing Up emoji](https://emojipedia.org/page-facing-up) (📄) contains a full Easter egg, a letter addressed "Dear Katie," signed "Take care, John Appleseed," carrying the text of Apple's 1997–2002 Think Different ad campaign. According to [Emojipedia](https://emojipedia.org/clipboard), the same hidden letter appears across the Scroll (📜), Clipboard (📋), and Open Book (📖). At normal emoji size it's indistinguishable from generic scribbles. You need significant zoom to read it.
+Apple's Page Facing Up emoji[^page-facing-up] (📄) contains a full Easter egg, a letter addressed "Dear Katie," signed "Take care, John Appleseed," carrying the text of Apple's 1997–2002 Think Different ad campaign. According to Emojipedia[^clipboard], the same hidden letter appears across the Scroll (📜), Clipboard (📋), and Open Book (📖). At normal emoji size it's indistinguishable from generic scribbles. You need significant zoom to read it.
 
 <TypographyMark>John Appleseed</TypographyMark> is widely believed to be the alias of Mike Markkula, the second CEO of Apple Computer, Inc., who used the name while publishing software for the Apple II. Apple has never officially confirmed this connection, but it has been treated as an open secret in the industry for decades. Apple has used the name as a placeholder in software demonstrations and demo accounts ever since.
 
@@ -78,7 +78,7 @@ Emojis originated in Japan in the late 1990s. The original set was culturally Ja
 
 ### 😪: that's not a tear
 
-[A 2015 YouGov survey](https://blog.emojipedia.org/emojiology-sleepy-face/) found 780 out of 1,000 Americans read the Sleepy Face emoji as "sad" or "crying", making it the most cross-culturally misread emoji in that study.
+A 2015 YouGov survey[^sleepy-face] found 780 out of 1,000 Americans read the Sleepy Face emoji as "sad" or "crying", making it the most cross-culturally misread emoji in that study.
 
 The droplet is not a tear. It comes from Japanese manga and anime, where a snot bubble signals that a character has fallen asleep, often at an awkward or comedic moment. The bubble swells and shrinks with the character's breath and pops on waking.
 
@@ -92,7 +92,7 @@ The official Unicode name is "Face With Look of Triumph." The steam represents t
 
 ### 💩: this one has a full origin story
 
-[The poop emoji originated in Japan](https://en.wikipedia.org/wiki/Poop_emoji), where feces had become associated with humour after an anthropomorphized poop appeared in *Dr. Slump*, Akira Toriyama's popular manga. Kurita created it in 1997 for phones sold by J-Phone. In Japan it carries luck, the word for poop (*unko*) starts with the same sound as the word for luck (*un*).
+The poop emoji originated in Japan[^poop], where feces had become associated with humour after an anthropomorphized poop appeared in *Dr. Slump*, Akira Toriyama's popular manga. Kurita created it in 1997 for phones sold by J-Phone. In Japan it carries luck, the word for poop (*unko*) starts with the same sound as the word for luck (*un*).
 
 <LinkCard url="https://en.wikipedia.org/wiki/Poop_emoji" />
 
@@ -145,7 +145,7 @@ The middle finger (🖕, Unicode 7.0, 2014) made it only after significant inter
 
 ### The gender triplet model
 
-In 2019, the <TypographyMark>[Unicode Emoji Subcommittee](https://unicode.org/emoji/)</TypographyMark> (ESC) adopted the **Gender Triplet** model: every human-form emoji needs three variants, a woman, a man, and a gender-neutral person. The neutral variant is the intended default. According to [Unicode Technical Standard #51](https://unicode.org/reports/tr51/), human-form emojis should be gender-neutral unless a specific gender is desired.
+In 2019, the <TypographyMark>Unicode Emoji Subcommittee</TypographyMark>[^unicode-emoji] (ESC) adopted the **Gender Triplet** model: every human-form emoji needs three variants, a woman, a man, and a gender-neutral person. The neutral variant is the intended default. According to Unicode Technical Standard #51[^tr51], human-form emojis should be gender-neutral unless a specific gender is desired.
 
 The pregnancy category was the outlier. Pregnant woman (<TypographyMark>U+1F930</TypographyMark>) had existed since 2016, added before the triplet model, leaving pregnancy as the only human-form emoji category stuck with a single gender. The <abbr title="Emoji Subcommittee">ESC</abbr> proposed the man (🫃) and neutral (🫄) variants in 2021 specifically to fix that.
 
@@ -155,7 +155,7 @@ Other emojis went through the same correction. Santa Claus got supplemented by M
 
 During the 2020–2021 review cycle, feedback proposed naming these emojis "man with swollen belly" and "person with swollen belly", arguing the names were more descriptive and accommodated use cases like food baby or general bloating.
 
-The ESC rejected this on data integrity grounds. [In their formal response (L2/21-055)](https://www.unicode.org/L2/L2021/21055-esc-response-fdbk.pdf), the committee noted that pregnancy and a swollen belly aren't synonymous, and naming them differently from the existing "pregnant woman" would semantically detach the new characters from it, breaking historical data comparisons across the triplet. The names stayed: <TypographyMark>PREGNANT MAN</TypographyMark> and <TypographyMark>PREGNANT PERSON</TypographyMark>.
+The ESC rejected this on data integrity grounds. In their formal response (L2/21-055)[^l2-21-055], the committee noted that pregnancy and a swollen belly aren't synonymous, and naming them differently from the existing "pregnant woman" would semantically detach the new characters from it, breaking historical data comparisons across the triplet. The names stayed: <TypographyMark>PREGNANT MAN</TypographyMark> and <TypographyMark>PREGNANT PERSON</TypographyMark>.
 
 The food baby use case wasn't ignored. The <TypographyMark><abbr title="Common Locale Data Repository">CLDR</abbr></TypographyMark>, the project that assigns search keywords to every emoji in every locale, added "bloated," "full," "overeat," and "belly" to the emoji's keyword list. The name is a stable identifier; keywords are the semantic surface area.
 
@@ -164,20 +164,20 @@ The food baby use case wasn't ignored. The <TypographyMark><abbr title="Common L
 
 The 🔫 emoji's history is the clearest example of how a platform's design decision changes what a message means in transit.
 
-It displayed as a handgun on most platforms. As early as 2013, Microsoft replaced the glyph with a ray gun. In 2016, [Apple replaced theirs with a water pistol](https://money.cnn.com/2016/08/01/technology/apple-pistol-emoji/index.html), driven by the <TypographyMark>#DisarmTheiPhone</TypographyMark> campaign from [New Yorkers Against Gun Violence](https://nyagv.org/).
+It displayed as a handgun on most platforms. As early as 2013, Microsoft replaced the glyph with a ray gun. In 2016, Apple replaced theirs with a water pistol[^apple-pistol], driven by the <TypographyMark>#DisarmTheiPhone</TypographyMark> campaign from New Yorkers Against Gun Violence[^nyagv].
 
 What an iOS user sent as a playful squirt gun arrived on Android as a realistic firearm. A jokey message could read, on the recipient's screen, as something threatening. The same code point, two different meanings and no technical fix short of platform convergence.
 
-[By 2018, Google, Samsung, and Twitter had all updated to water guns](https://blog.emojipedia.org/google-updates-gun-emoji/). Cross-platform consistency closed the gap.
+By 2018, Google, Samsung, and Twitter had all updated to water guns[^google-gun]. Cross-platform consistency closed the gap.
 
-Then in July 2024, [X reverted to a realistic firearm](https://appleinsider.com/articles/24/07/23/x-website-reverts-water-pistol-emoji-to-realistic-gun), specifically a semi-automatic M1911, not the original revolver, rolling out on July 18, 2024, the day after World Emoji Day. The semantic gap is open again for anyone using X's web client.
+Then in July 2024, X reverted to a realistic firearm[^x-gun], specifically a semi-automatic M1911, not the original revolver, rolling out on July 18, 2024, the day after World Emoji Day. The semantic gap is open again for anyone using X's web client.
 
 When a platform changes what a code point looks like, it changes what messages already in flight will mean.
 
 
 ## Why there are no new flag emojis coming
 
-As of March 2022, the Unicode Emoji Subcommittee [officially announced a moratorium](http://blog.unicode.org/2022/03/the-past-and-future-of-flag-emoji.html) on new flag emojis. No new national or regional flags will be accepted as proposals.
+As of March 2022, the Unicode Emoji Subcommittee officially announced a moratorium[^flags] on new flag emojis. No new national or regional flags will be accepted as proposals.
 
 Today, flags are already the largest emoji category, over 200 flags out of roughly 3,600 total emoji. But <TypographyMark><abbr title="International Organization for Standardization">ISO</abbr> 3166-2</TypographyMark> recognises over 5,000 geographically-valid regions including states, provinces, and autonomous territories. Adding sub-national flags at any scale would require a different encoding architecture entirely, with an effectively unlimited long tail of rarely-used icons.
 
@@ -251,7 +251,7 @@ When your device doesn't support a newer emoji, you see a small blank rectangle,
 
 Tofu appears when the sender's device uses a newer Unicode version than the recipient's font supports. The code point arrived correctly; the device just has no picture to match it against.
 
-Google's emoji font is called <TypographyMark>[Noto](https://fonts.google.com/noto)</TypographyMark>, short for "no tofu". The project's goal is to support every character in the Unicode standard so no user ever sees a blank box. Noto currently covers over 1,000 languages and scripts, making it one of the largest typeface design projects ever undertaken.
+Google's emoji font is called <TypographyMark>Noto</TypographyMark>[^noto], short for "no tofu". The project's goal is to support every character in the Unicode standard so no user ever sees a blank box. Noto currently covers over 1,000 languages and scripts, making it one of the largest typeface design projects ever undertaken.
 
 <LinkCard url="https://fonts.google.com/noto" />
 
@@ -282,9 +282,9 @@ When you type "fire" and 🔥 appears in suggestions, your keyboard runs a searc
 
 Early keyboards used lexical search, matching exactly against the official Unicode character name. The official name for 🔈 is <TypographyMark>SPEAKER LOW VOLUME</TypographyMark>, so searching "audio" returns nothing.
 
-Modern keyboards use semantic search backed by machine learning. [Google's Gboard](https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin) represents emojis as numerical vectors in a high-dimensional space, mapping visual appearance and descriptions mathematically. The system understands that 🐶 relates to "puppy" even though "puppy" doesn't appear in the official Unicode name.
+Modern keyboards use semantic search backed by machine learning. Google's Gboard[^gboard] represents emojis as numerical vectors in a high-dimensional space, mapping visual appearance and descriptions mathematically. The system understands that 🐶 relates to "puppy" even though "puppy" doesn't appear in the official Unicode name.
 
-The <TypographyMark><abbr title="Common Locale Data Repository">CLDR</abbr></TypographyMark> keyword system bridges both approaches. [CLDR](https://cldr.unicode.org/) maintainers manually curate keyword lists for every emoji in every locale. The pregnant man emoji has "bloated," "full," "overeat," and "belly" in its keyword list, not because those are Unicode names, but because the committee knew users would search that way.
+The <TypographyMark><abbr title="Common Locale Data Repository">CLDR</abbr></TypographyMark> keyword system bridges both approaches. CLDR[^cldr] maintainers manually curate keyword lists for every emoji in every locale. The pregnant man emoji has "bloated," "full," "overeat," and "belly" in its keyword list, not because those are Unicode names, but because the committee knew users would search that way.
 
 CLDR also handles localisation. The 🍚 (Steamed Rice Bowl) emoji searches differently by locale: in Japanese locales it surfaces for "gohan" (the word for both rice and meal); in Indian locales it surfaces for "chawal." The English keyword list is completely separate from the Japanese one, maintained independently. There are currently CLDR keyword sets for over 60 locales, each curated by native speakers.
 
@@ -322,3 +322,23 @@ Steps 3–5 happen in under a millisecond on a modern device. The full round-tri
 The emoji you tap is a small piece of a very large system: a standards committee that's been meeting since 2000, naming debates conducted in formal proposal documents, font format competition between Apple and Google that plays out in file sizes, and geopolitical decisions about what counts as a country.
 
 Next time you send 😤 expecting frustration and it lands as a flex, that's the edge of the system showing. It was never built to carry meaning universally, and it tries anyway.
+
+[^unicode]: Unicode Consortium, [Unicode: The World Standard for Text and Emoji](https://home.unicode.org/).
+[^emojipedia]: Emojipedia, [Emojipedia: Home of Emoji Meanings](https://emojipedia.org/).
+[^unicode-emoji]: Unicode Consortium, [Emoji](https://unicode.org/emoji/).
+[^noto]: Google Fonts, [Noto](https://fonts.google.com/noto).
+[^ical]: Apple Newsroom, [Apple Introduces iCal](https://www.apple.com/newsroom/2002/07/17Apple-Introduces-iCal/).
+[^worldemojiday]: [World Emoji Day](https://worldemojiday.com/).
+[^page-facing-up]: Emojipedia, [Page Facing Up Emoji](https://emojipedia.org/page-facing-up).
+[^clipboard]: Emojipedia, [Clipboard Emoji](https://emojipedia.org/clipboard).
+[^sleepy-face]: Emojipedia, [What Does The 😪 Sleepy Face Emoji Mean? (Emojiology)](https://blog.emojipedia.org/emojiology-sleepy-face/).
+[^poop]: Wikipedia, [Poop emoji](https://en.wikipedia.org/wiki/Poop_emoji).
+[^tr51]: Unicode Consortium, [UTS #51: Unicode Emoji](https://unicode.org/reports/tr51/).
+[^l2-21-055]: Unicode Emoji Subcommittee, [L2/21-055: response to feedback (PDF)](https://www.unicode.org/L2/L2021/21055-esc-response-fdbk.pdf).
+[^apple-pistol]: CNN Money, [Apple pistol emoji, August 1, 2016](https://money.cnn.com/2016/08/01/technology/apple-pistol-emoji/index.html).
+[^nyagv]: [New Yorkers Against Gun Violence](https://nyagv.org/).
+[^google-gun]: Emojipedia, [Google Updates Gun Emoji](https://blog.emojipedia.org/google-updates-gun-emoji/).
+[^x-gun]: AppleInsider, [Elon Musk's X redesigns the water pistol emoji as a gun](https://appleinsider.com/articles/24/07/23/x-website-reverts-water-pistol-emoji-to-realistic-gun).
+[^flags]: Unicode Consortium, [The Past and Future of Flag Emoji](http://blog.unicode.org/2022/03/the-past-and-future-of-flag-emoji.html).
+[^gboard]: Google Play, [Gboard](https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin).
+[^cldr]: Unicode Consortium, [Unicode CLDR Project](https://cldr.unicode.org/).
