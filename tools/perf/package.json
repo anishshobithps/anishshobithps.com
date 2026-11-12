@@ -1,0 +1,16 @@
+{
+  "name": "perf-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "measure": "tsx lighthouse.ts",
+    "types:check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "chrome-launcher": "^1.2.3",
+    "lighthouse": "13.5.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

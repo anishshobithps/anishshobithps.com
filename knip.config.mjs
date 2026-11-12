@@ -3,6 +3,7 @@ const config = {
   tags: ["-lintignore"],
   workspaces: {
     ".": {
+      ignore: ["tools/**", "unlighthouse.config.ts"],
       ignoreDependencies: ["next"],
     },
     "apps/web": {
