@@ -28,6 +28,7 @@ export interface Projection {
   scale: number;
   azimuth?: number;
   elevation?: number;
+  oblique?: number;
 }
 
 export interface Plan {
@@ -65,8 +66,9 @@ interface Camera {
   k: number;
 }
 
-export function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION }: Projection): Camera {
+export function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION, oblique }: Projection): Camera {
   const a = azimuth * RADIANS;
+  if (oblique !== undefined) return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: 1, cosE: oblique, k: scale * UNIT };
   const e = elevation * RADIANS;
   return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: Math.sin(e), cosE: Math.cos(e), k: scale * UNIT };
 }
@@ -499,10 +501,11 @@ export interface FitOptions {
   headroom?: number;
   azimuth?: number;
   elevation?: number;
+  oblique?: number;
 }
 
-export function fitProjection(points: Point3[], width: number, height: number, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION }: FitOptions = {}): Projection {
-  const unit: Projection = { origin: [0, 0], scale: 1, azimuth, elevation };
+export function fitProjection(points: Point3[], width: number, height: number, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION, oblique }: FitOptions = {}): Projection {
+  const unit: Projection = { origin: [0, 0], scale: 1, azimuth, elevation, ...(oblique === undefined ? {} : { oblique }) };
   const flat = points.map((point) => iso(point, unit));
   const xs = flat.map(([x]) => x);
   const ys = flat.map(([, y]) => y);
@@ -516,6 +519,7 @@ export function fitProjection(points: Point3[], width: number, height: number, {
     scale,
     azimuth,
     elevation,
+    ...(oblique === undefined ? {} : { oblique }),
   };
 }
 

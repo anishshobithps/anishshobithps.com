@@ -77,7 +77,10 @@ export const ROOT_TOKENS = {
   "iso-halo": "var(--foreground)",
   "iso-halo-opacity": "0.07",
   "iso-dot": "var(--foreground)",
-  "iso-sheet": "var(--background)"
+  "iso-sheet": "var(--background)",
+  "iso-plate-ink": "var(--foreground)",
+  "iso-plate-green": "var(--brand)",
+  "iso-screen": "var(--foreground)"
 } as const;
 
 export const DARK_TOKENS = {
@@ -136,5 +139,6 @@ export const DARK_TOKENS = {
   "iso-ink": "var(--brand-text)",
   "iso-halo": "oklch(0 0 0)",
   "iso-halo-opacity": "0.55",
-  "iso-sheet": "color-mix(in oklab, var(--foreground) 19%, var(--background))"
+  "iso-sheet": "color-mix(in oklab, var(--foreground) 19%, var(--background))",
+  "iso-plate-green": "var(--brand-text)"
 } as const;

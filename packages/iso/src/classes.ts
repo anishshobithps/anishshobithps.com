@@ -105,5 +105,30 @@ export const TUBE = {
   shade: "fill-iso-shade-0 stroke-none",
 } as const;
 
+const BLEND = "mix-blend-multiply dark:mix-blend-screen";
+
+export const PLATE = {
+  paper: "fill-iso-paper stroke-none",
+  ink: "fill-iso-plate-ink stroke-none",
+  green: "fill-iso-plate-green stroke-none",
+  blend: BLEND,
+  isolate: "isolate",
+  register: `${BLEND} transition-[translate] duration-500 ease-out group-hover/iso:translate-x-[3px] group-hover/iso:translate-y-[2px] group-focus-visible/iso:translate-x-[3px] group-focus-visible/iso:translate-y-[2px] motion-reduce:transition-none`,
+} as const;
+
+export const PRINT_LINE = "stroke-iso-plate-ink";
+
+export const PRINT_LINE_ATTRS =
+  'fill="none" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"';
+
+export const SCREEN_DOT = "fill-iso-screen stroke-none";
+
+export const PRINT_TEXT = "fill-iso-plate-ink font-pixel uppercase tracking-[0.06em]";
+
+export const HOTSPOT = {
+  link: "group/hot outline-none",
+  box: "fill-transparent stroke-transparent group-hover/hot:stroke-iso-plate-green group-focus-visible/hot:stroke-iso-plate-green",
+} as const;
+
 export const lineAttrs = (tone: LineTone, extra = "") =>
   `class="${TONE_STROKE[tone]}${extra ? ` ${extra}` : ""}" ${LINE_ATTRS}`;

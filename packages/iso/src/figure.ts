@@ -17,6 +17,7 @@ export interface Projection {
   scale: number;
   azimuth: number;
   elevation: number;
+  oblique?: number;
 }
 
 export interface Frame {
@@ -29,6 +30,16 @@ export interface Track {
   duration: number;
   easing: "linear" | "steps(1, end)";
   keyframes: Array<Record<string, string | number>>;
+  once?: boolean;
+}
+
+export interface Hotspot {
+  href: string;
+  label: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 export interface Scene {
@@ -39,6 +50,7 @@ export interface Scene {
   body: string;
   tracks: Track[];
   label: string;
+  hotspots?: Hotspot[];
 }
 
 function simplify(samples: Array<{ t: number; v: number[] }>, tolerance: number) {
@@ -181,7 +193,7 @@ export class Figure {
     return `transform:translate(${round(x, 3)}px,${round(y, 3)}px)`;
   }
 
-  track(name: string, frames: Frame[], { steps = false, period = this.period } = {}) {
+  track(name: string, frames: Frame[], { steps = false, period = this.period, once = false } = {}) {
     const id = `${this.id}-${name}-${this.tracks.length}`;
     const sorted = [...frames].sort((a, b) => a.t - b.t);
     if (!sorted.length) return "";
@@ -191,7 +203,7 @@ export class Figure {
     for (const { t, css } of sorted) seen.set(round((clamp(t, 0, period) / period) * 100, 2), css);
     const easing = steps ? "steps(1, end)" : "linear";
     const keyframes = [...seen].map(([pct, css]) => ({ offset: pct / 100, ...(steps ? { easing } : {}), ...declarationsOf(css) }));
-    this.tracks.push({ id, duration: period, easing, keyframes });
+    this.tracks.push({ id, duration: period, easing, keyframes, ...(once ? { once: true } : {}) });
     return `data-iso-track="${id}"`;
   }
 

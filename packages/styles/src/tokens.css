@@ -73,6 +73,9 @@
   --color-iso-halo: var(--iso-halo);
   --color-iso-dot: var(--iso-dot);
   --color-iso-sheet: var(--iso-sheet);
+  --color-iso-plate-ink: var(--iso-plate-ink);
+  --color-iso-plate-green: var(--iso-plate-green);
+  --color-iso-screen: var(--iso-screen);
 }
 
 :root {
@@ -155,6 +158,9 @@
   --iso-halo-opacity: 0.07;
   --iso-dot: var(--foreground);
   --iso-sheet: var(--background);
+  --iso-plate-ink: var(--foreground);
+  --iso-plate-green: var(--brand);
+  --iso-screen: var(--foreground);
 }
 
 .dark {
@@ -215,6 +221,7 @@
   --iso-halo: oklch(0 0 0);
   --iso-halo-opacity: 0.55;
   --iso-sheet: color-mix(in oklab, var(--foreground) 19%, var(--background));
+  --iso-plate-green: var(--brand-text);
 }
 
 @media (width >= 40rem) {

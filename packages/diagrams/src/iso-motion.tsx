@@ -19,25 +19,33 @@ export function IsoMotion({
     if (!root || reduced) return;
 
     const byId = new Map(tracks.map((track) => [track.id, track]));
-    const animations: Animation[] = [];
+    const animations: Array<{ animation: Animation; once: boolean }> = [];
     for (const el of root.querySelectorAll("[data-iso-track]")) {
       const track = byId.get(el.getAttribute("data-iso-track") ?? "");
       if (!track) continue;
+      const once = track.once === true;
       const animation = el.animate(track.keyframes, {
         duration: track.duration * 1000,
-        iterations: Infinity,
+        iterations: once ? 1 : Infinity,
         easing: "linear",
       });
       animation.pause();
-      animations.push(animation);
+      animations.push({ animation, once });
     }
 
     const stage = root.closest("[data-iso-stage]");
+    let wasActive = false;
     const sync = () => {
       const active = stage?.hasAttribute("data-iso-active") ?? false;
-      for (const animation of animations) {
-        if (active) animation.play();
-        else animation.pause();
+      const entering = active && !wasActive;
+      wasActive = active;
+      for (const { animation, once } of animations) {
+        if (active) {
+          if (once && entering) animation.currentTime = 0;
+          animation.play();
+        } else {
+          animation.pause();
+        }
       }
     };
     sync();
@@ -52,7 +60,7 @@ export function IsoMotion({
 
     return () => {
       observer.disconnect();
-      for (const animation of animations) animation.cancel();
+      for (const { animation } of animations) animation.cancel();
     };
   }, [tracks, reduced]);
 
