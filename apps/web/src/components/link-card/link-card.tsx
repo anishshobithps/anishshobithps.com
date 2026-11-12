@@ -91,7 +91,7 @@ function Eyebrow({ model }: { model: CardModel }) {
   return (
     <span className="flex min-w-0 items-center gap-1.5">
       {model.icon}
-      <span className="block min-w-0 truncate">
+      <span className="block min-w-0 truncate *:text-nowrap">
         <Text as="span" variant="caption">
           {model.eyebrow}
         </Text>
@@ -112,7 +112,9 @@ function Arrow({ external }: { external: boolean }) {
 
 function Title({ children, lines = 1 }: { children: ReactNode; lines?: 1 | 2 }) {
   return (
-    <span className={cn("block min-w-0", lines === 1 ? "truncate" : "line-clamp-2")}>
+    <span
+      className={cn("block min-w-0", lines === 1 ? "truncate *:text-nowrap" : "line-clamp-2")}
+    >
       <Text as="span" variant="title">
         {children}
       </Text>
@@ -224,7 +226,7 @@ export function LinkCardView({
   const description = note ?? model.description;
 
   if (variant === "row") {
-    const trailing = model.stats.find((stat) => stat.key === "stars") ?? model.stats[0];
+    const trailing = model.stats.find((stat) => stat.key === "stars");
     return (
       <Shell model={model} variant={variant} label={title} className={className}>
         {model.icon}

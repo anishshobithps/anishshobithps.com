@@ -54,6 +54,20 @@ function faviconIcon(favicon: string | null): ReactNode {
   return <LinkImage src={favicon} className="size-4 rounded-sm" fallback={fallback} />;
 }
 
+function bareTitle(host: string, path: string): string {
+  const segment = path.split("/").filter(Boolean).at(-1);
+  if (!segment) return host;
+  let decoded = segment;
+  try {
+    decoded = decodeURIComponent(segment);
+  } catch {
+    decoded = segment;
+  }
+  const words = decoded.replace(/\.[a-z0-9]{1,5}$/i, "").replace(/[-_+]+/g, " ").trim();
+  if (words === "" || /^\d+$/.test(words)) return host;
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
 export function toCardModel(preview: LinkPreview): CardModel {
   const base = { external: true, href: preview.url, media: null, description: null, stats: [] };
 
@@ -266,7 +280,7 @@ export function toCardModel(preview: LinkPreview): CardModel {
         ...base,
         eyebrow: preview.host,
         icon: <GlobeIcon aria-hidden="true" className={ICON} />,
-        title: preview.path ? `${preview.host}${preview.path}` : preview.host,
+        title: bareTitle(preview.host, preview.path),
       };
   }
 }

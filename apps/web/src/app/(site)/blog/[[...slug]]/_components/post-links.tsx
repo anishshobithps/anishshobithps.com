@@ -48,7 +48,7 @@ export function PostLinksRecap({ links }: { links: PostLink[] }) {
   if (links.length === 0) return null;
   return (
     <Reveal className="mt-14">
-      <section aria-labelledby="post-links-recap-heading">
+      <section aria-labelledby="post-links-recap-heading" className="not-prose">
         <div className="mb-4 flex items-center gap-2">
           <LinkIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
           <Text as="h2" id="post-links-recap-heading" variant="title">

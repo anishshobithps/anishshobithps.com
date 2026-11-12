@@ -150,7 +150,7 @@ async function RepoCard({
         </div>
       )}
 
-      <div data-slot="repo-meta" className="flex items-center gap-3 text-muted-foreground">
+      <div data-slot="repo-meta" className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
         {showLanguage && repoData.language && (
           <span className="inline-flex items-center gap-1.5">
             <span
