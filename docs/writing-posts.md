@@ -76,6 +76,20 @@ Cards are built on the server from the URL alone:
 
 A link that can't be fetched falls back to a plain card with its host. Results are cached for an hour (GitHub, npm, Discord) or a day, and a failed lookup is retried after five minutes.
 
+## Citations
+
+Cite a source with a footnote. Put the marker after the claim and define the source at the end of the post:
+
+```md
+The stadium runs at a reduced capacity of 28,000[^capacity].
+
+[^capacity]: NewsX, [M Chinnaswamy New Guidelines For IPL 2026](https://www.newsx.com/…).
+```
+
+Numbers follow the order the markers first appear, and citing the same id again reuses its number. The definitions become a "Sources" list at the end of the post, and a "Sources" entry in the contents. Hovering a number previews the source with the link text from its definition as the title, so write the real title there. The first `https` link in a definition is the one that gets previewed. Prefer this to an inline hyperlink when the link is evidence for a claim and not something the reader needs to follow.
+
+## Link cards
+
 To place a card in the body, write `<LinkCard url="https://…" />`, or put a URL on a line of its own and it becomes one. Passing `label` or `note` works the same as in frontmatter. Ordinary links in prose keep working as they were, and an external one opens a small preview when hovered.
 
 Video goes through the media player in `packages/media-player/src/index.tsx`. Import it at the top of the post, and see an existing post for the pattern. Videos stream from Cloudinary, which needs `res.cloudinary.com` allowed in the CSP, and it already is. Images inside posts are served from this domain.

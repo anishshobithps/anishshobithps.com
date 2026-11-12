@@ -1,7 +1,6 @@
 "use client";
 
 import type { ComponentProps, ReactNode } from "react";
-import { ArrowUpRightIcon } from "@repo/icons";
 import {
   HoverCard,
   HoverCardContent,
@@ -13,17 +12,30 @@ interface PreviewLinkProps extends ComponentProps<"a"> {
   preview: ReactNode;
 }
 
+export function PreviewSup({
+  preview,
+  children,
+  ...props
+}: ComponentProps<"sup"> & { preview: ReactNode }) {
+  const enabled = useLinkPreviewsEnabled();
+  const sup = <sup {...props}>{children}</sup>;
+
+  if (!enabled) return sup;
+
+  return (
+    <HoverCard openDelay={200} closeDelay={120}>
+      <HoverCardTrigger asChild>{sup}</HoverCardTrigger>
+      <HoverCardContent>{preview}</HoverCardContent>
+    </HoverCard>
+  );
+}
+
 export function PreviewLink({ preview, children, ...props }: PreviewLinkProps) {
   const enabled = useLinkPreviewsEnabled();
 
   const link = (
-    <a {...props} target="_blank" rel="noopener noreferrer">
+    <a {...props} target="_blank" rel="noopener noreferrer" data-external="">
       {children}
-      {"⁠"}
-      <ArrowUpRightIcon
-        aria-hidden="true"
-        className="ml-0.5 inline size-3 align-baseline opacity-60"
-      />
     </a>
   );
 

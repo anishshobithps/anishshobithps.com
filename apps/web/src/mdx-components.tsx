@@ -6,6 +6,7 @@ import type { MDXComponents } from "mdx/types";
 import { TypographyMark, TypographyMuted } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
 import { LinkCard, type LinkCardProps } from "@/components/link-card/link-card";
+import { CitationSup } from "@/components/link-card/mdx-link";
 
 function MdxLinkCard({ className, ...props }: LinkCardProps) {
   return <LinkCard {...props} className={cn("my-6", className)} />;
@@ -21,6 +22,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Files,
     Folder,
     LinkCard: MdxLinkCard,
+    sup: CitationSup,
     TypographyMark,
     TypographyMuted,
     ...components,

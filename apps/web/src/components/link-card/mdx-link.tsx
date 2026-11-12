@@ -2,12 +2,22 @@ import { Children, isValidElement, type ComponentProps, type ReactNode } from "r
 import { classifyLink } from "@repo/core/link-target";
 import { siteConfig } from "@repo/site-config";
 import { LinkCard } from "./link-card";
-import { PreviewLink } from "./preview-link";
+import { PreviewLink, PreviewSup } from "./preview-link";
 
 type AnchorComponent = (props: ComponentProps<"a">) => ReactNode | Promise<ReactNode>;
 
 const SITE_ORIGINS = [siteConfig.baseUrl, `https://${siteConfig.domain}`] as const;
 const IMAGE_URL = /\.(?:png|jpe?g|gif|webp|avif|svg)(?:[?#].*)?$/i;
+
+export function CitationSup(
+  props: ComponentProps<"sup"> & { "data-cite-url"?: string; "data-cite-label"?: string },
+) {
+  const { "data-cite-url": url, "data-cite-label": label, ...rest } = props;
+  if (!url) return <sup {...rest} />;
+  return (
+    <PreviewSup {...rest} preview={<LinkCard url={url} label={label} variant="preview" />} />
+  );
+}
 
 function wrapsImage(children: ReactNode): boolean {
   return Children.toArray(children).some(
