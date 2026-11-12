@@ -217,7 +217,7 @@ function HubBody({
   const pathname = usePathname();
   const engagement = useEngagementAnchor();
   const showAuth =
-    pathname.startsWith("/guestbook") || pathname.startsWith("/blog");
+    pathname.startsWith("/guestbook") || pathname.startsWith("/blog/");
   const isResume = pathname === "/resume";
 
   return (
