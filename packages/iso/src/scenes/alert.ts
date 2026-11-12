@@ -1,85 +1,47 @@
-import { Figure, type Flat, k, pathOf, type Plan, type Projection, type Scene, type V3 } from "../figure";
-import { alongY, arc, circleD, D, disc, face, G, L, S } from "../parts";
-import * as T from "../tube";
+import { DASH, PLATE } from "../classes";
+import { Figure, type Projection, type Scene } from "../figure";
+import { circleD, greenPlate, inkFill, inkPath, lineD, paperPath, polyD, rectD, shadowOf } from "../print";
 
-const CLOCK: V3 = [-12, 0, 26];
-const R = 15;
-const PERIOD = 4;
-const RING: [number, number] = [0.6, 1.9];
+const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
+
+function ticket(f: Figure, cx: number, cy: number, rot: number, { w = 120, stub = true } = {}) {
+  const h = 52;
+  const x = -w / 2;
+  const y = -h / 2;
+  const main = rectD(x, y, stub ? w * 0.74 : w, h);
+  const out: string[] = [shadowOf(f, main, [3, 3], "mid"), paperPath(main), inkPath(main)];
+  out.push(inkFill(rectD(x + 8, y + 8, 30, 4)), inkPath(lineD([[x + 8, y + 22], [x + 62, y + 22]]) + lineD([[x + 8, y + 30], [x + 48, y + 30]]) + lineD([[x + 8, y + 38], [x + 56, y + 38]])));
+  const bars = Array.from({ length: 7 }, (_, i) => rectD(x + 6 + i * 4 + (i % 2), y + h - 12, 1.6 + (i % 3), 8)).join("");
+  out.push(inkFill(bars));
+  if (stub) {
+    const s = rectD(x + w * 0.74, y, w * 0.26, h);
+    out.push(paperPath(s), inkPath(s), inkPath(lineD([[x + w * 0.74, y], [x + w * 0.74, y + h]]), DASH));
+    out.push(inkPath(circleD(x + w * 0.74, y, 3, 10) + circleD(x + w * 0.74, y + h, 3, 10)));
+    out.push(inkFill(rectD(x + w * 0.74 + 6, y + 12, 18, 3)));
+  }
+  return `<g transform="translate(${cx} ${cy}) rotate(${rot})">${out.join("")}</g>`;
+}
 
 export function alertScene(width = 400, height = 225): Scene {
-  const DESK: Plan = { x: -48, y: -24, w: 96, d: 50, r: 4 };
-  const P = k.fitProjection([...k.boxCorners(DESK, -3, 0), [CLOCK[0], 0, CLOCK[2] + R + 14], [CLOCK[0] - R - 8, 0, CLOCK[2] + R]], width, height, { pad: 20, azimuth: 60 }) as Projection;
-  const f = new Figure("alarm", P, PERIOD);
-  const times = Array.from({ length: 161 }, (_, i) => (i / 160) * PERIOD);
-  const ringing = (t: number) => t >= RING[0] && t <= RING[1];
+  const f = new Figure("alert", PROJECTION, 4);
+  const oy = (height - 225) / 2;
+  const body: string[] = [];
 
-  f.add(f.halo(DESK, -3, 6));
-  f.add(S(k.slabOf(DESK, -3, 3, P, 4, 0.5), { tone: "lo", inner: L(k.planOutline(k.insetPlan(DESK, 4), 0, P, 4), { tone: "faint" }) }));
+  body.push(ticket(f, 108, 56, -7), ticket(f, 214, 108, 4), ticket(f, 268, 164, -5, { w: 120, stub: false }));
 
-  const BODY = alongY(CLOCK);
-  for (const side of [-1, 1]) {
-    const foot: V3 = [CLOCK[0] + side * 9, -1, 2.2];
-    f.add(
-      T.tubePieces([[CLOCK[0] + side * 6.6, 0, CLOCK[2] - R + 2.4], [foot[0], foot[1], foot[2] + 1.6]] as V3[], 0.8, P, { maxLength: 400 })
-        .map((piece) => T.tubeSvg(piece, { tone: "mid" }))
-        .join(""),
-    );
-    f.add(S(G.sphereOf(foot, 2.2, P), { tone: "mid" }));
-  }
-  const bell = (side: number) => {
-    const a = side * 0.62;
-    const base: V3 = [CLOCK[0] + Math.sin(a) * (R - 1), 0, CLOCK[2] + Math.cos(a) * (R - 1)];
-    const F = G.frameAlong(base, [Math.sin(a), 0, Math.cos(a)]);
-    f.add(S(G.disc(0, 3, 0.8, F, P), { tone: "mid" }));
-    f.add(S(G.solidOf([[3, 8.2, 1], [5, 7.6, 1], [7, 6.2, 1], [8.6, 4, 1], [9.6, 1.6, 1], [9.9, 0, 1]], F, P), { tone: "hi", crease: "lo", inner: L(arc(P, F, 4, 7.9, { slope: -0.25 }), { tone: "faint" }) }));
+  const tornStub = (cx: number, cy: number, rot: number) => {
+    const s = rectD(-16, -26, 32, 52);
+    return `<g transform="translate(${cx} ${cy}) rotate(${rot})">${shadowOf(f, s, [3, 3], "mid")}${paperPath(s)}${greenPlate(f, s)}${inkPath(s, PLATE.blend)}${inkFill(rectD(-8, -12, 18, 3))}${inkPath(lineD([[-16, -26], [-12, -22], [-16, -18], [-12, -14], [-16, -10], [-12, -6], [-16, -2], [-12, 2], [-16, 6], [-12, 10], [-16, 14], [-12, 18], [-16, 22], [-12, 26]]), PLATE.blend)}</g>`;
   };
-  bell(-1);
-  const handle = T.tubePieces(G.fillet([[CLOCK[0] - 9, -0.5, CLOCK[2] + 9], [CLOCK[0] - 9, -0.5, CLOCK[2] + R + 11], [CLOCK[0] + 9, -0.5, CLOCK[2] + R + 11], [CLOCK[0] + 9, -0.5, CLOCK[2] + 9]] as V3[], 8, 10) as V3[], 1, P, { maxLength: 400 })
-    .map((piece) => T.tubeSvg(piece, { tone: "mid" }))
-    .join("");
-  f.add(handle);
-  f.add(S(disc(P, BODY, -5, 3.4, R), { tone: "mid", crease: "lo", inner: L(arc(P, BODY, -1, R), { tone: "faint" }) }));
-  f.add(S(G.ringBand(3.4, 4.6, R - 2, R + 0.4, BODY, P), { tone: "hi", crease: "lo" }));
+  body.push(tornStub(342, 150, 14));
 
-  const dial = f.sidePlane([CLOCK[0], 4.6], CLOCK[2], "left");
-  const ticks = Array.from({ length: 60 }, (_, i) => {
-    const a = (i / 60) * Math.PI * 2;
-    const r0 = i % 5 ? R - 3.6 : R - 5.2;
-    return pathOf([[Math.sin(a) * r0, -Math.cos(a) * r0], [Math.sin(a) * (R - 2.8), -Math.cos(a) * (R - 2.8)]]);
-  }).join("");
-  f.add(f.inPlane(dial, face(circleD(0, 0, R - 2, 64), "top", "lo") + L(ticks, { tone: "mid" })));
-  const hand = (len: number, w: number, angle: number) => `<g transform="rotate(${((angle * 180) / Math.PI).toFixed(1)})">${face(`M${-w} 2L0 ${-len}L${w} 2z`, "top", "hi")}</g>`;
-  f.add(f.inPlane(dial, hand(7.5, 1.1, (4 / 12) * Math.PI * 2) + hand(11, 0.8, 0)));
-  const sweep = f.spinOf("second", Array.from({ length: 61 }, (_, i) => ({ t: i, angle: (i / 60) * Math.PI * 2 })), { period: 60, tolerance: 0.5 });
-  f.add(f.inPlane(dial, `${L("M0 3L0 -11.8", { tone: "lit" })}${face(circleD(0, 0, 1, 12), "lit", "lit")}`, sweep));
-  f.add(f.inPlane(dial, `<g transform="rotate(120)">${L("M0 0L0 -5.4", { tone: "lit" })}${face(circleD(0, -5.4, 0.7, 10), "lit", "none")}</g>`));
+  const bubble = polyD([[298, 22], [364, 22], [364, 58], [330, 58], [318, 70], [320, 58], [298, 58]]);
+  body.push(shadowOf(f, bubble, [3, 3], "mid"), paperPath(bubble), inkPath(bubble), inkFill(rectD(328, 30, 4, 16)), inkFill(rectD(328, 49, 4, 4)));
 
-  const shake = f.spinOf(
-    "hammer",
-    times.map((t) => ({ t, angle: ringing(t) ? Math.sin((t - RING[0]) * Math.PI * 2 * 11) * 0.35 : 0 })),
-    { tolerance: 0.5 },
-  );
-  const stalk = f.sidePlane([CLOCK[0], 0.2], CLOCK[2] + R - 1, "left");
-  f.add(f.inPlane(stalk, L("M0 0L0 -8.4", { tone: "hi" }) + face(circleD(0, -9.4, 1.4, 14), "top", "hi"), shake));
-  bell(1);
-
-  const PHONE: Plan = { x: 14, y: -10, w: 18, d: 32, r: 3 };
-  f.add(S(k.slabOf(PHONE, 0, 1.6, P, 4, 0.4), { tone: "mid" }));
-  const screen = f.topPlane([PHONE.x + 1.4, PHONE.y + 3], 1.6);
-  f.add(f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "0", "lo")));
-  const lit = f.switchOf("screen", times.map((t) => ({ t, on: t >= RING[0] && t <= RING[1] + 1.2 })));
-  f.add(`<g ${lit} opacity="0">${f.inPlane(screen, face("M0 0h15.2v26h-15.2z", "sheet", "lit") + face("M1.6 3h12v7.4h-12z", "lit", "lit") + L("M3.2 5.4h6M3.2 7.8h8.6", { tone: "lo" }) + face(circleD(7.6, 21, 2.4, 16), "lit", "lit"))}</g>`);
-  f.add(D([f.at([PHONE.x + 9, PHONE.y + 1.6, 1.6])], { size: 0.5, tone: "mid" }));
-
-  const TICKET: Flat = [-22, 14];
-  const ticket = f.topPlane(TICKET, 0.3);
-  f.add(S(k.slabOf({ x: TICKET[0], y: TICKET[1], w: 26, d: 9, r: 0.6 }, 0, 0.3, P, 2), { tone: "lo", crease: "none", card: true }));
-  f.add(f.inPlane(ticket, face("M0 0h4v9h-4z", "lit", "none") + D(Array.from({ length: 7 }, (_, i) => [19, 1 + i * 1.2] as Flat), { size: 0.3, tone: "lo" }) + L("M6.4 3h9M6.4 5.6h6", { tone: "lo" })));
-
+  f.add(`<g transform="translate(0 ${oy})">${body.join("")}</g>`);
   return f.build({
     width,
     height,
-    label: "A twin-bell alarm clock stopped at four o'clock rings in bursts while a phone beside it lights up with a notification; a match ticket lies in front.",
+    label: "A strip of match tickets. The last one has its stub torn off, printed in green, and a small alert bubble pings beside it.",
   });
 }

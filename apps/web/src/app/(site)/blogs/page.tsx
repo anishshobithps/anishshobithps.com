@@ -40,7 +40,7 @@ export default function BlogPage() {
     date: page.data.date ? toISOString(page.data.date) : undefined,
     tags: page.data.tags,
     number: pages.length - i,
-    cover: <BlogCover slug={page.slugs.at(-1) ?? ""} />,
+    cover: <BlogCover slug={page.slugs.at(-1) ?? ""} number={pages.length - i} />,
   }));
 
   const shelf: ShelfPost[] = pages.map((page, i) => {
@@ -76,7 +76,7 @@ export default function BlogPage() {
 
       <Section className="pb-6" aria-label="Blog posts">
         <Suspense fallback={<BlogsSkeleton count={Math.min(posts.length, 10)} />}>
-          <BlogsClient posts={posts} allTags={allTags} filler={<PostGridFiller />} />
+          <BlogsClient posts={posts} allTags={allTags} filler={<PostGridFiller next={pages.length + 1} />} />
         </Suspense>
       </Section>
     </>
