@@ -169,6 +169,10 @@
   aspect-ratio: 960 / 200;
 }
 
+@utility not-prose {
+  --not-prose: 1;
+}
+
 @utility object-subject {
   object-position: 50% 35%;
 }
