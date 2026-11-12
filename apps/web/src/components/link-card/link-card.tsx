@@ -224,15 +224,16 @@ export function LinkCardView({
   const description = note ?? model.description;
 
   if (variant === "row") {
-    const first = model.stats[0];
+    const trailing = model.stats.find((stat) => stat.key === "stars") ?? model.stats[0];
     return (
       <Shell model={model} variant={variant} label={title} className={className}>
         {model.icon}
         <Title>{title}</Title>
-        {first && (
-          <span className="ml-auto shrink-0 tabular-nums">
+        {trailing && (
+          <span className="ml-auto inline-flex shrink-0 items-center gap-1 tabular-nums">
+            {trailing.icon}
             <Text as="span" variant="caption">
-              {first.text}
+              {trailing.text}
             </Text>
           </span>
         )}

@@ -3,6 +3,21 @@ import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { remarkReadingTime } from "@/lib/remarkReadingTime";
 import { z } from "zod/v4";
 
+const postLinkSchema = z
+    .union([
+        z.string().min(1),
+        z.object({
+            url: z.string().min(1),
+            label: z.string().optional(),
+            note: z.string().optional(),
+            featured: z.boolean().optional(),
+        }),
+    ])
+    .transform(
+        (value): { url: string; label?: string; note?: string; featured?: boolean } =>
+            typeof value === 'string' ? { url: value } : value,
+    );
+
 export const docs = defineDocs({
     dir: "content/blog",
     docs: {
@@ -14,6 +29,7 @@ export const docs = defineDocs({
             // deploy host made every push re-date every post. Frontmatter is
             // deterministic and gives full control over what counts as an update.
             lastModified: z.coerce.date().optional(),
+            links: z.array(postLinkSchema).optional(),
         }),
         postprocess: {
             includeProcessedMarkdown: true,

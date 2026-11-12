@@ -13,6 +13,11 @@ import {
   CommentsFallback,
   CommentsSection,
 } from "@/app/(site)/blog/[[...slug]]/_components/comments-section";
+import {
+  PostLinksRail,
+  PostLinksRecap,
+  PostSourceCard,
+} from "@/app/(site)/blog/[[...slug]]/_components/post-links";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
@@ -84,6 +89,7 @@ export default async function Page(props: {
         }
       : null;
   const postUrl = `${siteConfig.baseUrl}${page.url}`;
+  const links = page.data.links ?? [];
 
   return (
     <>
@@ -196,12 +202,17 @@ export default async function Page(props: {
         </HeroWithArt>
       </Section>
 
-      <BlogBody toc={page.data.toc}>
+      <BlogBody
+        toc={page.data.toc}
+        rail={links.length > 0 ? <PostLinksRail links={links} /> : undefined}
+      >
+        <PostSourceCard links={links} />
         <MDX
           components={getMDXComponents({
             a: createRelativeLink(source, page),
           })}
         />
+        <PostLinksRecap links={links} />
         <EndOfPost commentCount={commentCount} />
         <Signature text={siteConfig.name} />
       </BlogBody>

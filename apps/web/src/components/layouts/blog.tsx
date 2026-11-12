@@ -114,7 +114,7 @@ function ProgressCircle({
   );
 }
 
-function MobileTOC() {
+function MobileTOC({ rail }: { rail?: ReactNode }) {
   const items = useTOCItems();
   const active = useActiveAnchor();
   const [open, setOpen] = useState(false);
@@ -246,6 +246,7 @@ function MobileTOC() {
                     <TOCList />
                   </ScrollProvider>
                 </TOCScrollArea>
+                {rail && <div className="mt-2 border-t border-line pt-3">{rail}</div>}
               </div>
             </CollapsibleContent>
           </header>
@@ -257,34 +258,33 @@ function MobileTOC() {
 
 interface BlogBodyProps {
   toc: TOCItemType[];
+  rail?: ReactNode;
   children: ReactNode;
 }
 
-export function BlogBody({ toc, children }: BlogBodyProps) {
+export function BlogBody({ toc, rail, children }: BlogBodyProps) {
   return (
     <TOCProvider toc={toc}>
-      <MobileTOC />
+      <MobileTOC rail={rail} />
 
       <Section variant="article">
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
           <article className="prose min-w-0">{children}</article>
-          <nav
-            aria-label="Table of contents"
-            className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12"
-          >
-            <div className="pl-8 sticky top-20 flex flex-col gap-6">
-              <div>
+          <div className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
+            <div className="pl-8 sticky top-20 flex max-h-[calc(100vh-6rem)] flex-col gap-6">
+              <nav aria-label="Table of contents" className="flex min-h-0 flex-col">
                 <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
                   <TextAlignLeftIcon className="size-3.5 shrink-0" aria-hidden="true" />
                   On this page
                 </TypographySmall>
 
-                <TOCScrollArea className="max-h-[calc(100vh-8rem)] **:data-[slot=scroll-area-viewport]:scroll-fade-effect-y">
+                <TOCScrollArea className="**:data-[slot=scroll-area-viewport]:scroll-fade-effect-y">
                   <TOCList />
                 </TOCScrollArea>
-              </div>
+              </nav>
+              {rail}
             </div>
-          </nav>
+          </div>
         </div>
       </Section>
     </TOCProvider>
