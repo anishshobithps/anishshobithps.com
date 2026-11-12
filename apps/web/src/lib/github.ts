@@ -95,6 +95,94 @@ export async function fetchGitHubRepoData(
   }
 }
 
+export interface GitHubReleaseData {
+  tag: string
+  name: string | null
+  publishedAt: string | null
+  prerelease: boolean
+}
+
+export interface GitHubUserData {
+  login: string
+  name: string | null
+  bio: string | null
+  avatarUrl: string | null
+  followers: number
+  publicRepos: number
+}
+
+const GITHUB_API_TIMEOUT_MS = 5000
+
+async function githubGet(path: string): Promise<Record<string, unknown> | null> {
+  try {
+    const response = await fetch(`https://api.github.com${path}`, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(ENV.GITHUB_TOKEN
+          ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` }
+          : {}),
+      },
+      signal: AbortSignal.timeout(GITHUB_API_TIMEOUT_MS),
+    })
+    if (!response.ok) return null
+    const data: unknown = await response.json()
+    return data && typeof data === "object" ? (data as Record<string, unknown>) : null
+  } catch {
+    return null
+  }
+}
+
+function asString(value: unknown): string | null {
+  return typeof value === "string" && value !== "" ? value : null
+}
+
+function asCount(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0
+}
+
+function toReleaseData(data: Record<string, unknown> | null): GitHubReleaseData | null {
+  const tag = asString(data?.tag_name)
+  if (!data || !tag) return null
+  return {
+    tag,
+    name: asString(data.name),
+    publishedAt: asString(data.published_at),
+    prerelease: data.prerelease === true,
+  }
+}
+
+export async function fetchGitHubLatestRelease(
+  owner: string,
+  repo: string
+): Promise<GitHubReleaseData | null> {
+  return toReleaseData(await githubGet(`/repos/${owner}/${repo}/releases/latest`))
+}
+
+export async function fetchGitHubReleaseByTag(
+  owner: string,
+  repo: string,
+  tag: string
+): Promise<GitHubReleaseData | null> {
+  return toReleaseData(
+    await githubGet(`/repos/${owner}/${repo}/releases/tags/${encodeURIComponent(tag)}`)
+  )
+}
+
+export async function fetchGitHubUser(login: string): Promise<GitHubUserData | null> {
+  const data = await githubGet(`/users/${encodeURIComponent(login)}`)
+  const resolvedLogin = asString(data?.login)
+  if (!data || !resolvedLogin) return null
+  return {
+    login: resolvedLogin,
+    name: asString(data.name),
+    bio: asString(data.bio),
+    avatarUrl: asString(data.avatar_url),
+    followers: asCount(data.followers),
+    publicRepos: asCount(data.public_repos),
+  }
+}
+
 export function formatCount(count: number): string {
   if (count >= 1_000_000) {
     const value = count / 1_000_000
