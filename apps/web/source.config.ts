@@ -1,6 +1,7 @@
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { remarkReadingTime } from "@/lib/remarkReadingTime";
+import { remarkLinkCard } from "@/lib/remarkLinkCard";
 import { z } from "zod/v4";
 
 const postLinkSchema = z
@@ -43,7 +44,7 @@ export const docs = defineDocs({
 
 export default defineConfig({
     mdxOptions: {
-        remarkPlugins: [remarkReadingTime],
+        remarkPlugins: [remarkReadingTime, remarkLinkCard],
         rehypeCodeOptions: {
             inline: 'tailing-curly-colon',
             themes: {
