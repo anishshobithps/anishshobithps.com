@@ -58,7 +58,7 @@ In 2014, <TypographyMark>Jeremy Burge</TypographyMark>[^emojipedia], the founder
 
 Not everyone complied. <TypographyMark>WhatsApp</TypographyMark> shows <TypographyMark>February 24</TypographyMark>, the day the company incorporated in 2009[^calendar-emoji]. <TypographyMark>Facebook</TypographyMark> traditionally shows <TypographyMark>May 14</TypographyMark>, Mark Zuckerberg's birthday[^calendar-emoji].
 
-The same logic applies to Apple's clock emoji 🕐. It consistently shows <TypographyMark>10:09</TypographyMark>, the hands arranged in the V-shape that most watch advertisements use, because symmetric positions look balanced on a circular face. That's not an emoji-specific decision; it's a century-old watchmaking convention that Apple carried over without modification.
+The same logic applies to Apple's watch emoji ⌚[^watch]. It consistently shows <TypographyMark>10:09</TypographyMark>, the hands arranged in the V-shape that most watch advertisements use, because symmetric positions look balanced on a circular face. That's not an emoji-specific decision; it's a century-old watchmaking convention that Apple carried over without modification.
 
 
 ## There is hidden text inside Apple's paper emojis
@@ -179,7 +179,7 @@ When a platform changes what a code point looks like, it changes what messages a
 
 As of March 2022, the Unicode Emoji Subcommittee officially announced a moratorium[^flags] on new flag emojis. No new national or regional flags will be accepted as proposals.
 
-Today, flags are already the largest emoji category, over 200 flags out of roughly 3,600 total emoji. But <TypographyMark><abbr title="International Organization for Standardization">ISO</abbr> 3166-2</TypographyMark> recognises over 5,000 geographically-valid regions including states, provinces, and autonomous territories. Adding sub-national flags at any scale would require a different encoding architecture entirely, with an effectively unlimited long tail of rarely-used icons.
+Today, flags are already the second-largest emoji category after People & Body, with 270 flags out of nearly 4,000 total emoji[^emoji-counts]. But <TypographyMark><abbr title="International Organization for Standardization">ISO</abbr> 3166-2</TypographyMark> recognises over 5,000 geographically-valid regions including states, provinces, and autonomous territories. Adding sub-national flags at any scale would require a different encoding architecture entirely, with an effectively unlimited long tail of rarely-used icons.
 
 There's also a harder problem: borders and political identities change. Once a Unicode character is added, it can never be removed. A flag emoji added today represents a political reality that may not exist in ten years, but the code point stays in the standard permanently.
 
@@ -268,7 +268,7 @@ The four main formats:
 
 <TypographyMark>CBDT/CBLC</TypographyMark>[^cbdt] (Google, Android original) uses compressed <abbr title="Portable Network Graphics">PNG</abbr> data embedded inside the font file. Same concept as sbix, different implementation. Also produces large font files.
 
-<TypographyMark>COLR/CPAL</TypographyMark>[^colr] (Microsoft, now Google) is a vector format that defines layered colour fills. Google has moved toward <TypographyMark>COLRv1</TypographyMark>[^colrv1], which supports gradients and complex blending while keeping file sizes small. Noto Color Emoji in COLRv1 format is roughly 9MB, a 94% reduction from the equivalent bitmap format. More scalable at the cost of rendering complexity.
+<TypographyMark>COLR/CPAL</TypographyMark>[^colr] (Microsoft, now Google) is a vector format that defines layered colour fills. Google has moved toward <TypographyMark>COLRv1</TypographyMark>[^colrv1], which supports gradients and complex blending while keeping file sizes small. A build of the full Noto emoji set drops from 9MB as a bitmap font to 1.85MB as COLRv1 with WOFF2, a reduction of roughly 79%[^colrv1]. More scalable at the cost of rendering complexity.
 
 <TypographyMark>SVG-in-OpenType</TypographyMark>[^svg-table] (Adobe/Mozilla) embeds a full <abbr title="Scalable Vector Graphics">SVG</abbr> document per glyph. Most flexible for graphic complexity and infinite scalability, heavier on file size. Used primarily in Firefox.
 
@@ -365,3 +365,5 @@ Next time you send 😤 expecting frustration and it lands as a flex, that's the
 [^coretext]: Apple Developer Documentation, [Core Text](https://developer.apple.com/documentation/coretext).
 [^harfbuzz]: HarfBuzz, [HarfBuzz](https://harfbuzz.github.io/).
 [^directwrite]: Microsoft Learn, [DirectWrite (DWrite)](https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal).
+[^watch]: Emojipedia, [Watch Emoji](https://emojipedia.org/watch).
+[^emoji-counts]: Unicode Consortium, [Emoji counts](https://unicode.org/emoji/charts/emoji-counts.html).
