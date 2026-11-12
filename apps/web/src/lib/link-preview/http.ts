@@ -1,6 +1,6 @@
-export const PREVIEW_USER_AGENT = "Mozilla/5.0 (compatible; LinkCardBot/1.0)";
-export const PREVIEW_TIMEOUT_MS = 4000;
-export const PREVIEW_MAX_BYTES = 262_144;
+const PREVIEW_USER_AGENT = "Mozilla/5.0 (compatible; LinkCardBot/1.0)";
+const PREVIEW_TIMEOUT_MS = 4000;
+const PREVIEW_MAX_BYTES = 262_144;
 
 const IPV4_LITERAL = /^\d{1,3}(?:\.\d{1,3}){3}$/;
 const INTERNAL_SUFFIXES = [".local", ".localhost", ".internal", ".lan", ".home.arpa"];

@@ -16,7 +16,7 @@ import {
   type MediaShape,
 } from "./link-card-model";
 
-export type LinkCardVariant = "default" | "compact" | "row" | "preview";
+type LinkCardVariant ="default" | "compact" | "row" | "preview";
 
 export interface LinkCardProps {
   url: string;
@@ -199,7 +199,7 @@ interface ViewProps {
   className?: string;
 }
 
-export function LinkCardView({
+function LinkCardView({
   preview,
   variant = "default",
   label,
@@ -285,7 +285,7 @@ async function LinkCardBody({ url, ...rest }: LinkCardProps) {
   return <LinkCardView preview={preview} {...rest} />;
 }
 
-export function LinkCardSkeleton({
+function LinkCardSkeleton({
   variant = "default",
   className,
 }: {

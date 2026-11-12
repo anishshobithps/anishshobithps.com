@@ -93,5 +93,3 @@ export type LinkPreview =
       host: string;
       path: string;
     };
-
-export type LinkPreviewKind = LinkPreview["kind"];
