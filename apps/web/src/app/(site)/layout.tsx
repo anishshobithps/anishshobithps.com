@@ -7,7 +7,6 @@ import {
   FloatingHubServer,
   FloatingHubFallback,
 } from "@/components/shared/floating-hub-server";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Suspense } from "react";
 
 export default function SiteLayout({
@@ -16,7 +15,7 @@ export default function SiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <>
       <JsonLd type="person" />
       <JsonLd type="website" />
       <PageLayout>
@@ -41,6 +40,6 @@ export default function SiteLayout({
       <Suspense fallback={<FloatingHubFallback />}>
         <FloatingHubServer />
       </Suspense>
-    </ClerkProvider>
+    </>
   );
 }

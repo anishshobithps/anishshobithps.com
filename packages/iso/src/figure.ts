@@ -1,4 +1,3 @@
-import { HALO, HALO_OPACITY } from "./classes";
 import * as k from "./iso-kit";
 
 export type { Tone } from "./classes";
@@ -17,6 +16,7 @@ export interface Projection {
   scale: number;
   azimuth: number;
   elevation: number;
+  oblique?: number;
 }
 
 export interface Frame {
@@ -29,6 +29,7 @@ export interface Track {
   duration: number;
   easing: "linear" | "steps(1, end)";
   keyframes: Array<Record<string, string | number>>;
+  once?: boolean;
 }
 
 export interface Scene {
@@ -181,7 +182,7 @@ export class Figure {
     return `transform:translate(${round(x, 3)}px,${round(y, 3)}px)`;
   }
 
-  track(name: string, frames: Frame[], { steps = false, period = this.period } = {}) {
+  track(name: string, frames: Frame[], { steps = false, period = this.period, once = false } = {}) {
     const id = `${this.id}-${name}-${this.tracks.length}`;
     const sorted = [...frames].sort((a, b) => a.t - b.t);
     if (!sorted.length) return "";
@@ -191,7 +192,7 @@ export class Figure {
     for (const { t, css } of sorted) seen.set(round((clamp(t, 0, period) / period) * 100, 2), css);
     const easing = steps ? "steps(1, end)" : "linear";
     const keyframes = [...seen].map(([pct, css]) => ({ offset: pct / 100, ...(steps ? { easing } : {}), ...declarationsOf(css) }));
-    this.tracks.push({ id, duration: period, easing, keyframes });
+    this.tracks.push({ id, duration: period, easing, keyframes, ...(once ? { once: true } : {}) });
     return `data-iso-track="${id}"`;
   }
 
@@ -257,13 +258,6 @@ export class Figure {
     return k.sideMatrix(at, z, this.P, face);
   }
 
-  halo(plan: Plan, z: number, spread = 6) {
-    const layers = [1, 0.66, 0.33].map((share, index) => {
-      const grown = k.insetPlan(plan, -spread * share);
-      return `<path class="${HALO} ${HALO_OPACITY[index]!}" d="${k.haloOf(grown, z, 0.01, this.P)}"/>`;
-    });
-    return layers.join("");
-  }
 
   build(meta: Omit<Scene, "id" | "body" | "tracks" | "period" | "width" | "height"> & { width: number; height: number }): Scene {
     const defs = this.defs.length ? `<defs>${this.defs.join("")}</defs>` : "";

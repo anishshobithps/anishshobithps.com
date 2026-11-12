@@ -1,14 +1,5 @@
-import {
-  boxFaces,
-  ellipseRadii,
-  hash,
-  project,
-  projector,
-  toPoints,
-  type Vec3,
-} from "@repo/diagrams/iso";
 import { LogoIcon } from "@/components/shared/logo-icon";
-import { MASCOT_POINTS, MascotFigure } from "@/components/shared/logo-mascot";
+import { MASCOT_POINTS } from "@/components/shared/logo-mascot";
 import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/svg-kit/fonts";
 import { themeColor } from "@repo/styles/theme-tokens";
 import type { CSSProperties, ReactNode } from "react";
@@ -78,21 +69,6 @@ const color = {
   hireRing: fade("color-available", 16),
 };
 
-const TONES = {
-  default: {
-    stroke: color.stroke,
-    top: tint("foreground", 9),
-    left: tint("foreground", 5),
-    right: tint("foreground", 2),
-  },
-  accent: {
-    stroke: color.brand,
-    top: tint("brand", 24),
-    left: tint("brand", 12),
-    right: tint("brand", 6),
-  },
-} as const;
-
 const TITLE_SIZES = [
   [20, 68],
   [40, 56],
@@ -105,61 +81,10 @@ function titleSize(title: string) {
   );
 }
 
-const ART_P = projector(20, ART_WIDTH / 2, 230);
-
-const MASCOT = {
-  base: [0, 0.5, 0.8] as Vec3,
-  anchor: [32, 60] as const,
-  scale: 0.11,
-  depth: 0.9,
-  layers: 20,
-};
-
-const MASCOT_LAYERS = Array.from(
-  { length: MASCOT.layers },
-  (_, i) => MASCOT.depth * (1 - i / MASCOT.layers),
-);
-
-const FLOOR = { radius: 5, dotRadius: 4.6, step: 0.9 };
-const FLOOR_STEP_COUNT = Math.floor(FLOOR.dotRadius / FLOOR.step);
-const FLOOR_STEPS = Array.from(
-  { length: 2 * FLOOR_STEP_COUNT + 1 },
-  (_, i) => (i - FLOOR_STEP_COUNT) * FLOOR.step,
-);
-const FLOOR_DOTS = FLOOR_STEPS.flatMap((x) =>
-  FLOOR_STEPS.map((y): Vec3 => [x, y, 0]),
-).filter(([x, y]) => Math.hypot(x, y) <= FLOOR.dotRadius);
-
-const SPARKLES: { at: Vec3; radius: number }[] = [
-  { at: [-1.4, 1, 7.4], radius: 7 },
-  { at: [4.6, -4.6, 4.6], radius: 4.5 },
-  { at: [-5.2, -0.8, 3.6], radius: 3.5 },
-];
-
-function glyphToWorld(u: number, v: number): Vec3 {
-  const [x, y, z] = MASCOT.base;
-  const [anchorU, anchorV] = MASCOT.anchor;
-  return [
-    x + (u - anchorU) * MASCOT.scale,
-    y,
-    z + (anchorV - v) * MASCOT.scale,
-  ];
-}
-
-function screenDelta(vector: Vec3) {
-  const [x0, y0] = project(ART_P, [0, 0, 0]);
-  const [x1, y1] = project(ART_P, vector);
-  return [x1 - x0, y1 - y0] as const;
-}
-
-function glyphMatrix() {
-  const [ox, oy] = project(ART_P, glyphToWorld(0, 0));
-  const [ux, uy] = project(ART_P, glyphToWorld(1, 0));
-  const [vx, vy] = project(ART_P, glyphToWorld(0, 1));
-  return `matrix(${ux - ox} ${uy - oy} ${vx - ox} ${vy - oy} ${ox} ${oy})`;
-}
-
-const LABEL_POINT = project(ART_P, glyphToWorld(36, 22));
+const MARK = { scale: 5.4, x: 35, y: 18.4 };
+const OFFSET = [9, 6] as const;
+const MARK_TRANSFORM = `translate(${MARK.x} ${MARK.y}) scale(${MARK.scale})`;
+const LABEL_POINT = [MARK.x + 40.5 * MARK.scale, MARK.y + 38 * MARK.scale] as const;
 const LABEL_ELBOW = [LABEL_POINT[0] + 48, LABEL_POINT[1] - 44] as const;
 
 function PixelText({
@@ -409,137 +334,26 @@ function Copy({
   );
 }
 
-function Box({
-  at,
-  size,
-  tone,
-}: {
-  at: Vec3;
-  size: Vec3;
-  tone: keyof typeof TONES;
-}) {
-  const colors = TONES[tone];
+function MarkShapes({ fill }: { fill: string }) {
   return (
-    <g stroke={colors.stroke} strokeWidth="1.25" strokeLinejoin="round">
-      {boxFaces(at, size).map(([side, points]) => (
-        <polygon
-          key={side}
-          fill={colors[side]}
-          points={toPoints(ART_P, points)}
-        />
-      ))}
+    <g fill={fill}>
+      <polygon points={MASCOT_POINTS} />
+      <rect x="18" y="36" width="11" height="5" rx="2.5" />
+      <rect x="35" y="36" width="11" height="5" rx="2.5" />
     </g>
   );
 }
 
-function Shadow({
-  center,
-  radius,
-  fill,
-}: {
-  center: Vec3;
-  radius: number;
-  fill: string;
-}) {
-  const [cx, cy] = project(ART_P, center);
-  const [rx, ry] = ellipseRadii(ART_P, radius);
-  return <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={fill} />;
-}
-
-function FloatingCube({
-  at,
-  size,
-  tone,
-}: {
-  at: Vec3;
-  size: number;
-  tone: keyof typeof TONES;
-}) {
-  const [x, y, z] = at;
-  const center: Vec3 = [x + size / 2, y + size / 2, 0];
-  const [x1, y1] = project(ART_P, center);
-  const [x2, y2] = project(ART_P, [center[0], center[1], z]);
-
+function RegistrationMark({ cx, cy }: { cx: number; cy: number }) {
+  const shape = `M${cx - 9} ${cy}H${cx + 9}M${cx} ${cy - 9}V${cy + 9}`;
   return (
-    <g>
-      <Shadow center={center} radius={size * 0.7} fill={color.speck} />
-      <line
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
-        stroke={color.guide}
-        strokeWidth="1"
-        strokeDasharray="2 4"
-        strokeLinecap="round"
-      />
-      <Box at={at} size={[size, size, size]} tone={tone} />
-    </g>
-  );
-}
-
-function Floor() {
-  const r = FLOOR.radius;
-  return (
-    <g>
-      <polygon
-        points={toPoints(ART_P, [
-          [-r, -r, 0],
-          [r, -r, 0],
-          [r, r, 0],
-          [-r, r, 0],
-        ])}
-        fill={color.floor}
-        stroke={color.guide}
-        strokeWidth="1"
-        strokeDasharray="3 4"
-      />
-      {FLOOR_DOTS.map((point, index) => {
-        const [cx, cy] = project(ART_P, point);
-        const lit = hash(index + 1) < 0.12;
-        return (
-          <circle
-            key={`${cx}-${cy}`}
-            cx={cx}
-            cy={cy}
-            r={lit ? 1.5 : 1}
-            fill={lit ? color.brandText : color.guide}
-          />
-        );
-      })}
-    </g>
-  );
-}
-
-function Mascot() {
-  const matrix = glyphMatrix();
-  return (
-    <g>
-      {MASCOT_LAYERS.map((depth) => {
-        const [dx, dy] = screenDelta([0, -depth, 0]);
-        return (
-          <polygon
-            key={depth}
-            points={MASCOT_POINTS}
-            fill={color.extrusion}
-            transform={`translate(${dx} ${dy}) ${matrix}`}
-          />
-        );
-      })}
-      <g color={color.foreground} transform={matrix}>
-        <MascotFigure />
+    <g fill="none" strokeWidth="1.5">
+      <g transform={`translate(${OFFSET[0] / 3} ${OFFSET[1] / 3})`}>
+        <path d={shape} stroke={color.brand} />
       </g>
+      <circle cx={cx} cy={cy} r="5" stroke={color.foreground} />
+      <path d={shape} stroke={color.foreground} />
     </g>
-  );
-}
-
-function Sparkle({ at, radius: r }: { at: Vec3; radius: number }) {
-  const [x, y] = project(ART_P, at);
-  return (
-    <path
-      d={`M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z`}
-      fill={color.brandText}
-    />
   );
 }
 
@@ -567,7 +381,6 @@ function Leader() {
 }
 
 function Art() {
-  const [glowX, glowY] = project(ART_P, [0, 0.05, 3.8]);
   const [elbowX, elbowY] = LABEL_ELBOW;
 
   return (
@@ -586,6 +399,14 @@ function Art() {
           >
             <circle cx="8" cy="8" r="1" fill={color.speck} />
           </pattern>
+          <pattern
+            id="og-screen"
+            width="5"
+            height="5"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="2.5" cy="2.5" r="1.4" fill={color.foreground} />
+          </pattern>
           <radialGradient id="og-fade" cx="50%" cy="45%" r="60%">
             <stop offset="0" stopColor="white" />
             <stop offset="1" stopColor="white" stopOpacity="0" />
@@ -593,10 +414,6 @@ function Art() {
           <mask id="og-vignette">
             <rect width={ART_WIDTH} height={ART_HEIGHT} fill="url(#og-fade)" />
           </mask>
-          <radialGradient id="og-glow">
-            <stop offset="0" stopColor={color.brand} stopOpacity="0.28" />
-            <stop offset="1" stopColor={color.brand} stopOpacity="0" />
-          </radialGradient>
         </defs>
         <rect
           width={ART_WIDTH}
@@ -604,16 +421,21 @@ function Art() {
           fill="url(#og-dots)"
           mask="url(#og-vignette)"
         />
-        <circle cx={glowX} cy={glowY} r="190" fill="url(#og-glow)" />
-        <Floor />
-        <FloatingCube at={[-4.6, -0.2, 1.8]} size={1.2} tone="default" />
-        <Box at={[-2.2, -2.2, 0]} size={[4.4, 4.4, 0.8]} tone="accent" />
-        <Shadow center={[0, 0.05, 0.8]} radius={1.9} fill={color.shadow} />
-        <Mascot />
-        <FloatingCube at={[2.9, -4.1, 2.4]} size={1.1} tone="accent" />
-        {SPARKLES.map(({ at, radius }) => (
-          <Sparkle key={at.join()} at={at} radius={radius} />
-        ))}
+        <ellipse
+          cx={ART_WIDTH / 2}
+          cy={352}
+          rx={130}
+          ry={16}
+          fill="url(#og-screen)"
+        />
+        <g transform={`translate(${OFFSET[0]} ${OFFSET[1]}) ${MARK_TRANSFORM}`}>
+          <MarkShapes fill={color.brand} />
+        </g>
+        <g transform={MARK_TRANSFORM}>
+          <MarkShapes fill={color.foreground} />
+        </g>
+        <RegistrationMark cx={30} cy={30} />
+        <RegistrationMark cx={ART_WIDTH - 30} cy={ART_HEIGHT - 30} />
         <Leader />
       </svg>
       <div

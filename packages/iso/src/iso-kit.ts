@@ -1,23 +1,6 @@
-import {
-  DOT_TONE,
-  DOTS,
-  FACE_TEXT,
-  FILL_FACE,
-  FILL_PAPER,
-  HALO,
-  lineAttrs,
-  SEAM_ATTRS,
-  SHADE_FILL,
-  SHADE_LIT,
-  SHADE_LIT_SEAM,
-  SHADE_STROKE,
-  TOP,
-  TOP_SEAM,
-  type LineTone,
-  type Tone,
-} from "./classes";
+import { DOT_TONE, DOTS, type Tone } from "./classes";
 
-export type { LineTone, Tone };
+export type { Tone };
 
 export type Flat = [number, number];
 export type Point3 = [number, number, number];
@@ -28,6 +11,7 @@ export interface Projection {
   scale: number;
   azimuth?: number;
   elevation?: number;
+  oblique?: number;
 }
 
 export interface Plan {
@@ -65,8 +49,9 @@ interface Camera {
   k: number;
 }
 
-export function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION }: Projection): Camera {
+export function cameraOf({ scale, azimuth = AZIMUTH, elevation = ELEVATION, oblique }: Projection): Camera {
   const a = azimuth * RADIANS;
+  if (oblique !== undefined) return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: 1, cosE: oblique, k: scale * UNIT };
   const e = elevation * RADIANS;
   return { sinA: Math.sin(a), cosA: Math.cos(a), sinE: Math.sin(e), cosE: Math.cos(e), k: scale * UNIT };
 }
@@ -444,7 +429,6 @@ export function radialTicks(cx: number, cy: number, radius: number, count: numbe
   return { minor: minor.join(""), major: major.join("") };
 }
 
-export const haloOf = (plan: Plan, z: number, height: number, projection: Projection) => slabOf(plan, z, height, projection).fill;
 
 export function axisVector(projection: Projection, [dx, dy, dz]: Point3): Flat {
   const origin = iso([0, 0, 0], projection);
@@ -499,10 +483,11 @@ export interface FitOptions {
   headroom?: number;
   azimuth?: number;
   elevation?: number;
+  oblique?: number;
 }
 
-export function fitProjection(points: Point3[], width: number, height: number, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION }: FitOptions = {}): Projection {
-  const unit: Projection = { origin: [0, 0], scale: 1, azimuth, elevation };
+export function fitProjection(points: Point3[], width: number, height: number, { pad = 24, headroom = 0, azimuth = AZIMUTH, elevation = ELEVATION, oblique }: FitOptions = {}): Projection {
+  const unit: Projection = { origin: [0, 0], scale: 1, azimuth, elevation, ...(oblique === undefined ? {} : { oblique }) };
   const flat = points.map((point) => iso(point, unit));
   const xs = flat.map(([x]) => x);
   const ys = flat.map(([, y]) => y);
@@ -516,61 +501,8 @@ export function fitProjection(points: Point3[], width: number, height: number, {
     scale,
     azimuth,
     elevation,
+    ...(oblique === undefined ? {} : { oblique }),
   };
-}
-
-const escape = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-
-export interface SolidStyle {
-  tone?: Tone;
-  crease?: Tone | "none";
-  halo?: boolean;
-  lit?: boolean;
-  flat?: boolean;
-  card?: boolean;
-  className?: string;
-  inner?: string;
-}
-
-function shadeSvg(d: string, shade: number, lit: boolean, seamless: boolean) {
-  const fill = lit ? SHADE_LIT : SHADE_FILL[shade]!;
-  if (!seamless) return `<path class="${fill} stroke-none" d="${d}"/>`;
-  const stroke = lit ? SHADE_LIT_SEAM : SHADE_STROKE[shade]!;
-  return `<path class="${fill} ${stroke}" ${SEAM_ATTRS} d="${d}"/>`;
-}
-
-function topSvg(d: string, lit: boolean, card: boolean, seamless: boolean) {
-  const fill = lit ? TOP.lit : card ? TOP.card : TOP.plain;
-  if (!seamless) return `<path class="${fill} stroke-none" d="${d}"/>`;
-  return `<path class="${fill} ${lit ? TOP_SEAM.lit : TOP_SEAM.plain}" ${SEAM_ATTRS} d="${d}"/>`;
-}
-
-export function solidSvg(paths: SolidPaths, { tone = "hi", crease = "faint", halo = false, lit = false, flat = false, card = false, className, inner = "" }: SolidStyle = {}) {
-  const seamless = Boolean(paths.seamless);
-  const parts: string[] = [];
-  if (halo) parts.push(`<path class="${HALO}" d="${paths.fill}"/>`);
-  parts.push(`<path class="${lit ? FILL_FACE : FILL_PAPER}" d="${paths.fill}"/>`);
-  if (!flat) {
-    paths.shades.forEach((d, shade) => {
-      if (d) parts.push(shadeSvg(d, shade, lit, seamless));
-    });
-    parts.push(topSvg(paths.top, lit, card, seamless));
-  }
-  if (crease !== "none" && paths.crease) parts.push(`<path ${lineAttrs(crease)} d="${paths.crease}"/>`);
-  if (crease !== "none" && paths.bevel) parts.push(`<path ${lineAttrs(crease)} d="${paths.bevel}"/>`);
-  if (inner) parts.push(inner);
-  parts.push(`<path ${lineAttrs(lit ? "lit" : tone)} d="${paths.outline}"/>`);
-  return `<g${className ? ` class="${escape(className)}"` : ""}>${parts.join("")}</g>`;
-}
-
-export interface LineStyle {
-  tone?: LineTone;
-  className?: string;
-}
-
-export function lineSvg(d: string, { tone = "lo", className }: LineStyle = {}) {
-  if (!d) return "";
-  return `<path ${lineAttrs(tone, className)} d="${d}"/>`;
 }
 
 export function dotsSvg(points: Array<Flat | [number, number, number]>, { size = 0.5, tone = "mid" }: { size?: number; tone?: Tone } = {}) {
@@ -578,21 +510,4 @@ export function dotsSvg(points: Array<Flat | [number, number, number]>, { size =
     .map(([x, y, alpha]: number[]) => `<circle cx="${tenth(x!)}" cy="${tenth(y!)}" r="${size}"${alpha !== undefined && alpha < 1 ? ` fill-opacity="${Math.max(0, alpha).toFixed(2)}"` : ""}/>`)
     .join("");
   return `<g class="${DOTS} ${DOT_TONE[tone]}">${dots}</g>`;
-}
-
-export type Faded = { d: string; alpha: number } | [string, number];
-
-export function fadedSvg(list: Faded[], style: LineStyle = {}) {
-  const groups = new Map<number, string>();
-  for (const entry of list) {
-    const [d, alpha] = Array.isArray(entry) ? entry : [entry.d, entry.alpha];
-    if (!d || !(alpha > 0.02)) continue;
-    const level = Math.min(1, Math.round(alpha * 20) / 20);
-    groups.set(level, (groups.get(level) ?? "") + d);
-  }
-  return [...groups].map(([alpha, d]) => (alpha >= 1 ? lineSvg(d, style) : `<g opacity="${alpha.toFixed(2)}">${lineSvg(d, style)}</g>`)).join("");
-}
-
-export function faceTextSvg(transform: string, text: string, { size = 3, tone = "mid", anchor = "start" }: { size?: number; tone?: Tone; anchor?: "start" | "middle" | "end" } = {}) {
-  return `<text class="${FACE_TEXT[tone]}" transform="${transform}" font-size="${size}" text-anchor="${anchor}">${escape(text)}</text>`;
 }

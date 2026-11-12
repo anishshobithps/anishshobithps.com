@@ -49,7 +49,7 @@ export async function GuestbookTeaser() {
             </Button>
           </div>
           <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-video">
-            <PageArt name="traces" />
+            <PageArt name="traces" data={entries.map((entry) => entry.user.name)} />
           </ArtStage>
         </div>
 

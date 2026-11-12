@@ -17,10 +17,7 @@ import { Slot } from "radix-ui";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
 
 import { Button } from "@repo/ui/components/button";
-import {
-  ButtonGroup,
-  ButtonGroupText,
-} from "@repo/ui/components/button-group";
+import { ButtonGroup, ButtonGroupText } from "@repo/ui/components/button-group";
 import { cn } from "@repo/ui/lib/cn";
 import {
   CaretLeftIcon,
@@ -115,6 +112,11 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
     const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const [workerReady, setWorkerReady] = useState(false);
+    const [rendered, setRendered] = useState(false);
+
+    useEffect(() => {
+      setRendered(false);
+    }, [docKey]);
 
     useEffect(() => {
       import("react-pdf").then(({ pdfjs }) => {
@@ -178,28 +180,40 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
             aria-label="Document pages"
             className="relative flex-1 overflow-auto bg-muted/10 outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-ring/50"
           >
+            {!rendered && (loading || numPages) && (
+              <div
+                aria-hidden="true"
+                className="mx-auto my-4 aspect-[1/1.4142] w-[min(calc(100%-2px),900px)] bg-background"
+              />
+            )}
+
             {workerReady && pageWidth && (
-              <Document
-                key={docKey}
-                file={file}
-                loading={null}
-                onLoadSuccess={({ numPages }) =>
-                  dispatch({ type: "loaded", numPages })
-                }
-                onLoadError={() => dispatch({ type: "load-failed" })}
-                className="flex flex-col items-center gap-4 py-4"
-              >
-                {Array.from({ length: numPages ?? 0 }, (_, i) => (
-                  <Page
-                    key={i + 1}
-                    pageNumber={i + 1}
-                    width={pageWidth - 2}
-                    scale={zoom}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                  />
-                ))}
-              </Document>
+              <div className={cn(!rendered && "absolute inset-x-0 top-0")}>
+                <Document
+                  key={docKey}
+                  file={file}
+                  loading={null}
+                  onLoadSuccess={({ numPages }) =>
+                    dispatch({ type: "loaded", numPages })
+                  }
+                  onLoadError={() => dispatch({ type: "load-failed" })}
+                  className="flex flex-col items-center gap-4 py-4"
+                >
+                  {Array.from({ length: numPages ?? 0 }, (_, i) => (
+                    <Page
+                      key={i + 1}
+                      pageNumber={i + 1}
+                      width={pageWidth - 2}
+                      scale={zoom}
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                      onRenderSuccess={() => {
+                        if (i === 0) setRendered(true);
+                      }}
+                    />
+                  ))}
+                </Document>
+              </div>
             )}
 
             {(loading || !workerReady) && (

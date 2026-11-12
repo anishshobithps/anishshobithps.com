@@ -443,12 +443,8 @@ html[data-theme-transition]::view-transition-new(root) {
 }
 
 @theme inline {
-  --animate-iso-march: iso-march 0.9s linear infinite;
   --animate-iso-twinkle: iso-twinkle 3s ease-in-out infinite;
   --animate-iso-ripple: iso-ripple 1.8s ease-out infinite;
-  --animate-iso-float: iso-float 5s ease-in-out infinite;
-  --animate-iso-print: iso-print 3.6s ease-out infinite;
-  --animate-iso-shadow: iso-shadow 5s ease-in-out infinite;
   --animate-nudge-draw: nudge-draw 1.2s cubic-bezier(0.6, 0, 0.2, 1) var(--nudge-delay, 0ms) forwards;
   --animate-nudge-draw-loop: nudge-draw-loop 3.2s ease-in-out infinite;
   --animate-nudge-pop: nudge-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) var(--nudge-delay, 0ms) forwards;
@@ -563,37 +559,8 @@ html[data-theme-transition]::view-transition-new(root) {
     }
   }
 
-  @keyframes iso-float {
-    0%,
-    100% {
-      translate: 0 0;
-    }
 
-    50% {
-      translate: 0 var(--lift);
-    }
-  }
 
-  @keyframes iso-march {
-    to {
-      stroke-dashoffset: -12;
-    }
-  }
-
-  @keyframes iso-print {
-    0% {
-      opacity: 0;
-    }
-
-    8%,
-    70% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 0;
-    }
-  }
 
   @keyframes iso-ripple {
     from {
@@ -607,18 +574,6 @@ html[data-theme-transition]::view-transition-new(root) {
     }
   }
 
-  @keyframes iso-shadow {
-    0%,
-    100% {
-      scale: 1;
-      opacity: 1;
-    }
-
-    50% {
-      scale: 0.75;
-      opacity: 0.55;
-    }
-  }
 
   @keyframes iso-twinkle {
     0%,

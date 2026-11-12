@@ -60,24 +60,10 @@ export const ROOT_TOKENS = {
   "z-header": "50",
   "z-skip-link": "60",
   "iso-paper": "var(--background)",
-  "iso-face": "var(--background)",
-  "iso-top": "color-mix(in oklab, var(--foreground) 1.5%, var(--background))",
-  "iso-shade-0": "color-mix(in oklab, var(--foreground) 15%, var(--background))",
-  "iso-shade-1": "color-mix(in oklab, var(--foreground) 11%, var(--background))",
-  "iso-shade-2": "color-mix(in oklab, var(--foreground) 7.5%, var(--background))",
-  "iso-shade-3": "color-mix(in oklab, var(--foreground) 4%, var(--background))",
-  "iso-lit-top": "color-mix(in oklab, var(--brand) 9%, var(--background))",
-  "iso-lit-shade": "color-mix(in oklab, var(--brand) 20%, var(--background))",
-  "iso-hi": "color-mix(in oklab, var(--foreground) 80%, var(--background))",
-  "iso-mid": "color-mix(in oklab, var(--foreground) 47%, var(--background))",
-  "iso-lo": "color-mix(in oklab, var(--foreground) 29%, var(--background))",
-  "iso-faint": "color-mix(in oklab, var(--foreground) 15%, var(--background))",
-  "iso-lit": "var(--brand)",
-  "iso-ink": "var(--brand)",
-  "iso-halo": "var(--foreground)",
-  "iso-halo-opacity": "0.07",
   "iso-dot": "var(--foreground)",
-  "iso-sheet": "var(--background)"
+  "iso-plate-ink": "var(--foreground)",
+  "iso-plate-green": "var(--brand)",
+  "iso-screen": "var(--foreground)"
 } as const;
 
 export const DARK_TOKENS = {
@@ -120,21 +106,5 @@ export const DARK_TOKENS = {
   "color-available": "oklch(0.78 0.19 142)",
   "brand-text": "oklch(0.72 0.15 155)",
   "warning-foreground": "oklch(0.828 0.189 84.429)",
-  "iso-top": "color-mix(in oklab, var(--foreground) 12%, var(--background))",
-  "iso-face": "color-mix(in oklab, var(--foreground) 13%, var(--background))",
-  "iso-shade-0": "color-mix(in oklab, var(--foreground) 3.5%, var(--background))",
-  "iso-shade-1": "color-mix(in oklab, var(--foreground) 5.5%, var(--background))",
-  "iso-shade-2": "color-mix(in oklab, var(--foreground) 7.5%, var(--background))",
-  "iso-shade-3": "color-mix(in oklab, var(--foreground) 9.5%, var(--background))",
-  "iso-lit-top": "color-mix(in oklab, var(--brand-text) 22%, var(--background))",
-  "iso-lit-shade": "color-mix(in oklab, var(--brand-text) 12%, var(--background))",
-  "iso-hi": "color-mix(in oklab, var(--foreground) 84%, var(--background))",
-  "iso-mid": "color-mix(in oklab, var(--foreground) 46%, var(--background))",
-  "iso-lo": "color-mix(in oklab, var(--foreground) 30%, var(--background))",
-  "iso-faint": "color-mix(in oklab, var(--foreground) 17%, var(--background))",
-  "iso-lit": "var(--brand-text)",
-  "iso-ink": "var(--brand-text)",
-  "iso-halo": "oklch(0 0 0)",
-  "iso-halo-opacity": "0.55",
-  "iso-sheet": "color-mix(in oklab, var(--foreground) 19%, var(--background))"
+  "iso-plate-green": "var(--brand-text)"
 } as const;

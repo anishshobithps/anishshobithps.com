@@ -1,14 +1,14 @@
-import { IsoBox, projector } from "@repo/diagrams/iso";
+import { IsoArt } from "@repo/diagrams/iso-art";
+import { sheetScene } from "@repo/iso/scenes/sheet";
 import { SectionLabel } from "@repo/ui/components/typography";
 
-const p = projector(24, 60, 40);
-
-export function PostGridFiller() {
+export function PostGridFiller({ next }: { next: number }) {
+  const scene = sheetScene(next, "next", 400, 225, true);
   return (
     <div className="hatch flex h-full min-h-64 flex-col items-center justify-center gap-4 p-gutter">
-      <svg viewBox="0 0 120 90" aria-hidden="true" className="w-28">
-        <IsoBox p={p} at={[0, 0, 0]} size={[2, 2, 1]} tone="ghost" />
-      </svg>
+      <div className="relative aspect-video w-full max-w-56">
+        <IsoArt scene={scene} />
+      </div>
       <SectionLabel pixel>Next one&apos;s still churning</SectionLabel>
     </div>
   );

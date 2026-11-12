@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { hash } from "./iso";
 import { cn } from "@repo/ui/lib/cn";
 import {
   gitDraw,
@@ -74,6 +73,11 @@ const labels = [
 
 function delay(ms: number) {
   return { "--git-delay": `${ms}ms` } as CSSProperties;
+}
+
+function hash(n: number) {
+  const s = Math.sin(n * 12.9898) * 43758.5453;
+  return s - Math.floor(s);
 }
 
 export function GitChaos() {

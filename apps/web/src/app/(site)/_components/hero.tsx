@@ -20,11 +20,10 @@ import {
 import { LocationTag } from "@repo/ui/components/location";
 import { HireSign } from "@/app/(site)/_components/hire-sign";
 import { HeroNudges } from "@/app/(site)/_components/hero-nudges";
-import { Workbench } from "@/app/(site)/_components/workbench";
 import { IceCreamNote, PhotoCallout } from "@/components/shared/doodles";
 import { getLatestPost } from "@/lib/source";
 
-const { scene, ...workbench } = workbenchScene();
+const scene = workbenchScene();
 
 export function Hero() {
   const latest = getLatestPost();
@@ -34,7 +33,7 @@ export function Hero() {
       <div className="w-full max-w-5xl flex flex-col gap-8">
         <div className="relative">
           <PhotoCallout />
-          <div className="relative w-full border rounded-md overflow-hidden lg:max-h-60">
+          <div className="relative w-full border rounded-md overflow-hidden">
             <NextImage
               src="/profile.avif"
               alt={`Profile photo of ${siteConfig.name}`}
@@ -42,7 +41,7 @@ export function Hero() {
               height={4000}
               priority
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="w-full h-auto lg:h-60 lg:object-cover lg:object-subject"
+              className="w-full h-auto"
             />
           </div>
         </div>
@@ -120,11 +119,11 @@ export function Hero() {
           />
         </div>
 
-        <Workbench width={scene.width} height={scene.height} {...workbench}>
+        <div className="relative -mx-gutter mt-4 aspect-bench overflow-hidden">
           <ArtStage className="h-full">
             <IsoArt scene={scene} />
           </ArtStage>
-        </Workbench>
+        </div>
       </div>
     </Section>
   );

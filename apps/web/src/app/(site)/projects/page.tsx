@@ -13,6 +13,8 @@ import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { getPublicProjects } from "@/lib/projects";
+import { unstable_rethrow } from "next/navigation";
 
 export const metadata: Metadata = buildMeta({
   title: "Projects",
@@ -24,6 +26,16 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
+async function ProjectsArt() {
+  let titles: string[] = [];
+  try {
+    titles = (await getPublicProjects()).map((project) => project.title);
+  } catch (error) {
+    unstable_rethrow(error);
+  }
+  return <PageArt name="projects" data={titles} />;
+}
+
 export default function ProjectsPage() {
   return (
     <>
@@ -34,7 +46,13 @@ export default function ProjectsPage() {
         canonicalUrl={`${siteConfig.baseUrl}/projects`}
       />
       <Section variant="hero" aria-label="Projects header">
-        <HeroWithArt art={<PageArt name="projects" />}>
+        <HeroWithArt
+          art={
+            <Suspense fallback={<PageArt name="projects" />}>
+              <ProjectsArt />
+            </Suspense>
+          }
+        >
           <TypographyH1>Projects</TypographyH1>
           <TypographyLead>
             Everything I actually shipped, plus{" "}
