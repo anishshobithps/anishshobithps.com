@@ -119,3 +119,57 @@ export function groundDots(f: Figure, center: Flat, radius: number, step = 14, z
   }
   return k.dotsSvg(points, { size: 0.6, tone: "mid" }) as string;
 }
+
+export const lineD = (points: Flat[]) => k.pathOf(points) as string;
+
+export function arcD(cx: number, cy: number, r: number, from: number, to: number, steps = 18) {
+  return lineD(Array.from({ length: steps + 1 }, (_, i): Flat => {
+    const a = from + ((to - from) * i) / steps;
+    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  }));
+}
+
+export function ellipseD(cx: number, cy: number, rx: number, ry: number, steps = 28) {
+  return polyD(Array.from({ length: steps }, (_, i): Flat => [cx + Math.cos((i / steps) * Math.PI * 2) * rx, cy + Math.sin((i / steps) * Math.PI * 2) * ry]));
+}
+
+export function gearD(cx: number, cy: number, r: number, teeth: number, depth = 1.6) {
+  const points: Flat[] = [];
+  const step = (Math.PI * 2) / teeth;
+  for (let i = 0; i < teeth; i++) {
+    for (const [share, radius] of [[0, r - depth], [0.2, r], [0.5, r], [0.7, r - depth]] as const) {
+      const a = i * step + share * step;
+      points.push([cx + Math.cos(a) * radius, cy + Math.sin(a) * radius]);
+    }
+  }
+  return polyD(points);
+}
+
+export function greenAt(d: string, by: Flat = REGISTER, extra = "") {
+  if (!d) return "";
+  return `<g class="${PLATE.blend}${extra ? ` ${extra}` : ""}" transform="translate(${by[0]} ${by[1]})"><path class="${PLATE.green}" d="${d}"/></g>`;
+}
+
+export function greenFlat(d: string, by: Flat = REGISTER) {
+  if (!d) return "";
+  return `<g transform="translate(${by[0]} ${by[1]})"><path class="${PLATE.green}" d="${d}"/></g>`;
+}
+
+export function travel(f: Figure, name: string, points: Flat[], period: number, hold: Array<[number, number]> = []) {
+  const first = points[0]!;
+  const frames = points.map((point, index) => ({
+    t: (period * index) / (points.length - 1),
+    css: `transform:translate(${num(point[0] - first[0])}px,${num(point[1] - first[1])}px)`,
+  }));
+  for (const [t, index] of hold) {
+    const point = points[index]!;
+    frames.push({ t, css: `transform:translate(${num(point[0] - first[0])}px,${num(point[1] - first[1])}px)` });
+  }
+  return { attr: f.track(name, frames, { period }), start: first };
+}
+
+export function hash(text: string) {
+  let value = 2166136261;
+  for (let i = 0; i < text.length; i++) value = Math.imul(value ^ text.charCodeAt(i), 16777619);
+  return value >>> 0;
+}

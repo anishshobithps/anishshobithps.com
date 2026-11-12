@@ -19,8 +19,7 @@ type WorkbenchProps = Omit<ReturnType<typeof workbenchScene>, "scene"> & {
 
 export function Workbench({
   stations,
-  origin,
-  robot,
+  layers,
   width,
   height,
   children,
@@ -80,12 +79,13 @@ export function Workbench({
           }
         >
           <use href={`#${id}-outline`} />
-          <g transform={translate(-origin[0], -origin[1])}>
-            <use href={`#${id}-body`} />
-            <use href={`#${id}-eyes`} opacity={state.station >= 1 ? 1 : 0} />
-            <use href={`#${id}-gear`} opacity={state.station >= 2 ? 1 : 0} />
-            <use href={`#${id}-antenna`} opacity={state.station >= 3 ? 1 : 0} />
-          </g>
+          {layers.map(({ name, from, to }) => (
+            <use
+              key={name}
+              href={`#${id}-${name}`}
+              opacity={state.station >= from && state.station <= to ? 1 : 0}
+            />
+          ))}
           <rect
             x={-64}
             y={-64}
@@ -151,10 +151,10 @@ export function Workbench({
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            {Object.entries(robot).map(([part, markup]) => (
+            {layers.map(({ name, markup }) => (
               <g
-                key={part}
-                id={`${id}-${part}`}
+                key={name}
+                id={`${id}-${name}`}
                 dangerouslySetInnerHTML={{ __html: markup }}
               />
             ))}
