@@ -29,6 +29,7 @@ lastModified: 2026-04-02
 | `date` | No | Publication date. The blog index lists posts newest first by it |
 | `tags` | No | Free-form strings, and the blog index filters by them |
 | `lastModified` | No | Set it by hand when an edit is worth announcing |
+| `links` | No | The links worth surfacing while someone reads. See [Links](#links) |
 
 `lastModified` is manual on purpose. It used to come from git history, but shallow clones on the deploy host re-dated every post on every push. The sitemap uses `lastModified`, then `date`.
 
@@ -40,6 +41,42 @@ Everything `fumadocs-ui` provides by default for MDX works: headings, tables, ca
 
 - `<TypographyMark>` and `<TypographyMuted>`
 - The fumadocs tab components
+- `<Steps>` with `<Step>` children, and `<Files>` with `<Folder>` and `<File>` for a file tree
+- `<LinkCard url="…" />`, covered below
+
+## Links
+
+A post can list the links a reader should not miss, in frontmatter:
+
+```yaml
+links:
+  - url: https://github.com/anishshobithps/resume
+    label: Resume source
+    note: One line on why it matters.
+    featured: true
+  - https://exiftool.org/
+```
+
+An entry is a bare URL or an object with `url`, and optionally `label`, `note` and `featured`. Every entry shows up in a "Links" block under the table of contents (inside the contents drawer on phones), and in a "Links from this post" grid before the end of the post. The first entry with `featured: true` also gets a full card at the top of the post. Leave `featured` off when no link is the post's source.
+
+`label` replaces the card's title, and `note` replaces its description. Both are optional, and a card falls back to what the linked page says about itself. The full-size card for a GitHub repo always shows the repo's name, so there `label` only renames it in the side list and the grid, and `note` is added as an extra line.
+
+Cards are built on the server from the URL alone:
+
+| URL | Card shows |
+| --- | --- |
+| GitHub repo | Description, topics, language, stars, forks, license, latest release |
+| GitHub file, folder, release or profile | Path and repo, release tag and date, or followers and repos |
+| npm package | Version, weekly downloads, license |
+| YouTube video | Thumbnail, title, channel |
+| Wikipedia article | Summary and lead image |
+| Discord invite | Server name, icon, members, online now |
+| A post or page on this site | Title, description, date, reading time |
+| Anything else | Title, description, site name, image and favicon from the page's own metadata |
+
+A link that can't be fetched falls back to a plain card with its host. Results are cached for an hour (GitHub, npm, Discord) or a day, and a failed lookup is retried after five minutes.
+
+To place a card in the body, write `<LinkCard url="https://…" />`, or put a URL on a line of its own and it becomes one. Passing `label` or `note` works the same as in frontmatter. Ordinary links in prose keep working as they were, and an external one opens a small preview when hovered.
 
 Video goes through the media player in `packages/media-player/src/index.tsx`. Import it at the top of the post, and see an existing post for the pattern. Videos stream from Cloudinary, which needs `res.cloudinary.com` allowed in the CSP, and it already is. Images inside posts are served from this domain.
 

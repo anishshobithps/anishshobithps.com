@@ -24,7 +24,7 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-const LAST_UPDATED = "October 19, 2026";
+const LAST_UPDATED = "November 12, 2026";
 
 const POLICY_HISTORY_URL = `${siteConfig.repoUrl}/commits/main/src/app/(site)/privacy-policy/page.tsx`;
 
@@ -389,6 +389,23 @@ export default function PrivacyPolicyPage() {
               differently: they are optimised and served from this domain, so
               reading a post involves no Cloudinary request until you press
               play.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <Heading as="h3" level="h4" divider>Link previews in posts</Heading>
+            <TypographyP>
+              Some links in blog posts appear as a preview card with a title, a
+              description, and sometimes an image. The server builds these: it
+              reads the linked page&apos;s title and description, or asks
+              GitHub, npm, YouTube, Wikipedia, or Discord for the details, and
+              caches the result, so your browser doesn&apos;t contact those sites
+              to read the text. <TypographyMark>Thumbnails and site icons</TypographyMark>{" "}
+              are different: they load directly from the linked site&apos;s own
+              servers, so that site sees your{" "}
+              <TypographyMark>IP address and user agent</TypographyMark> the way
+              any image host does. Those requests are sent{" "}
+              <TypographyMark>without a referrer</TypographyMark>, so the site
+              doesn&apos;t learn which post you were reading.
             </TypographyP>
           </div>
           <div className="space-y-2">
