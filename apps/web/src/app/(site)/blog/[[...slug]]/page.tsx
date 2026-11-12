@@ -18,6 +18,7 @@ import {
   PostLinksRecap,
   PostSourceCard,
 } from "@/app/(site)/blog/[[...slug]]/_components/post-links";
+import { createPreviewLink } from "@/components/link-card/mdx-link";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
@@ -209,7 +210,7 @@ export default async function Page(props: {
         <PostSourceCard links={links} />
         <MDX
           components={getMDXComponents({
-            a: createRelativeLink(source, page),
+            a: createPreviewLink(createRelativeLink(source, page)),
           })}
         />
         <PostLinksRecap links={links} />
