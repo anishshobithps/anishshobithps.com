@@ -224,7 +224,7 @@ The correct approach is to let <TypographyMark>hyperxmp</TypographyMark> handle 
 }
 ```
 
-<TypographyMark>/DisplayDocTitle true</TypographyMark> is the important one here, because it's what makes PDF viewers show your name in the title bar instead of the filename. That was the original problem that started this whole rabbit hole.
+<TypographyMark>/DisplayDocTitle true</TypographyMark> is the important one here, because it's what makes PDF viewers show your name in the title bar instead of the filename[^pdf18]. That was the original problem that started this whole rabbit hole.
 
 <Callout type="info" title="Note">
 Even this `\pdfcatalog` block needs to stay out of main.tex if you want the XMP stream to be written correctly. During debugging I discovered that placing `\pdfcatalog` between `\hypersetup` and `\begin{document}` also silently breaks the XMP output. Move it into formatting.sty or remove it entirely. hyperxmp handles MarkInfo automatically, and the DisplayDocTitle hint is cosmetic.
@@ -883,3 +883,4 @@ If you want to look at the source, or use it as a starting point for your own re
 [^pandoc]: Pandoc, [pandoc/dockerfiles](https://github.com/pandoc/dockerfiles).
 [^releases]: GitHub Docs, [About releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
 [^dc]: Dublin Core Metadata Initiative, [Dublin Core Metadata Element Set](https://www.dublincore.org/specifications/dublin-core/dces/).
+[^pdf18]: W3C, [WCAG 2.1 Technique PDF18](https://www.w3.org/WAI/WCAG21/Techniques/pdf/PDF18).

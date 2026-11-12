@@ -67,7 +67,7 @@ Apple embeds nearly unreadable text into several of its symbols.
 
 Apple's Page Facing Up emoji[^page-facing-up] (📄) contains a full Easter egg, a letter addressed "Dear Katie," signed "Take care, John Appleseed," carrying the text of Apple's 1997–2002 Think Different ad campaign. According to Emojipedia[^clipboard], the same hidden letter appears across the Scroll (📜), Clipboard (📋), and Open Book (📖). At normal emoji size it's indistinguishable from generic scribbles. You need significant zoom to read it.
 
-<TypographyMark>John Appleseed</TypographyMark> is widely believed to be the alias of Mike Markkula, the second CEO of Apple Computer, Inc., who used the name while publishing software for the Apple II. Apple has never officially confirmed this connection, but it has been treated as an open secret in the industry for decades. Apple has used the name as a placeholder in software demonstrations and demo accounts ever since.
+<TypographyMark>John Appleseed</TypographyMark> is widely believed to be the alias of Mike Markkula, the second CEO of Apple Computer, Inc., who used the name while publishing software for the Apple II[^markkula]. Apple has never officially confirmed this connection, but it has been treated as an open secret in the industry for decades. Apple has used the name as a placeholder in software demonstrations and demo accounts ever since.
 
 This pattern isn't unique to Apple. Google's original Noto emoji font embedded a tiny "G" inside several punctuation glyphs in early versions as an internal tracking marker. Samsung's older emoji set had watermarks in the transparency layer of several face emojis, invisible unless you extracted the raw <abbr title="Portable Network Graphics">PNG</abbr> from the font file.
 
@@ -92,17 +92,17 @@ The official Unicode name is "Face With Look of Triumph." The steam represents t
 
 ### 💩: this one has a full origin story
 
-The poop emoji originated in Japan[^poop], where feces had become associated with humour after an anthropomorphized poop appeared in *Dr. Slump*, Akira Toriyama's popular manga. Kurita created it in 1997 for phones sold by J-Phone. In Japan it carries luck, the word for poop (*unko*) starts with the same sound as the word for luck (*un*).
+The poop emoji originated in Japan[^poop], where feces had become associated with humour after an anthropomorphized poop appeared in *Dr. Slump*, Akira Toriyama's popular manga. Kurita created it in 1997 for phones sold by J-Phone. In Japan it carries luck, the word for poop (*unko*) starts with the same sound as the word for luck (*un*)[^poop].
 
 <LinkCard url="https://en.wikipedia.org/wiki/Poop_emoji" />
 
-When Google prepared to add it to Gmail, internal teams resisted. A direct appeal from Google's Japanese product manager, explaining its cultural popularity, eventually cleared it.
+When Google prepared to add it to Gmail, internal teams resisted. A direct appeal from Google's Japanese product manager, explaining its cultural popularity, eventually cleared it[^poop].
 
 The popular theory that the poop emoji and soft-serve ice cream share a swirl isn't far off, in *Dr. Slump* itself, poop characters meet a Soft-Serve-Ice-Cream Boy they mistake for a poop. The visual confusion is built into the origin.
 
 ### 👋: context-dependent across cultures
 
-In Western usage: hello or goodbye. On WeChat in Chinese digital culture, sending this wave can carry the meaning "I don't want to be your friend anymore." Same picture, different message depending on who receives it.
+In Western usage: hello or goodbye. On WeChat in Chinese digital culture, sending this wave can carry the meaning "I don't want to be your friend anymore."[^waving-hand] Same picture, different message depending on who receives it.
 
 In 2019, reports from distributed teams (including Slack engineering discussions) showed that globally distributed teams had significantly higher rates of emoji-related misunderstandings than single-region teams. The wave, the folded hands (🙏, which reads as prayer in Western contexts and "please" or "thank you" in Japanese), and the OK hand (👌, which has offensive connotations in several countries) topped the list.
 
@@ -179,7 +179,7 @@ When a platform changes what a code point looks like, it changes what messages a
 
 As of March 2022, the Unicode Emoji Subcommittee officially announced a moratorium[^flags] on new flag emojis. No new national or regional flags will be accepted as proposals.
 
-Today, flags are already the second-largest emoji category after People & Body, with 270 flags out of nearly 4,000 total emoji[^emoji-counts]. But <TypographyMark><abbr title="International Organization for Standardization">ISO</abbr> 3166-2</TypographyMark> recognises over 5,000 geographically-valid regions including states, provinces, and autonomous territories. Adding sub-national flags at any scale would require a different encoding architecture entirely, with an effectively unlimited long tail of rarely-used icons.
+Today, flags are already the second-largest emoji category after People & Body, with 270 flags out of nearly 4,000 total emoji[^emoji-counts]. But <TypographyMark><abbr title="International Organization for Standardization">ISO</abbr> 3166-2</TypographyMark> recognises over 5,000 geographically-valid regions including states, provinces, and autonomous territories[^iso-3166-2]. Adding sub-national flags at any scale would require a different encoding architecture entirely, with an effectively unlimited long tail of rarely-used icons.
 
 There's also a harder problem: borders and political identities change. Once a Unicode character is added, it can never be removed. A flag emoji added today represents a political reality that may not exist in ten years, but the code point stays in the standard permanently.
 
@@ -264,7 +264,7 @@ Standard fonts are monochrome vector drawings. Emoji fonts need full colour, mul
 
 The four main formats:
 
-<TypographyMark>sbix</TypographyMark>[^sbix] (Apple) stores each emoji as a stack of embedded <abbr title="Portable Network Graphics">PNG</abbr> images at different resolutions. When your iPhone renders an emoji, it selects the bitmap size that matches the display's <abbr title="Dots Per Inch">DPI</abbr>. This produces the glossy, high-detail look characteristic of Apple Color Emoji. On macOS, where assets include high-res bitmaps optimised for 5K displays, `AppleColorEmoji.ttc` exceeds 160MB, on iOS the same assets are significantly more compressed and optimised to conserve storage.
+<TypographyMark>sbix</TypographyMark>[^sbix] (Apple) stores each emoji as a stack of embedded <abbr title="Portable Network Graphics">PNG</abbr> images at different resolutions. When your iPhone renders an emoji, it selects the bitmap size that matches the display's <abbr title="Dots Per Inch">DPI</abbr>. This produces the glossy, high-detail look characteristic of Apple Color Emoji. On macOS, where assets include high-res bitmaps optimised for 5K displays, `AppleColorEmoji.ttc` exceeds 200MB[^apple-font], on iOS the same assets are significantly more compressed and optimised to conserve storage.
 
 <TypographyMark>CBDT/CBLC</TypographyMark>[^cbdt] (Google, Android original) uses compressed <abbr title="Portable Network Graphics">PNG</abbr> data embedded inside the font file. Same concept as sbix, different implementation. Also produces large font files.
 
@@ -300,7 +300,7 @@ When you tap 👩‍💻 and it appears on your screen, here's the full sequence
     The sequence is stored as <abbr title="8-bit Unicode Transformation Format">UTF-8</abbr> or <abbr title="16-bit Unicode Transformation Format">UTF-16</abbr> in the text buffer, typically around 15–20 bytes in UTF-8 depending on modifiers.
   </Step>
   <Step>
-    The text layout engine (CoreText[^coretext] on iOS, HarfBuzz[^harfbuzz] on Android, DirectWrite[^directwrite] on Windows) reads the sequence, identifies the <abbr title="Zero Width Joiner">ZWJ</abbr> boundaries, and determines this is a single <abbr title="A user-perceived character, possibly made of multiple code points">grapheme cluster</abbr> requiring a single glyph slot.
+    The text layout engine (CoreText[^coretext] on iOS, HarfBuzz[^harfbuzz] on Android[^harfbuzz-wiki], DirectWrite[^directwrite] on Windows) reads the sequence, identifies the <abbr title="Zero Width Joiner">ZWJ</abbr> boundaries, and determines this is a single <abbr title="A user-perceived character, possibly made of multiple code points">grapheme cluster</abbr> requiring a single glyph slot.
   </Step>
   <Step>
     The layout engine queries the font fallback chain. If the primary font doesn't contain this glyph, it walks the chain until it finds one that does.
@@ -367,3 +367,8 @@ Next time you send 😤 expecting frustration and it lands as a flex, that's the
 [^directwrite]: Microsoft Learn, [DirectWrite (DWrite)](https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal).
 [^watch]: Emojipedia, [Watch Emoji](https://emojipedia.org/watch).
 [^emoji-counts]: Unicode Consortium, [Emoji counts](https://unicode.org/emoji/charts/emoji-counts.html).
+[^waving-hand]: Emojipedia, [Waving Hand Emoji](https://emojipedia.org/waving-hand).
+[^apple-font]: Emojipedia, [Apple's Emoji Font Gets Versatile](https://blog.emojipedia.org/apples-emoji-font-gets-versatile/).
+[^iso-3166-2]: Wikipedia, [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2).
+[^harfbuzz-wiki]: Wikipedia, [HarfBuzz](https://en.wikipedia.org/wiki/HarfBuzz).
+[^markkula]: Online Archive of California, [Markkula (Mike) collection of early Apple Computer material](https://oac.cdlib.org/findaid/ark:/13030/c8cv4qcp).
