@@ -89,6 +89,12 @@ export type CoercedEnvSchema = {
   VERCEL_DEPLOYMENT_ID?: string;
   
   /**
+   * **CLOUDINARY_CLOUD_NAME**  
+   * ![icon](data:image/svg+xml;utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20fill%3D%22%23808080%22%20d%3D%22M29%2022h-5a2.003%202.003%200%200%201-2-2v-6a2%202%200%200%201%202-2h5v2h-5v6h5ZM18%2012h-4V8h-2v14h6a2.003%202.003%200%200%200%202-2v-6a2%202%200%200%200-2-2m-4%208v-6h4v6Zm-6-8H3v2h5v2H4a2%202%200%200%200-2%202v2a2%202%200%200%200%202%202h6v-8a2%202%200%200%200-2-2m0%208H4v-2h4Z%22%2F%3E%3C%2Fsvg%3E)   
+   */
+  CLOUDINARY_CLOUD_NAME?: string;
+  
+  /**
    * **DATABASE_URL** 🔐 _sensitive_  
    * ![icon](data:image/svg+xml;utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cpath%20fill%3D%22%23808080%22%20d%3D%22M29%2022h-5a2.003%202.003%200%200%201-2-2v-6a2%202%200%200%201%202-2h5v2h-5v6h5ZM18%2012h-4V8h-2v14h6a2.003%202.003%200%200%200%202-2v-6a2%202%200%200%200-2-2m-4%208v-6h4v6Zm-6-8H3v2h5v2H4a2%202%200%200%200-2%202v2a2%202%200%200%200%202%202h6v-8a2%202%200%200%200-2-2m0%208H4v-2h4Z%22%2F%3E%3C%2Fsvg%3E)   
    */
@@ -108,11 +114,11 @@ export type CoercedEnvSchema = {
   
 };
 
-type _CoercedEnvSchema_59bbf336 = CoercedEnvSchema;
+type _CoercedEnvSchema_9b907c1d = CoercedEnvSchema;
 
 declare module 'varlock/env' {
-  export interface TypedEnvSchema extends Readonly<_CoercedEnvSchema_59bbf336> {}
-  export interface PublicTypedEnvSchema extends Readonly<Pick<_CoercedEnvSchema_59bbf336, 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY' | 'OWNER_CLERK_USER_ID' | 'NEXT_PUBLIC_SHORTLINK_DOMAIN' | 'NEXT_PUBLIC_UMAMI_WEBSITE_ID' | 'VERCEL_DEPLOYMENT_ID' | 'NEXT_PUBLIC_BASE_URL' | 'NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL'>> {}
+  export interface TypedEnvSchema extends Readonly<_CoercedEnvSchema_9b907c1d> {}
+  export interface PublicTypedEnvSchema extends Readonly<Pick<_CoercedEnvSchema_9b907c1d, 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY' | 'OWNER_CLERK_USER_ID' | 'NEXT_PUBLIC_SHORTLINK_DOMAIN' | 'NEXT_PUBLIC_UMAMI_WEBSITE_ID' | 'VERCEL_DEPLOYMENT_ID' | 'CLOUDINARY_CLOUD_NAME' | 'NEXT_PUBLIC_BASE_URL' | 'NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL'>> {}
 }
 
 
@@ -122,11 +128,11 @@ export type EnvSchemaAsStrings = {
       : (NonNullable<CoercedEnvSchema[Property]> extends boolean ? ('true' | 'false') : string)
 };
 
-type _EnvSchemaAsStrings_59bbf336 = EnvSchemaAsStrings;
+type _EnvSchemaAsStrings_9b907c1d = EnvSchemaAsStrings;
 declare global {
 
   // add types for global import.meta.env
-  interface ImportMetaEnv extends _EnvSchemaAsStrings_59bbf336 {}
+  interface ImportMetaEnv extends _EnvSchemaAsStrings_9b907c1d {}
   interface ImportMeta {
     readonly env: ImportMetaEnv;
   }

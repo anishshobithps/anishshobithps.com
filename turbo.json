@@ -23,6 +23,7 @@
         "WAKATIME_API_KEY",
         "SHORTLINK_DOMAIN",
         "VERCEL_DEPLOYMENT_ID",
+        "CLOUDINARY_CLOUD_NAME",
         "_VARLOCK_ENV_KEY",
         "ENABLE_EXPERIMENTAL_COREPACK",
         "CI",
