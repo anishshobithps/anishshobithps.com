@@ -10,7 +10,7 @@ This repository contains separately licensed code, creative works, and other mat
 
 In short: the functional code is MIT, while the writing and artwork are CC BY-NC-ND 4.0. My name, likeness, and brand identity are not licensed for reuse. Part III explains how brand assets can be licensed as artwork while the brand itself stays reserved.
 
-The summaries in this file explain how the licenses apply here. They do not replace the license texts. Where a summary and a license text differ, the license text governs.
+The full texts are in [`LICENSE-MIT`](LICENSE-MIT) and [`LICENSE-CC-BY-NC-ND`](LICENSE-CC-BY-NC-ND). The summaries in this file explain how the licenses apply here. They do not replace the license texts. Where a summary and a license text differ, the license text governs.
 
 ---
 
