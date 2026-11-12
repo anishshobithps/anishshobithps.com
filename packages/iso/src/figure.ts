@@ -1,4 +1,3 @@
-import { HALO, HALO_OPACITY } from "./classes";
 import * as k from "./iso-kit";
 
 export type { Tone } from "./classes";
@@ -259,13 +258,6 @@ export class Figure {
     return k.sideMatrix(at, z, this.P, face);
   }
 
-  halo(plan: Plan, z: number, spread = 6) {
-    const layers = [1, 0.66, 0.33].map((share, index) => {
-      const grown = k.insetPlan(plan, -spread * share);
-      return `<path class="${HALO} ${HALO_OPACITY[index]!}" d="${k.haloOf(grown, z, 0.01, this.P)}"/>`;
-    });
-    return layers.join("");
-  }
 
   build(meta: Omit<Scene, "id" | "body" | "tracks" | "period" | "width" | "height"> & { width: number; height: number }): Scene {
     const defs = this.defs.length ? `<defs>${this.defs.join("")}</defs>` : "";

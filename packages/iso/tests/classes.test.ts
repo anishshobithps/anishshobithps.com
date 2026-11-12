@@ -27,32 +27,18 @@ describe("iso class maps", () => {
     }
   });
 
-  it("styles every line tone", () => {
-    expect(Object.keys(classes.TONE_STROKE).sort()).toEqual([
-      "faint",
-      "hi",
-      "lit",
-      "lo",
-      "mid",
-    ]);
+  it("covers every dot tone", () => {
+    expect(Object.keys(classes.DOT_TONE).sort()).toEqual(["faint", "hi", "lo", "mid"]);
   });
 
-  it("has exactly three halo layers", () => {
-    expect(classes.HALO_OPACITY).toHaveLength(3);
+  it("offers the two plates, paper and the blend helpers", () => {
+    expect(Object.keys(classes.PLATE).sort()).toEqual(["blend", "green", "ink", "isolate", "paper", "register", "void"]);
+    expect(classes.PLATE.blend).toContain("mix-blend-multiply");
+    expect(classes.PLATE.blend).toContain("dark:mix-blend-screen");
   });
 
-  it("covers every face fill the scenes can ask for", () => {
-    expect(Object.keys(classes.FACE_FILL).sort()).toEqual([
-      "0",
-      "1",
-      "2",
-      "3",
-      "ink",
-      "lit",
-      "paper",
-      "sheet",
-      "top",
-    ]);
+  it("offers six theme swatches for the fan deck", () => {
+    expect(classes.SWATCH).toHaveLength(6);
   });
 
   it("only references colors declared in the theme tokens", () => {

@@ -40,7 +40,7 @@ export const README: Block[] = [
   {
     kind: "list",
     items: [
-      `Shipping v3 of [anishshobithps.com](https://github.com/anishshobithps/anishshobithps.com): isometric art drawn in code, a guestbook, and these cards.`,
+      `Shipping v3 of [anishshobithps.com](https://github.com/anishshobithps/anishshobithps.com): two-colour print art drawn in code, a guestbook, and these cards.`,
       "Studying cryptology and ethical hacking at MSIS, Manipal. Breaking things, but with a syllabus.",
       "Looking for a full-time role. Also open to collaborations that make sense, or at least teach me something.",
     ],
