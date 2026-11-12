@@ -26,6 +26,14 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
+async function GuestbookArt() {
+  const { entries } = await getGuestbookEntries({ limit: 8 });
+  const names = [...entries]
+    .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+    .map((entry) => entry.user.name);
+  return <PageArt name="guestbook" data={names} />;
+}
+
 function GuestbookFeed({ currentUserId }: { currentUserId: string | null }) {
   return (
     <PrefetchInfinite
@@ -60,7 +68,13 @@ export default async function GuestbookPage() {
       />
 
       <Section variant="hero" aria-label="Guestbook">
-        <HeroWithArt art={<PageArt name="guestbook" />}>
+        <HeroWithArt
+          art={
+            <Suspense fallback={<PageArt name="guestbook" />}>
+              <GuestbookArt />
+            </Suspense>
+          }
+        >
           <TypographyH1>Guestbook</TypographyH1>
           <TypographyLead>
             You stopped by. <TypographyMark>Leave a mark.</TypographyMark>

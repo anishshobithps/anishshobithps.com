@@ -16,8 +16,8 @@ export type { ShelfPost };
 
 const scenes = {
   blogs: (posts: ShelfPost[]) => shelfScene(posts),
-  projects: () => projectsScene(),
-  guestbook: () => guestbookScene(),
+  projects: (titles?: string[]) => projectsScene(titles),
+  guestbook: (names?: string[]) => guestbookScene(names),
   resume: () => resumeScene(),
   privacy: () => redactedScene(),
   branding: () => brandingScene(),

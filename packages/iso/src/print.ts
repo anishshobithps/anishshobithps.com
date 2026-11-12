@@ -173,3 +173,17 @@ export function hash(text: string) {
   for (let i = 0; i < text.length; i++) value = Math.imul(value ^ text.charCodeAt(i), 16777619);
   return value >>> 0;
 }
+
+const LOGO = "32,4 48,60 40.5,60 32,14 23.5,60 16,60";
+
+export function logoD(x: number, y: number, size: number) {
+  const scale = size / 64;
+  return polyD(
+    LOGO.split(" ").map((pair): Flat => {
+      const [px, py] = pair.split(",").map(Number) as [number, number];
+      return [x + px * scale, y + py * scale];
+    }),
+  );
+}
+
+export const pad2 = (value: number) => String(value).padStart(2, "0");

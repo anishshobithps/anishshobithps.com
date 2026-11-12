@@ -117,6 +117,15 @@ export const PLATE = {
   register: `${BLEND} transition-[translate] duration-500 ease-out group-hover/iso:translate-x-[3px] group-hover/iso:translate-y-[2px] group-focus-visible/iso:translate-x-[3px] group-focus-visible/iso:translate-y-[2px] motion-reduce:transition-none`,
 } as const;
 
+export const SWATCH = [
+  "fill-(--brand) stroke-none",
+  "fill-(--selection-bg) stroke-none",
+  "fill-foreground stroke-none",
+  "fill-muted-foreground stroke-none",
+  "fill-muted stroke-none",
+  "fill-background stroke-none",
+] as const;
+
 export const PRINT_LINE = "stroke-iso-plate-ink";
 
 export const DASH = "[stroke-dasharray:3_4]";

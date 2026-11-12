@@ -1,22 +1,11 @@
 import { PLATE } from "../classes";
 import { Figure, type Flat, type Projection, type Scene } from "../figure";
-import { circleD, gearD, greenAt, inkPath, lineD, paperPath, rectD, REGISTER, screenPath, polyD } from "../print";
+import { circleD, gearD, greenAt, inkPath, lineD, logoD, paperPath, polyD, rectD, REGISTER, screenPath } from "../print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 const PERIOD = 4;
 const SURFACE = 96;
 const PRESS = 5;
-
-const LOGO = "32,4 48,60 40.5,60 32,14 23.5,60 16,60";
-
-function logoD(x: number, y: number, size: number) {
-  const scale = size / 64;
-  const points = LOGO.split(" ").map((pair): Flat => {
-    const [px, py] = pair.split(",").map(Number) as [number, number];
-    return [x + px * scale, y + py * scale];
-  });
-  return polyD(points);
-}
 
 export function principlesScene(width = 400, height = 225): Scene {
   const f = new Figure("surface", PROJECTION, PERIOD);
