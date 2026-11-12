@@ -69,8 +69,6 @@ Apple's Page Facing Up emoji[^page-facing-up] (📄) contains a full Easter egg,
 
 <TypographyMark>John Appleseed</TypographyMark> is widely believed to be the alias of Mike Markkula, the second CEO of Apple Computer, Inc., who used the name while publishing software for the Apple II[^markkula]. Apple has never officially confirmed this connection, but it has been treated as an open secret in the industry for decades. Apple has used the name as a placeholder in software demonstrations and demo accounts ever since.
 
-This pattern isn't unique to Apple. Google's original Noto emoji font embedded a tiny "G" inside several punctuation glyphs in early versions as an internal tracking marker. Samsung's older emoji set had watermarks in the transparency layer of several face emojis, invisible unless you extracted the raw <abbr title="Portable Network Graphics">PNG</abbr> from the font file.
-
 
 ## Emojis you've been misreading for years
 
@@ -104,7 +102,7 @@ The popular theory that the poop emoji and soft-serve ice cream share a swirl is
 
 In Western usage: hello or goodbye. On WeChat in Chinese digital culture, sending this wave can carry the meaning "I don't want to be your friend anymore."[^waving-hand] Same picture, different message depending on who receives it.
 
-In 2019, reports from distributed teams (including Slack engineering discussions) showed that globally distributed teams had significantly higher rates of emoji-related misunderstandings than single-region teams. The wave, the folded hands (🙏, which reads as prayer in Western contexts and "please" or "thank you" in Japanese), and the OK hand (👌, which has offensive connotations in several countries) topped the list.
+A 2022 survey of 9,400 hybrid workers across 11 countries, run for Slack and Duolingo, found that 58% had been unaware that specific emoji have multiple meanings, and that 31% of Gen Z and 24% of millennials had sent an emoji that a recipient misunderstood[^slack-survey]. The folded hands (🙏) read as prayer in some contexts and as "please" or "thank you" in Japanese culture[^folded-hands], and the OK hand (👌) can be offensive in parts of Europe, the Middle East, and South America[^ok-hand].
 
 
 ## The Fitzpatrick scale and the politics of skin tone
@@ -136,7 +134,7 @@ The most-rejected category is food. Proposals for specific national dishes arriv
 
 The most consistently rejected category besides food is logos and brand marks. Several tech companies have submitted proposals for brand-adjacent emoji (a specific laptop design, a specific phone shape). All were rejected, because the Consortium has a firm rule against proprietary visual references in a universal standard.
 
-Some rejections are instructive. The bagel was rejected twice before it was accepted in 2018. The initial designs showed a plain bagel, which testers found indistinguishable from a donut at small sizes. Only after Emojipedia ran a public campaign and the proposal was revised to include cream cheese did it pass.
+Some rejections are instructive. The bagel was proposed officially and rejected in November 2016, then proposed again in 2017[^bagel-tracker], and was approved in 2018 with Unicode 11[^bagel]. Even then its design was contested: Apple updated its bagel during the iOS 12.1 beta after complaints that it lacked cream cheese[^bagel].
 
 The middle finger (🖕, Unicode 7.0, 2014) made it only after significant internal debate. The deciding argument was that the character already existed in SoftBank's pre-Unicode Japanese emoji set, so rejecting it would create a compatibility break.
 
@@ -264,7 +262,7 @@ Standard fonts are monochrome vector drawings. Emoji fonts need full colour, mul
 
 The four main formats:
 
-<TypographyMark>sbix</TypographyMark>[^sbix] (Apple) stores each emoji as a stack of embedded <abbr title="Portable Network Graphics">PNG</abbr> images at different resolutions. When your iPhone renders an emoji, it selects the bitmap size that matches the display's <abbr title="Dots Per Inch">DPI</abbr>. This produces the glossy, high-detail look characteristic of Apple Color Emoji. On macOS, where assets include high-res bitmaps optimised for 5K displays, `AppleColorEmoji.ttc` exceeds 200MB[^apple-font], on iOS the same assets are significantly more compressed and optimised to conserve storage.
+<TypographyMark>sbix</TypographyMark>[^sbix] (Apple) stores each emoji as a stack of embedded <abbr title="Portable Network Graphics">PNG</abbr> images at different resolutions. When your iPhone renders an emoji, it selects the bitmap size that matches the display's <abbr title="Dots Per Inch">DPI</abbr>. This produces the glossy, high-detail look characteristic of Apple Color Emoji. The font file, `AppleColorEmoji.ttc`, weighs in at over 200MB[^apple-font].
 
 <TypographyMark>CBDT/CBLC</TypographyMark>[^cbdt] (Google, Android original) uses compressed <abbr title="Portable Network Graphics">PNG</abbr> data embedded inside the font file. Same concept as sbix, different implementation. Also produces large font files.
 
@@ -372,3 +370,8 @@ Next time you send 😤 expecting frustration and it lands as a flex, that's the
 [^iso-3166-2]: Wikipedia, [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2).
 [^harfbuzz-wiki]: Wikipedia, [HarfBuzz](https://en.wikipedia.org/wiki/HarfBuzz).
 [^markkula]: Online Archive of California, [Markkula (Mike) collection of early Apple Computer material](https://oac.cdlib.org/findaid/ark:/13030/c8cv4qcp).
+[^slack-survey]: Slack, [Beyond the smile: how emoji use has evolved in the workplace](https://slack.com/blog/collaboration/emoji-use-at-work).
+[^folded-hands]: Emojipedia, [Folded Hands Emoji](https://emojipedia.org/folded-hands).
+[^ok-hand]: Emojipedia, [OK Hand Emoji](https://emojipedia.org/ok-hand).
+[^bagel-tracker]: GitHub, [Bagel emoji, unicode-proposals issue #47](https://github.com/Crissov/unicode-proposals/issues/47).
+[^bagel]: Emojipedia, [Bagel Emoji](https://emojipedia.org/bagel).
