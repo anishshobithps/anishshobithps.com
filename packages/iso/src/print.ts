@@ -55,6 +55,9 @@ export const rectD = (x: number, y: number, w: number, h: number) => k.pathOf([[
 
 export const polyD = (points: Flat[]) => k.pathOf(points, true) as string;
 
+export const circleD = (cx: number, cy: number, r: number, steps = 28) =>
+  polyD(Array.from({ length: steps }, (_, i): Flat => [cx + Math.cos((i / steps) * Math.PI * 2) * r, cy + Math.sin((i / steps) * Math.PI * 2) * r]));
+
 export function inkPath(d: string, extra = "") {
   if (!d) return "";
   return `<path class="${PRINT_LINE}${extra ? ` ${extra}` : ""}" ${PRINT_LINE_ATTRS} d="${d}"/>`;

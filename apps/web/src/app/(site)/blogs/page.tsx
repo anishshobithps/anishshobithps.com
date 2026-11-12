@@ -1,5 +1,5 @@
 import { BlogCover } from "@repo/diagrams/blog-covers";
-import { PageArt } from "@repo/diagrams/page-art";
+import { PageArt, type ShelfPost } from "@repo/diagrams/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { BlogsClient, type BlogPost } from "@/app/(site)/blogs/blogs-client";
 import { BlogsSkeleton } from "@/app/(site)/blogs/blogs-skeleton";
@@ -43,6 +43,16 @@ export default function BlogPage() {
     cover: <BlogCover slug={page.slugs.at(-1) ?? ""} />,
   }));
 
+  const shelf: ShelfPost[] = pages.map((page, i) => {
+    const exported = page.data as { _exports?: { readingTime?: { minutes?: number } } };
+    return {
+      href: page.url,
+      title: page.data.title,
+      number: pages.length - i,
+      minutes: Math.max(1, Math.ceil(exported._exports?.readingTime?.minutes ?? 5)),
+    };
+  });
+
   const allTags = Array.from(
     new Set(pages.flatMap((p) => p.data.tags ?? [])),
   ).sort();
@@ -56,7 +66,7 @@ export default function BlogPage() {
         canonicalUrl={`${siteConfig.baseUrl}/blogs`}
       />
       <Section variant="hero" aria-label="Blog header">
-        <HeroWithArt art={<PageArt name="blogs" />}>
+        <HeroWithArt art={<PageArt name="blogs" data={shelf} />}>
           <TypographyH1>Blogs</TypographyH1>
           <TypographyLead>
             Writing about what I built,{" "}

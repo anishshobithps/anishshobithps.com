@@ -113,10 +113,13 @@ export const PLATE = {
   green: "fill-iso-plate-green stroke-none",
   blend: BLEND,
   isolate: "isolate",
+  void: "dark:fill-iso-paper",
   register: `${BLEND} transition-[translate] duration-500 ease-out group-hover/iso:translate-x-[3px] group-hover/iso:translate-y-[2px] group-focus-visible/iso:translate-x-[3px] group-focus-visible/iso:translate-y-[2px] motion-reduce:transition-none`,
 } as const;
 
 export const PRINT_LINE = "stroke-iso-plate-ink";
+
+export const DASH = "[stroke-dasharray:3_4]";
 
 export const PRINT_LINE_ATTRS =
   'fill="none" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"';

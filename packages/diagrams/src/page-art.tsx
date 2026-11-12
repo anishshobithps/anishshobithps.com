@@ -1,38 +1,48 @@
 import type { Scene } from "@repo/iso/figure";
-import { blogsScene } from "@repo/iso/scenes/blogs";
 import { brandingScene } from "@repo/iso/scenes/branding";
 import { contactScene } from "@repo/iso/scenes/contact";
 import { guestbookScene } from "@repo/iso/scenes/guestbook";
 import { lateNightScene } from "@repo/iso/scenes/late-night";
-import { notFoundScene } from "@repo/iso/scenes/not-found";
 import { principlesScene } from "@repo/iso/scenes/principles";
-import { privacyScene } from "@repo/iso/scenes/privacy";
 import { projectsScene } from "@repo/iso/scenes/projects";
+import { redactedScene } from "@repo/iso/scenes/redacted";
 import { resumeScene } from "@repo/iso/scenes/resume";
+import { type ShelfPost, shelfScene } from "@repo/iso/scenes/shelf";
+import { siteMapScene } from "@repo/iso/scenes/site-map";
 import { tracesScene } from "@repo/iso/scenes/traces";
 import { IsoArt } from "./iso-art";
 
+export type { ShelfPost };
+
 const scenes = {
-  blogs: () => blogsScene(),
+  blogs: (posts: ShelfPost[]) => shelfScene(posts),
   projects: () => projectsScene(),
   guestbook: () => guestbookScene(),
   resume: () => resumeScene(),
-  privacy: () => privacyScene(),
+  privacy: () => redactedScene(),
   branding: () => brandingScene(),
   contact: () => contactScene(),
-  notFound: () => notFoundScene(),
+  notFound: () => siteMapScene(),
   lateNight: () => lateNightScene(),
   traces: () => tracesScene(),
   principles: () => principlesScene(),
-} satisfies Record<string, () => Scene>;
+} satisfies Record<string, (data: never) => Scene>;
 
-const built = new Map<keyof typeof scenes, Scene>();
+type Scenes = typeof scenes;
+type Name = keyof Scenes;
+type DataOf<N extends Name> = Parameters<Scenes[N]>[0];
+type Props<N extends Name> = { name: N } & (undefined extends DataOf<N> ? { data?: undefined } : { data: DataOf<N> });
 
-export function PageArt({ name }: { name: keyof typeof scenes }) {
-  let scene = built.get(name);
+const built = new Map<string, Scene>();
+const LIMIT = 32;
+
+export function PageArt<N extends Name>({ name, data }: Props<N>) {
+  const key = `${name}:${data === undefined ? "" : JSON.stringify(data)}`;
+  let scene = built.get(key);
   if (!scene) {
-    scene = scenes[name]();
-    built.set(name, scene);
+    if (built.size >= LIMIT) built.clear();
+    scene = (scenes[name] as (data?: unknown) => Scene)(data);
+    built.set(key, scene);
   }
   return <IsoArt scene={scene} />;
 }
