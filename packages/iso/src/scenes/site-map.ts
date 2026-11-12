@@ -1,6 +1,6 @@
 import { DASH, PLATE } from "../classes";
-import { Figure, type Flat, type Hotspot, type Projection, type Scene } from "../figure";
-import { circleD, greenPlate, hotspotOf, inkPath, paperPath, polyD, printText, rectD, shadowOf } from "../print";
+import { Figure, type Flat, type Projection, type Scene } from "../figure";
+import { circleD, greenPlate, inkPath, paperPath, polyD, printText, rectD, shadowOf } from "../print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 
@@ -54,13 +54,10 @@ export function siteMapScene(width = 400, height = 300): Scene {
   body.push(registrationMark(f, SHEET.x + SHEET.w / 2, 14), registrationMark(f, 14, SHEET.y + SHEET.h / 2));
   body.push(shadowOf(f, sheet, [5, 5], "mid"), paperPath(sheet), inkPath(sheet));
 
-  const hotspots: Hotspot[] = [];
   for (const plot of PLOTS) {
     const shape = rectD(plot.x, plot.y, plot.w, plot.h);
     body.push(shadowOf(f, shape, [3, 3], "mid"), paperPath(shape), inkPath(shape));
     body.push(printText(`translate(${plot.x + 8} ${plot.y + 13})`, plot.name, { size: 7 }), inkPath(detail(plot)));
-    const spot = hotspotOf([[plot.x, plot.y + OY], [plot.x + plot.w, plot.y + plot.h + OY]], plot.href, `Go to ${plot.name}`, 0);
-    hotspots.push(spot);
   }
 
   const start: Flat = [84, 188];
@@ -91,7 +88,6 @@ export function siteMapScene(width = 400, height = 300): Scene {
   return f.build({
     width,
     height,
-    hotspots,
     label: "A map of this site drawn as four plots inside a sheet border: projects, blogs, resume and guestbook. A dashed trail leaves the sheet to a green pin standing in the blank margin, as if this page were off the map.",
   });
 }

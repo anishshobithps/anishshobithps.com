@@ -46,8 +46,6 @@ export default function BlogPage() {
   const shelf: ShelfPost[] = pages.map((page, i) => {
     const exported = page.data as { _exports?: { readingTime?: { minutes?: number } } };
     return {
-      href: page.url,
-      title: page.data.title,
       number: pages.length - i,
       minutes: Math.max(1, Math.ceil(exported._exports?.readingTime?.minutes ?? 5)),
     };

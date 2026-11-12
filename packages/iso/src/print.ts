@@ -1,5 +1,5 @@
 import { PLATE, PRINT_LINE, PRINT_LINE_ATTRS, PRINT_TEXT, SCREEN_DOT } from "./classes";
-import type { Figure, Flat, Hotspot } from "./figure";
+import type { Figure, Flat } from "./figure";
 import { k } from "./figure";
 
 type SolidPaths = ReturnType<typeof k.slabOf>;
@@ -118,19 +118,4 @@ export function groundDots(f: Figure, center: Flat, radius: number, step = 14, z
     }
   }
   return k.dotsSvg(points, { size: 0.6, tone: "mid" }) as string;
-}
-
-export function hotspotOf(points: Flat[], href: string, label: string, pad = 2): Hotspot {
-  const xs = points.map(([x]) => x);
-  const ys = points.map(([, y]) => y);
-  const x = Math.min(...xs) - pad;
-  const y = Math.min(...ys) - pad;
-  return {
-    href,
-    label,
-    x: Math.round(x * 10) / 10,
-    y: Math.round(y * 10) / 10,
-    w: Math.round((Math.max(...xs) + pad - x) * 10) / 10,
-    h: Math.round((Math.max(...ys) + pad - y) * 10) / 10,
-  };
 }

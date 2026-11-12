@@ -128,10 +128,5 @@ export const SCREEN_DOT = "fill-iso-screen stroke-none";
 
 export const PRINT_TEXT = "fill-iso-plate-ink font-pixel uppercase tracking-[0.06em]";
 
-export const HOTSPOT = {
-  link: "group/hot outline-none",
-  box: "fill-transparent stroke-transparent group-hover/hot:stroke-iso-plate-green group-focus-visible/hot:stroke-iso-plate-green",
-} as const;
-
 export const lineAttrs = (tone: LineTone, extra = "") =>
   `class="${TONE_STROKE[tone]}${extra ? ` ${extra}` : ""}" ${LINE_ATTRS}`;

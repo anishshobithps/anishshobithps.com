@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Figure, k } from "../src/figure";
-import { greenPlate, hotspotOf, printSolid, REGISTER, rectD, SETTLE_FROM, SETTLE_TIME } from "../src/print";
+import { greenPlate, printSolid, REGISTER, rectD, SETTLE_FROM, SETTLE_TIME } from "../src/print";
 
 const projection = { origin: [0, 0] as [number, number], scale: 4, azimuth: 60, elevation: 30, oblique: 0.8 };
 
@@ -52,9 +52,5 @@ describe("print kit", () => {
       expect(scene.body).toContain(`id="${scene.id}-scr-${level}"`);
     }
     expect(scene.body).not.toContain(`url(#p-scr`);
-  });
-
-  it("boxes a hotspot around its points with padding", () => {
-    expect(hotspotOf([[10, 20], [30, 50]], "/x", "X", 2)).toEqual({ href: "/x", label: "X", x: 8, y: 18, w: 24, h: 34 });
   });
 });

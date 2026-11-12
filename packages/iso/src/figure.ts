@@ -33,15 +33,6 @@ export interface Track {
   once?: boolean;
 }
 
-export interface Hotspot {
-  href: string;
-  label: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
 export interface Scene {
   id: string;
   width: number;
@@ -50,7 +41,6 @@ export interface Scene {
   body: string;
   tracks: Track[];
   label: string;
-  hotspots?: Hotspot[];
 }
 
 function simplify(samples: Array<{ t: number; v: number[] }>, tolerance: number) {

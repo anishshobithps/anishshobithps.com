@@ -16,7 +16,6 @@
     "@repo/ui": "workspace:*"
   },
   "peerDependencies": {
-    "next": "catalog:",
     "react": "catalog:"
   },
   "devDependencies": {
@@ -25,7 +24,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "eslint": "catalog:",
-    "next": "catalog:",
     "typescript": "catalog:"
   }
 }
