@@ -1,5 +1,5 @@
 import { DASH, PLATE } from "../classes";
-import { Figure, type Flat, type Projection } from "../figure";
+import { Figure, type Flat, type Projection, type Scene } from "../figure";
 import { circleD, greenAt, greenFlat, inkFill, inkPath, lineD, paperPath, rectD, REGISTER, screenPath } from "../print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
@@ -58,14 +58,13 @@ function rack(x: number) {
   return out.join("");
 }
 
-export interface BotLayer {
-  name: string;
+interface BotLayer {
   from: number;
   to: number;
   markup: string;
 }
 
-export function workbenchScene(width = 960, height = 230) {
+export function workbenchScene(width = 960, height = 230): Scene {
   const f = new Figure("bench", PROJECTION, 1);
   f.add(screenPath(f, rectD(20, GROUND, 920, 6), "lo"), inkPath(lineD([[20, GROUND], [940, GROUND]])));
   f.add(sheets(f, XS[0]));
@@ -73,20 +72,12 @@ export function workbenchScene(width = 960, height = 230) {
   f.add(frame(f, XS[2], "green"));
   f.add(rack(XS[3]));
 
-  const scene = f.build({ width, height, label: "A small robot walks along a print shop floor. On blank paper it is only faint guide lines, the ink press prints its outline and halftone, the green press lands a slightly misregistered plate, and at the drying rack the plates settle into register and the robot wakes up." });
-
-  const raw: BotLayer[] = [
+  const layers: BotLayer[] = [
+    { from: 0, to: 0, markup: inkPath(BODY, DASH) + inkPath(FEET, DASH) + inkPath("M-7 0H7M0 -7V7") },
+    { from: 1, to: 3, markup: paperPath(BODY) + paperPath(FEET) },
+    { from: 2, to: 2, markup: greenFlat(BODY, OFF) },
+    { from: 3, to: 3, markup: greenFlat(BODY, REGISTER) },
     {
-      name: "guides",
-      from: 0,
-      to: 0,
-      markup: inkPath(BODY, DASH) + inkPath(FEET, DASH) + inkPath("M-7 0H7M0 -7V7"),
-    },
-    { name: "paper", from: 1, to: 3, markup: paperPath(BODY) + paperPath(FEET) },
-    { name: "greenOff", from: 2, to: 2, markup: greenFlat(BODY, OFF) },
-    { name: "greenOn", from: 3, to: 3, markup: greenFlat(BODY, REGISTER) },
-    {
-      name: "ink",
       from: 1,
       to: 3,
       markup:
@@ -97,7 +88,6 @@ export function workbenchScene(width = 960, height = 230) {
         inkPath(lineD([[-8, 10], [8, 10]])),
     },
     {
-      name: "awake",
       from: 3,
       to: 3,
       markup:
@@ -107,16 +97,10 @@ export function workbenchScene(width = 960, height = 230) {
         inkPath(circleD(0, -41, 3.5, 14)),
     },
   ];
-  const layers = raw.map((layer) => ({ ...layer, markup: layer.markup.split("bench-").join(`${scene.id}-`) }));
+  XS.forEach((x, station) => {
+    const markup = layers.filter((layer) => station >= layer.from && station <= layer.to).map((layer) => layer.markup).join("");
+    f.add(`<g transform="translate(${x} ${BOT_Y})">${markup}</g>`);
+  });
 
-  return {
-    scene,
-    layers,
-    stations: [
-      { label: "Blank", status: "The robot starts as faint guide lines on blank paper.", at: [XS[0], BOT_Y] as Flat },
-      { label: "Ink", status: "The ink press prints the outline and the halftone.", at: [XS[1], BOT_Y] as Flat },
-      { label: "Green", status: "The green press lands, a hair off register.", at: [XS[2], BOT_Y] as Flat },
-      { label: "Registered", status: "The plates settle into register. The robot is awake.", at: [XS[3], BOT_Y] as Flat },
-    ],
-  };
+  return f.build({ width, height, label: "A small robot walks along a print shop floor. On blank paper it is only faint guide lines, the ink press prints its outline and halftone, the green press lands a slightly misregistered plate, and at the drying rack the plates settle into register and the robot wakes up." });
 }
