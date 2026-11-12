@@ -190,8 +190,9 @@ export default function PrivacyPolicyPage() {
             <TypographyMark>floating quick-menu button</TypographyMark> to, your{" "}
             <TypographyMark>sound effects setting</TypographyMark> (on or off,
             and volume) once you change it, whether you&apos;ve{" "}
-            <TypographyMark>turned link previews off</TypographyMark>, and,
-            once you&apos;ve played a
+            <TypographyMark>turned link previews off</TypographyMark>, the date
+            of the <TypographyMark>latest revision you&apos;ve seen</TypographyMark>{" "}
+            on each post you&apos;ve opened, and, once you&apos;ve played a
             video in a post, the player&apos;s{" "}
             <TypographyMark>volume, mute, and subtitle settings</TypographyMark>
             . Clerk&apos;s script also keeps a copy of its own configuration

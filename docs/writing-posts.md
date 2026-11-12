@@ -18,7 +18,10 @@ date: 2026-03-19
 tags:
   - Unicode
   - Typography
-lastModified: 2026-04-02
+updates:
+  - date: 2026-04-02
+    kind: correction
+    note: Fixed the year the format shipped.
 ---
 ```
 
@@ -28,10 +31,31 @@ lastModified: 2026-04-02
 | `description` | No, but write one | The meta description, the RSS summary, and the OG card text |
 | `date` | No | Publication date. The blog index lists posts newest first by it |
 | `tags` | No | Free-form strings, and the blog index filters by them |
-| `lastModified` | No | Set it by hand when an edit is worth announcing |
+| `updates` | No | The revision log. See [Revisions](#revisions) |
+| `lastModified` | No | Overrides the date taken from `updates`. Rarely needed |
 | `links` | No | The links worth surfacing while someone reads. See [Links](#links) |
 
-`lastModified` is manual on purpose. It used to come from git history, but shallow clones on the deploy host re-dated every post on every push. The sitemap uses `lastModified`, then `date`.
+The modified date is manual on purpose. It used to come from git history, but shallow clones on the deploy host re-dated every post on every push. It is the newest `updates` date, or `lastModified` when that is set, and the sitemap, the structured data and the page metadata all use it. The sitemap falls back to `date`.
+
+## Revisions
+
+Record an edit worth announcing as an entry in `updates`:
+
+```yaml
+updates:
+  - date: 2026-04-02
+    kind: correction
+    note: The 10:09 watch is the ⌚ emoji, not a clock face.
+  - date: 2026-04-02
+    kind: sources
+    note: Added 54 numbered sources.
+```
+
+`kind` is `correction`, `addition`, `sources` or `edit`, and defaults to `edit`. `note` is one or two sentences saying what changed, so write it for a reader and not as a commit message. Entries on the same date keep the order you write them and share one date heading, and a run of the same `kind` shows its label once, so put corrections before sources.
+
+A post with `updates` shows a "Revised" chip in its header instead of a plain date. Clicking it opens a revision log, a small timeline of every entry ending at the publish date. A reader who has visited before and not opened the log since the latest entry sees a dot on the chip, and the entries they have not seen are marked "New for you". A first-time reader never gets the dot, since they are reading the current version. What a reader has seen is kept in their browser only, under `revision-seen:` keys, and never sent anywhere.
+
+Fix typos without logging them. Log a correction when a reader who trusted the old text would have been misled.
 
 Reading time is computed at build time by a remark plugin ([`apps/web/src/lib/remarkReadingTime.ts`](../apps/web/src/lib/remarkReadingTime.ts)).
 

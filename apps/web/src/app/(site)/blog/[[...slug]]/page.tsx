@@ -18,6 +18,8 @@ import {
   PostLinksRecap,
   PostSourceCard,
 } from "@/app/(site)/blog/[[...slug]]/_components/post-links";
+import { PostRevisions } from "@/app/(site)/blog/[[...slug]]/_components/post-revisions";
+import { getModifiedAt, getPostUpdates } from "@/lib/post-updates";
 import { createPreviewLink } from "@/components/link-card/mdx-link";
 import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
@@ -91,6 +93,9 @@ export default async function Page(props: {
       : null;
   const postUrl = `${siteConfig.baseUrl}${page.url}`;
   const links = page.data.links ?? [];
+  const updates = getPostUpdates(page.data);
+  const modifiedAt = getModifiedAt(page.data);
+  const toDay = (date: Date) => toISOString(date).slice(0, 10);
 
   return (
     <>
@@ -100,11 +105,7 @@ export default async function Page(props: {
         description={page.data.description ?? ""}
         canonicalUrl={postUrl}
         publishedAt={page.data.date ? toISOString(page.data.date) : undefined}
-        updatedAt={
-          page.data.lastModified
-            ? toISOString(page.data.lastModified)
-            : undefined
-        }
+        updatedAt={modifiedAt ? toISOString(modifiedAt) : undefined}
         tags={page.data.tags}
       />
       <JsonLd
@@ -156,14 +157,26 @@ export default async function Page(props: {
                 </time>
               </TypographyMuted>
             )}
-            {page.data.lastModified && (
-              <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
-                <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
-                Updated{" "}
-                <time dateTime={toISOString(page.data.lastModified)}>
-                  {formatShortDate(page.data.lastModified)}
-                </time>
-              </TypographyMuted>
+            {updates.length > 0 ? (
+              <PostRevisions
+                slug={page.url}
+                entries={updates.map((update) => ({
+                  day: toDay(update.date),
+                  kind: update.kind,
+                  note: update.note,
+                }))}
+                publishedDay={page.data.date ? toDay(page.data.date) : undefined}
+              />
+            ) : (
+              modifiedAt && (
+                <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
+                  <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
+                  Updated{" "}
+                  <time dateTime={toISOString(modifiedAt)}>
+                    {formatShortDate(modifiedAt)}
+                  </time>
+                </TypographyMuted>
+              )
             )}
             {readingTime && (
               <TypographyMuted className="text-xs tabular-nums flex items-center gap-1.5">
@@ -254,6 +267,7 @@ export async function generateMetadata(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
+  const modifiedAt = getModifiedAt(page.data);
   const rawTitle = page.data.title;
   const metaTitle =
     rawTitle.length > 60 ? rawTitle.slice(0, 57).trimEnd() + "…" : rawTitle;
@@ -271,8 +285,6 @@ export async function generateMetadata(props: {
     type: "article",
     tags: (page.data.tags as string[] | undefined) ?? [],
     publishedAt: page.data.date ? toISOString(page.data.date) : undefined,
-    updatedAt: page.data.lastModified
-      ? toISOString(page.data.lastModified)
-      : undefined,
+    updatedAt: modifiedAt ? toISOString(modifiedAt) : undefined,
   });
 }

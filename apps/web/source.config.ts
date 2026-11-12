@@ -20,17 +20,20 @@ const postLinkSchema = z
             typeof value === 'string' ? { url: value } : value,
     );
 
+const postUpdateSchema = z.object({
+    date: z.coerce.date(),
+    kind: z.enum(['correction', 'addition', 'sources', 'edit']).default('edit'),
+    note: z.string().min(1),
+});
+
 export const docs = defineDocs({
     dir: "content/blog",
     docs: {
         schema: pageSchema.extend({
             tags: z.array(z.string()).optional(),
             date: z.coerce.date().optional(),
-            // Set explicitly in frontmatter when a post is meaningfully edited.
-            // Previously derived from git history, but shallow clones on the
-            // deploy host made every push re-date every post. Frontmatter is
-            // deterministic and gives full control over what counts as an update.
             lastModified: z.coerce.date().optional(),
+            updates: z.array(postUpdateSchema).optional(),
             links: z.array(postLinkSchema).optional(),
         }),
         postprocess: {
