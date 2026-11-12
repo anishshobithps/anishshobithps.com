@@ -62,7 +62,7 @@ function Footer({ model, stats }: { model: CardModel; stats: CardStat[] }) {
     <ul role="list" className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
       <li className="inline-flex min-w-0 items-center gap-1.5">
         {model.icon}
-        <span className="block min-w-0 truncate *:text-nowrap">
+        <span className="block min-w-0 truncate leading-none *:text-nowrap">
           <Text as="span" variant="caption">
             {model.eyebrow}
           </Text>
@@ -89,7 +89,7 @@ function Footer({ model, stats }: { model: CardModel; stats: CardStat[] }) {
 
 function Title({ children }: { children: ReactNode }) {
   return (
-    <span className="block min-w-0 truncate *:text-nowrap">
+    <span className="block min-w-0 truncate leading-none *:text-nowrap">
       <Text as="span" variant="title">
         {children}
       </Text>
@@ -199,7 +199,7 @@ function LinkCardView({ preview, variant = "default", label, note, className }: 
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <Title>{title}</Title>
           <span className="flex min-w-0 items-center gap-2">
-            <span className="block min-w-0 truncate *:text-nowrap">
+            <span className="block min-w-0 truncate leading-none *:text-nowrap">
               <Text as="span" variant="caption">
                 {model.eyebrow}
               </Text>

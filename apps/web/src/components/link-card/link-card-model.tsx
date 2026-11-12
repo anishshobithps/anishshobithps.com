@@ -227,7 +227,11 @@ export function toCardModel(preview: LinkPreview): CardModel {
     case "discord-invite": {
       const stats: CardStat[] = [];
       if (preview.online !== null) {
-        stats.push({ key: "online", text: `${formatCount(preview.online)} online` });
+        stats.push({
+          key: "online",
+          text: `${formatCount(preview.online)} online`,
+          dot: "oklch(0.696 0.17 162.48)",
+        });
       }
       if (preview.members !== null) {
         stats.push({
