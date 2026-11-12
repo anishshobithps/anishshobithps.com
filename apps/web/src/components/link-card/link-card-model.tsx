@@ -41,8 +41,8 @@ export interface CardModel {
   href: string;
 }
 
-const ICON = "size-4 shrink-0 text-muted-foreground";
-const STAT_ICON = "size-3.5 opacity-60";
+const ICON = "size-3.5 shrink-0 text-muted-foreground";
+const STAT_ICON = "size-3 opacity-60";
 
 function plural(count: number, one: string, many: string) {
   return `${formatCount(count)} ${count === 1 ? one : many}`;
@@ -51,7 +51,7 @@ function plural(count: number, one: string, many: string) {
 function faviconIcon(favicon: string | null): ReactNode {
   const fallback = <GlobeIcon aria-hidden="true" className={ICON} />;
   if (!favicon) return fallback;
-  return <LinkImage src={favicon} className="size-4 rounded-sm" fallback={fallback} />;
+  return <LinkImage src={favicon} className="size-3.5 rounded-sm" fallback={fallback} />;
 }
 
 function bareTitle(host: string, path: string): string {

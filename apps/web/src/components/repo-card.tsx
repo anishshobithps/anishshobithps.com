@@ -4,7 +4,6 @@ import { cn } from "@repo/ui/lib/cn"
 import {
   fetchGitHubRepoData,
   formatCount,
-  type GitHubReleaseData,
   type GitHubRepoData,
 } from "@/lib/github"
 import { formatRelativeDate } from "@repo/core/date"
@@ -15,7 +14,6 @@ import {
   GithubLogoIcon,
   ScalesIcon,
   StarIcon,
-  TagIcon,
 } from "@repo/icons"
 
 const repoCardVariants = cva(
@@ -56,8 +54,6 @@ interface RepoCardProps
   showUpdated?: boolean
   maxTopics?: number
   data?: GitHubRepoData
-  release?: GitHubReleaseData | null
-  note?: string
 }
 
 async function RepoCard({
@@ -71,8 +67,6 @@ async function RepoCard({
   showUpdated = true,
   maxTopics = 4,
   data: dataProp,
-  release,
-  note,
   className,
   ...props
 }: RepoCardProps) {
@@ -126,12 +120,6 @@ async function RepoCard({
         </p>
       )}
 
-      {note && (
-        <p data-slot="repo-note" className="text-foreground/80 text-xs">
-          {note}
-        </p>
-      )}
-
       {showTopics && topics.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {topics.map((topic) => (
@@ -150,7 +138,7 @@ async function RepoCard({
         </div>
       )}
 
-      <div data-slot="repo-meta" className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
+      <div data-slot="repo-meta" className="flex items-center gap-3 text-muted-foreground">
         {showLanguage && repoData.language && (
           <span className="inline-flex items-center gap-1.5">
             <span
@@ -174,13 +162,6 @@ async function RepoCard({
           <span className="inline-flex items-center gap-1 tabular-nums">
             <GitForkIcon aria-hidden="true" className="size-3.5 opacity-60" />
             {formatCount(repoData.forks)}
-          </span>
-        )}
-
-        {release && (
-          <span className="inline-flex items-center gap-1 tabular-nums">
-            <TagIcon aria-hidden="true" className="size-3.5 opacity-60" />
-            {release.tag}
           </span>
         )}
 
