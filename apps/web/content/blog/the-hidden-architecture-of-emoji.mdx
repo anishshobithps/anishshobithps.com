@@ -9,6 +9,14 @@ tags:
   - Web Standards
   - Typography
   - Open Standards
+links:
+  - url: https://unicode.org/reports/tr51/
+    label: Unicode TR51, Emoji
+    note: The technical standard that defines how emoji are encoded, sequenced and rendered.
+  - url: https://emojipedia.org/
+    label: Emojipedia
+  - url: https://unicode.org/emoji/
+    label: Unicode emoji charts
 ---
 
 
@@ -86,6 +94,8 @@ The official Unicode name is "Face With Look of Triumph." The steam represents t
 
 [The poop emoji originated in Japan](https://en.wikipedia.org/wiki/Poop_emoji), where feces had become associated with humour after an anthropomorphized poop appeared in *Dr. Slump*, Akira Toriyama's popular manga. Kurita created it in 1997 for phones sold by J-Phone. In Japan it carries luck, the word for poop (*unko*) starts with the same sound as the word for luck (*un*).
 
+<LinkCard url="https://en.wikipedia.org/wiki/Poop_emoji" />
+
 When Google prepared to add it to Gmail, internal teams resisted. A direct appeal from Google's Japanese product manager, explaining its cultural popularity, eventually cleared it.
 
 The popular theory that the poop emoji and soft-serve ice cream share a swirl isn't far off, in *Dr. Slump* itself, poop characters meet a Soft-Serve-Ice-Cream Boy they mistake for a poop. The visual confusion is built into the origin.
@@ -113,6 +123,8 @@ The gap between what the standard allows and what platforms actually render is w
 ## How an emoji gets added
 
 The Unicode Consortium accepts emoji proposals from the public. The bar is higher than most people expect.
+
+<LinkCard url="https://unicode.org/reports/tr51/" />
 
 A submission requires a completed proposal document covering: evidence of distinctiveness (it can't be too similar to an existing character), expected usage frequency backed by data, multiple use cases across diverse communities, compatibility with existing emoji design principles, and examples of how it would look at 72×72px.
 
@@ -241,6 +253,8 @@ Tofu appears when the sender's device uses a newer Unicode version than the reci
 
 Google's emoji font is called <TypographyMark>[Noto](https://fonts.google.com/noto)</TypographyMark>, short for "no tofu". The project's goal is to support every character in the Unicode standard so no user ever sees a blank box. Noto currently covers over 1,000 languages and scripts, making it one of the largest typeface design projects ever undertaken.
 
+<LinkCard url="https://fonts.google.com/noto" />
+
 The version gap is more significant than most users realise. Unicode 15.1 (2023) added 627 new characters. iOS ships new Unicode support roughly annually. Android's update cadence depends on the device manufacturer. A new emoji sent from an iPhone 15 to an older Android on a carrier that hasn't pushed a system update in 18 months will show as tofu, not because the sender or recipient did anything wrong, but because the fragmentation is baked into the distribution model.
 
 
@@ -278,13 +292,29 @@ CLDR also handles localisation. The 🍚 (Steamed Rice Bowl) emoji searches diff
 
 When you tap 👩‍💻 and it appears on your screen, here's the full sequence:
 
-1. The keyboard sends the code point sequence to the <abbr title="Operating System">OS</abbr> text input system.
-2. The sequence is stored as <abbr title="8-bit Unicode Transformation Format">UTF-8</abbr> or <abbr title="16-bit Unicode Transformation Format">UTF-16</abbr> in the text buffer, typically around 15–20 bytes in UTF-8 depending on modifiers.
-3. The text layout engine (CoreText on iOS, HarfBuzz on Android, DirectWrite on Windows) reads the sequence, identifies the <abbr title="Zero Width Joiner">ZWJ</abbr> boundaries, and determines this is a single <abbr title="A user-perceived character, possibly made of multiple code points">grapheme cluster</abbr> requiring a single glyph slot.
-4. The layout engine queries the font fallback chain. If the primary font doesn't contain this glyph, it walks the chain until it finds one that does.
-5. The font engine looks up the glyph ID for this sequence in the font's <abbr title="Glyph Substitution">GSUB</abbr> table, which maps character sequences to single combined glyphs.
-6. Depending on the format (sbix, COLR, SVG), the engine rasterises or composites the layers at the appropriate size and <abbr title="Dots Per Inch">DPI</abbr>.
-7. The resulting pixels are composited into the frame buffer and shown on screen.
+<Steps>
+  <Step>
+    The keyboard sends the code point sequence to the <abbr title="Operating System">OS</abbr> text input system.
+  </Step>
+  <Step>
+    The sequence is stored as <abbr title="8-bit Unicode Transformation Format">UTF-8</abbr> or <abbr title="16-bit Unicode Transformation Format">UTF-16</abbr> in the text buffer, typically around 15–20 bytes in UTF-8 depending on modifiers.
+  </Step>
+  <Step>
+    The text layout engine (CoreText on iOS, HarfBuzz on Android, DirectWrite on Windows) reads the sequence, identifies the <abbr title="Zero Width Joiner">ZWJ</abbr> boundaries, and determines this is a single <abbr title="A user-perceived character, possibly made of multiple code points">grapheme cluster</abbr> requiring a single glyph slot.
+  </Step>
+  <Step>
+    The layout engine queries the font fallback chain. If the primary font doesn't contain this glyph, it walks the chain until it finds one that does.
+  </Step>
+  <Step>
+    The font engine looks up the glyph ID for this sequence in the font's <abbr title="Glyph Substitution">GSUB</abbr> table, which maps character sequences to single combined glyphs.
+  </Step>
+  <Step>
+    Depending on the format (sbix, COLR, SVG), the engine rasterises or composites the layers at the appropriate size and <abbr title="Dots Per Inch">DPI</abbr>.
+  </Step>
+  <Step>
+    The resulting pixels are composited into the frame buffer and shown on screen.
+  </Step>
+</Steps>
 
 Steps 3–5 happen in under a millisecond on a modern device. The full round-trip from tap to pixel is typically under 16ms to hit a 60fps frame. Emoji rendering is fast not because it's simple, but because the entire stack, from Unicode spec to font format to layout engine, has been optimised over 15+ years of international standardisation, beginning in earnest with the Unicode 6.0 cleanup in 2010.
 

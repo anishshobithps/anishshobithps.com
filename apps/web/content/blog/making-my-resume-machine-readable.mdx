@@ -11,10 +11,23 @@ tags:
     - Structured Data
     - Personal Branding
     - Resume Engineering
+links:
+    - url: https://github.com/anishshobithps/resume
+      label: Resume source
+      note: The LaTeX source, Dockerfile, embedded JSON files and the GitHub Actions workflow this post walks through.
+      featured: true
+    - url: https://exiftool.org/
+      label: exiftool
+    - url: https://ctan.org/pkg/hyperxmp
+      label: hyperxmp on CTAN
+    - url: https://jsonresume.org/schema
+      label: JSON Resume schema
 ---
 
 
-> **Disclaimer**: None of what I describe in this post will directly improve your chances of getting a job. ATS systems are notoriously inconsistent, most recruiters never look at PDF metadata, and no amount of embedded JSON is going to compensate for weak experience or a poorly written resume. This post is about treating your resume as a piece of software: building it with the care you'd give a production system, and understanding the infrastructure underneath a document most people treat as a Word file. I did it because I was curious, because I enjoy over-engineering things, and because if a machine is going to read my resume, I'd rather it read it correctly.
+<Callout type="warn" title="Disclaimer">
+None of what I describe in this post will directly improve your chances of getting a job. ATS systems are notoriously inconsistent, most recruiters never look at PDF metadata, and no amount of embedded JSON is going to compensate for weak experience or a poorly written resume. This post is about treating your resume as a piece of software: building it with the care you'd give a production system, and understanding the infrastructure underneath a document most people treat as a Word file. I did it because I was curious, because I enjoy over-engineering things, and because if a machine is going to read my resume, I'd rather it read it correctly.
+</Callout>
 
 ## The problem
 
@@ -213,11 +226,40 @@ The correct approach is to let <TypographyMark>hyperxmp</TypographyMark> handle 
 
 <TypographyMark>/DisplayDocTitle true</TypographyMark> is the important one here, because it's what makes PDF viewers show your name in the title bar instead of the filename. That was the original problem that started this whole rabbit hole.
 
-> **Note**: Even this `\pdfcatalog` block needs to stay out of main.tex if you want the XMP stream to be written correctly. During debugging I discovered that placing `\pdfcatalog` between `\hypersetup` and `\begin{document}` also silently breaks the XMP output. Move it into formatting.sty or remove it entirely. hyperxmp handles MarkInfo automatically, and the DisplayDocTitle hint is cosmetic.
+<Callout type="info" title="Note">
+Even this `\pdfcatalog` block needs to stay out of main.tex if you want the XMP stream to be written correctly. During debugging I discovered that placing `\pdfcatalog` between `\hypersetup` and `\begin{document}` also silently breaks the XMP output. Move it into formatting.sty or remove it entirely. hyperxmp handles MarkInfo automatically, and the DisplayDocTitle hint is cosmetic.
+</Callout>
 
 ## The Docker setup, and why it matters
 
 I compile my resume inside a Docker container, for reproducibility. LaTeX installations are notoriously environment-dependent. A package installed on one machine might be a different version on another. Fonts render differently. Compilation fails silently because a package is missing. Using Docker means the resume always compiles identically, on any machine, in any environment, including CI.
+
+The repository layout, for reference:
+
+<Files>
+  <Folder name=".docker" defaultOpen>
+    <File name="Dockerfile" />
+  </Folder>
+  <Folder name=".github" defaultOpen>
+    <Folder name="workflows" defaultOpen>
+      <File name="release.yml" />
+    </Folder>
+  </Folder>
+  <Folder name="sections">
+    <File name="education.tex" />
+    <File name="experience.tex" />
+    <File name="header.tex" />
+    <File name="projects.tex" />
+    <File name="skills.tex" />
+    <File name="summary.tex" />
+  </Folder>
+  <File name="formatting.sty" />
+  <File name="main.tex" />
+  <File name="resume.json" />
+  <File name="schema.json" />
+  <File name="LICENSE" />
+  <File name="README.md" />
+</Files>
 
 The base image I originally used was <TypographyMark>pandoc/latex:latest</TypographyMark>, which ships a minimal frozen subset of TeX Live. The problem is that <TypographyMark>tlmgr install</TypographyMark> is effectively broken on this image: the TeX Live installation is frozen and network-restricted, so packages silently fail to install. You can see this by running:
 
@@ -277,6 +319,8 @@ RUN tlmgr option repository https://ftp.math.utah.edu/pub/tex/historic/systems/t
 WORKDIR /data
 ENTRYPOINT ["pdflatex"]
 ```
+
+<LinkCard url="https://github.com/anishshobithps/resume/blob/main/.docker/Dockerfile" />
 
 Here's why each package is included:
 
@@ -759,10 +803,24 @@ Or run it directly in Docker without installing anything locally:
 
 The last piece is making sure none of this requires manual maintenance. Every time I push a change to <TypographyMark>main</TypographyMark>, a GitHub Actions workflow:
 
-1. Rebuilds and pushes the Docker image if <TypographyMark>.docker/Dockerfile</TypographyMark> changed (with layer caching so it's fast when nothing changed)
-2. Patches the <TypographyMark>lastModified</TypographyMark> date in <TypographyMark>resume.json</TypographyMark> and <TypographyMark>dateModified</TypographyMark> in <TypographyMark>schema.json</TypographyMark> with today's date
-3. Compiles the PDF with <TypographyMark>pdflatex</TypographyMark>
-4. Creates a GitHub Release with the compiled PDF attached and auto-generated release notes
+<Steps>
+  <Step>
+    Rebuilds and pushes the Docker image if <TypographyMark>.docker/Dockerfile</TypographyMark> changed (with layer caching so it's fast when nothing changed)
+  </Step>
+  <Step>
+    Patches the <TypographyMark>lastModified</TypographyMark> date in <TypographyMark>resume.json</TypographyMark> and <TypographyMark>dateModified</TypographyMark> in <TypographyMark>schema.json</TypographyMark> with today's date
+  </Step>
+  <Step>
+    Compiles the PDF with <TypographyMark>pdflatex</TypographyMark>
+  </Step>
+  <Step>
+    Creates a GitHub Release with the compiled PDF attached and auto-generated release notes
+  </Step>
+</Steps>
+
+<LinkCard url="https://github.com/anishshobithps/resume/blob/main/.github/workflows/release.yml" />
+
+<LinkCard url="https://github.com/anishshobithps/resume/releases/latest" />
 
 The date patching step is what keeps the embedded JSON files current:
 
@@ -808,4 +866,4 @@ The payoff was elsewhere. I now understand exactly what a PDF is, what informati
 
 I treated a document like a software system, with versioning, reproducible builds, structured data, and automated deployment, and doing it taught me far more than the result itself was worth.
 
-If you want to look at the source, or use it as a starting point for your own resume, it's all on [GitHub](https://github.com/anishshobithps/resume).
+If you want to look at the source, or use it as a starting point for your own resume, the whole repository is in the card at the top of this post and in the links below.

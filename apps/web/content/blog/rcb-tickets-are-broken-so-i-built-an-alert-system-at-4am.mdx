@@ -8,6 +8,15 @@ tags:
   - TypeScript
   - Effect
   - Personal
+links:
+  - url: https://www.espncricinfo.com/series/ipl-2026-1510719/royal-challengers-bengaluru-vs-delhi-capitals-26th-match-1529269/full-scorecard
+    label: The match scorecard
+    note: RCB vs Delhi Capitals, April 18, ball by ball.
+  - url: https://effect.website/
+    label: Effect
+    note: The TypeScript library the alert system is built on.
+  - url: https://en.wikipedia.org/wiki/2025_Bengaluru_crowd_crush
+    label: 2025 Bengaluru crowd crush
 ---
 
 import {
@@ -26,7 +35,9 @@ import {
     MediaPlayerVolume,
 } from "@repo/media-player";
 
-> I built this for myself, for one ticket, to sit in the stands at Chinnaswamy and watch a match. Nothing was resold and nothing was listed anywhere. The system watches a publicly accessible API endpoint and sends a notification. It doesn't automate purchases or touch any platform safeguard. I wanted my first ever live cricket match, and RCB tickets at face value feel more like a lottery than a purchase.
+<Callout type="info">
+I built this for myself, for one ticket, to sit in the stands at Chinnaswamy and watch a match. Nothing was resold and nothing was listed anywhere. The system watches a publicly accessible API endpoint and sends a notification. It doesn't automate purchases or touch any platform safeguard. I wanted my first ever live cricket match, and RCB tickets at face value feel more like a lottery than a purchase.
+</Callout>
 
 ## Why getting RCB tickets is broken
 
@@ -114,6 +125,8 @@ Future events only, button text matching exactly. Everything else is infrastruct
 With detection figured out, I wrote the rest in about 30 minutes.
 
 I built it on <TypographyMark>Effect</TypographyMark>, a <TypographyMark>TypeScript</TypographyMark> library for typed, composable async programs. I've been using it on other projects and it fits how I think about programs that need to run continuously, handle errors without crashing, and do multiple things at once. For something where a failed fetch shouldn't kill the whole process and retries need sensible backoff, Effect handles the plumbing without me wiring it manually.
+
+<LinkCard url="https://effect.website/" />
 
 ### Polling strategy
 
@@ -205,6 +218,8 @@ What the system does is send a notification. I still went through checkout mysel
 This was my first ever live cricket match. I'd never been to any kind of live match before: not IPL, not domestic, nothing. I'd watched hundreds of games on TV and thought I had a reasonable picture of what it would feel like. I was wrong about this in most of the ways that matter.
 
 The match was [RCB vs Delhi Capitals on April 18](https://www.espncricinfo.com/series/ipl-2026-1510719/royal-challengers-bengaluru-vs-delhi-capitals-26th-match-1529269/full-scorecard), and it was an absolute heartbreaker. RCB put up <TypographyMark>175/8</TypographyMark> batting first, with <TypographyMark>Phil Salt</TypographyMark> top-scoring at <TypographyMark>63 off 38</TypographyMark> alongside a quick <TypographyMark>19 from Virat Kohli</TypographyMark> at the top. <TypographyMark>Tim David</TypographyMark> added a late 26 off 17, but DC's bowling, led by <TypographyMark>Axar Patel (2/18)</TypographyMark> and <TypographyMark>Kuldeep Yadav (2/32)</TypographyMark>, strangled the middle overs and the pitch played slower than expected throughout.
+
+<LinkCard url="https://www.espncricinfo.com/series/ipl-2026-1510719/royal-challengers-bengaluru-vs-delhi-capitals-26th-match-1529269/full-scorecard" />
 
 DC's chase was a thriller. <TypographyMark>Bhuvneshwar Kumar</TypographyMark> took three wickets and had DC reeling at <TypographyMark>22/3</TypographyMark> inside three overs, and RCB fans believed. <TypographyMark>KL Rahul</TypographyMark> built a composed <TypographyMark>57 off 34</TypographyMark> and kept DC in it through the middle overs. <TypographyMark>Krunal Pandya</TypographyMark> dismissed Rahul just when it looked like he might finish it, and RCB squeezed beautifully in the death, conceding just <TypographyMark>13 runs across overs 17 to 19</TypographyMark>.
 
