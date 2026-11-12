@@ -35,17 +35,17 @@ This post covers the corporate Easter eggs hiding in plain sight, the emojis you
 
 ## Where it started: 176 pixels on a pager
 
-Before Unicode, before Apple, before any of this, there was Shigetaka Kurita, a 25-year-old designer at NTT DoCoMo in Tokyo working on a mobile internet platform called i-mode.
+Before Unicode, before Apple, before any of this, there was Shigetaka Kurita, a 25-year-old designer at NTT DoCoMo in Tokyo working on a mobile internet platform called i-mode[^kurita].
 
 The year was 1999. i-mode let subscribers send short messages, but the text interface was sterile and cold. Weather forecasts used words. Emotional tone was invisible. Kurita's job was to make the interface feel human without increasing character limits, which the network couldn't support.
 
-His solution was a 12×12 pixel grid for each symbol. He drew 176 of them by hand, pulling visual vocabulary from manga conventions (the snot bubble for sleep, the sweat drop for anxiety), Japanese weather maps, and street signage. The original emoji set wasn't expressive by accident; each symbol was designed to carry a specific, unambiguous meaning within the constraints of a tiny monochrome screen.
+His solution was a 12×12 pixel grid for each symbol[^kurita]. He drew 176 of them by hand, pulling visual vocabulary from manga conventions (the snot bubble for sleep, the sweat drop for anxiety), Japanese weather maps, and street signage. The original emoji set wasn't expressive by accident; each symbol was designed to carry a specific, unambiguous meaning within the constraints of a tiny monochrome screen.
 
 NTT DoCoMo's competitors, SoftBank and au by KDDI, immediately released their own incompatible emoji sets. By 2000, Japan had three parallel emoji standards with no interoperability. A message sent from one carrier's phone to another rendered as garbage characters. This was the original emoji compatibility problem, and it never went away. It scaled up to a global level.
 
-When Apple launched the iPhone in Japan in 2008, they needed emoji support to compete. The SoftBank emoji set shipped on that device, which is why several original Apple emoji designs trace directly back to SoftBank's early 2000s graphics. When Google added emoji support to Android to reach the Japanese market, they mapped their own set. The Unicode Consortium's standardisation effort in 2010 was, in large part, a cleanup operation for this inherited chaos.
+When Apple launched the iPhone in Japan in 2008[^emoji-wiki], they needed emoji support to compete. The SoftBank emoji set shipped on that device, which is why several original Apple emoji designs trace directly back to SoftBank's early 2000s graphics. When Google added emoji support to Android to reach the Japanese market, they mapped their own set. The Unicode Consortium's standardisation effort in 2010[^emoji-wiki] was, in large part, a cleanup operation for this inherited chaos.
 
-Kurita's original 176 emoji are now in the collection of the Museum of Modern Art in New York, a set drawn as a workaround for a pager network.
+Kurita's original 176 emoji are now in the collection of the Museum of Modern Art in New York[^kurita], a set drawn as a workaround for a pager network.
 
 
 ## The calendar is locked to July 17 on purpose
@@ -56,7 +56,7 @@ On July 17, 2002, Apple unveiled <TypographyMark>iCal</TypographyMark> at the Ma
 
 In 2014, <TypographyMark>Jeremy Burge</TypographyMark>[^emojipedia], the founder of Emojipedia, declared July 17 World Emoji Day[^worldemojiday], specifically because of the Apple icon. Once it became a global event, other platforms had reason to fall in line. Google switched in 2016. Samsung and Twitter followed to avoid user confusion on the day itself.
 
-Not everyone complied. <TypographyMark>WhatsApp</TypographyMark> shows <TypographyMark>February 24</TypographyMark>, the day the company incorporated in 2009. <TypographyMark>Facebook</TypographyMark> traditionally shows <TypographyMark>May 14</TypographyMark>, Mark Zuckerberg's birthday.
+Not everyone complied. <TypographyMark>WhatsApp</TypographyMark> shows <TypographyMark>February 24</TypographyMark>, the day the company incorporated in 2009[^calendar-emoji]. <TypographyMark>Facebook</TypographyMark> traditionally shows <TypographyMark>May 14</TypographyMark>, Mark Zuckerberg's birthday[^calendar-emoji].
 
 The same logic applies to Apple's clock emoji 🕐. It consistently shows <TypographyMark>10:09</TypographyMark>, the hands arranged in the V-shape that most watch advertisements use, because symmetric positions look balanced on a circular face. That's not an emoji-specific decision; it's a century-old watchmaking convention that Apple carried over without modification.
 
@@ -109,13 +109,13 @@ In 2019, reports from distributed teams (including Slack engineering discussions
 
 ## The Fitzpatrick scale and the politics of skin tone
 
-In 2015, Unicode 8.0 added skin tone modifiers, five shades derived from the Fitzpatrick scale, a dermatological classification system developed in 1975 by Thomas Fitzpatrick to measure how human skin responds to UV radiation.
+In 2015, Unicode 8.0 added skin tone modifiers[^emoji-wiki], five shades derived from the Fitzpatrick scale, a dermatological classification system developed in 1975 by Thomas Fitzpatrick to measure how human skin responds to UV radiation[^fitzpatrick].
 
-The modifiers are code points <TypographyMark>U+1F3FB</TypographyMark> through <TypographyMark>U+1F3FF</TypographyMark>, representing five skin tones from light to dark. When appended to a compatible human-form emoji, they shift the rendering. No modifier means the default, which Unicode specifies should be a non-realistic yellow, following the convention of avoiding any particular ethnic association.
+The modifiers are code points <TypographyMark>U+1F3FB</TypographyMark> through <TypographyMark>U+1F3FF</TypographyMark>, representing five skin tones from light to dark[^tr51]. When appended to a compatible human-form emoji, they shift the rendering. No modifier means the default, which Unicode specifies should be a non-realistic yellow, following the convention of avoiding any particular ethnic association.
 
 The adoption of the Fitzpatrick scale was contested from the start. Critics pointed out that five points is medically arbitrary. The scale was built to predict clinical sunburn, and it doesn't map cleanly onto the range of human skin tones in practice. The Unicode Consortium's position: the scale was an existing, documented, neutral standard, which made it defensible in a way that an invented five-point gradient wouldn't be.
 
-Hair colour modifiers, including red hair (🦰), curly hair (🦱), white hair (🦳), and bald (🦲), were added in 2018 via Unicode 11.0. These combine through more complex ZWJ sequences. A curly-haired, medium-dark-skinned woman technologist emoji is <TypographyMark>U+1F469</TypographyMark> (woman) + <TypographyMark>U+1F3FE</TypographyMark> (medium-dark skin) + <TypographyMark>U+200D</TypographyMark> (ZWJ) + <TypographyMark>U+1F4BB</TypographyMark> (laptop), and the curly hair needs a separate hair-component sequence on top of that, which most platforms still don't draw.
+Hair colour modifiers, including red hair (🦰), curly hair (🦱), white hair (🦳), and bald (🦲), were added in 2018 via Unicode 11.0[^hair]. These combine through more complex ZWJ sequences[^zwj]. A curly-haired, medium-dark-skinned woman technologist emoji is <TypographyMark>U+1F469</TypographyMark> (woman) + <TypographyMark>U+1F3FE</TypographyMark> (medium-dark skin) + <TypographyMark>U+200D</TypographyMark> (ZWJ) + <TypographyMark>U+1F4BB</TypographyMark> (laptop), and the curly hair needs a separate hair-component sequence on top of that, which most platforms still don't draw.
 
 The gap between what the standard allows and what platforms actually render is wide. Unicode defines the sequence. Whether your device has a font that draws it is a separate question entirely.
 
@@ -126,7 +126,7 @@ The Unicode Consortium accepts emoji proposals from the public. The bar is highe
 
 <LinkCard url="https://unicode.org/reports/tr51/" />
 
-A submission requires a completed proposal document covering: evidence of distinctiveness (it can't be too similar to an existing character), expected usage frequency backed by data, multiple use cases across diverse communities, compatibility with existing emoji design principles, and examples of how it would look at 72×72px.
+A submission requires a completed proposal document covering: evidence of distinctiveness (it can't be too similar to an existing character), expected usage frequency backed by data, multiple use cases across diverse communities, compatibility with existing emoji design principles, and examples of how it would look at 72×72px[^proposals].
 
 The Consortium evaluates proposals against a published checklist. Characters with high "compatibility" scores, meaning they work as parts of sequences, have gender or skin-tone variations, or fill a gap in an existing category, score better. Characters that are "too specific" (a single food from a single country, a niche sports term) tend to fail.
 
@@ -145,7 +145,7 @@ The middle finger (🖕, Unicode 7.0, 2014) made it only after significant inter
 
 ### The gender triplet model
 
-In 2019, the <TypographyMark>Unicode Emoji Subcommittee</TypographyMark>[^unicode-emoji] (ESC) adopted the **Gender Triplet** model: every human-form emoji needs three variants, a woman, a man, and a gender-neutral person. The neutral variant is the intended default. According to Unicode Technical Standard #51[^tr51], human-form emojis should be gender-neutral unless a specific gender is desired.
+In 2019, the <TypographyMark>Unicode Emoji Subcommittee</TypographyMark>[^unicode-emoji] (ESC) adopted the **Gender Triplet** model[^pregnant-man]: every human-form emoji needs three variants, a woman, a man, and a gender-neutral person. The neutral variant is the intended default. According to Unicode Technical Standard #51[^tr51], human-form emojis should be gender-neutral unless a specific gender is desired.
 
 The pregnancy category was the outlier. Pregnant woman (<TypographyMark>U+1F930</TypographyMark>) had existed since 2016, added before the triplet model, leaving pregnancy as the only human-form emoji category stuck with a single gender. The <abbr title="Emoji Subcommittee">ESC</abbr> proposed the man (🫃) and neutral (🫄) variants in 2021 specifically to fix that.
 
@@ -164,13 +164,13 @@ The food baby use case wasn't ignored. The <TypographyMark><abbr title="Common L
 
 The 🔫 emoji's history is the clearest example of how a platform's design decision changes what a message means in transit.
 
-It displayed as a handgun on most platforms. As early as 2013, Microsoft replaced the glyph with a ray gun. In 2016, Apple replaced theirs with a water pistol[^apple-pistol], driven by the <TypographyMark>#DisarmTheiPhone</TypographyMark> campaign from New Yorkers Against Gun Violence[^nyagv].
+It displayed as a handgun on most platforms. As early as 2013, Microsoft replaced the glyph with a ray gun[^pistol-wiki]. In 2016, Apple replaced theirs with a water pistol[^apple-pistol], driven by the <TypographyMark>#DisarmTheiPhone</TypographyMark> campaign from New Yorkers Against Gun Violence[^nyagv].
 
 What an iOS user sent as a playful squirt gun arrived on Android as a realistic firearm. A jokey message could read, on the recipient's screen, as something threatening. The same code point, two different meanings and no technical fix short of platform convergence.
 
 By 2018, Google, Samsung, and Twitter had all updated to water guns[^google-gun]. Cross-platform consistency closed the gap.
 
-Then in July 2024, X reverted to a realistic firearm[^x-gun], specifically a semi-automatic M1911, not the original revolver, rolling out on July 18, 2024, the day after World Emoji Day. The semantic gap is open again for anyone using X's web client.
+Then in July 2024, X reverted to a realistic firearm[^x-gun], specifically a semi-automatic M1911[^pistol-wiki], not the original revolver, rolling out on July 18, 2024, the day after World Emoji Day. The semantic gap is open again for anyone using X's web client.
 
 When a platform changes what a code point looks like, it changes what messages already in flight will mean.
 
@@ -187,7 +187,7 @@ Subdivision flags compound the problem. A flag for Catalonia creates immediate p
 
 The <abbr title="Emoji Subcommittee">ESC</abbr>'s position: flags are better handled through stickers, <abbr title="Graphics Interchange Format">GIF</abbr>s, and image attachments, decentralised distribution that doesn't require international standards consensus to expand.
 
-Flag encoding itself is architecturally unusual. National flags use **Regional Indicator Symbols**, a pair of code points corresponding to the ISO 3166-1 country code. 🇮🇳 is <TypographyMark>U+1F1EE</TypographyMark> (Regional Indicator I) + <TypographyMark>U+1F1F3</TypographyMark> (Regional Indicator N). Subdivision flags use a completely different mechanism: a tag sequence starting with <TypographyMark>U+1F3F4</TypographyMark> (Black Flag), followed by subdivision code tag characters, terminated with <TypographyMark>U+E007F</TypographyMark>. The Scottish flag 🏴󠁧󠁢󠁳󠁣󠁴󠁿 is seven code points. At 5,000+ regions this becomes unworkable.
+Flag encoding itself is architecturally unusual. National flags use **Regional Indicator Symbols**, a pair of code points corresponding to the ISO 3166-1 country code. 🇮🇳 is <TypographyMark>U+1F1EE</TypographyMark> (Regional Indicator I) + <TypographyMark>U+1F1F3</TypographyMark> (Regional Indicator N)[^tr51]. Subdivision flags use a completely different mechanism: a tag sequence starting with <TypographyMark>U+1F3F4</TypographyMark> (Black Flag), followed by subdivision code tag characters, terminated with <TypographyMark>U+E007F</TypographyMark>. The Scottish flag 🏴󠁧󠁢󠁳󠁣󠁴󠁿 is seven code points. At 5,000+ regions this becomes unworkable.
 
 
 ## How this works underneath
@@ -200,11 +200,11 @@ Unicode is an international encoding protocol that assigns a unique numeric valu
 
 Emojis are text characters, not images injected into a chat. When you send 🔥, you're sending the code point <TypographyMark>U+1F525</TypographyMark>. Whatever device receives it is responsible for rendering it. Unicode defines characters, not <abbr title="The visual representation of a character">glyphs</abbr>. What you see is an implementation detail. This is why the fire emoji looks different on iOS vs Android vs Windows. You sent the same code point; each platform drew its own picture.
 
-Most modern emojis live in the <TypographyMark>Supplementary Multilingual Plane</TypographyMark> (<abbr title="Supplementary Multilingual Plane">SMP</abbr>), specifically <TypographyMark>U+10000</TypographyMark> to <TypographyMark>U+1FFFF</TypographyMark>, a block designed for complex pictographic data that exceeds the capacity of the legacy Basic Multilingual Plane. That said, not every emoji lives there. Legacy symbols like the anchor (⚓, <TypographyMark>U+2693</TypographyMark>) and warning sign (⚠️, <TypographyMark>U+26A0</TypographyMark>) have been part of the <abbr title="Basic Multilingual Plane">BMP</abbr> since long before the emoji era. They were repurposed into emoji use via Variation Selector 16, which tells a renderer to draw the character as a coloured emoji glyph instead of a monochrome symbol.
+Most modern emojis live in the <TypographyMark>Supplementary Multilingual Plane</TypographyMark> (<abbr title="Supplementary Multilingual Plane">SMP</abbr>), specifically <TypographyMark>U+10000</TypographyMark> to <TypographyMark>U+1FFFF</TypographyMark>[^planes], a block designed for complex pictographic data that exceeds the capacity of the legacy Basic Multilingual Plane. That said, not every emoji lives there. Legacy symbols like the anchor (⚓, <TypographyMark>U+2693</TypographyMark>) and warning sign (⚠️, <TypographyMark>U+26A0</TypographyMark>) have been part of the <abbr title="Basic Multilingual Plane">BMP</abbr> since long before the emoji era. They were repurposed into emoji use via Variation Selector 16, which tells a renderer to draw the character as a coloured emoji glyph instead of a monochrome symbol.
 
-Variation Selector 16 (VS-16, <TypographyMark>U+FE0F</TypographyMark>) is the mechanism that forces emoji-style rendering. Without it, many characters default to text presentation. For example, a heart without VS-16 renders as ♥ (text), while with VS-16 it becomes ❤️ (emoji).
+Variation Selector 16 (VS-16, <TypographyMark>U+FE0F</TypographyMark>) is the mechanism that forces emoji-style rendering[^tr51]. Without it, many characters default to text presentation. For example, a heart without VS-16 renders as ♥ (text), while with VS-16 it becomes ❤️ (emoji).
 
-This placement has a practical consequence for older software. JavaScript's `String.prototype.length{:js}` counts UTF-16 code units, not Unicode code points. An SMP emoji requires two UTF-16 code units, a surrogate pair, which is why `"🔥".length === 2{:js}` in JavaScript, not 1. For correct grapheme counting in 2026, `Intl.Segmenter{:js}` with `granularity: 'grapheme'{:js}` is the most reliable native approach. Simple array spreading still fails on complex ZWJ sequences like multi-person families:
+This placement has a practical consequence for older software. JavaScript's `String.prototype.length{:js}` counts UTF-16 code units, not Unicode code points[^mdn-length]. An SMP emoji requires two UTF-16 code units, a surrogate pair, which is why `"🔥".length === 2{:js}` in JavaScript, not 1. For correct grapheme counting in 2026, `Intl.Segmenter{:js}` with `granularity: 'grapheme'{:js}` is the most reliable native approach[^mdn-segmenter]. Simple array spreading still fails on complex ZWJ sequences like multi-person families:
 
 ```js
 const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
@@ -251,11 +251,11 @@ When your device doesn't support a newer emoji, you see a small blank rectangle,
 
 Tofu appears when the sender's device uses a newer Unicode version than the recipient's font supports. The code point arrived correctly; the device just has no picture to match it against.
 
-Google's emoji font is called <TypographyMark>Noto</TypographyMark>[^noto], short for "no tofu". The project's goal is to support every character in the Unicode standard so no user ever sees a blank box. Noto currently covers over 1,000 languages and scripts, making it one of the largest typeface design projects ever undertaken.
+Google's emoji font is called <TypographyMark>Noto</TypographyMark>[^noto], short for "no tofu". The project's goal is to support every character in the Unicode standard so no user ever sees a blank box. Noto currently covers over 1,000 languages and scripts, making it one of the largest typeface design projects ever undertaken[^noto-wiki].
 
 <LinkCard url="https://fonts.google.com/noto" />
 
-The version gap is more significant than most users realise. Unicode 15.1 (2023) added 627 new characters. iOS ships new Unicode support roughly annually. Android's update cadence depends on the device manufacturer. A new emoji sent from an iPhone 15 to an older Android on a carrier that hasn't pushed a system update in 18 months will show as tofu, not because the sender or recipient did anything wrong, but because the fragmentation is baked into the distribution model.
+The version gap is more significant than most users realise. Unicode 15.1 (2023) added 627 new characters[^unicode-15-1]. iOS ships new Unicode support roughly annually. Android's update cadence depends on the device manufacturer. A new emoji sent from an iPhone 15 to an older Android on a carrier that hasn't pushed a system update in 18 months will show as tofu, not because the sender or recipient did anything wrong, but because the fragmentation is baked into the distribution model.
 
 
 ### How colour emoji render
@@ -264,13 +264,13 @@ Standard fonts are monochrome vector drawings. Emoji fonts need full colour, mul
 
 The four main formats:
 
-<TypographyMark>sbix</TypographyMark> (Apple) stores each emoji as a stack of embedded <abbr title="Portable Network Graphics">PNG</abbr> images at different resolutions. When your iPhone renders an emoji, it selects the bitmap size that matches the display's <abbr title="Dots Per Inch">DPI</abbr>. This produces the glossy, high-detail look characteristic of Apple Color Emoji. On macOS, where assets include high-res bitmaps optimised for 5K displays, `AppleColorEmoji.ttc` exceeds 160MB, on iOS the same assets are significantly more compressed and optimised to conserve storage.
+<TypographyMark>sbix</TypographyMark>[^sbix] (Apple) stores each emoji as a stack of embedded <abbr title="Portable Network Graphics">PNG</abbr> images at different resolutions. When your iPhone renders an emoji, it selects the bitmap size that matches the display's <abbr title="Dots Per Inch">DPI</abbr>. This produces the glossy, high-detail look characteristic of Apple Color Emoji. On macOS, where assets include high-res bitmaps optimised for 5K displays, `AppleColorEmoji.ttc` exceeds 160MB, on iOS the same assets are significantly more compressed and optimised to conserve storage.
 
-<TypographyMark>CBDT/CBLC</TypographyMark> (Google, Android original) uses compressed <abbr title="Portable Network Graphics">PNG</abbr> data embedded inside the font file. Same concept as sbix, different implementation. Also produces large font files.
+<TypographyMark>CBDT/CBLC</TypographyMark>[^cbdt] (Google, Android original) uses compressed <abbr title="Portable Network Graphics">PNG</abbr> data embedded inside the font file. Same concept as sbix, different implementation. Also produces large font files.
 
-<TypographyMark>COLR/CPAL</TypographyMark> (Microsoft, now Google) is a vector format that defines layered colour fills. Google has moved toward <TypographyMark>COLRv1</TypographyMark>, which supports gradients and complex blending while keeping file sizes small. Noto Color Emoji in COLRv1 format is roughly 9MB, a 94% reduction from the equivalent bitmap format. More scalable at the cost of rendering complexity.
+<TypographyMark>COLR/CPAL</TypographyMark>[^colr] (Microsoft, now Google) is a vector format that defines layered colour fills. Google has moved toward <TypographyMark>COLRv1</TypographyMark>[^colrv1], which supports gradients and complex blending while keeping file sizes small. Noto Color Emoji in COLRv1 format is roughly 9MB, a 94% reduction from the equivalent bitmap format. More scalable at the cost of rendering complexity.
 
-<TypographyMark>SVG-in-OpenType</TypographyMark> (Adobe/Mozilla) embeds a full <abbr title="Scalable Vector Graphics">SVG</abbr> document per glyph. Most flexible for graphic complexity and infinite scalability, heavier on file size. Used primarily in Firefox.
+<TypographyMark>SVG-in-OpenType</TypographyMark>[^svg-table] (Adobe/Mozilla) embeds a full <abbr title="Scalable Vector Graphics">SVG</abbr> document per glyph. Most flexible for graphic complexity and infinite scalability, heavier on file size. Used primarily in Firefox.
 
 When the same emoji looks "cuter" on Samsung and more "realistic" on iOS, that's partly aesthetic choice and partly the rendering architecture. Apple's sbix bitmaps are drawn by hand at multiple sizes in a specific illustrative style. Google's COLRv1 vector layers are mathematically defined and scale perfectly. The art direction differs because the designers and toolchains differ.
 
@@ -300,13 +300,13 @@ When you tap 👩‍💻 and it appears on your screen, here's the full sequence
     The sequence is stored as <abbr title="8-bit Unicode Transformation Format">UTF-8</abbr> or <abbr title="16-bit Unicode Transformation Format">UTF-16</abbr> in the text buffer, typically around 15–20 bytes in UTF-8 depending on modifiers.
   </Step>
   <Step>
-    The text layout engine (CoreText on iOS, HarfBuzz on Android, DirectWrite on Windows) reads the sequence, identifies the <abbr title="Zero Width Joiner">ZWJ</abbr> boundaries, and determines this is a single <abbr title="A user-perceived character, possibly made of multiple code points">grapheme cluster</abbr> requiring a single glyph slot.
+    The text layout engine (CoreText[^coretext] on iOS, HarfBuzz[^harfbuzz] on Android, DirectWrite[^directwrite] on Windows) reads the sequence, identifies the <abbr title="Zero Width Joiner">ZWJ</abbr> boundaries, and determines this is a single <abbr title="A user-perceived character, possibly made of multiple code points">grapheme cluster</abbr> requiring a single glyph slot.
   </Step>
   <Step>
     The layout engine queries the font fallback chain. If the primary font doesn't contain this glyph, it walks the chain until it finds one that does.
   </Step>
   <Step>
-    The font engine looks up the glyph ID for this sequence in the font's <abbr title="Glyph Substitution">GSUB</abbr> table, which maps character sequences to single combined glyphs.
+    The font engine looks up the glyph ID for this sequence in the font's <abbr title="Glyph Substitution">GSUB</abbr> table[^gsub], which maps character sequences to single combined glyphs.
   </Step>
   <Step>
     Depending on the format (sbix, COLR, SVG), the engine rasterises or composites the layers at the appropriate size and <abbr title="Dots Per Inch">DPI</abbr>.
@@ -342,3 +342,26 @@ Next time you send 😤 expecting frustration and it lands as a flex, that's the
 [^flags]: Unicode Consortium, [The Past and Future of Flag Emoji](http://blog.unicode.org/2022/03/the-past-and-future-of-flag-emoji.html).
 [^gboard]: Google Play, [Gboard](https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin).
 [^cldr]: Unicode Consortium, [Unicode CLDR Project](https://cldr.unicode.org/).
+[^kurita]: Wikipedia, [Shigetaka Kurita](https://en.wikipedia.org/wiki/Shigetaka_Kurita).
+[^emoji-wiki]: Wikipedia, [Emoji](https://en.wikipedia.org/wiki/Emoji).
+[^calendar-emoji]: Emojipedia, [Calendar Emoji](https://emojipedia.org/calendar).
+[^fitzpatrick]: Wikipedia, [Fitzpatrick scale](https://en.wikipedia.org/wiki/Fitzpatrick_scale).
+[^hair]: Emojipedia, [Emoji Component Curly Hair](https://emojipedia.org/curly-hair).
+[^zwj]: Emojipedia, [Emoji ZWJ Sequence](https://emojipedia.org/emoji-zwj-sequence).
+[^proposals]: Unicode Consortium, [Emoji proposals](https://unicode.org/emoji/proposals.html).
+[^pregnant-man]: Emojipedia, [Why Is There a Pregnant Man Emoji?](https://blog.emojipedia.org/why-is-there-a-pregnant-man-emoji).
+[^pistol-wiki]: Wikipedia, [Pistol emoji](https://en.wikipedia.org/wiki/Pistol_emoji).
+[^planes]: Wikipedia, [Plane (Unicode)](https://en.wikipedia.org/wiki/Plane_(Unicode)).
+[^mdn-length]: MDN Web Docs, [String: length](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length).
+[^mdn-segmenter]: MDN Web Docs, [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter).
+[^noto-wiki]: Wikipedia, [Noto fonts](https://en.wikipedia.org/wiki/Noto_fonts).
+[^unicode-15-1]: Unicode Consortium, [Unicode 15.1.0](https://www.unicode.org/versions/Unicode15.1.0/).
+[^sbix]: Microsoft Learn, [sbix: Standard Bitmap Graphics Table](https://learn.microsoft.com/en-us/typography/opentype/spec/sbix).
+[^cbdt]: Microsoft Learn, [CBDT: Color Bitmap Data Table](https://learn.microsoft.com/en-us/typography/opentype/spec/cbdt).
+[^colr]: Microsoft Learn, [COLR: Color Table](https://learn.microsoft.com/en-us/typography/opentype/spec/colr).
+[^svg-table]: Microsoft Learn, [SVG: Scalable vector graphics table](https://learn.microsoft.com/en-us/typography/opentype/spec/svg).
+[^colrv1]: Chrome for Developers, [COLRv1 fonts](https://developer.chrome.com/blog/colrv1-fonts).
+[^gsub]: Microsoft Learn, [GSUB: Glyph Substitution Table](https://learn.microsoft.com/en-us/typography/opentype/spec/gsub).
+[^coretext]: Apple Developer Documentation, [Core Text](https://developer.apple.com/documentation/coretext).
+[^harfbuzz]: HarfBuzz, [HarfBuzz](https://harfbuzz.github.io/).
+[^directwrite]: Microsoft Learn, [DirectWrite (DWrite)](https://learn.microsoft.com/en-us/windows/win32/directwrite/direct-write-portal).

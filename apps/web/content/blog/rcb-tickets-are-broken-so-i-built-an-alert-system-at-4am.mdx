@@ -57,7 +57,7 @@ I sat down at <TypographyMark>4:00am</TypographyMark> with a rough plan: poll th
 
 My first assumption was that the API required authentication. That seemed reasonable. Ticketing platforms have obvious incentives to block automated access, so they'd gate their endpoints. I opened the browser, loaded the ticketing site, and started inspecting network requests in the developer tools.
 
-There were cookies, and a <TypographyMark>Bearer token</TypographyMark> sitting in one of the authorization headers. My brain latched onto those and I started building around them.
+There were cookies, and a <TypographyMark>Bearer token</TypographyMark>[^bearer] sitting in one of the authorization headers. My brain latched onto those and I started building around them.
 
 ### The cookie phase
 
@@ -77,11 +77,11 @@ I also noticed something odd while debugging: the token still worked briefly aft
 
 ### The proxy phase
 
-My third wrong turn was building a <TypographyMark>CORS proxy</TypographyMark>. Browser requests to the API were hitting CORS restrictions, so I'd route my fetch calls through a <TypographyMark>Cloudflare Worker</TypographyMark> that would strip those headers and forward the request server-side.
+My third wrong turn was building a <TypographyMark>CORS proxy</TypographyMark>. Browser requests to the API were hitting CORS restrictions, so I'd route my fetch calls through a <TypographyMark>Cloudflare Worker</TypographyMark>[^workers] that would strip those headers and forward the request server-side.
 
 I got the Worker running, sent a request through it, and got a <TypographyMark>403</TypographyMark>.
 
-CORS is enforced by the browser, not the server, so a proxy doesn't bypass anything server-side. It moves the request to a different origin. If the server blocks requests based on IP ranges or TLS fingerprints, routing through a Cloudflare Worker makes things worse, because Cloudflare's datacenter IPs are well-known and actively flagged by services that filter non-browser traffic.
+CORS is enforced by the browser, not the server[^cors], so a proxy doesn't bypass anything server-side. It moves the request to a different origin. If the server blocks requests based on IP ranges or TLS fingerprints, routing through a Cloudflare Worker makes things worse, because Cloudflare's datacenter IPs are well-known and actively flagged by services that filter non-browser traffic.
 
 I tore down the proxy and went back to basics.
 
@@ -91,7 +91,7 @@ By this point I'd read enough about request filtering to try full header spoofin
 
 Requests that had been going through fine started failing more consistently.
 
-The reason, which I pieced together after, is that fingerprinting often happens at the <TypographyMark>TLS</TypographyMark> layer, not the HTTP layer. When a browser initiates a TLS handshake, the specific <TypographyMark>cipher suites</TypographyMark> it advertises, the order it lists them, and the extensions it includes form a fingerprint identifying it as <TypographyMark>Chrome on Windows</TypographyMark>. A script running in <TypographyMark>Bun</TypographyMark> makes a completely different TLS handshake even if the HTTP headers are identical. You can copy every header perfectly and still be identifiable because the TLS fingerprint doesn't match. Sending more headers makes it worse, because a request carrying every header a browser sends looks like something trying very hard to look like a browser.
+The reason, which I pieced together after, is that fingerprinting often happens at the <TypographyMark>TLS</TypographyMark> layer, not the HTTP layer[^ja3]. When a browser initiates a TLS handshake, the specific <TypographyMark>cipher suites</TypographyMark> it advertises, the order it lists them, and the extensions it includes form a fingerprint identifying it as <TypographyMark>Chrome on Windows</TypographyMark>. A script running in <TypographyMark>Bun</TypographyMark>[^bun] makes a completely different TLS handshake even if the HTTP headers are identical. You can copy every header perfectly and still be identifiable because the TLS fingerprint doesn't match. Sending more headers makes it worse, because a request carrying every header a browser sends looks like something trying very hard to look like a browser.
 
 Minimal headers worked better. I settled on four: `accept`, `accept-language`, `user-agent`, and `origin` with the expected referer.
 
@@ -124,7 +124,7 @@ Future events only, button text matching exactly. Everything else is infrastruct
 
 With detection figured out, I wrote the rest in about 30 minutes.
 
-I built it on <TypographyMark>Effect</TypographyMark>, a <TypographyMark>TypeScript</TypographyMark> library for typed, composable async programs. I've been using it on other projects and it fits how I think about programs that need to run continuously, handle errors without crashing, and do multiple things at once. For something where a failed fetch shouldn't kill the whole process and retries need sensible backoff, Effect handles the plumbing without me wiring it manually.
+I built it on <TypographyMark>Effect</TypographyMark>[^effect], a <TypographyMark>TypeScript</TypographyMark> library for typed, composable async programs. I've been using it on other projects and it fits how I think about programs that need to run continuously, handle errors without crashing, and do multiple things at once. For something where a failed fetch shouldn't kill the whole process and retries need sensible backoff, Effect handles the plumbing without me wiring it manually.
 
 <LinkCard url="https://effect.website/" />
 
@@ -161,7 +161,7 @@ On top of that, there's a <TypographyMark>1-hour cooldown per event code</Typogr
 
 ### Retry logic
 
-The retry policy uses <TypographyMark>exponential backoff</TypographyMark> starting at <TypographyMark>1 second</TypographyMark>, composing up to <TypographyMark>5 retries</TypographyMark>:
+The retry policy uses <TypographyMark>exponential backoff</TypographyMark>[^backoff] starting at <TypographyMark>1 second</TypographyMark>, composing up to <TypographyMark>5 retries</TypographyMark>:
 
 ```ts
 const retryPolicy = Schedule.exponential(Duration.seconds(1)).pipe(
@@ -175,7 +175,7 @@ If the endpoint is temporarily unreachable, the system waits progressively longe
 
 ### Two concurrent loops
 
-I ran two loops concurrently using Effect's <TypographyMark>fiber model</TypographyMark>: the main polling loop and a heartbeat that pings Discord every <TypographyMark>2 hours</TypographyMark> to confirm the process is still alive.
+I ran two loops concurrently using Effect's <TypographyMark>fiber model</TypographyMark>[^fibers]: the main polling loop and a heartbeat that pings Discord every <TypographyMark>2 hours</TypographyMark> to confirm the process is still alive.
 
 ```ts
 const fiber1 = yield* Effect.fork(pollLoop);
@@ -187,7 +187,7 @@ A message in Discord every 2 hours means I know it's running. Without that, a si
 
 ### Telegram vs Discord
 
-My first notification target was Telegram. Delivery worked technically, but latency was inconsistent and I hit rate limits during testing. <TypographyMark>Discord webhooks</TypographyMark> were faster, instant in every test I ran, and supported role mentions, which meant the notification would actually push to my phone rather than sitting in a channel I might not have open.
+My first notification target was Telegram. Delivery worked technically, but latency was inconsistent and I hit rate limits during testing[^telegram]. <TypographyMark>Discord webhooks</TypographyMark>[^discord] were faster, instant in every test I ran, and supported role mentions, which meant the notification would actually push to my phone rather than sitting in a channel I might not have open.
 
 ### The cloud deployment problem
 
@@ -284,3 +284,13 @@ If you're an RCB fan who has missed sale windows staring at a refresh screen, th
 [^yaari]: Sports Yaari, [Sold out before it began? RCB ticket chaos raises questions](https://www.sportsyaari.com/cricket/sold-out-before-it-began-rcb-ticket-chaos-raises-questions-23469/).
 [^resale]: NewsX, [MI vs RCB: Tickets For Marquee Clash Sold Out in Minutes; Exorbitant Prices, Third-Party Reselling Among Major Concerns Ahead Of IPL 2026](https://www.newsx.com/sports/mi-vs-rcb-mi-vs-kkr-tickets-sold-out-in-minutes-ipl-2026-ticket-high-price-black-market-third-party-reselling-among-issues-faced-by-fans-before-indian-premier-league-188316/).
 [^scorecard]: ESPNcricinfo, [Royal Challengers Bengaluru vs Delhi Capitals, 26th match: full scorecard](https://www.espncricinfo.com/series/ipl-2026-1510719/royal-challengers-bengaluru-vs-delhi-capitals-26th-match-1529269/full-scorecard).
+[^effect]: Effect, [Effect](https://effect.website/).
+[^bun]: Bun, [Bun](https://bun.sh/).
+[^ja3]: Cloudflare Docs, [JA3/JA4 fingerprint](https://developers.cloudflare.com/bots/additional-configurations/ja3-ja4-fingerprint/).
+[^cors]: MDN Web Docs, [Cross-Origin Resource Sharing (CORS)](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS).
+[^workers]: Cloudflare Docs, [Cloudflare Workers](https://developers.cloudflare.com/workers/).
+[^bearer]: IETF, [RFC 6750: The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750).
+[^discord]: Discord Developer Docs, [Webhook resource](https://docs.discord.com/developers/resources/webhook).
+[^telegram]: Telegram, [Bots FAQ](https://core.telegram.org/bots/faq).
+[^backoff]: Effect documentation, [Built-in schedules](https://effect.website/docs/scheduling/built-in-schedules/).
+[^fibers]: Effect documentation, [Fibers](https://effect.website/docs/concurrency/fibers/).

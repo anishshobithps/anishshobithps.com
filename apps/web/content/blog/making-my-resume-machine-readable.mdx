@@ -43,9 +43,9 @@ My resume had almost none of it. I set out to fix that, then kept going much fur
 
 ## What PDF metadata is, and why it matters
 
-A PDF file is not a flat document. It's a structured binary format that contains, among other things, a **document information dictionary** (the legacy metadata format) and an **XMP stream** (the modern standard). Both can carry structured information about the document: who created it, when, what it's about, what language it's in, who owns the rights to it, and more.
+A PDF file is not a flat document. It's a structured binary format that contains, among other things, a **document information dictionary** (the legacy metadata format) and an **XMP stream** (the modern standard)[^xmp]. Both can carry structured information about the document: who created it, when, what it's about, what language it's in, who owns the rights to it, and more.
 
-The <TypographyMark>XMP (Extensible Metadata Platform)</TypographyMark> standard was developed by Adobe and is now the format used by archival systems (PDF/A), enterprise document management platforms, and most modern ATS software. It's built on RDF/XML, so the metadata is machine-readable in a proper semantic sense: typed, namespaced, linked data rather than flat key-value pairs.
+The <TypographyMark>XMP (Extensible Metadata Platform)</TypographyMark> standard was developed by Adobe[^xmp] and is now the format used by archival systems (PDF/A)[^pdfa], enterprise document management platforms, and most modern ATS software. It's built on RDF/XML, so the metadata is machine-readable in a proper semantic sense: typed, namespaced, linked data rather than flat key-value pairs.
 
 For a resume specifically, this matters in a few ways. Systems like Workday, Greenhouse, and Lever extract text from PDFs and try to identify sections, dates, job titles, and skills, and well-structured metadata helps them get it right. Google and other crawlers that index PDFs read XMP metadata to work out what a document is about. Screen readers use document metadata to describe a file to visually impaired users. And metadata like author, date, and license makes it clear who created the document and under what terms.
 
@@ -127,8 +127,8 @@ My resume is written in LaTeX, so the right place to add metadata is in the LaTe
 
 The two packages that handle this are:
 
-- <TypographyMark>hyperref</TypographyMark>: The standard LaTeX package for hyperlinks and PDF metadata. It writes to the legacy PDF information dictionary.
-- <TypographyMark>hyperxmp</TypographyMark>: An extension that hooks into hyperref and writes a full XMP stream to the PDF. This is the package that makes the metadata actually useful to modern parsers.
+- <TypographyMark>hyperref</TypographyMark>[^hyperref]: The standard LaTeX package for hyperlinks and PDF metadata. It writes to the legacy PDF information dictionary.
+- <TypographyMark>hyperxmp</TypographyMark>[^hyperxmp]: An extension that hooks into hyperref and writes a full XMP stream to the PDF. This is the package that makes the metadata actually useful to modern parsers.
 
 The critical thing about <TypographyMark>hyperxmp</TypographyMark> is load order. It **must** be loaded immediately after <TypographyMark>hyperref</TypographyMark>, before any other package that might interact with hyperref's output routines:
 
@@ -174,7 +174,7 @@ Here's the full `\hypersetup` block in <TypographyMark>main.tex</TypographyMark>
 A few things worth noting here:
 
 - <TypographyMark>pdfauthortitle</TypographyMark> embeds your job title as a discrete structured field, not just freeform text. This maps to `photoshop:AuthorsPosition` in the XMP stream, a field that Adobe and some HR systems read specifically for the creator's role.
-- <TypographyMark>pdfcontact*</TypographyMark> fields (email, URL, address) map to the IPTC Core `CreatorContactInfo` structure in the XMP output, giving parsers your contact details as typed, discrete fields rather than text buried in keywords.
+- <TypographyMark>pdfcontact*</TypographyMark> fields (email, URL, address) map to the IPTC Core `CreatorContactInfo` structure[^iptc] in the XMP output, giving parsers your contact details as typed, discrete fields rather than text buried in keywords.
 - <TypographyMark>pdfcopyright</TypographyMark> uses `\the\year` so the copyright range updates automatically at every compile. The <TypographyMark>2024</TypographyMark> at the start is hardcoded as the original publication year, and `\the\year` expands to the current compilation year.
 - <TypographyMark>pdfdate</TypographyMark> is intentionally omitted. I originally included `pdfdate={\DTMtoday}` to embed the compile date, but `\DTMtoday` from the <TypographyMark>datetime2</TypographyMark> package expands at the wrong time inside `\hypersetup` and silently corrupts the entire options block, so hyperxmp writes nothing. Removing it entirely is the right call; hyperxmp automatically sets the date from the PDF creation timestamp anyway.
 
@@ -261,7 +261,7 @@ The repository layout, for reference:
   <File name="README.md" />
 </Files>
 
-The base image I originally used was <TypographyMark>pandoc/latex:latest</TypographyMark>, which ships a minimal frozen subset of TeX Live. The problem is that <TypographyMark>tlmgr install</TypographyMark> is effectively broken on this image: the TeX Live installation is frozen and network-restricted, so packages silently fail to install. You can see this by running:
+The base image I originally used was <TypographyMark>pandoc/latex:latest</TypographyMark>[^pandoc], which ships a minimal frozen subset of TeX Live. The problem is that <TypographyMark>tlmgr install</TypographyMark> is effectively broken on this image: the TeX Live installation is frozen and network-restricted, so packages silently fail to install. You can see this by running:
 
 ```bash
 docker run --rm --entrypoint tlmgr pandoc/latex:latest info enumitem
@@ -525,7 +525,7 @@ The raw packet is proper RDF/XML and shows every namespace that hyperxmp wrote. 
 
 hyperxmp writes a proper RDF graph with multiple named namespaces rather than one flat list of key-value pairs. A few things worth pointing out:
 
-- Dublin Core (`dc:`) writes each keyword as a separate `<rdf:li>` node in a typed `<rdf:Bag>`, not a comma-separated string. This means a parser can enumerate skills without having to split on commas and guess at boundaries.
+- Dublin Core (`dc:`)[^dc] writes each keyword as a separate `<rdf:li>` node in a typed `<rdf:Bag>`, not a comma-separated string. This means a parser can enumerate skills without having to split on commas and guess at boundaries.
 - IPTC Core (`Iptc4xmpCore:CreatorContactInfo`) is the namespace that maps to the `Creator Address`, `Creator Work Email`, and `Creator Work URL` fields you see in exiftool's output. These are discrete typed fields, not freeform text.
 - `photoshop:AuthorsPosition` is how hyperxmp stores the `pdfauthortitle` value. It uses the Photoshop namespace not because this has anything to do with Photoshop, but because that namespace became the de facto standard for this field before a proper XMP extension was defined.
 - `xmpMM:DocumentID` stays constant across recompiles of the same document. `xmpMM:InstanceID` changes with each compile. This lets document management systems track versions of the same file over time.
@@ -575,14 +575,14 @@ The solution is to embed structured data files directly inside the PDF as attach
 
 Different parsers speak different languages:
 
-- <TypographyMark>Schema.org</TypographyMark> is the vocabulary used by Google, semantic web crawlers, and increasingly by AI systems processing documents. It's typed, linked, and hierarchical.
-- <TypographyMark>JSON Resume</TypographyMark> is an open standard built for resumes. It's simpler and more opinionated, and platforms like Workday, Greenhouse, and Lever parse it natively: they know the schema and map fields directly without inference.
+- <TypographyMark>Schema.org</TypographyMark>[^schema] is the vocabulary used by Google, semantic web crawlers, and increasingly by AI systems processing documents. It's typed, linked, and hierarchical.
+- <TypographyMark>JSON Resume</TypographyMark>[^jsonresume] is an open standard built for resumes. It's simpler and more opinionated, and platforms like Workday, Greenhouse, and Lever parse it natively: they know the schema and map fields directly without inference.
 
 Embedding both covers the widest possible surface area.
 
 ### The attachfile2 dead end
 
-My first attempt was to use the <TypographyMark>attachfile2</TypographyMark> LaTeX package. This package embeds files as PDF annotations, essentially clickable paperclip icons pinned to a position in the document. You can make them invisible with an empty text argument:
+My first attempt was to use the <TypographyMark>attachfile2</TypographyMark>[^attachfile2] LaTeX package. This package embeds files as PDF annotations, essentially clickable paperclip icons pinned to a position in the document. You can make them invisible with an empty text argument:
 
 ```latex
 \textattachfile[
@@ -599,7 +599,7 @@ exiftool -b -EmbeddedFile Anish_Shobith_P_S_Resume.pdf > extracted.json
 
 The output is empty. The file wasn't embedded in the PDF's <TypographyMark>EmbeddedFiles</TypographyMark> name tree. It was attached as an annotation object, which is a fundamentally different thing. Some PDF viewers will show it as a paperclip. Most parsers will ignore it entirely.
 
-The correct package for proper spec-compliant embedding is <TypographyMark>embedfile</TypographyMark>.
+The correct package for proper spec-compliant embedding is <TypographyMark>embedfile</TypographyMark>[^embedfile].
 
 ### schema.json
 
@@ -677,7 +677,7 @@ The correct package for proper spec-compliant embedding is <TypographyMark>embed
 
 The <TypographyMark>alternateName</TypographyMark> fields on each `ItemList` are the ATS compatibility layer. Different systems use different heading names to identify sections when extracting text from a PDF. A Schema.org-aware parser reading this attachment knows that "Experience", "Employment History", and "Career History" all refer to the same section.
 
-One Schema.org gotcha worth knowing: <TypographyMark>copyrightYear</TypographyMark> must be a 4-digit integer, not a string. Writing <TypographyMark>"2024 - Present"</TypographyMark> will fail structured data validation. Use <TypographyMark>dateCreated</TypographyMark> for the origin year and <TypographyMark>dateModified</TypographyMark> for the current year, and keep <TypographyMark>copyrightYear</TypographyMark> as a plain integer.
+One Schema.org gotcha worth knowing: <TypographyMark>copyrightYear</TypographyMark> must be a 4-digit integer, not a string[^copyrightyear]. Writing <TypographyMark>"2024 - Present"</TypographyMark> will fail structured data validation. Use <TypographyMark>dateCreated</TypographyMark> for the origin year and <TypographyMark>dateModified</TypographyMark> for the current year, and keep <TypographyMark>copyrightYear</TypographyMark> as a plain integer.
 
 ### resume.json
 
@@ -757,7 +757,7 @@ The <TypographyMark>afrelationship=&#123;/Supplement&#125;</TypographyMark>
 
 ### Verifying the attachments
 
-<TypographyMark>exiftool -b -EmbeddedFile</TypographyMark> won't find these files because it looks for annotation-based attachments, not name tree attachments. Use <TypographyMark>pypdf</TypographyMark> instead:
+<TypographyMark>exiftool -b -EmbeddedFile</TypographyMark> won't find these files because it looks for annotation-based attachments, not name tree attachments. Use <TypographyMark>pypdf</TypographyMark>[^pypdf] instead:
 
 ```python
 import pypdf
@@ -814,7 +814,7 @@ The last piece is making sure none of this requires manual maintenance. Every ti
     Compiles the PDF with <TypographyMark>pdflatex</TypographyMark>
   </Step>
   <Step>
-    Creates a GitHub Release with the compiled PDF attached and auto-generated release notes
+    Creates a GitHub Release with the compiled PDF attached and auto-generated release notes[^releases]
   </Step>
 </Steps>
 
@@ -869,3 +869,17 @@ I treated a document like a software system, with versioning, reproducible build
 If you want to look at the source, or use it as a starting point for your own resume, the whole repository is in the card at the top of this post and in the links below.
 
 [^exiftool]: [ExifTool by Phil Harvey](https://exiftool.org/).
+[^xmp]: Wikipedia, [Extensible Metadata Platform](https://en.wikipedia.org/wiki/Extensible_Metadata_Platform).
+[^pdfa]: Wikipedia, [PDF/A](https://en.wikipedia.org/wiki/PDF/A).
+[^hyperref]: CTAN, [hyperref](https://ctan.org/pkg/hyperref).
+[^hyperxmp]: CTAN, [hyperxmp](https://ctan.org/pkg/hyperxmp).
+[^iptc]: IPTC, [IPTC Photo Metadata Standard](https://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata).
+[^schema]: Schema.org, [Person](https://schema.org/Person).
+[^jsonresume]: JSON Resume, [The open resume standard](https://jsonresume.org/).
+[^copyrightyear]: Schema.org, [copyrightYear](https://schema.org/copyrightYear).
+[^attachfile2]: CTAN, [attachfile2](https://ctan.org/pkg/attachfile2).
+[^embedfile]: CTAN, [embedfile](https://ctan.org/pkg/embedfile).
+[^pypdf]: pypdf documentation, [PdfReader](https://pypdf.readthedocs.io/en/stable/modules/PdfReader.html).
+[^pandoc]: Pandoc, [pandoc/dockerfiles](https://github.com/pandoc/dockerfiles).
+[^releases]: GitHub Docs, [About releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
+[^dc]: Dublin Core Metadata Initiative, [Dublin Core Metadata Element Set](https://www.dublincore.org/specifications/dublin-core/dces/).
