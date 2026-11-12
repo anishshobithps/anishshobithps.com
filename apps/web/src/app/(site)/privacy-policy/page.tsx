@@ -189,7 +189,9 @@ export default function PrivacyPolicyPage() {
             system), the spot you last dragged the{" "}
             <TypographyMark>floating quick-menu button</TypographyMark> to, your{" "}
             <TypographyMark>sound effects setting</TypographyMark> (on or off,
-            and volume) once you change it, and, once you&apos;ve played a
+            and volume) once you change it, whether you&apos;ve{" "}
+            <TypographyMark>turned link previews off</TypographyMark>, and,
+            once you&apos;ve played a
             video in a post, the player&apos;s{" "}
             <TypographyMark>volume, mute, and subtitle settings</TypographyMark>
             . Clerk&apos;s script also keeps a copy of its own configuration

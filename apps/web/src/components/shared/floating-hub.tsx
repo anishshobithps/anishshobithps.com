@@ -25,6 +25,7 @@ import {
   XIcon,
 } from "@repo/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
+import { LinkPreviewPanel } from "@/components/shared/link-preview-panel";
 import { SoundPanel } from "@/components/shared/sound-controls";
 import {
   CommentBubble,
@@ -288,6 +289,13 @@ function HubBody({
       )}
 
       {showAuth && <AuthSection onClose={onClose} />}
+
+      {pathname.startsWith("/blog/") && (
+        <section className="flex flex-col gap-2">
+          <HubLabel>Reading</HubLabel>
+          <LinkPreviewPanel />
+        </section>
+      )}
 
       <section className="flex flex-col gap-2">
         <HubLabel>Sound</HubLabel>
