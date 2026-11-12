@@ -47,13 +47,21 @@ function plankStyle(index: number) {
   } as CSSProperties;
 }
 
-function PlankText({ label, note }: { label: string; note: string }) {
+function PlankText({
+  label,
+  note,
+  accent = false,
+}: {
+  label: string;
+  note: string;
+  accent?: boolean;
+}) {
   return (
     <>
       <SectionLabel pixel asChild className="text-inherit">
         <span>{label}</span>
       </SectionLabel>
-      <span aria-hidden="true" className="text-2xs leading-none opacity-70">
+      <span aria-hidden="true" className={cn("text-2xs leading-none", !accent && "opacity-70")}>
         {note}
       </span>
     </>
@@ -101,7 +109,7 @@ export function EndOfPage() {
             // eslint-disable-next-line shadcn/no-inline-styles
             style={plankStyle(index)}
           >
-            <PlankText label={label} note={note} />
+            <PlankText label={label} note={note} accent={accent} />
           </Link>
         ))}
         {/* eslint-disable-next-line no-restricted-syntax */}
