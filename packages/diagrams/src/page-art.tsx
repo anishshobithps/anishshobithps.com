@@ -23,15 +23,19 @@ const scenes = {
   branding: () => brandingScene(),
   contact: () => contactScene(),
   notFound: () => siteMapScene(),
-  lateNight: () => lateNightScene(),
-  traces: () => tracesScene(),
+  lateNight: (posts?: number) => lateNightScene(posts),
+  traces: (names?: string[]) => tracesScene(names),
   principles: () => principlesScene(),
 } satisfies Record<string, (data: never) => Scene>;
 
 type Scenes = typeof scenes;
 type Name = keyof Scenes;
 type DataOf<N extends Name> = Parameters<Scenes[N]>[0];
-type Props<N extends Name> = { name: N } & (undefined extends DataOf<N> ? { data?: undefined } : { data: DataOf<N> });
+type Props<N extends Name> = { name: N } & ([DataOf<N>] extends [undefined]
+  ? { data?: undefined }
+  : undefined extends DataOf<N>
+    ? { data?: NonNullable<DataOf<N>> }
+    : { data: DataOf<N> });
 
 const built = new Map<string, Scene>();
 const LIMIT = 32;

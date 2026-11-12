@@ -16,9 +16,8 @@ import Link from "next/link";
 import type { Route } from "next";
 
 export function BlogTeaser() {
-  const posts = source
-    .getPages()
-    .filter((p) => p.data.date)
+  const dated = source.getPages().filter((p) => p.data.date);
+  const posts = dated
     .sort(
       (a, b) =>
         new Date(b.data.date!).getTime() - new Date(a.data.date!).getTime(),
@@ -49,7 +48,7 @@ export function BlogTeaser() {
             </Button>
           </div>
           <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-video">
-            <PageArt name="lateNight" />
+            <PageArt name="lateNight" data={dated.length} />
           </ArtStage>
         </div>
 
