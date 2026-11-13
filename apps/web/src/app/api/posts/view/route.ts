@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { viewPost } from "@/app/(site)/blog/[[...slug]]/actions";
+import { getPostBundle } from "@/app/(site)/blog/[[...slug]]/actions";
 
 export async function POST(request: Request) {
   let slug: unknown;
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
-  return NextResponse.json(await viewPost(slug), {
+  return NextResponse.json(await getPostBundle(slug), {
     headers: { "Cache-Control": "no-store" },
   });
 }

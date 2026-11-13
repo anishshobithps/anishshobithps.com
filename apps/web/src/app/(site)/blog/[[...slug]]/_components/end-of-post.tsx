@@ -8,7 +8,8 @@ import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography
 import { gitDraw, gitPop } from "@repo/diagrams/classes";
 import { cn } from "@repo/ui/lib/cn";
 import type { CSSProperties } from "react";
-import { usePostStats } from "@/app/(site)/blog/[[...slug]]/_components/use-post-stats";
+import { EndMessageSkeleton } from "@/app/(site)/blog/[[...slug]]/_components/post-skeletons";
+import { usePostData } from "@/app/(site)/blog/[[...slug]]/_components/use-post-data";
 
 function FinishLine() {
   return (
@@ -58,7 +59,8 @@ interface EndOfPostProps {
 }
 
 export function EndOfPost({ slug, className }: EndOfPostProps) {
-  const commentCount = usePostStats(slug).data?.commentCount ?? 0;
+  const { data, isError } = usePostData(slug);
+  const commentCount = data?.stats.commentCount ?? 0;
   const scrollToEngagement = () => {
     document
       .getElementById("engagement")
@@ -73,11 +75,15 @@ export function EndOfPost({ slug, className }: EndOfPostProps) {
           <TypographySmall className="text-foreground">
             That&apos;s the end. What did you think?
           </TypographySmall>
-          <TypographyMuted className="text-xs font-mono">
-            {commentCount > 0
-              ? `// ${commentCount} ${commentCount === 1 ? "person has" : "people have"} already said something.`
-              : "// no reactions yet. you could be the first."}
-          </TypographyMuted>
+          {data ? (
+            <TypographyMuted className="text-xs font-mono">
+              {commentCount > 0
+                ? `// ${commentCount} ${commentCount === 1 ? "person has" : "people have"} already said something.`
+                : "// no reactions yet. you could be the first."}
+            </TypographyMuted>
+          ) : isError ? null : (
+            <EndMessageSkeleton />
+          )}
         </div>
         <Button
           variant="outline"

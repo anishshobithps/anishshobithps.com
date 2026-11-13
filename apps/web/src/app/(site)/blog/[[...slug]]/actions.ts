@@ -94,15 +94,8 @@ export interface PostStats {
     commentCount: number;
 }
 
-export async function viewPost(slug: string): Promise<PostStats> {
-    return safeQuery("viewPost", () => loadPostStats(slug), { reads: 0, commentCount: 0 });
-}
-
-async function loadPostStats(slug: string): Promise<PostStats> {
-    const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
-    if (postId === null) return { reads: 0, commentCount: 0 };
-
-    const result = await db.execute<{ reads: number; comments: number }>(sql`
+function statsStatement(postId: number, ipHash: string) {
+    return db.execute<{ reads: number; comments: number }>(sql`
         with inserted as (
             insert into blog_reads (post_id, ip_hash)
             values (${postId}, ${ipHash})
@@ -113,9 +106,6 @@ async function loadPostStats(slug: string): Promise<PostStats> {
             ((select count(*) from blog_reads where post_id = ${postId}) + (select count(*) from inserted))::int as reads,
             (select count(*) from blog_comments where post_id = ${postId} and is_deleted = false)::int as comments
     `);
-
-    const row = result.rows[0];
-    return { reads: row?.reads ?? 0, commentCount: row?.comments ?? 0 };
 }
 
 export async function getReactions(slug: string): Promise<ReactionsData> {
@@ -125,15 +115,8 @@ export async function getReactions(slug: string): Promise<ReactionsData> {
     });
 }
 
-async function loadReactions(slug: string): Promise<ReactionsData> {
-    const [ipHash, postId] = await Promise.all([
-        getIpHash(),
-        getPostIdBySlug(slug),
-    ]);
-
-    if (postId === null) return { counts: {}, userMood: null };
-
-    const rows = await db
+function reactionsQuery(postId: number, ipHash: string) {
+    return db
         .select({
             mood: blogReactions.mood,
             count: sql<number>`count(*)::int`,
@@ -142,7 +125,9 @@ async function loadReactions(slug: string): Promise<ReactionsData> {
         .from(blogReactions)
         .where(eq(blogReactions.postId, postId))
         .groupBy(blogReactions.mood);
+}
 
+function toReactions(rows: { mood: string; count: number; mine: boolean }[]): ReactionsData {
     const counts = rows.reduce<ReactionCounts>((acc, { mood, count }) => {
         if (isValidMood(mood)) acc[mood] = count;
         return acc;
@@ -154,6 +139,17 @@ async function loadReactions(slug: string): Promise<ReactionsData> {
         counts,
         userMood: isValidMood(userMood) ? userMood : null,
     };
+}
+
+async function loadReactions(slug: string): Promise<ReactionsData> {
+    const [ipHash, postId] = await Promise.all([
+        getIpHash(),
+        getPostIdBySlug(slug),
+    ]);
+
+    if (postId === null) return { counts: {}, userMood: null };
+
+    return toReactions(await reactionsQuery(postId, ipHash));
 }
 
 export async function submitReaction(slug: string, mood: MoodId | null): Promise<void> {
@@ -216,21 +212,14 @@ export async function getComments(slug: string): Promise<GetCommentsResult> {
     });
 }
 
-async function loadComments(slug: string): Promise<GetCommentsResult> {
-    const { userId } = await auth();
-
-    const postId = await getPostIdBySlug(slug);
-
-    if (postId === null) return { comments: [], total: 0, viewerId: userId };
-
+function commentsQuery(postId: number, userId: string | null) {
     const likedByMe = userId
         ? sql<boolean>`exists (select 1 from ${blogCommentLikes} where ${blogCommentLikes.commentId} = ${blogComments.id} and ${blogCommentLikes.clerkUserId} = ${userId})`
         : sql<boolean>`false`;
 
-    const rows = await db
+    return db
         .select({
             id: blogComments.id,
-            postId: blogComments.postId,
             parentId: blogComments.parentId,
             clerkUserId: blogComments.clerkUserId,
             body: blogComments.body,
@@ -242,7 +231,15 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
         .from(blogComments)
         .where(and(eq(blogComments.postId, postId), eq(blogComments.isDeleted, false)))
         .orderBy(desc(blogComments.isPinned), desc(blogComments.createdAt));
+}
 
+type CommentRow = Awaited<ReturnType<typeof commentsQuery>>[number];
+
+async function assembleComments(
+    rows: CommentRow[],
+    slug: string,
+    userId: string | null,
+): Promise<GetCommentsResult> {
     if (rows.length === 0) return { comments: [], total: 0, viewerId: userId };
 
     const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
@@ -272,6 +269,58 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
     }
 
     return { comments: roots, total: flat.length, viewerId: userId };
+}
+
+async function loadComments(slug: string): Promise<GetCommentsResult> {
+    const { userId } = await auth();
+
+    const postId = await getPostIdBySlug(slug);
+
+    if (postId === null) return { comments: [], total: 0, viewerId: userId };
+
+    return assembleComments(await commentsQuery(postId, userId), slug, userId);
+}
+
+export interface PostBundle {
+    stats: PostStats;
+    comments: GetCommentsResult;
+    reactions: ReactionsData;
+}
+
+function emptyBundle(viewerId: string | null): PostBundle {
+    return {
+        stats: { reads: 0, commentCount: 0 },
+        comments: { comments: [], total: 0, viewerId },
+        reactions: { counts: {}, userMood: null },
+    };
+}
+
+export async function getPostBundle(slug: string): Promise<PostBundle> {
+    return safeQuery("getPostBundle", () => loadPostBundle(slug), emptyBundle(null));
+}
+
+async function loadPostBundle(slug: string): Promise<PostBundle> {
+    const [{ userId }, postId, ipHash] = await Promise.all([
+        auth(),
+        getOrCreatePost(slug),
+        getIpHash(),
+    ]);
+
+    if (postId === null) return emptyBundle(userId);
+
+    const [statsResult, commentRows, reactionRows] = await db.batch([
+        statsStatement(postId, ipHash),
+        commentsQuery(postId, userId),
+        reactionsQuery(postId, ipHash),
+    ]);
+
+    const row = statsResult.rows[0];
+
+    return {
+        stats: { reads: row?.reads ?? 0, commentCount: row?.comments ?? 0 },
+        comments: await assembleComments(commentRows, slug, userId),
+        reactions: toReactions(reactionRows),
+    };
 }
 
 export async function submitComment(

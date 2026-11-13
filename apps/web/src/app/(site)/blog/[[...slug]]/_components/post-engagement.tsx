@@ -8,7 +8,8 @@ import {
   toggleCommentLike,
   type CommentWithMeta,
   type MoodId,
-  type PostStats,
+  type PostBundle,
+  type ReactionsData,
 } from "@/app/(site)/blog/[[...slug]]/actions";
 import { CommentComposerArea } from "@/app/(site)/blog/[[...slug]]/_components/comment-composer-area";
 import { CommentList } from "@/app/(site)/blog/[[...slug]]/_components/comment-list";
@@ -110,12 +111,14 @@ function applyMood(state: MoodState, next: MoodId | ""): MoodState {
 interface PostEngagementProps {
   slug: string;
   initialComments: CommentWithMeta[];
+  initialReactions: ReactionsData;
   currentUserId: string | null;
 }
 
 export function PostEngagement({
   slug,
   initialComments,
+  initialReactions,
   currentUserId,
 }: PostEngagementProps) {
   "use memo";
@@ -126,9 +129,15 @@ export function PostEngagement({
   const reactionsKey = useMemo(() => queryKeys.reactions(slug), [slug]);
   const bumpCommentCount = useCallback(
     (delta: number) =>
-      queryClient.setQueryData<PostStats>(queryKeys.postStats(slug), (old) =>
+      queryClient.setQueryData<PostBundle>(queryKeys.postData(slug), (old) =>
         old
-          ? { ...old, commentCount: Math.max(0, old.commentCount + delta) }
+          ? {
+              ...old,
+              stats: {
+                ...old.stats,
+                commentCount: Math.max(0, old.stats.commentCount + delta),
+              },
+            }
           : old,
       ),
     [queryClient, slug],
@@ -136,6 +145,10 @@ export function PostEngagement({
 
   const { data: moodState = EMPTY_MOOD, isPending: moodLoading } = useQuery({
     queryKey: reactionsKey,
+    initialData: (): MoodState => ({
+      value: initialReactions.userMood ?? "",
+      counts: initialReactions.counts,
+    }),
     queryFn: async (): Promise<MoodState> => {
       const { counts, userMood } = await getReactions(slug);
       return { value: userMood ?? "", counts };
