@@ -28,6 +28,22 @@ const cells = Array.from({ length: COLS * ROWS }, (_, i) => {
   };
 });
 
+function cellPath(x: number, y: number) {
+  return `M${x + 2} ${y}h6a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z`;
+}
+
+const twinkleCells = cells.filter((cell) => cell.twinkle);
+
+const staticCellPaths = [0, 1, 2, 3]
+  .map((level) => ({
+    level,
+    d: cells
+      .filter((cell) => !cell.twinkle && cell.level === level)
+      .map((cell) => cellPath(cell.x, cell.y))
+      .join(""),
+  }))
+  .filter(({ d }) => d.length > 0);
+
 const LEVEL_CLASS = [
   "fill-foreground/5",
   "fill-(--brand)/15",
@@ -103,7 +119,10 @@ export function GitChaos() {
       </defs>
 
       <g mask="url(#git-chaos-mask)" className={gitFade} style={delay(0)}>
-        {cells.map(({ x, y, level, twinkle, delay: d }) => (
+        {staticCellPaths.map(({ level, d }) => (
+          <path key={level} d={d} className={LEVEL_CLASS[level]} />
+        ))}
+        {twinkleCells.map(({ x, y, delay: d }) => (
           <rect
             key={`${x}-${y}`}
             x={x}
@@ -111,10 +130,8 @@ export function GitChaos() {
             width={CELL}
             height={CELL}
             rx="2"
-            className={twinkle ? isoTwinkle : LEVEL_CLASS[level]}
-            style={
-              twinkle ? { animationDelay: `-${d.toFixed(2)}s` } : undefined
-            }
+            className={isoTwinkle}
+            style={{ animationDelay: `-${d.toFixed(2)}s` }}
           />
         ))}
       </g>
