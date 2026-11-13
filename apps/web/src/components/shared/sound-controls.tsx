@@ -16,7 +16,7 @@ import {
 import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 import { disableSound, enableSound } from "@repo/sounds/sound-player";
 
-function setSoundOn(next: boolean) {
+export function setSoundOn(next: boolean) {
   if (next) void enableSound();
   else disableSound();
 }

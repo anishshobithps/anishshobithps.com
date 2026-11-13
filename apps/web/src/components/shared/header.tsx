@@ -1,8 +1,10 @@
 "use client";
 
+import { AppearanceControl } from "@/components/shared/appearance-control";
+import { pad, RegisterDial } from "@/components/layouts/blog-toc";
 import { Logo } from "@/components/shared/logo";
-import { SoundSwitch, SoundToggle } from "@/components/shared/sound-controls";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { SoundToggle } from "@/components/shared/sound-controls";
+import { ThemeCycle } from "@/components/shared/theme-toggle";
 import { Button } from "@repo/ui/components/button";
 import { ButtonGroup } from "@repo/ui/components/button-group";
 import { Kbd } from "@repo/ui/components/kbd";
@@ -12,52 +14,84 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@repo/ui/components/navigation-menu";
-import { TypographySmall } from "@repo/ui/components/typography";
+import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
+import { type ReadingState, setTocOpen, useReading } from "@/lib/reading-store";
 import { playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import {
+  CaretDownIcon,
   ListIcon,
   MagnifyingGlassIcon,
   XIcon,
 } from "@repo/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 function isActive(pathname: string, href: string) {
   if (pathname === href) return true;
   return href === "/blogs" && pathname.startsWith("/blog/");
 }
 
-function NavPin({ className }: { className?: string }) {
+const WIDE = "(min-width: 80rem)";
+
+function subscribeWide(onChange: () => void) {
+  const query = window.matchMedia(WIDE);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function useWide() {
+  return useSyncExternalStore(
+    subscribeWide,
+    () => window.matchMedia(WIDE).matches,
+    () => false,
+  );
+}
+
+function ReadingBar({ reading }: { reading: ReadingState }) {
   return (
-    <svg
-      viewBox="0 0 16 16"
-      aria-hidden="true"
-      className={cn(
-        "pointer-events-none size-4 origin-[3px_14px] animate-pin-drop overflow-visible",
-        className,
-      )}
+    <Button
+      type="button"
+      variant="ghost"
+      data-reading-trigger=""
+      aria-label={`Table of contents, section ${reading.section} of ${reading.sections}: ${reading.heading}`}
+      aria-expanded={reading.tocOpen}
+      onClick={() => {
+        playCue(reading.tocOpen ? "close" : "open");
+        setTocOpen(!reading.tocOpen);
+      }}
+      size="sm"
+      className="h-9 min-w-0 flex-1 justify-start"
     >
-      <path
-        d="M7.5 7.5 L3 14"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        className="stroke-muted-foreground"
+      <RegisterDial progress={reading.progress} size={16} className="shrink-0" />
+      <SectionLabel pixel accent asChild className="shrink-0">
+        <span>
+          {pad(reading.section)}/{pad(reading.sections)}
+        </span>
+      </SectionLabel>
+      <span className="block min-w-0 truncate *:text-nowrap">
+        <TypographySmall>{reading.heading}</TypographySmall>
+      </span>
+      <CaretDownIcon
+        aria-hidden="true"
+        className={cn(
+          "size-3.5 shrink-0 text-muted-foreground transition-transform",
+          reading.tocOpen && "rotate-180",
+        )}
       />
-      <ellipse
-        cx="8.6"
-        cy="6.6"
-        rx="4.2"
-        ry="3.6"
-        className="fill-foreground/15"
-      />
-      <circle cx="8" cy="5.6" r="3.9" className="fill-(--brand)" />
-      <circle cx="6.7" cy="4.3" r="1.2" className="fill-white/70" />
-    </svg>
+    </Button>
   );
 }
 
@@ -94,6 +128,30 @@ export function Header() {
   const isMac = useIsMac();
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const reading = useReading();
+  const wide = useWide();
+  const engaged = !wide && reading.engaged && reading.sections > 0;
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const place = () => {
+      const current = nav.querySelector<HTMLElement>("[data-current]");
+      if (!current) {
+        nav.style.setProperty("--rule-width", "0px");
+        return;
+      }
+      const box = nav.getBoundingClientRect();
+      const rect = current.getBoundingClientRect();
+      nav.style.setProperty("--rule-left", `${rect.left - box.left + 10}px`);
+      nav.style.setProperty("--rule-width", `${rect.width - 20}px`);
+    };
+    place();
+    const observer = new ResizeObserver(place);
+    observer.observe(nav);
+    return () => observer.disconnect();
+  }, [pathname, engaged]);
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
@@ -140,14 +198,22 @@ export function Header() {
             aria-label={`${siteConfig.name}, home`}
             className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
           >
-            <Logo size={32} showWordmark alive aria-hidden="true" />
+            <Logo size={32} showWordmark={!engaged} alive aria-hidden="true" />
           </Link>
 
+          {engaged && (
+            <div className="mx-2 flex min-w-0 flex-1 animate-in fade-in-0 slide-in-from-bottom-1 duration-300 motion-reduce:animate-none md:mx-6">
+              <ReadingBar reading={reading} />
+            </div>
+          )}
+
           <div className="flex items-center gap-1">
-            <NavigationMenu
-              className="max-md:hidden"
-              aria-label="Main navigation"
+            {engaged ? null : (
+            <div
+              ref={navRef}
+              className="relative max-md:hidden animate-in fade-in-0 slide-in-from-top-1 duration-300 motion-reduce:animate-none"
             >
+            <NavigationMenu aria-label="Main navigation">
               <NavigationMenuList className="gap-0.5">
                 {siteConfig.nav.map((link) => {
                   const active = isActive(pathname, link.href);
@@ -156,7 +222,7 @@ export function Header() {
                       <NavigationMenuLink
                         asChild
                         data-current={active || undefined}
-                        className="relative text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-[color,background-color,rotate] data-current:-rotate-2 data-current:bg-(--brand)/10 data-current:font-medium data-current:text-foreground data-current:ring-1 data-current:ring-(--brand)/35 data-current:hover:rotate-0 data-current:hover:bg-(--brand)/15 data-current:animate-note-swing"
+                        className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-colors data-current:text-foreground"
                       >
                         <Link
                           href={link.href}
@@ -170,12 +236,6 @@ export function Header() {
                           }
                         >
                           <TypographySmall>{link.label}</TypographySmall>
-                          {active && (
-                            <NavPin
-                              key={pathname}
-                              className="absolute -top-2 -right-1.5"
-                            />
-                          )}
                         </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
@@ -183,11 +243,21 @@ export function Header() {
                 })}
               </NavigationMenuList>
             </NavigationMenu>
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-0.5 left-(--rule-left,0) h-0.5 w-(--rule-width,0) translate-x-0.5 translate-y-0.75 rounded-full bg-(--brand) transition-[left,width] delay-75 duration-700 ease-out motion-reduce:transition-none"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-0.5 left-(--rule-left,0) h-0.5 w-(--rule-width,0) rounded-full bg-foreground transition-[left,width] duration-200 ease-out motion-reduce:transition-none"
+              />
+            </div>
+            )}
 
             <ButtonGroup className="max-md:hidden">
               <CommandMenuButton isMac={isMac} />
               <SoundToggle className="h-8.5 w-9 pointer-coarse:size-11" />
-              <ThemeToggle className="h-8.5 rounded-r-full py-0 pr-0.75 pl-1 pointer-coarse:h-11" />
+              <ThemeCycle className="h-8.5 w-9 rounded-r-full pointer-coarse:size-11" />
             </ButtonGroup>
 
             <ButtonGroup className="md:hidden">
@@ -229,7 +299,7 @@ export function Header() {
             className="flex flex-col divide-y"
             aria-label="Mobile navigation"
           >
-            {siteConfig.nav.map((link) => {
+            {siteConfig.nav.map((link, index) => {
               const active = isActive(pathname, link.href);
               return (
                 <Link
@@ -237,7 +307,11 @@ export function Header() {
                   href={link.href}
                   data-sound="tap"
                   onClick={() => setOpen(false)}
-                  className="text-foreground hover:text-muted-foreground hover:bg-accent px-6 py-3.5 transition-colors"
+                  className={cn(
+                    "relative px-6 py-3.5 text-foreground transition-[opacity,translate,background-color] delay-(--stagger) duration-300 ease-out hover:bg-accent motion-reduce:transition-none",
+                    open ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0",
+                  )}
+                  style={{ "--stagger": `${open ? 40 + index * 45 : 0}ms` } as CSSProperties}
                   aria-current={
                     pathname === link.href
                       ? "page"
@@ -246,24 +320,25 @@ export function Header() {
                         : undefined
                   }
                 >
-                  <span className="flex items-center gap-2">
-                    <TypographySmall>{link.label}</TypographySmall>
-                    {active && <NavPin key={pathname} />}
-                  </span>
+                  {active && (
+                    <>
+                      <span aria-hidden="true" className="absolute inset-y-3 left-3 w-0.5 translate-x-0.5 translate-y-0.5 rounded-full bg-(--brand)" />
+                      <span aria-hidden="true" className="absolute inset-y-3 left-3 w-0.5 rounded-full bg-foreground" />
+                    </>
+                  )}
+                  <TypographySmall>{link.label}</TypographySmall>
                 </Link>
               );
             })}
-            <div className="flex items-center justify-between px-6 py-3.5">
-              <TypographySmall className="text-foreground" id="theme-label">
-                Theme
-              </TypographySmall>
-              <ThemeToggle aria-labelledby="theme-label" />
-            </div>
-            <div className="flex items-center justify-between px-6 py-3.5">
-              <TypographySmall id="sound-label">
-                Sound
-              </TypographySmall>
-              <SoundSwitch aria-labelledby="sound-label" />
+            <div
+              className={cn(
+                "flex items-center justify-between gap-4 px-6 py-3 transition-[opacity,translate] delay-(--stagger) duration-300 ease-out motion-reduce:transition-none",
+                open ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0",
+              )}
+              style={{ "--stagger": `${open ? 40 + siteConfig.nav.length * 45 : 0}ms` } as CSSProperties}
+            >
+              <TypographySmall>Appearance</TypographySmall>
+              <AppearanceControl />
             </div>
           </nav>
         </div>
