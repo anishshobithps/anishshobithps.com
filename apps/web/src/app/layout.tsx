@@ -1,7 +1,6 @@
 import { ENV } from "varlock/env";
 import { CommandMenuHost } from "@/components/shared/command-menu-host";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
-import { QueryProvider } from "@/components/shared/query-provider";
 import { SoundEffects } from "@/components/shared/sound-effects";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { Toaster } from "@repo/ui/components/sonner";
@@ -16,7 +15,6 @@ import {
   Manrope,
 } from "next/font/google";
 import Script from "next/script";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./global.css";
 
@@ -107,19 +105,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
-          <NuqsAdapter>
-            <QueryProvider>
-            <TooltipProvider>
-              <PhosphorProvider>
-                <ThemeHotkey />
-                <SoundEffects />
-                <CommandMenuHost />
-                {children}
-                <Toaster />
-              </PhosphorProvider>
-            </TooltipProvider>
-            </QueryProvider>
-          </NuqsAdapter>
+          <TooltipProvider>
+            <PhosphorProvider>
+              <ThemeHotkey />
+              <SoundEffects />
+              <CommandMenuHost />
+              {children}
+              <Toaster />
+            </PhosphorProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

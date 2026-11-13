@@ -1,10 +1,10 @@
 "use client";
 
 import { fetchNowPlaying } from "@/app/(site)/actions";
+import type { NowPlayingData } from "@/lib/spotify";
 import { TypographyMuted } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
-import { queryKeys } from "@/lib/query-keys";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 function Turntable({ playing }: { playing: boolean }) {
   return (
@@ -83,13 +83,31 @@ function Turntable({ playing }: { playing: boolean }) {
   );
 }
 
-export function NowPlayingLive() {
-  const { data } = useQuery({
-    queryKey: queryKeys.nowPlaying,
-    queryFn: fetchNowPlaying,
-    refetchInterval: 60_000,
-    refetchOnWindowFocus: true,
-  });
+const REFRESH_MS = 60_000;
+
+export function NowPlayingLive({ initial }: { initial: NowPlayingData }) {
+  const [data, setData] = useState(initial);
+
+  useEffect(() => {
+    let cancelled = false;
+    const refresh = () => {
+      fetchNowPlaying()
+        .then((next) => {
+          if (!cancelled) setData(next);
+        })
+        .catch(() => {});
+    };
+    const timer = window.setInterval(refresh, REFRESH_MS);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, []);
 
   return (
     <div className="flex items-center gap-1.5 max-w-[280px] min-w-0">

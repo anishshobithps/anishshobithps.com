@@ -15,6 +15,7 @@ import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import { toISOString, toTimestamp } from "@repo/core/date";
 
@@ -76,7 +77,9 @@ export default function BlogPage() {
 
       <Section className="pb-6" aria-label="Blog posts">
         <Suspense fallback={<BlogsSkeleton count={Math.min(posts.length, 10)} />}>
-          <BlogsClient posts={posts} allTags={allTags} filler={<PostGridFiller next={pages.length + 1} />} />
+          <NuqsAdapter>
+            <BlogsClient posts={posts} allTags={allTags} filler={<PostGridFiller next={pages.length + 1} />} />
+          </NuqsAdapter>
         </Suspense>
       </Section>
     </>

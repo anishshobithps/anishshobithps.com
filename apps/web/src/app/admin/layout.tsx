@@ -5,6 +5,8 @@ import { SidebarInset, SidebarProvider } from "@repo/ui/components/sidebar";
 import { AdminSidebar } from "@/app/admin/sidebar";
 import { AdminHeader } from "@/app/admin/admin-header";
 import { AdminUnauthorized } from "@/app/admin/unauthorized";
+import { QueryProvider } from "@/components/shared/query-provider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -26,13 +28,17 @@ export default async function AdminLayout({
 
   return (
     <ClerkProvider>
-      <SidebarProvider>
-        <AdminSidebar />
-        <SidebarInset>
-          <AdminHeader />
-          {children}
-        </SidebarInset>
-      </SidebarProvider>
+      <NuqsAdapter>
+        <QueryProvider>
+          <SidebarProvider>
+            <AdminSidebar />
+            <SidebarInset>
+              <AdminHeader />
+              {children}
+            </SidebarInset>
+          </SidebarProvider>
+        </QueryProvider>
+      </NuqsAdapter>
     </ClerkProvider>
   );
 }
