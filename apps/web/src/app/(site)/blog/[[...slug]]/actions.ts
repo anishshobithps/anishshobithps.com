@@ -9,7 +9,7 @@ import { blogCommentLikes, blogComments, blogPosts, blogReactions } from "@repo/
 import { source } from "@/lib/source";
 import { sanitizeText, ValidationError, validateLength } from "@repo/core/text";
 import { auth } from "@clerk/nextjs/server";
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { cache } from "react";
 
@@ -133,29 +133,22 @@ async function loadReactions(slug: string): Promise<ReactionsData> {
 
     if (postId === null) return { counts: {}, userMood: null };
 
-    const [countRows, userRows] = await Promise.all([
-        db
-            .select({
-                mood: blogReactions.mood,
-                count: sql<number>`count(*)::int`,
-            })
-            .from(blogReactions)
-            .where(eq(blogReactions.postId, postId))
-            .groupBy(blogReactions.mood),
+    const rows = await db
+        .select({
+            mood: blogReactions.mood,
+            count: sql<number>`count(*)::int`,
+            mine: sql<boolean>`coalesce(bool_or(${blogReactions.ipHash} = ${ipHash}), false)`,
+        })
+        .from(blogReactions)
+        .where(eq(blogReactions.postId, postId))
+        .groupBy(blogReactions.mood);
 
-        db
-            .select({ mood: blogReactions.mood })
-            .from(blogReactions)
-            .where(and(eq(blogReactions.postId, postId), eq(blogReactions.ipHash, ipHash)))
-            .limit(1),
-    ]);
-
-    const counts = countRows.reduce<ReactionCounts>((acc, { mood, count }) => {
+    const counts = rows.reduce<ReactionCounts>((acc, { mood, count }) => {
         if (isValidMood(mood)) acc[mood] = count;
         return acc;
     }, {});
 
-    const userMood = userRows[0]?.mood;
+    const userMood = rows.find((row) => row.mine)?.mood;
 
     return {
         counts,
@@ -230,6 +223,10 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
 
     if (postId === null) return { comments: [], total: 0, viewerId: userId };
 
+    const likedByMe = userId
+        ? sql<boolean>`exists (select 1 from ${blogCommentLikes} where ${blogCommentLikes.commentId} = ${blogComments.id} and ${blogCommentLikes.clerkUserId} = ${userId})`
+        : sql<boolean>`false`;
+
     const rows = await db
         .select({
             id: blogComments.id,
@@ -239,29 +236,14 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
             body: blogComments.body,
             isPinned: blogComments.isPinned,
             createdAt: blogComments.createdAt,
-            likeCount: sql<number>`count(${blogCommentLikes.commentId})::int`,
+            likeCount: sql<number>`(select count(*)::int from ${blogCommentLikes} where ${blogCommentLikes.commentId} = ${blogComments.id})`,
+            likedByMe,
         })
         .from(blogComments)
-        .leftJoin(blogCommentLikes, eq(blogComments.id, blogCommentLikes.commentId))
         .where(and(eq(blogComments.postId, postId), eq(blogComments.isDeleted, false)))
-        .groupBy(blogComments.id)
         .orderBy(desc(blogComments.isPinned), desc(blogComments.createdAt));
 
     if (rows.length === 0) return { comments: [], total: 0, viewerId: userId };
-
-    let likedIds = new Set<number>();
-    if (userId) {
-        const likes = await db
-            .select({ commentId: blogCommentLikes.commentId })
-            .from(blogCommentLikes)
-            .where(
-                and(
-                    eq(blogCommentLikes.clerkUserId, userId),
-                    inArray(blogCommentLikes.commentId, rows.map((r) => r.id)),
-                ),
-            );
-        likedIds = new Set(likes.map((l) => l.commentId));
-    }
 
     const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
@@ -273,7 +255,7 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
         isPinned: row.isPinned,
         createdAt: row.createdAt.toISOString(),
         likeCount: row.likeCount,
-        likedByMe: likedIds.has(row.id),
+        likedByMe: row.likedByMe,
         user: resolveUser(userMap, row.clerkUserId),
         replies: [],
     }));
@@ -349,24 +331,30 @@ export async function deleteComment(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "Not authenticated." };
 
-        const [comment] = await db
-            .select({ clerkUserId: blogComments.clerkUserId, postId: blogComments.postId })
-            .from(blogComments)
-            .where(and(eq(blogComments.id, commentId), eq(blogComments.isDeleted, false)))
-            .limit(1);
-
-        if (!comment) return { success: false, error: "Comment not found." };
-
-        const isOwner = comment.clerkUserId === userId;
         const isSiteOwner = userId === ENV.OWNER_CLERK_USER_ID;
 
-        if (!isOwner && !isSiteOwner)
-            return { success: false, error: "You don't have permission to delete this comment." };
-
-        await db
+        const updated = await db
             .update(blogComments)
             .set({ isDeleted: true, updatedAt: new Date() })
-            .where(eq(blogComments.id, commentId));
+            .where(
+                and(
+                    eq(blogComments.id, commentId),
+                    eq(blogComments.isDeleted, false),
+                    isSiteOwner ? undefined : eq(blogComments.clerkUserId, userId),
+                ),
+            )
+            .returning({ id: blogComments.id });
+
+        if (updated.length === 0) {
+            const [exists] = await db
+                .select({ id: blogComments.id })
+                .from(blogComments)
+                .where(and(eq(blogComments.id, commentId), eq(blogComments.isDeleted, false)))
+                .limit(1);
+            return exists
+                ? { success: false, error: "You don't have permission to delete this comment." }
+                : { success: false, error: "Comment not found." };
+        }
 
         return { success: true };
     } catch {
@@ -382,18 +370,13 @@ export async function togglePinComment(
         if (!userId || userId !== ENV.OWNER_CLERK_USER_ID)
             return { success: false, error: "Not authorized." };
 
-        const [comment] = await db
-            .select({ isPinned: blogComments.isPinned, postId: blogComments.postId })
-            .from(blogComments)
-            .where(eq(blogComments.id, commentId))
-            .limit(1);
-
-        if (!comment) return { success: false, error: "Comment not found." };
-
-        await db
+        const updated = await db
             .update(blogComments)
-            .set({ isPinned: !comment.isPinned, updatedAt: new Date() })
-            .where(eq(blogComments.id, commentId));
+            .set({ isPinned: sql`not ${blogComments.isPinned}`, updatedAt: new Date() })
+            .where(eq(blogComments.id, commentId))
+            .returning({ id: blogComments.id });
+
+        if (updated.length === 0) return { success: false, error: "Comment not found." };
 
         return { success: true };
     } catch {
@@ -408,20 +391,14 @@ export async function toggleCommentLike(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to like comments." };
 
-        const [existing] = await db
-            .select()
-            .from(blogCommentLikes)
+        const removed = await db
+            .delete(blogCommentLikes)
             .where(and(eq(blogCommentLikes.commentId, commentId), eq(blogCommentLikes.clerkUserId, userId)))
-            .limit(1);
+            .returning({ commentId: blogCommentLikes.commentId });
 
-        if (existing) {
-            await db
-                .delete(blogCommentLikes)
-                .where(and(eq(blogCommentLikes.commentId, commentId), eq(blogCommentLikes.clerkUserId, userId)));
-            return { success: true, liked: false };
-        }
+        if (removed.length > 0) return { success: true, liked: false };
 
-        await db.insert(blogCommentLikes).values({ commentId, clerkUserId: userId });
+        await db.insert(blogCommentLikes).values({ commentId, clerkUserId: userId }).onConflictDoNothing();
         return { success: true, liked: true };
     } catch {
         return { success: false, error: "Something went wrong." };
