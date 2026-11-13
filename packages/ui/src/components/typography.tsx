@@ -6,14 +6,14 @@ import { cn } from "@repo/ui/lib/cn";
 type AsChildProps = { asChild?: boolean };
 
 const headingVariants = cva(
-  "scroll-m-20 font-display tracking-tight text-balance leading-[1.1]",
+  "scroll-m-20 font-display tracking-tight text-balance",
   {
     variants: {
       level: {
-        h1: "text-[clamp(2.25rem,1.4rem+3.4vw,3.5rem)] font-extrabold",
-        h2: "text-[clamp(1.75rem,1.2rem+2.2vw,2.5rem)] font-bold",
-        h3: "text-[clamp(1.375rem,1.05rem+1.4vw,1.75rem)] font-semibold",
-        h4: "text-[clamp(1.125rem,0.95rem+0.75vw,1.375rem)] font-semibold",
+        h1: "text-[clamp(2.25rem,1.4rem+3.4vw,3.5rem)]/[1.1] font-extrabold",
+        h2: "text-[clamp(1.75rem,1.2rem+2.2vw,2.5rem)]/[1.1] font-bold",
+        h3: "text-[clamp(1.375rem,1.05rem+1.4vw,1.75rem)]/[1.1] font-semibold",
+        h4: "text-[clamp(1.125rem,0.95rem+0.75vw,1.375rem)]/[1.1] font-semibold",
       },
       divider: {
         true: "border-b border-border pb-2",
