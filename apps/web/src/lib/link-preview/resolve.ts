@@ -65,29 +65,31 @@ async function dispatch(target: LinkTarget, url: string): Promise<LinkPreview | 
   }
 }
 
-async function resolveRich(url: string): Promise<LinkPreview> {
+type Outcome = { preview: LinkPreview | null };
+
+async function resolveRich(url: string): Promise<LinkPreview | null> {
   const target = classifyLink(url, SITE_ORIGINS);
-  if (!target) throw new Error("unsupported link");
-  const preview = await dispatch(target, url);
-  if (!preview) throw new Error("no preview available");
-  return preview;
+  if (!target) return null;
+  return dispatch(target, url);
 }
 
-async function resolveGenericOnly(url: string): Promise<LinkPreview> {
-  const preview = await resolveGeneric(url);
-  if (!preview) throw new Error("no preview available");
-  return preview;
+function cachedOutcome(
+  name: string,
+  revalidate: number,
+  resolve: (url: string) => Promise<LinkPreview | null>,
+) {
+  return unstable_cache(
+    async (url: string): Promise<Outcome> => ({
+      preview: await resolve(url).catch(() => null),
+    }),
+    ["link-preview", name],
+    { revalidate },
+  );
 }
 
-const richFast = unstable_cache(resolveRich, ["link-preview", "fast"], {
-  revalidate: HOUR,
-});
-const richSlow = unstable_cache(resolveRich, ["link-preview", "slow"], {
-  revalidate: DAY,
-});
-const genericCached = unstable_cache(resolveGenericOnly, ["link-preview", "generic"], {
-  revalidate: DAY,
-});
+const richFast = cachedOutcome("fast", HOUR, resolveRich);
+const richSlow = cachedOutcome("slow", DAY, resolveRich);
+const genericCached = cachedOutcome("generic", DAY, resolveGeneric);
 
 function rememberFailure(url: string) {
   if (recentFailures.size >= MAX_REMEMBERED_FAILURES) recentFailures.clear();
@@ -102,14 +104,12 @@ export async function resolveLinkPreview(url: string): Promise<LinkPreview> {
   const retryAfter = recentFailures.get(url);
   if (retryAfter && retryAfter > Date.now()) return bare(url);
 
-  try {
-    return await (FAST_KINDS.has(target.kind) ? richFast : richSlow)(url);
-  } catch {}
+  const rich = await (FAST_KINDS.has(target.kind) ? richFast : richSlow)(url);
+  if (rich.preview) return rich.preview;
 
   if (target.kind !== "generic" && isPublicHttpsUrl(url)) {
-    try {
-      return await genericCached(url);
-    } catch {}
+    const generic = await genericCached(url);
+    if (generic.preview) return generic.preview;
   }
 
   rememberFailure(url);
