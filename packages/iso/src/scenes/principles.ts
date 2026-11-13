@@ -1,6 +1,6 @@
-import { PLATE } from "../classes";
-import { Figure, type Flat, type Projection, type Scene } from "../figure";
-import { circleD, gearD, greenAt, inkPath, lineD, logoD, paperPath, polyD, rectD, REGISTER, screenPath } from "../print";
+import { PLATE } from "@repo/iso/classes";
+import { Figure, type Flat, type Projection, type Scene } from "@repo/iso/figure";
+import { circleD, gearD, greenAt, inkPath, lineD, logoD, paperPath, polyD, rectD, REGISTER, screenPath } from "@repo/iso/print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 const PERIOD = 4;

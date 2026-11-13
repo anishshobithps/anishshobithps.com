@@ -5,25 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { SidebarSimpleIcon } from "@repo/icons";
 import { Slot } from "radix-ui";
 
-import { useIsMobile } from "../hooks/use-mobile";
-import { cn } from "../lib/cn";
-import { Button } from "./button";
-import { Input } from "./input";
-import { Separator } from "./separator";
+import { useIsMobile } from "@repo/ui/hooks/use-mobile";
+import { cn } from "@repo/ui/lib/cn";
+import { Button } from "@repo/ui/components/button";
+import { Input } from "@repo/ui/components/input";
+import { Separator } from "@repo/ui/components/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "./sheet";
-import { Skeleton } from "./skeleton";
+} from "@repo/ui/components/sheet";
+import { Skeleton } from "@repo/ui/components/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./tooltip";
+} from "@repo/ui/components/tooltip";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

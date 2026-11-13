@@ -5,7 +5,9 @@
   "type": "module",
   "exports": {
     "./tokens.css": "./src/tokens.css",
-    "./theme-tokens": "./src/theme-tokens.ts"
+    "./theme-tokens": "./src/theme-tokens.ts",
+    "./tokens.generated": "./src/tokens.generated.ts",
+    "./scripts/*": "./scripts/*.ts"
   },
   "scripts": {
     "lint": "eslint",

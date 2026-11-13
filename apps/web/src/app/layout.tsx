@@ -16,7 +16,7 @@ import {
 } from "next/font/google";
 import Script from "next/script";
 
-import "./global.css";
+import "@/app/global.css";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],

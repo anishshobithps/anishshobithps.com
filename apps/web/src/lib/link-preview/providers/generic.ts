@@ -1,6 +1,6 @@
 import { extractPageMeta } from "@repo/core/html-meta";
-import { displayHost, fetchHtmlHead, isPublicHttpsUrl } from "../http";
-import type { LinkPreview } from "../types";
+import { displayHost, fetchHtmlHead, isPublicHttpsUrl } from "@/lib/link-preview/http";
+import type { LinkPreview } from "@/lib/link-preview/types";
 
 export async function resolveGeneric(url: string): Promise<LinkPreview | null> {
   if (!isPublicHttpsUrl(url)) return null;

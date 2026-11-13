@@ -4,7 +4,7 @@ import {
   getServerSoundPreferences,
   getSoundPreferences,
   subscribeSoundPreferences,
-} from "./sound-preferences";
+} from "@repo/sounds/sound-preferences";
 
 export function useSoundPreferences() {
   return useSyncExternalStore(

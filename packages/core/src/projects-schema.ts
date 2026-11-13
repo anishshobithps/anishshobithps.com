@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isHttpUrl } from "./links-schema";
+import { isHttpUrl } from "@repo/core/links-schema";
 
 export const PROJECT_LIMITS = {
   title: 256,

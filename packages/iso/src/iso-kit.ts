@@ -1,4 +1,4 @@
-import { DOT_TONE, DOTS, type Tone } from "./classes";
+import { DOT_TONE, DOTS, type Tone } from "@repo/iso/classes";
 
 export type { Tone };
 

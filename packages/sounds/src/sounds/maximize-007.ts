@@ -1,4 +1,4 @@
-import type { SoundAsset } from "../sound-types";
+import type { SoundAsset } from "@repo/sounds/sound-types";
 
 export const maximize007Sound: SoundAsset = {
   name: "maximize-007",

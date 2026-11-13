@@ -1,4 +1,4 @@
-import { ENV } from "../env";
+import { ENV } from "@repo/db/env";
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 

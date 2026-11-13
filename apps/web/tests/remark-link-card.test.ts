@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Paragraph, Root, RootContent } from "mdast";
-import { remarkLinkCard } from "../src/lib/remarkLinkCard";
+import { remarkLinkCard } from "@/lib/remarkLinkCard";
 
 function link(url: string, text: string = url, title?: string): RootContent {
     return {

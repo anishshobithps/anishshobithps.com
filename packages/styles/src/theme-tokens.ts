@@ -6,7 +6,7 @@ import {
   parse,
   toGamut,
 } from "culori";
-import { DARK_TOKENS, ROOT_TOKENS } from "./tokens.generated";
+import { DARK_TOKENS, ROOT_TOKENS } from "@repo/styles/tokens.generated";
 
 type Theme = "light" | "dark";
 type Tokens = Record<string, string>;

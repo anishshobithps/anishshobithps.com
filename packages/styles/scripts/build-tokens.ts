@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { extractTokens } from "./extract-tokens";
+import { extractTokens } from "@repo/styles/scripts/extract-tokens";
 
 const css = readFileSync(new URL("../src/tokens.css", import.meta.url), "utf8");
 const { root, dark } = extractTokens(css);

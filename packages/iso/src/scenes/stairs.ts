@@ -1,5 +1,5 @@
-import { Figure, k, type Flat, type Projection, type Scene } from "../figure";
-import { groundDots, inkPath, logoD, OBLIQUE, paperPath, printSolid, shadowOf } from "../print";
+import { Figure, k, type Flat, type Projection, type Scene } from "@repo/iso/figure";
+import { groundDots, inkPath, logoD, OBLIQUE, paperPath, printSolid, shadowOf } from "@repo/iso/print";
 
 const STEPS = 6;
 const STEP_W = 22;

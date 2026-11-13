@@ -1,4 +1,4 @@
-import type { SoundAsset } from "../sound-types";
+import type { SoundAsset } from "@repo/sounds/sound-types";
 
 export const cardPlace2Sound: SoundAsset = {
   name: "card-place-2",

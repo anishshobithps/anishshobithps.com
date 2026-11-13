@@ -1,6 +1,6 @@
-import { PLATE } from "../classes";
-import { Figure, k, type Flat, type Projection, type Scene } from "../figure";
-import { circleD, greenPlate, inkPath, OBLIQUE, polyD, printSolid, printText, screenPath } from "../print";
+import { PLATE } from "@repo/iso/classes";
+import { Figure, k, type Flat, type Projection, type Scene } from "@repo/iso/figure";
+import { circleD, greenPlate, inkPath, OBLIQUE, polyD, printSolid, printText, screenPath } from "@repo/iso/print";
 
 const PAGE_W = 62;
 const PAGE_D = 84;

@@ -1,7 +1,7 @@
 import { Slot } from "radix-ui";
 import { type VariantProps, cva } from "class-variance-authority";
 import { type ElementType, type HTMLAttributes, forwardRef } from "react";
-import { cn } from "../lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 type AsChildProps = { asChild?: boolean };
 

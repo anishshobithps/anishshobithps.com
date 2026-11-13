@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import * as classes from "../src/classes";
+import * as classes from "@repo/iso/classes";
 
 const tokens = readFileSync(
   new URL("../../styles/src/tokens.css", import.meta.url),

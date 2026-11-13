@@ -6,7 +6,7 @@ import {
   XCircleIcon,
   WarningIcon,
 } from "@repo/icons";
-import { Spinner } from "./spinner";
+import { Spinner } from "@repo/ui/components/spinner";
 import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 

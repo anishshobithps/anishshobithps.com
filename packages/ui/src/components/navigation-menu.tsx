@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 import { CaretDownIcon } from "@repo/icons";
 import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
-import { cn } from "../lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 function NavigationMenu({
   className,

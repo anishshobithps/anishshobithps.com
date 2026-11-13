@@ -1,6 +1,6 @@
-import { PLATE, PRINT_LINE, PRINT_LINE_ATTRS, PRINT_TEXT, SCREEN_DOT } from "./classes";
-import type { Figure, Flat } from "./figure";
-import { k } from "./figure";
+import { PLATE, PRINT_LINE, PRINT_LINE_ATTRS, PRINT_TEXT, SCREEN_DOT } from "@repo/iso/classes";
+import type { Figure, Flat } from "@repo/iso/figure";
+import { k } from "@repo/iso/figure";
 
 type SolidPaths = ReturnType<typeof k.slabOf>;
 

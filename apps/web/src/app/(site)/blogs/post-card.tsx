@@ -13,7 +13,7 @@ import { postTransitionName } from "@/lib/view-transition";
 import type { Route } from "next";
 import Link from "next/link";
 import { ViewTransition } from "react";
-import type { BlogPost } from "./blogs-client";
+import type { BlogPost } from "@/app/(site)/blogs/blogs-client";
 
 interface PostCardProps {
   post: BlogPost;

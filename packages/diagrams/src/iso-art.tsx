@@ -1,6 +1,6 @@
 import type { Scene } from "@repo/iso/figure";
 import { sceneMarkup } from "@repo/iso/figure";
-import { IsoMotion } from "./iso-motion";
+import { IsoMotion } from "@repo/diagrams/iso-motion";
 
 export function IsoArt({ scene, slice = false }: { scene: Scene; slice?: boolean }) {
   const art = (

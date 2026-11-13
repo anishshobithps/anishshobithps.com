@@ -43,21 +43,51 @@ const KINDS = {
   edit: { label: "Edited", Icon: GitCommitIcon },
 } as const;
 
-function TimelineDot({ active = false }: { active?: boolean }) {
+interface RevisionRun {
+  kind: PostUpdateKind;
+  notes: string[];
+}
+
+interface RevisionGroup {
+  day: string;
+  runs: RevisionRun[];
+}
+
+function TimelineMark({
+  active = false,
+  first = false,
+  last = false,
+}: {
+  active?: boolean;
+  first?: boolean;
+  last?: boolean;
+}) {
   return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "relative z-10 mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border bg-popover",
-        active && "border-primary",
+    <span aria-hidden="true" className="relative w-4 shrink-0">
+      {!(first && last) && (
+        <span
+          className={cn(
+            "absolute inset-x-0 mx-auto w-px bg-border",
+            first ? "top-2.5" : "top-0",
+            last ? "h-2.5" : "bottom-0",
+          )}
+        />
       )}
-    >
-      <span
-        className={cn(
-          "size-1.5 rounded-full",
-          active ? "bg-primary" : "bg-muted-foreground",
-        )}
-      />
+      <span className="relative z-10 flex h-5 items-center">
+        <span
+          className={cn(
+            "flex size-4 items-center justify-center rounded-full border bg-popover",
+            active && "border-primary",
+          )}
+        >
+          <span
+            className={cn(
+              "size-1.5 rounded-full",
+              active ? "bg-primary" : "bg-muted-foreground",
+            )}
+          />
+        </span>
+      </span>
     </span>
   );
 }
@@ -80,15 +110,17 @@ export function PostRevisions({
 
   const isNew = (day: string) => seen !== null && day > seen;
   const unseen = entries.filter((entry) => isNew(entry.day)).length;
-  const groups = entries.reduce<{ day: string; items: RevisionEntry[] }[]>(
-    (acc, entry) => {
-      const group = acc.find((g) => g.day === entry.day);
-      if (group) group.items.push(entry);
-      else acc.push({ day: entry.day, items: [entry] });
-      return acc;
-    },
-    [],
-  );
+  const groups = entries.reduce<RevisionGroup[]>((acc, entry) => {
+    let group = acc.find((g) => g.day === entry.day);
+    if (!group) {
+      group = { day: entry.day, runs: [] };
+      acc.push(group);
+    }
+    const run = group.runs.at(-1);
+    if (run?.kind === entry.kind) run.notes.push(entry.note);
+    else group.runs.push({ kind: entry.kind, notes: [entry.note] });
+    return acc;
+  }, []);
 
   return (
     <Popover
@@ -97,7 +129,7 @@ export function PostRevisions({
       }}
     >
       <PopoverTrigger asChild>
-        <Button variant="muted" size="xs" className="-ml-1.5">
+        <Button variant="muted" size="inline">
           <GitCommitIcon className="size-3.5 shrink-0" aria-hidden="true" />
           <span className="tabular-nums">
             Revised{" "}
@@ -140,18 +172,14 @@ export function PostRevisions({
             const last = index === groups.length - 1 && !publishedDay;
 
             return (
-              <li
-                key={group.day}
-                className="relative flex gap-3 pb-5 last:pb-0"
-              >
-                {!last && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute top-4 -bottom-0.5 left-2 w-px -translate-x-1/2 bg-border"
-                  />
-                )}
-                <TimelineDot active={fresh} />
-                <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <li key={group.day} className="flex gap-3">
+                <TimelineMark active={fresh} first={index === 0} last={last} />
+                <div
+                  className={cn(
+                    "flex min-w-0 flex-1 flex-col gap-3",
+                    !last && "pb-5",
+                  )}
+                >
                   <div className="flex items-center gap-2">
                     <Text variant="title" as="span">
                       <time dateTime={group.day}>
@@ -161,36 +189,26 @@ export function PostRevisions({
                     {fresh && <Badge variant="default">New for you</Badge>}
                   </div>
                   <ul role="list" className="flex flex-col gap-3">
-                    {group.items.map((item, itemIndex) => {
-                      const { label, Icon } = KINDS[item.kind];
-                      const startsRun =
-                        itemIndex === 0 ||
-                        group.items[itemIndex - 1].kind !== item.kind;
+                    {group.runs.map((run, runIndex) => {
+                      const { label, Icon } = KINDS[run.kind];
 
                       return (
-                        <li
-                          key={itemIndex}
-                          className={cn("flex gap-2", !startsRun && "-mt-1.5")}
-                        >
-                          {startsRun ? (
-                            <Icon
-                              aria-hidden="true"
-                              className="mt-0.5 size-3.5 shrink-0 text-muted-foreground"
-                            />
-                          ) : (
-                            <span aria-hidden="true" className="size-3.5 shrink-0" />
-                          )}
+                        <li key={runIndex} className="flex gap-2">
+                          <Icon
+                            aria-hidden="true"
+                            className="mt-0.5 size-3.5 shrink-0 text-muted-foreground"
+                          />
                           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                            {startsRun ? (
-                              <Text variant="title" as="span">
-                                {label}
-                              </Text>
-                            ) : (
-                              <span className="sr-only">{label}</span>
-                            )}
-                            <Text variant="muted" as="p">
-                              {item.note}
+                            <Text variant="title" as="span">
+                              {label}
                             </Text>
+                            <div className="flex flex-col gap-1.5">
+                              {run.notes.map((note, noteIndex) => (
+                                <Text key={noteIndex} variant="muted" as="p">
+                                  {note}
+                                </Text>
+                              ))}
+                            </div>
                           </div>
                         </li>
                       );
@@ -201,8 +219,8 @@ export function PostRevisions({
             );
           })}
           {publishedDay && (
-            <li className="relative flex gap-3">
-              <TimelineDot />
+            <li className="flex gap-3">
+              <TimelineMark last />
               <div className="flex items-center gap-2">
                 <Text variant="title" as="span">
                   Published

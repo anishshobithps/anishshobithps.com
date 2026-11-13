@@ -1,4 +1,4 @@
-import type { SoundAsset } from "../sound-types";
+import type { SoundAsset } from "@repo/sounds/sound-types";
 
 export const select007Sound: SoundAsset = {
   name: "select-007",

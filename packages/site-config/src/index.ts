@@ -1,4 +1,4 @@
-import { ENV } from "../env";
+import { ENV } from "@repo/site-config/env";
 
 export const siteConfig = {
     name: "Anish Shobith P S",

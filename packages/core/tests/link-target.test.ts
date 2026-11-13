@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyLink, isExternalTarget } from "../src/link-target";
+import { classifyLink, isExternalTarget } from "@repo/core/link-target";
 
 const SITE = "https://anishshobithps.com";
 

@@ -1,5 +1,5 @@
-import { Figure, type Projection, type Scene } from "../figure";
-import { arcD, circleD, greenPlate, inkFill, inkPath, lineD, paperPath, polyD, rectD, screenPath, shadowOf } from "../print";
+import { Figure, type Projection, type Scene } from "@repo/iso/figure";
+import { arcD, circleD, greenPlate, inkFill, inkPath, lineD, paperPath, polyD, rectD, screenPath, shadowOf } from "@repo/iso/print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 const MAX_RINGS = 10;

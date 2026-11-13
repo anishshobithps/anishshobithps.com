@@ -6,8 +6,8 @@ import {
   DotsThreeIcon,
 } from "@repo/icons";
 
-import { cn } from "../lib/cn";
-import { buttonVariants, type Button } from "./button";
+import { cn } from "@repo/ui/lib/cn";
+import { buttonVariants, type Button } from "@repo/ui/components/button";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (

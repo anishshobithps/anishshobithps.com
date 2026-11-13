@@ -1,6 +1,6 @@
-import { DASH } from "../classes";
-import { Figure, k, type Projection, type Scene } from "../figure";
-import { circleD, inkFill, inkPath, lineD, OBLIQUE, printSolid, rectD } from "../print";
+import { DASH } from "@repo/iso/classes";
+import { Figure, k, type Projection, type Scene } from "@repo/iso/figure";
+import { circleD, inkFill, inkPath, lineD, OBLIQUE, printSolid, rectD } from "@repo/iso/print";
 
 const W = 56;
 const D = 76;

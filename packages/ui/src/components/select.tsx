@@ -8,7 +8,7 @@ import {
 } from "@repo/icons";
 import { Select as SelectPrimitive } from "radix-ui";
 
-import { cn } from "../lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 function Select({
   ...props

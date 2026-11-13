@@ -5,7 +5,7 @@ import {
   type QueryKey,
 } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import { getQueryClient } from "./client";
+import { getQueryClient } from "@repo/query/client";
 
 export async function Prefetch({
   queryKey,

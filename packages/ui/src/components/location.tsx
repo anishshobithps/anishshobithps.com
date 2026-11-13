@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "./button";
-import { cn } from "../lib/cn";
+import { Button } from "@repo/ui/components/button";
+import { cn } from "@repo/ui/lib/cn";
 import { formatTimeInZone, getHourInZone, getZoneOffsetHours, statusForHour } from "@repo/core/date";
 
 function SkyIcon({ hour }: { hour: number | null }) {

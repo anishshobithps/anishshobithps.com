@@ -1,5 +1,5 @@
-import { fetchJson, httpsOrNull, str } from "../http";
-import type { LinkPreview } from "../types";
+import { fetchJson, httpsOrNull, str } from "@/lib/link-preview/http";
+import type { LinkPreview } from "@/lib/link-preview/types";
 
 export async function resolveWikipedia(
   lang: string,

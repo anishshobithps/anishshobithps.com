@@ -4,14 +4,14 @@ import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { MagnifyingGlassIcon } from "@repo/icons";
 
-import { cn } from "../lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "./dialog";
+} from "@repo/ui/components/dialog";
 
 function Command({
   className,

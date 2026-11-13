@@ -20,15 +20,6 @@ const config = {
         "vfile",
       ],
     },
-    "packages/media-player": {
-      ignore: ["src/compose-refs.ts"],
-    },
-    "packages/site-config": {
-      ignore: ["env.ts"],
-    },
-    "packages/db": {
-      ignore: ["env.ts"],
-    },
     "packages/*": {},
   },
 };

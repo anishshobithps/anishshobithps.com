@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { extractTokens } from "../scripts/extract-tokens";
-import { DARK_TOKENS, ROOT_TOKENS } from "../src/tokens.generated";
+import { extractTokens } from "@repo/styles/scripts/extract-tokens";
+import { DARK_TOKENS, ROOT_TOKENS } from "@repo/styles/tokens.generated";
 
 const css = readFileSync(
   new URL("../src/tokens.css", import.meta.url),

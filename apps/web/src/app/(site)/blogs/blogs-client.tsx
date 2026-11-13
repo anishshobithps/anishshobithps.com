@@ -51,8 +51,8 @@ import {
   useQueryStates,
 } from "nuqs";
 import { type ReactNode, useDeferredValue, useMemo } from "react";
-import { PostCard } from "./post-card";
-import { postGrid } from "./post-grid";
+import { PostCard } from "@/app/(site)/blogs/post-card";
+import { postGrid } from "@/app/(site)/blogs/post-grid";
 
 export type BlogPost = {
   url: string;

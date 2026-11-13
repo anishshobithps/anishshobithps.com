@@ -1,12 +1,12 @@
 import { renderSvg } from "takumi-js";
-import { loadFonts } from "./fonts";
-import type { AnySvgTemplate, Theme } from "./template";
+import { loadFonts } from "@repo/svg-kit/fonts";
+import type { AnySvgTemplate, Theme } from "@repo/svg-kit/template";
 import {
   ERROR_SIZE,
   ErrorCard,
   fallbackErrorSvg,
   type SvgErrorKind,
-} from "./error";
+} from "@repo/svg-kit/error";
 
 export async function renderTemplate(
   template: AnySvgTemplate,

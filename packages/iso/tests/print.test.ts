@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Figure, k } from "../src/figure";
-import { greenPlate, printSolid, REGISTER, rectD, SETTLE_FROM, SETTLE_TIME } from "../src/print";
+import { Figure, k } from "@repo/iso/figure";
+import { greenPlate, printSolid, REGISTER, rectD, SETTLE_FROM, SETTLE_TIME } from "@repo/iso/print";
 
 const projection = { origin: [0, 0] as [number, number], scale: 4, azimuth: 60, elevation: 30, oblique: 0.8 };
 

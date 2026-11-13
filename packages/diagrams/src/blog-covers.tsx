@@ -4,7 +4,7 @@ import { graphemeScene } from "@repo/iso/scenes/grapheme";
 import { resumeCoverScene } from "@repo/iso/scenes/resume-cover";
 import { sheetScene } from "@repo/iso/scenes/sheet";
 import { stairsScene } from "@repo/iso/scenes/stairs";
-import { IsoArt } from "./iso-art";
+import { IsoArt } from "@repo/diagrams/iso-art";
 
 type Make = (width: number, height: number) => Scene;
 

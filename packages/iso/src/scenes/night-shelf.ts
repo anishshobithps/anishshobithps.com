@@ -1,5 +1,5 @@
-import { Figure, type Flat, type Projection, type Scene } from "../figure";
-import { arcD, circleD, greenAt, inkFill, inkPath, lineD, paperPath, polyD, printText, rectD, screenPath } from "../print";
+import { Figure, type Flat, type Projection, type Scene } from "@repo/iso/figure";
+import { arcD, circleD, greenAt, inkFill, inkPath, lineD, paperPath, polyD, printText, rectD, screenPath } from "@repo/iso/print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 const SHELF = 150;

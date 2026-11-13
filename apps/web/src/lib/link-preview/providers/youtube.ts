@@ -1,5 +1,5 @@
-import { fetchJson, str } from "../http";
-import type { LinkPreview } from "../types";
+import { fetchJson, str } from "@/lib/link-preview/http";
+import type { LinkPreview } from "@/lib/link-preview/types";
 
 export async function resolveYoutube(id: string, url: string): Promise<LinkPreview | null> {
   const watch = `https://www.youtube.com/watch?v=${id}`;

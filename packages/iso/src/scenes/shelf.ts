@@ -1,6 +1,6 @@
-import { DASH, PLATE } from "../classes";
-import { Figure, k, type Projection, type Scene } from "../figure";
-import { groundDots, inkPath, OBLIQUE, polyD, printSolid, printText, screenPath } from "../print";
+import { DASH, PLATE } from "@repo/iso/classes";
+import { Figure, k, type Projection, type Scene } from "@repo/iso/figure";
+import { groundDots, inkPath, OBLIQUE, polyD, printSolid, printText, screenPath } from "@repo/iso/print";
 
 export interface ShelfPost {
   number: number;

@@ -1,6 +1,6 @@
-import { PLATE } from "../classes";
-import { Figure, type Projection, type Scene } from "../figure";
-import { greenPlate, inkFill, inkPath, paperPath, polyD, printText, rectD, screenPath, shadowOf } from "../print";
+import { PLATE } from "@repo/iso/classes";
+import { Figure, type Projection, type Scene } from "@repo/iso/figure";
+import { greenPlate, inkFill, inkPath, paperPath, polyD, printText, rectD, screenPath, shadowOf } from "@repo/iso/print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 

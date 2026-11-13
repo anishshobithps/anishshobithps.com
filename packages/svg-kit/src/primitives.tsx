@@ -1,8 +1,8 @@
 import { type CSSProperties, Fragment, type ReactNode } from "react";
 import { siteConfig } from "@repo/site-config";
-import { FONT_STACK, FONTS, PIXEL_SHAPE } from "./fonts";
-import { palette } from "./palette";
-import type { Theme } from "./template";
+import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/svg-kit/fonts";
+import { palette } from "@repo/svg-kit/palette";
+import type { Theme } from "@repo/svg-kit/template";
 
 type Themed = { theme: Theme };
 

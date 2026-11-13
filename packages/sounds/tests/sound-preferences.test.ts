@@ -35,7 +35,7 @@ function installWindow(initial?: string) {
 
 async function loadStore() {
   vi.resetModules();
-  return import("../src/sound-preferences");
+  return import("@repo/sounds/sound-preferences");
 }
 
 describe("sound preferences", () => {

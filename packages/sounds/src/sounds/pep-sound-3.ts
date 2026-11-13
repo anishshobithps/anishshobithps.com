@@ -1,4 +1,4 @@
-import type { SoundAsset } from "../sound-types";
+import type { SoundAsset } from "@repo/sounds/sound-types";
 
 export const pepSound3Sound: SoundAsset = {
   name: "pep-sound-3",

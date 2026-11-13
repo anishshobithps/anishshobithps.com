@@ -16,14 +16,14 @@ const engine = vi.hoisted(() => {
   };
 });
 
-vi.mock("../src/sound-engine", () => ({
+vi.mock("@repo/sounds/sound-engine", () => ({
   getAudioContext: engine.getAudioContext,
   decodeAudioData: engine.decodeAudioData,
   playSound: engine.playSound,
 }));
 
-vi.mock("../src/sounds/palette", async () => {
-  const { cueNames } = await import("../src/sound-cues");
+vi.mock("@repo/sounds/sounds/palette", async () => {
+  const { cueNames } = await import("@repo/sounds/sound-cues");
   return {
     palette: Object.fromEntries(
       cueNames.map((name) => [
@@ -52,8 +52,8 @@ function installBrowser(initial?: { enabled: boolean; volume: number }) {
 
 async function load() {
   vi.resetModules();
-  const player = await import("../src/sound-player");
-  const prefs = await import("../src/sound-preferences");
+  const player = await import("@repo/sounds/sound-player");
+  const prefs = await import("@repo/sounds/sound-preferences");
   return { player, prefs };
 }
 
@@ -181,7 +181,7 @@ describe("sound player", () => {
   it("warms the palette once audio is unlocked", async () => {
     installBrowser({ enabled: true, volume: 0.6 });
     const { player } = await load();
-    const { cueNames } = await import("../src/sound-cues");
+    const { cueNames } = await import("@repo/sounds/sound-cues");
     await player.unlockAudio();
     await vi.waitFor(() =>
       expect(engine.decodeAudioData).toHaveBeenCalledTimes(cueNames.length),

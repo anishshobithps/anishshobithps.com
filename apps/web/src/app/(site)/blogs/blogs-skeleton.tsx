@@ -1,7 +1,7 @@
 import { Divider } from "@repo/ui/components/divider";
 import { Skeleton } from "@repo/ui/components/skeleton";
 import { cn } from "@repo/ui/lib/cn";
-import { postGrid } from "./post-grid";
+import { postGrid } from "@/app/(site)/blogs/post-grid";
 
 export function BlogsSkeleton({ count }: { count: number }) {
   const grid = postGrid(Array.from({ length: Math.max(count, 1) }), true);

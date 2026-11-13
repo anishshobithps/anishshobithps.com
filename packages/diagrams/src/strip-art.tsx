@@ -1,6 +1,6 @@
 import type { Scene } from "@repo/iso/figure";
 import { nightShelfScene } from "@repo/iso/scenes/night-shelf";
-import { IsoArt } from "./iso-art";
+import { IsoArt } from "@repo/diagrams/iso-art";
 
 type Make = (width: number, height: number) => Scene;
 

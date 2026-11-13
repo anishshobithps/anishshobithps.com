@@ -1,6 +1,6 @@
-import * as k from "./iso-kit";
+import * as k from "@repo/iso/iso-kit";
 
-export type { Tone } from "./classes";
+export type { Tone } from "@repo/iso/classes";
 
 export type V3 = [number, number, number];
 export type Flat = [number, number];

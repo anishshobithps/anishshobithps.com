@@ -1,6 +1,6 @@
-import { SWATCH } from "../classes";
-import { Figure, type Flat, type Projection, type Scene } from "../figure";
-import { circleD, greenAt, inkPath, logoD, paperPath, polyD, printText, screenPath, shadowOf } from "../print";
+import { SWATCH } from "@repo/iso/classes";
+import { Figure, type Flat, type Projection, type Scene } from "@repo/iso/figure";
+import { circleD, greenAt, inkPath, logoD, paperPath, polyD, printText, screenPath, shadowOf } from "@repo/iso/print";
 
 const PROJECTION: Projection = { origin: [0, 0], scale: 1, azimuth: 45, elevation: 30 };
 const PIVOT: Flat = [62, 252];

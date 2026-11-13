@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeText, slugify, ValidationError, validateLength } from "../src/text";
+import { sanitizeText, slugify, ValidationError, validateLength } from "@repo/core/text";
 
 describe("slugify", () => {
     it.each([

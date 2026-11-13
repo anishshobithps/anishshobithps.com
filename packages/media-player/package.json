@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.tsx"
+    ".": "./src/index.tsx",
+    "./compose-refs": "./src/compose-refs.ts",
+    "./use-lazy-ref": "./src/use-lazy-ref.ts"
   },
   "scripts": {
     "lint": "eslint",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Figure, sceneMarkup } from "../src/figure";
+import { Figure, sceneMarkup } from "@repo/iso/figure";
 
 const projection = { origin: [0, 0] as [number, number], scale: 1, azimuth: 45, elevation: 30 };
 

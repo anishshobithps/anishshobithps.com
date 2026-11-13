@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { depthOf, extrude, fitProjection, iso, type Projection } from "../src/iso-kit";
+import { depthOf, extrude, fitProjection, iso, type Projection } from "@repo/iso/iso-kit";
 
 const plan: Projection = { origin: [0, 0], scale: 10, azimuth: 60, oblique: 0.8 };
 

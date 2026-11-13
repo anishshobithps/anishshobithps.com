@@ -8,7 +8,7 @@ import {
 } from "@repo/icons";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
-import { cn } from "../lib/cn";
+import { cn } from "@repo/ui/lib/cn";
 
 function DropdownMenu({
   ...props

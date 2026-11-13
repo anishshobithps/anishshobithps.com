@@ -91,4 +91,4 @@ export {
   XIcon,
   XLogoIcon,
   YoutubeLogoIcon,
-} from "./icons.generated";
+} from "@repo/icons/icons.generated";

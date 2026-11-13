@@ -2,7 +2,7 @@ import { CaretUpDownIcon } from "@repo/icons";
 import { Button } from "@repo/ui/components/button";
 import { TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import type { ReactTable, RowData } from "@tanstack/react-table";
-import type { sortableTableFeatures } from "./features";
+import type { sortableTableFeatures } from "@repo/data-table/features";
 
 export function SortableTableHeader<TData extends RowData>({
   table,

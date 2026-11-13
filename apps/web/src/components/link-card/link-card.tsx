@@ -7,13 +7,13 @@ import { Text } from "@repo/ui/components/typography";
 import { ArrowUpRightIcon } from "@repo/icons";
 import { resolveLinkPreview } from "@/lib/link-preview/resolve";
 import type { LinkPreview } from "@/lib/link-preview/types";
-import { LinkImage } from "./link-image";
+import { LinkImage } from "@/components/link-card/link-image";
 import {
   toCardModel,
   type CardModel,
   type CardStat,
   type MediaShape,
-} from "./link-card-model";
+} from "@/components/link-card/link-card-model";
 
 type LinkCardVariant = "default" | "compact" | "row" | "preview";
 

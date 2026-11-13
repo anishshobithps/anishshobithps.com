@@ -1,5 +1,5 @@
-import { fetchJson, num, str } from "../http";
-import type { LinkPreview } from "../types";
+import { fetchJson, num, str } from "@/lib/link-preview/http";
+import type { LinkPreview } from "@/lib/link-preview/types";
 
 export async function resolveNpm(name: string, url: string): Promise<LinkPreview | null> {
   const registryName = name.startsWith("@") ? name.replaceAll("/", "%2F") : name;

@@ -5,7 +5,7 @@ import {
   fetchGitHubRepoData,
   fetchGitHubUser,
 } from "@/lib/github";
-import type { LinkPreview } from "../types";
+import type { LinkPreview } from "@/lib/link-preview/types";
 
 export type GithubTarget = Extract<
   LinkTarget,

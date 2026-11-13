@@ -62,7 +62,7 @@ function shapes(element: ReactElement): Node[] {
 
 async function main() {
   const lines: string[] = [
-    `import { ShapeIcon, type IconShapes, type ShapeIconProps } from "./create-icon";`,
+    `import { ShapeIcon, type IconShapes, type ShapeIconProps } from "@repo/icons/create-icon";`,
     "",
   ];
 

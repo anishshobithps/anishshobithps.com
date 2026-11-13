@@ -1,6 +1,6 @@
 import { siteConfig } from "@repo/site-config";
 import { source } from "@/lib/source";
-import type { LinkPreview } from "../types";
+import type { LinkPreview } from "@/lib/link-preview/types";
 
 interface ReadingTimeExports {
   _exports?: { readingTime?: { text?: string } };

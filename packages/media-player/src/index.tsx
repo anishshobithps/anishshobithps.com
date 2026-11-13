@@ -36,9 +36,9 @@ import {
 } from "radix-ui";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { useComposedRefs } from "./compose-refs";
+import { useComposedRefs } from "@repo/media-player/compose-refs";
 import { cn } from "@repo/ui/lib/cn";
-import { useLazyRef } from "./use-lazy-ref";
+import { useLazyRef } from "@repo/media-player/use-lazy-ref";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Kbd } from "@repo/ui/components/kbd";

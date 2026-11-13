@@ -1,4 +1,4 @@
-import type { SoundAsset } from "../sound-types";
+import type { SoundAsset } from "@repo/sounds/sound-types";
 
 export const impactGenericLight001Sound: SoundAsset = {
   name: "impact-generic-light-001",

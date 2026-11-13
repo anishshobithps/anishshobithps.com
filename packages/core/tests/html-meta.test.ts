@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractPageMeta } from "../src/html-meta";
+import { extractPageMeta } from "@repo/core/html-meta";
 
 const BASE = "https://example.com/post/1";
 

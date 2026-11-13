@@ -1,11 +1,11 @@
-import type { CueName } from "./sound-cues";
+import type { CueName } from "@repo/sounds/sound-cues";
 import {
   decodeAudioData,
   getAudioContext,
   playSound,
-} from "./sound-engine";
-import { getSoundPreferences, setSoundEnabled } from "./sound-preferences";
-import type { Palette } from "./sounds/palette";
+} from "@repo/sounds/sound-engine";
+import { getSoundPreferences, setSoundEnabled } from "@repo/sounds/sound-preferences";
+import type { Palette } from "@repo/sounds/sounds/palette";
 
 const MAX_VOICES = 6;
 
@@ -24,7 +24,7 @@ function isRunning(audioContext: AudioContext | null) {
 }
 
 function loadPalette() {
-  paletteRequest ??= import("./sounds/palette").then(
+  paletteRequest ??= import("@repo/sounds/sounds/palette").then(
     (module) => module.palette,
     () => {
       paletteRequest = null;
