@@ -1,4 +1,4 @@
-import type { GuestbookPreviewEntry } from "@/app/(site)/guestbook/actions";
+import type { GuestbookPreviewEntry } from "@/lib/guestbook-preview";
 import { formatShortDate } from "@repo/core/date";
 import {
   TypographyMuted,

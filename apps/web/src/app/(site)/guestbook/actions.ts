@@ -9,7 +9,14 @@ import { safeQuery } from "@/lib/safe-query";
 import { sanitizeText, ValidationError, validateLength } from "@repo/core/text";
 import { auth } from "@clerk/nextjs/server";
 import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { GUESTBOOK_PREVIEW_TAG } from "@/lib/guestbook-preview";
+
+function refreshPublicPreview() {
+    updateTag(GUESTBOOK_PREVIEW_TAG);
+    revalidatePath("/");
+    revalidatePath("/guestbook");
+}
 
 const MAX_MESSAGE_LENGTH = 280;
 const MIN_MESSAGE_LENGTH = 2;
@@ -33,6 +40,7 @@ export interface GetEntriesResult {
     entries: GuestbookEntryWithMeta[];
     total: number;
     hasMore: boolean;
+    viewerId: string | null;
 }
 
 export async function getGuestbookEntries(
@@ -42,6 +50,7 @@ export async function getGuestbookEntries(
         entries: [],
         total: 0,
         hasMore: false,
+        viewerId: null,
     });
 }
 
@@ -78,7 +87,7 @@ async function loadGuestbookEntries(
     ]);
 
     const total = totalRow?.count ?? 0;
-    if (rows.length === 0) return { entries: [], total, hasMore: false };
+    if (rows.length === 0) return { entries: [], total, hasMore: false, viewerId: userId };
 
     let likedEntryIds = new Set<number>();
     if (userId) {
@@ -108,56 +117,7 @@ async function loadGuestbookEntries(
         visit: row.visit,
     }));
 
-    return { entries, total, hasMore: page.offset + entries.length < total };
-}
-
-export interface GuestbookPreviewEntry {
-    id: number;
-    message: string;
-    createdAt: string;
-    user: {
-        name: string;
-        imageUrl: string;
-    };
-}
-
-export async function getGuestbookPreview(limit = 15): Promise<GuestbookPreviewEntry[]> {
-    return safeQuery("getGuestbookPreview", () => loadGuestbookPreview(limit), []);
-}
-
-async function loadGuestbookPreview(limit: number): Promise<GuestbookPreviewEntry[]> {
-    const pool = await db
-        .select({
-            id: guestbookEntries.id,
-            clerkUserId: guestbookEntries.clerkUserId,
-            message: guestbookEntries.message,
-            isPinned: guestbookEntries.isPinned,
-            createdAt: guestbookEntries.createdAt,
-        })
-        .from(guestbookEntries)
-        .where(and(eq(guestbookEntries.isDeleted, false), eq(guestbookEntries.isPinned, false)))
-        .orderBy(desc(guestbookEntries.createdAt))
-        .limit(60);
-
-    const rows = pool
-        .map((row) => ({ row, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .slice(0, limit)
-        .map(({ row }) => row);
-
-    if (rows.length === 0) return [];
-
-    const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
-
-    return rows.map((row) => {
-        const user = resolveUser(userMap, row.clerkUserId);
-        return {
-            id: row.id,
-            message: row.message,
-            createdAt: row.createdAt.toISOString(),
-            user: { name: user.name, imageUrl: user.imageUrl },
-        };
-    });
+    return { entries, total, hasMore: page.offset + entries.length < total, viewerId: userId };
 }
 
 export async function submitGuestbookEntry(
@@ -180,7 +140,7 @@ export async function submitGuestbookEntry(
             .from(guestbookEntries)
             .where(and(eq(guestbookEntries.clerkUserId, userId), eq(guestbookEntries.isDeleted, false)));
 
-        revalidatePath("/guestbook");
+        refreshPublicPreview();
         return { success: true, id: inserted.id, visit: visits?.count ?? 1 };
     } catch (err) {
         if (err instanceof ValidationError) return { success: false, error: err.message };
@@ -216,7 +176,7 @@ export async function deleteGuestbookEntry(
             .set({ isDeleted: true, updatedAt: new Date() })
             .where(eq(guestbookEntries.id, entryId));
 
-        revalidatePath("/guestbook");
+        refreshPublicPreview();
         return { success: true };
     } catch {
         return { success: false, error: "Something went wrong." };
@@ -245,7 +205,7 @@ export async function togglePinEntry(
             .set({ isPinned: !entry.isPinned, updatedAt: new Date() })
             .where(eq(guestbookEntries.id, entryId));
 
-        revalidatePath("/guestbook");
+        refreshPublicPreview();
         return { success: true };
     } catch {
         return { success: false, error: "Something went wrong." };
@@ -269,12 +229,10 @@ export async function toggleLike(
             await db
                 .delete(guestbookLikes)
                 .where(and(eq(guestbookLikes.entryId, entryId), eq(guestbookLikes.clerkUserId, userId)));
-            revalidatePath("/guestbook");
             return { success: true, liked: false };
         }
 
         await db.insert(guestbookLikes).values({ entryId, clerkUserId: userId });
-        revalidatePath("/guestbook");
         return { success: true, liked: true };
     } catch {
         return { success: false, error: "Something went wrong." };

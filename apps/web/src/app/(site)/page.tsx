@@ -5,11 +5,9 @@ import { RulesIFollow } from "@/app/(site)/_components/rules";
 import { BlogTeaser } from "@/app/(site)/_components/blog-teaser";
 import { GuestbookTeaser } from "@/app/(site)/_components/guestbook-teaser";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Section } from "@/components/layouts/page";
 import { siteConfig } from "@repo/site-config";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
 const homeTitle = `${siteConfig.name} – ${siteConfig.role}`;
 
@@ -38,17 +36,7 @@ export default function Page() {
       <BuiltThings />
       <RulesIFollow />
       <BlogTeaser />
-      <Suspense
-        fallback={
-          <Section aria-hidden="true" className="animate-pulse">
-            <div className="h-5 w-80 max-w-full rounded bg-muted" />
-            <div className="h-20 rounded-md bg-muted/50" />
-            <div className="h-9 w-40 rounded-md bg-muted" />
-          </Section>
-        }
-      >
-        <GuestbookTeaser />
-      </Suspense>
+      <GuestbookTeaser />
       <Contact />
     </>
   );

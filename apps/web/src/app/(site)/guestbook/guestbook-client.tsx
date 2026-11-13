@@ -32,7 +32,7 @@ import {
   type InfiniteData,
 } from "@tanstack/react-query";
 import { useVirtualList } from "@repo/virtual/use-virtual-list";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const MAX_MESSAGE_LENGTH = 280;
@@ -49,11 +49,7 @@ function sortEntries(
   ];
 }
 
-interface GuestbookClientProps {
-  currentUserId: string | null;
-}
-
-export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
+export function GuestbookClient() {
   "use memo";
 
   const { user, isSignedIn, isLoaded, signOut } = useSiteAuth();
@@ -65,6 +61,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isPending,
     isError: loadMoreFailed,
   } = useInfiniteQuery({
     queryKey: GUESTBOOK_KEY,
@@ -75,6 +72,18 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
         ? allPages.reduce((seen, page) => seen + page.entries.length, 0)
         : undefined,
   });
+
+  const currentUserId = data?.pages[0]?.viewerId ?? null;
+
+  const viewerKey = isLoaded ? (user?.id ?? "anon") : "pending";
+  const lastViewer = useRef(viewerKey);
+  useEffect(() => {
+    const previous = lastViewer.current;
+    lastViewer.current = viewerKey;
+    if (previous !== "pending" && previous !== viewerKey) {
+      void queryClient.invalidateQueries({ queryKey: GUESTBOOK_KEY });
+    }
+  }, [viewerKey, queryClient]);
 
   const entries = useMemo(() => {
     const seen = new Set<number>();
@@ -371,7 +380,9 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
 
       <PanelHeader label="Messages" count={count} />
 
-      {entries.length === 0 ? (
+      {isPending ? (
+        <PanelRow aria-hidden="true" className="h-64 animate-pulse" />
+      ) : entries.length === 0 ? (
         <PanelRow>
           <EngagementEmptyState
             title="Nobody here yet."
