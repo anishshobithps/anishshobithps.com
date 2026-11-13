@@ -1,17 +1,19 @@
 import { useSyncExternalStore } from "react";
 
-const QUERY = "(prefers-reduced-motion: reduce)";
+import {
+  getMotionSetting,
+  getServerMotionSetting,
+  subscribeMotion,
+} from "@repo/ui/lib/motion-preference";
 
-function subscribe(onStoreChange: () => void) {
-  const query = window.matchMedia(QUERY);
-  query.addEventListener("change", onStoreChange);
-  return () => query.removeEventListener("change", onStoreChange);
+export function useMotionSetting() {
+  return useSyncExternalStore(
+    subscribeMotion,
+    getMotionSetting,
+    getServerMotionSetting,
+  );
 }
 
 export function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    subscribe,
-    () => window.matchMedia(QUERY).matches,
-    () => false,
-  );
+  return useMotionSetting() !== "on";
 }

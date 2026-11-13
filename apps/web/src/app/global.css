@@ -356,6 +356,20 @@ html {
   }
 }
 
+html[data-motion="reduce"] {
+  scroll-behavior: auto;
+
+  & *,
+  & ::before,
+  & ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @keyframes guestbook-marquee {
   to {
     transform: translateX(-50%);
@@ -410,6 +424,12 @@ html[data-theme-transition]::view-transition-new(root) {
   ::view-transition-new(*) {
     animation: none !important;
   }
+}
+
+html[data-motion="reduce"]::view-transition-group(*),
+html[data-motion="reduce"]::view-transition-old(*),
+html[data-motion="reduce"]::view-transition-new(*) {
+  animation: none !important;
 }
 
 *::-webkit-scrollbar {

@@ -2,6 +2,7 @@
 
 import { Logo } from "@/components/shared/logo";
 import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "@repo/ui/lib/motion-preference";
 
 const LOGO_SIZE = 40;
 const LOGO_W = Math.round(((64 - 14) / 64) * LOGO_SIZE);
@@ -57,7 +58,7 @@ export function BouncingLogos({
 
     paint();
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
 
     const tick = () => {
       const maxX = container.clientWidth - LOGO_W;

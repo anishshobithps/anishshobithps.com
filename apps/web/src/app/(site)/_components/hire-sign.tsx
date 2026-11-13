@@ -2,6 +2,7 @@
 
 import { ArrowRightIcon } from "@repo/icons";
 import { cn } from "@repo/ui/lib/cn";
+import { prefersReducedMotion } from "@repo/ui/lib/motion-preference";
 import { isoType } from "@repo/diagrams/classes";
 import { useEffect, useState } from "react";
 
@@ -20,7 +21,7 @@ function NeonSign() {
       className="h-7.5 w-11 shrink-0 overflow-visible"
     >
       <circle cx="22" cy="2.5" r="1.6" className="fill-muted-foreground" />
-      <g className="[transform-box:view-box] origin-[22px_2.5px] animate-neon-sway group-hover:animate-neon-swing group-focus-visible:animate-neon-swing">
+      <g className="[transform-box:view-box] origin-[22px_2.5px] animate-neon-sway not-group-hover:not-group-focus-visible:[animation-iteration-count:1] group-hover:animate-neon-swing group-focus-visible:animate-neon-swing">
         <path
           d="M22 2.5 L9 11 M22 2.5 L35 11"
           fill="none"
@@ -57,18 +58,36 @@ function NeonSign() {
 export function HireSign() {
   const [index, setIndex] = useState(0);
 
+  const [active, setActive] = useState(false);
+
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!active) return;
+    if (prefersReducedMotion()) return;
     const id = setInterval(
       () => setIndex((i) => (i + 1) % PHRASES.length),
-      2800,
+      1600,
     );
     return () => clearInterval(id);
-  }, []);
+  }, [active]);
+
+  const start = () => {
+    if (prefersReducedMotion()) return;
+    setActive(true);
+    setIndex(1);
+  };
+
+  const stop = () => {
+    setActive(false);
+    setIndex(0);
+  };
 
   return (
     <a
       href="#contact"
+      onPointerEnter={start}
+      onPointerLeave={stop}
+      onFocus={start}
+      onBlur={stop}
       aria-label="Available for hire, jump to contact"
       className="group inline-flex items-center gap-2.5 rounded-full border border-(--brand)/30 bg-(--brand)/8 py-1 pr-3 pl-1.5 text-xs font-medium text-(--brand-text) transition-colors hover:bg-(--brand)/15"
     >

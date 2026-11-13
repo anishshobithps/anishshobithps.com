@@ -22,6 +22,7 @@ import { ArrowDownIcon, DownloadIcon } from "@repo/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
 import { LinkPreviewPanel } from "@/components/shared/link-preview-panel";
 import { SoundPanel } from "@/components/shared/sound-panel";
+import { MotionPanel } from "@/components/shared/motion-panel";
 import {
   CommentBubble,
   ReadingProgress,
@@ -216,6 +217,11 @@ function HubBody({
       <section className="flex flex-col gap-2">
         <HubLabel>Sound</HubLabel>
         <SoundPanel />
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <HubLabel>Motion</HubLabel>
+        <MotionPanel />
       </section>
 
       <section className="flex flex-col gap-2">

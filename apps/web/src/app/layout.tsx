@@ -5,6 +5,7 @@ import { SoundEffects } from "@/components/shared/sound-effects";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { ToasterHost } from "@/components/shared/toaster-host";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
+import { MOTION_INIT_SCRIPT } from "@repo/ui/lib/motion-preference";
 import { siteConfig } from "@repo/site-config";
 import { ThemeProvider } from "next-themes";
 import type { Metadata, Viewport } from "next";
@@ -86,6 +87,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: MOTION_INIT_SCRIPT }} />
         <link rel="preconnect" href="https://img.clerk.com" />
         <link rel="dns-prefetch" href="https://img.clerk.com" />
       </head>
