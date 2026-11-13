@@ -39,7 +39,6 @@ export const blogReactions = pgTable(
     },
     (table) => [
         primaryKey({ columns: [table.postId, table.ipHash] }),
-        index("blog_reactions_post_idx").on(table.postId),
     ],
 );
 
@@ -54,7 +53,6 @@ export const blogReads = pgTable(
     },
     (table) => [
         primaryKey({ columns: [table.postId, table.ipHash] }),
-        index("blog_reads_post_idx").on(table.postId),
     ],
 );
 
@@ -86,7 +84,6 @@ export const guestbookLikes = pgTable(
     },
     (table) => [
         primaryKey({ columns: [table.entryId, table.clerkUserId] }),
-        index("guestbook_likes_entry_idx").on(table.entryId),
     ],
 );
 
@@ -111,7 +108,6 @@ export const blogComments = pgTable(
     (table) => [
         index("blog_comments_post_idx").on(table.postId),
         index("blog_comments_parent_idx").on(table.parentId),
-        index("blog_comments_pinned_idx").on(table.isPinned),
     ],
 );
 
@@ -126,7 +122,6 @@ export const blogCommentLikes = pgTable(
     },
     (table) => [
         primaryKey({ columns: [table.commentId, table.clerkUserId] }),
-        index("blog_comment_likes_comment_idx").on(table.commentId),
     ],
 );
 
@@ -145,7 +140,6 @@ export const projects = pgTable(
         updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (table) => [
-        index("projects_enabled_idx").on(table.enabled),
         index("projects_sort_order_idx").on(table.sortOrder),
     ],
 );
@@ -166,7 +160,6 @@ export const links = pgTable(
         updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
     },
     (table) => [
-        index("links_enabled_idx").on(table.enabled),
     ],
 );
 

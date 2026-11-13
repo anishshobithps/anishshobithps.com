@@ -85,6 +85,13 @@
       "when": 1789357525073,
       "tag": "0011_overconfident_nehzno",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794550055700,
+      "tag": "0012_drop-redundant-indexes",
+      "breakpoints": true
     }
   ]
 }
