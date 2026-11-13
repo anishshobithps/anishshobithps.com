@@ -24,6 +24,12 @@ updates:
   - date: 2026-11-12
     kind: sources
     note: The links that sat inside sentences are now 54 numbered sources at the bottom.
+  - date: 2026-11-13
+    kind: correction
+    note: The red heart is U+2764 followed by U+FE0F. I had shown the card suit ♥, which is U+2665, as its text form.
+  - date: 2026-11-13
+    kind: addition
+    note: Added what Slack does to a skin tone emoji on copy, and why ❤️ has a length of 2 without a surrogate pair. Both come from Fazal Singh Bhinder.
 tags:
   - Unicode
   - Emojis
@@ -39,6 +45,9 @@ links:
     label: Emojipedia
   - url: https://unicode.org/emoji/
     label: Unicode emoji charts
+  - url: https://dev.to/fazal_bhinder/copy-an-emoji-from-slack-and-you-get-1skin-tone-4-i-tested-4-chat-apps-4m74
+    label: "Copy an emoji from Slack and you get :+1::skin-tone-4:"
+    note: Fazal Singh Bhinder compares what four web chat apps put on the clipboard when you copy emoji back out.
 ---
 
 
@@ -137,6 +146,8 @@ The adoption of the Fitzpatrick scale was contested from the start. Critics poin
 
 Hair colour modifiers, including red hair (🦰), curly hair (🦱), white hair (🦳), and bald (🦲), were added in 2018 via Unicode 11.0[^hair]. These combine through more complex ZWJ sequences[^zwj]. A curly-haired, medium-dark-skinned woman technologist emoji is <TypographyMark>U+1F469</TypographyMark> (woman) + <TypographyMark>U+1F3FE</TypographyMark> (medium-dark skin) + <TypographyMark>U+200D</TypographyMark> (ZWJ) + <TypographyMark>U+1F4BB</TypographyMark> (laptop), and the curly hair needs a separate hair-component sequence on top of that, which most platforms still don't draw.
 
+Because a modifier is its own code point, anything that rewrites text on its way to the clipboard has to handle it. Fazal Singh Bhinder sent the same 15 emoji through Discord, Telegram, WhatsApp and Slack in November 2026, copied them back and compared code points. Slack was the only one that changed a skin tone emoji, returning `:+1::skin-tone-4:` for a medium skin tone thumbs-up instead of 👍🏽[^slack-copy]. The test covered web clients only, on one day with one account per app, so it's a data point and not a rule about Slack.
+
 The gap between what the standard allows and what platforms actually render is wide. Unicode defines the sequence. Whether your device has a font that draws it is a separate question entirely.
 
 
@@ -222,9 +233,9 @@ Emojis are text characters, not images injected into a chat. When you send 🔥,
 
 Most modern emojis live in the <TypographyMark>Supplementary Multilingual Plane</TypographyMark> (<abbr title="Supplementary Multilingual Plane">SMP</abbr>), specifically <TypographyMark>U+10000</TypographyMark> to <TypographyMark>U+1FFFF</TypographyMark>[^planes], a block designed for complex pictographic data that exceeds the capacity of the legacy Basic Multilingual Plane. That said, not every emoji lives there. Legacy symbols like the anchor (⚓, <TypographyMark>U+2693</TypographyMark>) and warning sign (⚠️, <TypographyMark>U+26A0</TypographyMark>) have been part of the <abbr title="Basic Multilingual Plane">BMP</abbr> since long before the emoji era. They were repurposed into emoji use via Variation Selector 16, which tells a renderer to draw the character as a coloured emoji glyph instead of a monochrome symbol.
 
-Variation Selector 16 (VS-16, <TypographyMark>U+FE0F</TypographyMark>) is the mechanism that forces emoji-style rendering[^tr51]. Without it, many characters default to text presentation. For example, a heart without VS-16 renders as ♥ (text), while with VS-16 it becomes ❤️ (emoji).
+Variation Selector 16 (VS-16, <TypographyMark>U+FE0F</TypographyMark>) is the mechanism that forces emoji-style rendering[^tr51]. Without it, many characters default to text presentation. The red heart ❤️ is <TypographyMark>U+2764</TypographyMark> followed by <TypographyMark>U+FE0F</TypographyMark>[^variation-sequences], and an app that receives only the first code point is free to draw a plain text heart instead.
 
-This placement has a practical consequence for older software. JavaScript's `String.prototype.length{:js}` counts UTF-16 code units, not Unicode code points[^mdn-length]. An SMP emoji requires two UTF-16 code units, a surrogate pair, which is why `"🔥".length === 2{:js}` in JavaScript, not 1. For correct grapheme counting in 2026, `Intl.Segmenter{:js}` with `granularity: 'grapheme'{:js}` is the most reliable native approach[^mdn-segmenter]. Simple array spreading still fails on complex ZWJ sequences like multi-person families:
+This placement has a practical consequence for older software. JavaScript's `String.prototype.length{:js}` counts UTF-16 code units, not Unicode code points[^mdn-length]. An SMP emoji requires two UTF-16 code units, a surrogate pair, which is why `"🔥".length === 2{:js}` in JavaScript, not 1. A length of 2 doesn't always mean a surrogate pair, though. ❤️ also reports 2, but U+2764 and U+FE0F both sit in the <abbr title="Basic Multilingual Plane">BMP</abbr>, so that is one code unit each[^emojidig]. For correct grapheme counting in 2026, `Intl.Segmenter{:js}` with `granularity: 'grapheme'{:js}` is the most reliable native approach[^mdn-segmenter]. Simple array spreading still fails on complex ZWJ sequences like multi-person families:
 
 ```js
 const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
@@ -397,3 +408,6 @@ Next time you send 😤 expecting frustration and it lands as a flex, that's the
 [^ok-hand]: Emojipedia, [OK Hand Emoji](https://emojipedia.org/ok-hand).
 [^bagel-tracker]: GitHub, [Bagel emoji, unicode-proposals issue #47](https://github.com/Crissov/unicode-proposals/issues/47).
 [^bagel]: Emojipedia, [Bagel Emoji](https://emojipedia.org/bagel).
+[^variation-sequences]: Unicode Consortium, [emoji-variation-sequences.txt](https://www.unicode.org/Public/latest/ucd/emoji/emoji-variation-sequences.txt).
+[^emojidig]: EmojiDig, [Red Heart emoji](https://emojidig.com/emoji/red-heart).
+[^slack-copy]: Fazal Singh Bhinder, [Copy an emoji from Slack and you get :+1::skin-tone-4: (I tested 4 chat apps)](https://dev.to/fazal_bhinder/copy-an-emoji-from-slack-and-you-get-1skin-tone-4-i-tested-4-chat-apps-4m74).
