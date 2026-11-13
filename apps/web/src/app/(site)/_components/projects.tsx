@@ -13,11 +13,14 @@ import {
   Heading,
   TypographyH2,
   TypographyLead,
-  TypographyMark,
   TypographyMuted,
   SectionLabel,
 } from "@repo/ui/components/typography";
-import { GithubLogoIcon, ArrowUpRightIcon } from "@repo/icons";
+import {
+  GithubLogoIcon,
+  ArrowUpRightIcon,
+  ArrowRightIcon,
+} from "@repo/icons";
 import Link from "next/link";
 import { padIndex } from "@repo/core/text";
 import type { Route } from "next";
@@ -27,8 +30,10 @@ import { unstable_rethrow } from "next/navigation";
 
 export async function ProjectGrid({
   headingLevel = "h2",
+  limit,
 }: {
   headingLevel?: "h2" | "h3";
+  limit?: number;
 }) {
   let projects: Awaited<ReturnType<typeof getPublicProjects>>;
   try {
@@ -47,16 +52,19 @@ export async function ProjectGrid({
     );
   }
 
+  const shown = limit ? projects.slice(0, limit) : projects;
+  const hidden = projects.length - shown.length;
+
   return (
     <CardGrid>
-      {projects.map((project, index) => (
+      {shown.map((project, index) => (
         <CardGridItem key={project.title}>
           <SectionLabel pixel className="absolute top-4 right-4 @sm:top-6 @sm:right-6">
             No.{padIndex(index + 1)}
           </SectionLabel>
           <Reveal delay={index * 90}>
             <article className="space-y-4" aria-label={project.title}>
-              <Heading as={headingLevel} level="h2" className="pr-14 text-xl">
+              <Heading as={headingLevel} level="h4" className="pr-14">
                 {project.title}
               </Heading>
               <TypographyMuted className="leading-relaxed">
@@ -75,7 +83,11 @@ export async function ProjectGrid({
                   </li>
                 ))}
               </ul>
-              <nav aria-label={`Links for ${project.title}`} className="pt-4">
+              <div
+                role="group"
+                aria-label={`Links for ${project.title}`}
+                className="pt-4"
+              >
                 <ButtonGroup>
                   {project.live && (
                     <>
@@ -118,50 +130,75 @@ export async function ProjectGrid({
                     </Button>
                   )}
                 </ButtonGroup>
-              </nav>
+              </div>
             </article>
           </Reveal>
         </CardGridItem>
       ))}
+      {hidden > 0 && (
+        <CardGridItem className="p-0 @sm:p-0 @lg:p-0 md:col-span-2">
+          <Link
+            href="/projects"
+            prefetch={false}
+            data-sound="tap"
+            className="group/more flex items-center justify-between gap-4 p-4 transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover @sm:p-6 @lg:p-8"
+          >
+            <span className="flex min-w-0 flex-col gap-1">
+              <SectionLabel pixel>
+                No.{padIndex(shown.length + 1)} to No.{padIndex(projects.length)}
+              </SectionLabel>
+              <Heading as="p" level="h4">
+                {hidden === 1 ? "1 more project" : `${hidden} more projects`}
+              </Heading>
+            </span>
+            <span className="flex shrink-0 items-center gap-2">
+              <TypographyMuted asChild>
+                <span className="max-sm:sr-only">See all {projects.length}</span>
+              </TypographyMuted>
+              <ArrowRightIcon
+                aria-hidden="true"
+                className="size-5 transition-transform duration-300 ease-snappy group-hover/more:translate-x-1"
+              />
+            </span>
+          </Link>
+        </CardGridItem>
+      )}
     </CardGrid>
   );
 }
 
 export function BuiltThings() {
   return (
-    <Section aria-label="Things I've Built" doodle="bot">
-      <TypographyH2 className="sr-only">Things I&apos;ve built</TypographyH2>
+    <Section aria-label="Things I've built" doodle="bot">
       <Reveal>
-        <div className="mb-12 max-w-3xl">
+        <div className="flex max-w-3xl flex-col gap-3">
+          <TypographyH2>Things I&apos;ve built</TypographyH2>
           <TypographyLead>
-            A mix of{" "}
-            <TypographyMark>
-              real systems, useful tools, and controlled chaos
-            </TypographyMark>
-            .
+            A mix of real systems, useful tools, and controlled chaos.
           </TypographyLead>
         </div>
       </Reveal>
-      <Suspense fallback={<ProjectsSkeleton count={4} />}>
-        <ProjectGrid headingLevel="h3" />
+      <Suspense fallback={<ProjectsSkeleton count={2} />}>
+        <ProjectGrid headingLevel="h3" limit={2} />
       </Suspense>
       <Reveal className="group/iso mt-16 flex flex-col items-center gap-6 text-center">
         <IsoStage className="w-full max-w-xl">
           <GitChaos />
         </IsoStage>
         <TypographyLead className="max-w-2xl">
-          There’s more{" "}
-          <TypographyMark>
-            experiments, half-built tools, and questionable decisions
-          </TypographyMark>{" "}
-          living on my GitHub.
+          There are more experiments and half-built tools living on my GitHub.
         </TypographyLead>
-        <Button asChild size="lg" className="rounded-lg font-semibold">
+        <Button
+          asChild
+          size="lg"
+          variant="outline"
+          className="rounded-lg font-semibold"
+        >
           <Link
             href="https://github.com/anishshobithps"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Explore the chaos, view all projects on GitHub"
+            aria-label="Browse everything on GitHub (opens in new tab)"
           >
             <GithubLogoIcon
               data-icon="inline-start"
@@ -169,7 +206,7 @@ export function BuiltThings() {
               aria-hidden="true"
             />
 
-            <span>Explore the Chaos</span>
+            <span>Browse my GitHub</span>
             <ArrowUpRightIcon
               data-icon="inline-end"
               className="size-4 opacity-70"

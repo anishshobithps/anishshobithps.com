@@ -30,18 +30,17 @@ export function Hero() {
 
   return (
     <Section variant="hero" aria-label="Introduction">
-      <div className="w-full max-w-5xl flex flex-col gap-8">
-        <div className="relative">
+      <div className="w-full max-w-5xl flex flex-col gap-6 sm:gap-8">
+        <div className="relative @container">
           <PhotoCallout />
-          <div className="relative w-full border rounded-md overflow-hidden">
+          <div className="relative w-full aspect-video max-h-[max(41.6cqw,calc(100svh-37rem))] sm:aspect-[3/2] border rounded-md overflow-hidden">
             <NextImage
               src="/profile.avif"
               alt={`Profile photo of ${siteConfig.name}`}
-              width={6000}
-              height={4000}
+              fill
               priority
               sizes="(max-width: 1024px) 100vw, 1024px"
-              className="w-full h-auto"
+              className="object-cover object-subject"
             />
           </div>
         </div>
@@ -68,7 +67,7 @@ export function Hero() {
               I don&apos;t have to repeat myself.
             </TypographyLead>
 
-            <nav aria-label="Primary actions">
+            <div role="group" aria-label="Primary actions">
               <ButtonGroup>
                 <Button
                   asChild
@@ -112,7 +111,7 @@ export function Hero() {
                   </a>
                 </Button>
               </ButtonGroup>
-            </nav>
+            </div>
           </div>
           <HeroNudges
             latest={latest && { url: latest.url, title: latest.data.title }}

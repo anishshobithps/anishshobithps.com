@@ -34,8 +34,8 @@ export default function Page() {
       />
       <Hero />
       <BuiltThings />
-      <RulesIFollow />
       <BlogTeaser />
+      <RulesIFollow />
       <GuestbookTeaser />
       <Contact />
     </>
