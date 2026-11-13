@@ -5,7 +5,7 @@ import { links, linkSlugs } from "@repo/db/schema";
 import { adminMutation } from "@/lib/admin-action";
 import type { ActionResult } from "@repo/core/action-result";
 import { assertAdmin } from "@/lib/assert-admin";
-import { findSlugConflicts } from "@/lib/links";
+import { findSlugConflicts, LINKS_CACHE_TAG } from "@/lib/links";
 import {
   formatPath,
   linkInputSchema,
@@ -14,7 +14,7 @@ import {
 } from "@repo/core/links-schema";
 import { safeQuery } from "@/lib/safe-query";
 import { desc, eq, inArray, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 export type AdminLink = {
   id: number;
@@ -51,6 +51,7 @@ function parseInput(raw: unknown): ParsedInput {
 }
 
 function revalidateLinks() {
+  updateTag(LINKS_CACHE_TAG);
   revalidatePath("/admin/links");
 }
 
@@ -163,13 +164,14 @@ export async function updateLink(id: number, raw: unknown): Promise<ActionResult
     const taken = await takenPath(parsed.pairs, id);
     if (taken) return `The path /${taken} is already taken.`;
 
-    await db
-      .update(links)
-      .set({ ...linkColumns(parsed.data), updatedAt: new Date() })
-      .where(eq(links.id, id));
-
-    await db.delete(linkSlugs).where(eq(linkSlugs.linkId, id));
-    await db.insert(linkSlugs).values(slugRows(id, parsed.pairs));
+    await db.batch([
+      db
+        .update(links)
+        .set({ ...linkColumns(parsed.data), updatedAt: new Date() })
+        .where(eq(links.id, id)),
+      db.delete(linkSlugs).where(eq(linkSlugs.linkId, id)),
+      db.insert(linkSlugs).values(slugRows(id, parsed.pairs)),
+    ]);
   }, revalidateLinks);
 }
 

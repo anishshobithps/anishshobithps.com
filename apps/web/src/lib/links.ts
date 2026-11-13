@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { and, eq, ne, or, sql } from "drizzle-orm";
 import { db } from "@repo/db";
@@ -15,35 +16,39 @@ export type ResolvedLink = {
   permanent: boolean;
 };
 
+export const LINKS_CACHE_TAG = "short-links";
+
+const loadLink = unstable_cache(
+  async (tag: string, slug: string): Promise<ResolvedLink | null> => {
+    const [row] = await db
+      .select({
+        id: links.id,
+        target: links.target,
+        title: links.title,
+        description: links.description,
+        ogEnabled: links.ogEnabled,
+        ogImage: links.ogImage,
+        permanent: links.permanent,
+      })
+      .from(linkSlugs)
+      .innerJoin(links, eq(linkSlugs.linkId, links.id))
+      .where(
+        and(
+          eq(linkSlugs.tag, tag),
+          eq(linkSlugs.slug, slug),
+          eq(links.enabled, true),
+        ),
+      )
+      .limit(1);
+    return row ?? null;
+  },
+  ["short-link"],
+  { revalidate: 3600, tags: [LINKS_CACHE_TAG] },
+);
+
 export const resolveLink = cache(
   (tag: string, slug: string): Promise<ResolvedLink | null> =>
-    safeQuery(
-      "resolveLink",
-      async () => {
-        const [row] = await db
-          .select({
-            id: links.id,
-            target: links.target,
-            title: links.title,
-            description: links.description,
-            ogEnabled: links.ogEnabled,
-            ogImage: links.ogImage,
-            permanent: links.permanent,
-          })
-          .from(linkSlugs)
-          .innerJoin(links, eq(linkSlugs.linkId, links.id))
-          .where(
-            and(
-              eq(linkSlugs.tag, tag),
-              eq(linkSlugs.slug, slug),
-              eq(links.enabled, true),
-            ),
-          )
-          .limit(1);
-        return row ?? null;
-      },
-      null,
-    ),
+    safeQuery("resolveLink", () => loadLink(tag, slug), null),
 );
 
 export function recordClick(id: number): Promise<void> {
