@@ -19,6 +19,7 @@ import { siteConfig } from "@repo/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { Fragment } from "react";
 import { SocialsNudge } from "@/components/shared/doodles";
+import { CopyEmail } from "@/components/shared/copy-email";
 
 export function Contact() {
   return (
@@ -30,8 +31,8 @@ export function Contact() {
               <TypographyH2>Got something worth building?</TypographyH2>
 
               <TypographyLead>
-                If you’re working on something ambitious and need a frontend
-                engineer who prefers{" "}
+                If you’re working on something ambitious and need a software
+                developer who prefers{" "}
                 <TypographyMark>clarity over chaos</TypographyMark>, we’ll
                 probably get along.
               </TypographyLead>
@@ -40,6 +41,8 @@ export function Contact() {
                 Open to full-time roles, collaborations, and projects that make
                 sense (or at least teach me something).
               </TypographyMuted>
+
+              <CopyEmail />
             </div>
 
             <nav aria-label="Contact links" className="pt-4 pb-10">
@@ -96,7 +99,7 @@ export function Contact() {
               </div>
             </nav>
           </div>
-          <ArtStage className="order-first -mx-gutter h-44 md:order-none md:mx-0 md:h-auto md:aspect-[4/3]">
+          <ArtStage className="-mx-gutter h-44 md:mx-0 md:h-auto md:aspect-[4/3]">
             <PageArt name="contact" />
           </ArtStage>
         </div>
