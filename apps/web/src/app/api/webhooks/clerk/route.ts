@@ -7,13 +7,22 @@ import {
     guestbookLikes,
 } from "@repo/db/schema";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
+import { clerkUserTag } from "@/lib/clerk-users";
 
 type UserDeletedEvent = {
     type: "user.deleted";
     data: { id: string; deleted: boolean };
 };
+
+type UserUpdatedEvent = {
+    type: "user.updated";
+    data: { id: string };
+};
+
+type ClerkWebhookEvent = UserDeletedEvent | UserUpdatedEvent;
 
 export async function POST(req: Request) {
     const secret = ENV.CLERK_WEBHOOK_SECRET;
@@ -33,14 +42,14 @@ export async function POST(req: Request) {
     const payload = await req.text();
 
     const wh = new Webhook(secret);
-    let event: UserDeletedEvent;
+    let event: ClerkWebhookEvent;
     try {
         wh.verify(payload, {
             "svix-id": svixId,
             "svix-timestamp": svixTimestamp,
             "svix-signature": svixSignature,
         });
-        event = JSON.parse(payload) as UserDeletedEvent;
+        event = JSON.parse(payload) as ClerkWebhookEvent;
     } catch {
         return new Response("Invalid webhook signature", { status: 400 });
     }
@@ -53,6 +62,10 @@ export async function POST(req: Request) {
             db.delete(blogCommentLikes).where(eq(blogCommentLikes.clerkUserId, userId)),
             db.delete(blogComments).where(eq(blogComments.clerkUserId, userId)),
         ]);
+    }
+
+    if (event.type === "user.updated" && event.data.id) {
+        revalidateTag(clerkUserTag(event.data.id), "max");
     }
 
     return new Response(null, { status: 200 });

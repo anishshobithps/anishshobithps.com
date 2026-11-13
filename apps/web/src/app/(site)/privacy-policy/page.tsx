@@ -24,7 +24,7 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-const LAST_UPDATED = "November 12, 2026";
+const LAST_UPDATED = "November 13, 2026";
 
 const POLICY_HISTORY_URL = `${siteConfig.repoUrl}/commits/main/src/app/(site)/privacy-policy/page.tsx`;
 
@@ -133,8 +133,9 @@ export default function PrivacyPolicyPage() {
               <TypographyMark>
                 name, username, and profile picture
               </TypographyMark>{" "}
-              are fetched live from Clerk when rendering the guestbook, not
-              stored in the database. Both actions are{" "}
+              are fetched from Clerk when rendering the guestbook and the home
+              page preview, and held in a server cache for up to ten minutes,
+              not stored in the database. Both actions are{" "}
               <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t sign in, nothing is stored.
             </TypographyP>
@@ -156,8 +157,8 @@ export default function PrivacyPolicyPage() {
               <TypographyMark>
                 name, username, and profile picture
               </TypographyMark>{" "}
-              are fetched live from Clerk when rendering comments, not stored
-              in the database. Both actions are{" "}
+              are fetched from Clerk when rendering comments and held in a
+              server cache for up to ten minutes, not stored in the database. Both actions are{" "}
               <TypographyMark>fully voluntary</TypographyMark>. If you
               don&apos;t sign in, nothing is stored.
             </TypographyP>
