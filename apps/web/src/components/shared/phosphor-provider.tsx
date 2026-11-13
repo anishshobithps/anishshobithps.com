@@ -1,6 +1,6 @@
 "use client";
 
-import { IconContext } from "@phosphor-icons/react";
+import { IconContext } from "@phosphor-icons/react/dist/lib/context";
 import type { ReactNode } from "react";
 
 export function PhosphorProvider({ children }: { children: ReactNode }) {

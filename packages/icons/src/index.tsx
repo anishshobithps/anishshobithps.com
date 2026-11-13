@@ -91,4 +91,4 @@ export {
   XIcon,
   XLogoIcon,
   YoutubeLogoIcon,
-} from "@phosphor-icons/react";
+} from "./icons.generated";

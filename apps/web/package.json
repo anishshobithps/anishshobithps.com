@@ -17,6 +17,7 @@
     "lint": "eslint",
     "banners": "varlock run -- tsx scripts/banners/generate.ts",
     "cursors": "tsx scripts/cursors/generate.ts",
+    "icons": "tsx scripts/icons/generate.ts",
     "signature": "varlock run -- tsx scripts/signature/generate.ts"
   },
   "dependencies": {
