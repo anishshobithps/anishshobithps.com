@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useId, useReducer } from "react";
+import { useId } from "react";
 import { LazyMotion, domAnimation, m, useReducedMotion } from "motion/react";
-import * as opentype from "opentype.js";
 
 interface SignatureProps {
-  text?: string;
+  entries: { d: string; key: string }[];
+  width: number;
   color?: string;
   fontSize?: number;
   duration?: number;
@@ -13,26 +13,9 @@ interface SignatureProps {
   once?: boolean;
 }
 
-let cachedFont: opentype.Font | null = null;
-let fontLoadPromise: Promise<opentype.Font> | null = null;
-
-function loadFont(): Promise<opentype.Font> {
-  if (cachedFont) return Promise.resolve(cachedFont);
-  if (!fontLoadPromise) {
-    fontLoadPromise = fetch("/fonts/LastoriaBoldRegular.otf")
-      .then((res) => res.arrayBuffer())
-      .then((buf) => {
-        cachedFont = opentype.parse(buf);
-        return cachedFont;
-      });
-  }
-  return fontLoadPromise;
-}
-
-type SigState = { entries: { d: string; key: string }[]; width: number };
-
 export function Signature({
-  text = "Signature",
+  entries,
+  width,
   color = "var(--foreground)",
   fontSize = 14,
   duration = 1.5,
@@ -40,45 +23,9 @@ export function Signature({
   className,
   once = true,
 }: SignatureProps) {
-  const [{ entries, width }, dispatch] = useReducer(
-    (_: SigState, next: SigState) => next,
-    { entries: [], width: 300 },
-  );
-
   const height = 100;
-  const horizontalPadding = fontSize * 0.1;
-  const topMargin = Math.max(5, (height - fontSize) / 2);
-  const baseline = Math.min(height - 5, topMargin + fontSize);
   const maskId = `sig-${useId().replace(/:/g, "")}`;
   const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    let cancelled = false;
-    loadFont()
-      .then((font) => {
-        if (cancelled) return;
-        let x = horizontalPadding;
-        const next: { d: string; key: string }[] = [];
-
-        for (const char of text) {
-          const glyph = font.charToGlyph(char);
-          const d = glyph.getPath(x, baseline, fontSize).toPathData(3);
-          next.push({ d, key: `${char}@${Math.round(x)}` });
-          x +=
-            (glyph.advanceWidth ?? font.unitsPerEm) *
-            (fontSize / font.unitsPerEm);
-        }
-
-        dispatch({ entries: next, width: x + horizontalPadding });
-      })
-      .catch(() => {
-        if (cancelled) return;
-        dispatch({ entries: [], width: text.length * fontSize * 0.6 });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [text, fontSize, baseline, horizontalPadding]);
 
   const variants = {
     hidden: { pathLength: 0, opacity: 0 },

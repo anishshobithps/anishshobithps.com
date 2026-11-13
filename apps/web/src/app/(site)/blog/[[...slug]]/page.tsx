@@ -25,7 +25,7 @@ import { BlogBody } from "@/components/layouts/blog";
 import { BlogPostNav } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
-import { Signature } from "@repo/ui/components/signature";
+import { LazySignature } from "@/components/shared/lazy-signature";
 import {
   TypographyH1,
   TypographyLead,
@@ -237,7 +237,7 @@ export default async function Page(props: {
         />
         <PostLinksRecap links={links} />
         <EndOfPost commentCount={commentCount} />
-        <Signature text={siteConfig.name} />
+        <LazySignature />
       </BlogBody>
 
       <Section
