@@ -102,10 +102,11 @@ interface PdfViewerProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   loader?: ReactNode;
   deferMs?: number;
+  startOnInteraction?: boolean;
 }
 
 export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
-  ({ file, downloadHref, children, loader, deferMs = 0, className, ...props }, ref) => {
+  ({ file, downloadHref, children, loader, deferMs = 0, startOnInteraction = false, className, ...props }, ref) => {
     const [doc, dispatch] = useReducer(docReducer, initialDocState);
     const { numPages, currentPage, docKey, loading } = doc;
     const [zoom, setZoom] = useState(1);
@@ -121,7 +122,25 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
 
     useEffect(() => {
       let cancelled = false;
-      const timer = window.setTimeout(() => {
+      let started = false;
+      const events = [
+        "pointerdown",
+        "pointermove",
+        "keydown",
+        "scroll",
+        "touchstart",
+        "wheel",
+      ] as const;
+
+      const stopListening = () => {
+        window.clearTimeout(timer);
+        for (const name of events) window.removeEventListener(name, start);
+      };
+
+      function start() {
+        if (started) return;
+        started = true;
+        stopListening();
         import("react-pdf").then(({ pdfjs }) => {
           if (cancelled) return;
           pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -130,12 +149,20 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
           ).toString();
           setWorkerReady(true);
         });
-      }, deferMs);
+      }
+
+      const timer = window.setTimeout(start, deferMs);
+      if (startOnInteraction) {
+        for (const name of events) {
+          window.addEventListener(name, start, { passive: true });
+        }
+      }
+
       return () => {
         cancelled = true;
-        window.clearTimeout(timer);
+        stopListening();
       };
-    }, [deferMs]);
+    }, [deferMs, startOnInteraction]);
 
     const onResize = useCallback<ResizeObserverCallback>((entries) => {
       const entry = entries[0];
