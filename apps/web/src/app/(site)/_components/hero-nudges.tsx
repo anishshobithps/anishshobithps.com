@@ -133,6 +133,7 @@ function Nudge({ href, label, art, children }: NudgeProps) {
   return (
     <Link
       href={href as Route}
+      prefetch={false}
       className="group/nudge flex items-center gap-3 rounded-md border bg-background/70 p-2 pr-4 transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover"
     >
       <IsoStage className={cn(isoCanvas, "h-16 w-24 shrink-0 rounded-sm")}>

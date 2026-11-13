@@ -37,7 +37,7 @@ export function BlogTeaser() {
               occasional 3am adventure.
             </TypographyLead>
             <Button asChild variant="outline">
-              <Link href="/blogs">
+              <Link href="/blogs" prefetch={false}>
                 See all posts
                 <CaretRightIcon
                   data-icon="inline-end"
@@ -57,6 +57,7 @@ export function BlogTeaser() {
             <Link
               key={post.url}
               href={post.url as Route}
+              prefetch={false}
               className="group flex items-baseline justify-between gap-4 py-4 border-b last:border-b-0 -mx-gutter px-gutter hover:bg-muted/40 transition-colors"
             >
               <span className="font-medium text-foreground flex items-center gap-2 min-w-0">

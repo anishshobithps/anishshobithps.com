@@ -27,7 +27,7 @@ export async function GuestbookTeaser() {
               <TypographyMark>left a trace</TypographyMark>. Add yours.
             </TypographyLead>
             <Button asChild variant="outline">
-              <Link href="/guestbook">
+              <Link href="/guestbook" prefetch={false}>
                 Sign the guestbook
                 <CaretRightIcon
                   data-icon="inline-end"

@@ -135,6 +135,7 @@ export function Header() {
         <div className="flex h-14 items-center justify-between px-gutter">
           <Link
             href="/"
+            prefetch={false}
             data-sound="tap"
             aria-label={`${siteConfig.name}, home`}
             className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
