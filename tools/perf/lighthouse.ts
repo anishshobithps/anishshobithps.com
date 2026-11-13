@@ -53,6 +53,7 @@ const { values } = parseArgs({
     runs: { type: "string", default: "5" },
     profile: { type: "string", default: "both" },
     path: { type: "string", multiple: true },
+    block: { type: "string", multiple: true },
     min: { type: "string" },
     out: { type: "string" },
   },
@@ -202,6 +203,7 @@ try {
           formFactor: "mobile",
           throttlingMethod: "simulate",
           throttling: PROFILES[profile],
+          blockedUrlPatterns: values.block,
         });
         if (result?.lhr) samples.push(toSample(result.lhr));
       }
