@@ -23,7 +23,7 @@ import {
 import { Spinner } from "@repo/ui/components/spinner";
 import { cn } from "@repo/ui/lib/cn";
 import { timeAgo } from "@repo/core/date";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInTrigger } from "@/components/shared/site-auth";
 import { useEffect, useRef, useState, useTransition } from "react";
 
 const COMMENT_MAX_LENGTH = 1000;
@@ -216,7 +216,7 @@ export function CommentCard({
                         )}
                       </Button>
                     ) : (
-                      <SignInButton mode="modal">
+                      <SignInTrigger>
                         <Button variant="outline" size="sm">
                           <ArrowBendDownRightIcon
                             data-icon="inline-start"
@@ -228,7 +228,7 @@ export function CommentCard({
                             (sign in)
                           </span>
                         </Button>
-                      </SignInButton>
+                      </SignInTrigger>
                     )}
                   </>
                 )}

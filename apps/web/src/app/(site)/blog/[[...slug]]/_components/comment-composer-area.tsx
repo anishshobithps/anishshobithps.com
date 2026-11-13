@@ -9,7 +9,7 @@ import { TypingBubble } from "@/components/shared/doodles";
 import { SignInIcon, SignOutIcon } from "@repo/icons";
 import { Button } from "@repo/ui/components/button";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInTrigger } from "@/components/shared/site-auth";
 import Link from "next/link";
 
 const COMMENT_MAX_LENGTH = 1000;
@@ -110,12 +110,12 @@ export function CommentComposerArea({
           </TypographyMuted>
         </div>
       </div>
-      <SignInButton mode="modal">
+      <SignInTrigger>
         <Button size="sm" className="shrink-0">
           <SignInIcon data-icon="inline-start" size={14} aria-hidden="true" />
           Sign in to comment
         </Button>
-      </SignInButton>
+      </SignInTrigger>
     </div>
   );
 }

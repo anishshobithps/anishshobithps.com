@@ -3,6 +3,7 @@ import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { JsonLd } from "@/components/shared/json-ld";
 import { MouseGlow } from "@/components/shared/mouse-glow";
+import { AuthProvider } from "@/components/shared/site-auth";
 import {
   FloatingHubServer,
   FloatingHubFallback,
@@ -15,7 +16,7 @@ export default function SiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <AuthProvider>
       <JsonLd type="person" />
       <JsonLd type="website" />
       <PageLayout>
@@ -40,6 +41,6 @@ export default function SiteLayout({
       <Suspense fallback={<FloatingHubFallback />}>
         <FloatingHubServer />
       </Suspense>
-    </>
+    </AuthProvider>
   );
 }

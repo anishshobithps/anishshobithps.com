@@ -21,7 +21,7 @@ import { nowISO } from "@repo/core/date";
 import { playCue } from "@repo/sounds/sound-player";
 import type { CueName } from "@repo/sounds/sound-cues";
 import { classifyError, typedToast } from "@/lib/toast";
-import { useClerk, useUser } from "@clerk/nextjs";
+import { useSiteAuth } from "@/components/shared/site-auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -120,8 +120,7 @@ export function PostEngagement({
 }: PostEngagementProps) {
   "use memo";
 
-  const { user, isSignedIn, isLoaded } = useUser();
-  const { signOut } = useClerk();
+  const { user, isSignedIn, isLoaded, signOut } = useSiteAuth();
 
   const queryClient = useQueryClient();
   const reactionsKey = useMemo(() => queryKeys.reactions(slug), [slug]);

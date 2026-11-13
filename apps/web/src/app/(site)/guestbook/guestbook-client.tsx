@@ -24,7 +24,7 @@ import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography
 import { nowISO } from "@repo/core/date";
 import { playCue } from "@repo/sounds/sound-player";
 import { toastError, typedToast } from "@/lib/toast";
-import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
+import { SignInTrigger, useSiteAuth } from "@/components/shared/site-auth";
 import {
   useInfiniteQuery,
   useMutation,
@@ -56,8 +56,7 @@ interface GuestbookClientProps {
 export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
   "use memo";
 
-  const { user, isSignedIn, isLoaded } = useUser();
-  const { signOut } = useClerk();
+  const { user, isSignedIn, isLoaded, signOut } = useSiteAuth();
 
   const queryClient = useQueryClient();
 
@@ -353,8 +352,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
                   Sign in, it only takes a second.
                 </TypographyMuted>
               </div>
-              <SignInButton
-                mode="modal"
+              <SignInTrigger
                 forceRedirectUrl="/guestbook"
                 signUpForceRedirectUrl="/guestbook"
               >
@@ -364,7 +362,7 @@ export function GuestbookClient({ currentUserId }: GuestbookClientProps) {
                     Sign in
                   </Button>
                 </ButtonGroup>
-              </SignInButton>
+              </SignInTrigger>
             </div>
             <EngagementNudge type="guestbook" className="pt-1 text-left" />
           </>

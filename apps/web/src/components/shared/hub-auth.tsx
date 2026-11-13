@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SignInButton, useClerk, useUser } from "@clerk/nextjs";
+import { SignInTrigger, useSiteAuth } from "@/components/shared/site-auth";
 import { Button } from "@repo/ui/components/button";
 import { Text } from "@repo/ui/components/typography";
 import { SignInIcon, SignOutIcon } from "@repo/icons";
@@ -10,8 +10,7 @@ import { Avatar } from "@/components/engagement/avatar";
 
 export default function HubAuth({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
-  const { user, isSignedIn, isLoaded } = useUser();
-  const { signOut } = useClerk();
+  const { user, isSignedIn, isLoaded, signOut } = useSiteAuth();
 
   return (
     <>
@@ -40,9 +39,9 @@ export default function HubAuth({ onClose }: { onClose: () => void }) {
             <Text as="p" variant="small" className="truncate text-foreground">
               {user.fullName || user.username || "You"}
             </Text>
-            {user.primaryEmailAddress?.emailAddress && (
+            {user.email && (
               <Text as="p" variant="muted" className="truncate text-xs">
-                {user.primaryEmailAddress.emailAddress}
+                {user.email}
               </Text>
             )}
           </div>
@@ -74,8 +73,7 @@ export default function HubAuth({ onClose }: { onClose: () => void }) {
               Sign in to comment, react and sign.
             </Text>
           </div>
-          <SignInButton
-            mode="modal"
+          <SignInTrigger
             forceRedirectUrl={pathname}
             signUpForceRedirectUrl={pathname}
           >
@@ -91,7 +89,7 @@ export default function HubAuth({ onClose }: { onClose: () => void }) {
               />
               Sign in
             </Button>
-          </SignInButton>
+          </SignInTrigger>
         </Pass>
       )}
     </>
