@@ -8,6 +8,7 @@ import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography
 import { gitDraw, gitPop } from "@repo/diagrams/classes";
 import { cn } from "@repo/ui/lib/cn";
 import type { CSSProperties } from "react";
+import { usePostStats } from "@/app/(site)/blog/[[...slug]]/_components/use-post-stats";
 
 function FinishLine() {
   return (
@@ -52,11 +53,12 @@ function FinishLine() {
 }
 
 interface EndOfPostProps {
-  commentCount: number;
+  slug: string;
   className?: string;
 }
 
-export function EndOfPost({ commentCount, className }: EndOfPostProps) {
+export function EndOfPost({ slug, className }: EndOfPostProps) {
+  const commentCount = usePostStats(slug).data?.commentCount ?? 0;
   const scrollToEngagement = () => {
     document
       .getElementById("engagement")

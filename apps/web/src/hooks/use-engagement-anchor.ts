@@ -31,8 +31,21 @@ export function useEngagementAnchor() {
       });
     };
 
-    const frame = requestAnimationFrame(read);
-    return () => cancelAnimationFrame(frame);
+    let observer: MutationObserver | null = null;
+    const frame = requestAnimationFrame(() => {
+      read();
+      const el = document.getElementById("engagement");
+      if (!el) return;
+      observer = new MutationObserver(read);
+      observer.observe(el, {
+        attributes: true,
+        attributeFilter: ["data-comment-count"],
+      });
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
   }, [pathname]);
 
   const scrollToEngagement = useCallback(() => {

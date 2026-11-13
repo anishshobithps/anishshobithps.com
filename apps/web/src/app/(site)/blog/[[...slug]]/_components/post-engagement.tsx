@@ -8,6 +8,7 @@ import {
   toggleCommentLike,
   type CommentWithMeta,
   type MoodId,
+  type PostStats,
 } from "@/app/(site)/blog/[[...slug]]/actions";
 import { CommentComposerArea } from "@/app/(site)/blog/[[...slug]]/_components/comment-composer-area";
 import { CommentList } from "@/app/(site)/blog/[[...slug]]/_components/comment-list";
@@ -124,6 +125,15 @@ export function PostEngagement({
 
   const queryClient = useQueryClient();
   const reactionsKey = useMemo(() => queryKeys.reactions(slug), [slug]);
+  const bumpCommentCount = useCallback(
+    (delta: number) =>
+      queryClient.setQueryData<PostStats>(queryKeys.postStats(slug), (old) =>
+        old
+          ? { ...old, commentCount: Math.max(0, old.commentCount + delta) }
+          : old,
+      ),
+    [queryClient, slug],
+  );
 
   const { data: moodState = EMPTY_MOOD, isPending: moodLoading } = useQuery({
     queryKey: reactionsKey,
@@ -180,8 +190,10 @@ export function PostEngagement({
       if (!result.success) throw new Error(result.error);
       return result.id;
     },
-    onSuccess: (id, { tempId }) =>
-      setBaseComments((prev) => patchConfirm(prev, tempId, id)),
+    onSuccess: (id, { tempId }) => {
+      setBaseComments((prev) => patchConfirm(prev, tempId, id));
+      bumpCommentCount(1);
+    },
     onError: (error, { tempId }) => {
       setBaseComments((prev) => patchDelete(prev, tempId));
       typedToast(classifyError(error.message), error.message);
@@ -193,8 +205,14 @@ export function PostEngagement({
       const result = await deleteComment(id);
       if (!result.success) throw new Error(result.error);
     },
-    onMutate: (id) => setBaseComments((prev) => patchDelete(prev, id)),
-    onError: (error) => typedToast(classifyError(error.message), error.message),
+    onMutate: (id) => {
+      setBaseComments((prev) => patchDelete(prev, id));
+      bumpCommentCount(-1);
+    },
+    onError: (error) => {
+      bumpCommentCount(1);
+      typedToast(classifyError(error.message), error.message);
+    },
   });
 
   const likeComment = useMutation({

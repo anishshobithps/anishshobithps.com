@@ -5,12 +5,11 @@ import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users
 import { db } from "@repo/db";
 import { getClientIp, hashIp } from "@/lib/ip";
 import { safeQuery } from "@/lib/safe-query";
-import { blogCommentLikes, blogComments, blogPosts, blogReactions, blogReads } from "@repo/db/schema";
+import { blogCommentLikes, blogComments, blogPosts, blogReactions } from "@repo/db/schema";
 import { source } from "@/lib/source";
 import { sanitizeText, ValidationError, validateLength } from "@repo/core/text";
 import { auth } from "@clerk/nextjs/server";
-import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 import { cache } from "react";
 
@@ -33,21 +32,30 @@ async function getIpHash(): Promise<string> {
     return hashIp(getClientIp(hdrs));
 }
 
+const postIds = new Map<string, number>();
+
 const isKnownPost = cache(async (slug: string): Promise<boolean> => {
     return source.getPages().some((page) => page.url === slug);
 });
 
 const getPostIdBySlug = cache(async (slug: string): Promise<number | null> => {
+    const known = postIds.get(slug);
+    if (known !== undefined) return known;
+
     const [post] = await db
         .select({ id: blogPosts.id })
         .from(blogPosts)
         .where(eq(blogPosts.slug, slug))
         .limit(1);
+    if (post) postIds.set(slug, post.id);
     return post?.id ?? null;
 });
 
 async function getOrCreatePost(slug: string): Promise<number | null> {
     if (!(await isKnownPost(slug))) return null;
+
+    const known = postIds.get(slug);
+    if (known !== undefined) return known;
 
     const [existing] = await db
         .select({ id: blogPosts.id })
@@ -55,7 +63,10 @@ async function getOrCreatePost(slug: string): Promise<number | null> {
         .where(eq(blogPosts.slug, slug))
         .limit(1);
 
-    if (existing) return existing.id;
+    if (existing) {
+        postIds.set(slug, existing.id);
+        return existing.id;
+    }
 
     const [inserted] = await db
         .insert(blogPosts)
@@ -63,7 +74,10 @@ async function getOrCreatePost(slug: string): Promise<number | null> {
         .onConflictDoNothing()
         .returning({ id: blogPosts.id });
 
-    if (inserted) return inserted.id;
+    if (inserted) {
+        postIds.set(slug, inserted.id);
+        return inserted.id;
+    }
 
     const [retry] = await db
         .select({ id: blogPosts.id })
@@ -71,34 +85,37 @@ async function getOrCreatePost(slug: string): Promise<number | null> {
         .where(eq(blogPosts.slug, slug))
         .limit(1);
 
+    if (retry) postIds.set(slug, retry.id);
     return retry?.id ?? null;
 }
 
-export async function trackRead(slug: string): Promise<void> {
-    return safeQuery("trackRead", () => recordRead(slug), undefined);
+export interface PostStats {
+    reads: number;
+    commentCount: number;
 }
 
-async function recordRead(slug: string): Promise<void> {
+export async function viewPost(slug: string): Promise<PostStats> {
+    return safeQuery("viewPost", () => loadPostStats(slug), { reads: 0, commentCount: 0 });
+}
+
+async function loadPostStats(slug: string): Promise<PostStats> {
     const [postId, ipHash] = await Promise.all([getOrCreatePost(slug), getIpHash()]);
-    if (postId === null) return;
-    await db.insert(blogReads).values({ postId, ipHash }).onConflictDoNothing();
-}
+    if (postId === null) return { reads: 0, commentCount: 0 };
 
-export async function getBlogReadsCount(slug: string): Promise<number> {
-    return safeQuery("getBlogReadsCount", () => loadBlogReadsCount(slug), 0);
-}
+    const result = await db.execute<{ reads: number; comments: number }>(sql`
+        with inserted as (
+            insert into blog_reads (post_id, ip_hash)
+            values (${postId}, ${ipHash})
+            on conflict do nothing
+            returning 1
+        )
+        select
+            ((select count(*) from blog_reads where post_id = ${postId}) + (select count(*) from inserted))::int as reads,
+            (select count(*) from blog_comments where post_id = ${postId} and is_deleted = false)::int as comments
+    `);
 
-async function loadBlogReadsCount(slug: string): Promise<number> {
-    const postId = await getPostIdBySlug(slug);
-
-    if (postId === null) return 0;
-
-    const rows = await db
-        .select({ count: sql<number>`count(*)::int` })
-        .from(blogReads)
-        .where(eq(blogReads.postId, postId));
-
-    return rows[0]?.count ?? 0;
+    const row = result.rows[0];
+    return { reads: row?.reads ?? 0, commentCount: row?.comments ?? 0 };
 }
 
 export async function getReactions(slug: string): Promise<ReactionsData> {
@@ -195,29 +212,14 @@ export interface CommentWithMeta {
 export interface GetCommentsResult {
     comments: CommentWithMeta[];
     total: number;
-}
-
-export async function getCommentCount(slug: string): Promise<number> {
-    return safeQuery("getCommentCount", () => loadCommentCount(slug), 0);
-}
-
-async function loadCommentCount(slug: string): Promise<number> {
-    const postId = await getPostIdBySlug(slug);
-
-    if (postId === null) return 0;
-
-    const [row] = await db
-        .select({ count: count() })
-        .from(blogComments)
-        .where(and(eq(blogComments.postId, postId), eq(blogComments.isDeleted, false)));
-
-    return row?.count ?? 0;
+    viewerId: string | null;
 }
 
 export async function getComments(slug: string): Promise<GetCommentsResult> {
     return safeQuery("getComments", () => loadComments(slug), {
         comments: [],
         total: 0,
+        viewerId: null,
     });
 }
 
@@ -226,7 +228,7 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
 
     const postId = await getPostIdBySlug(slug);
 
-    if (postId === null) return { comments: [], total: 0 };
+    if (postId === null) return { comments: [], total: 0, viewerId: userId };
 
     const rows = await db
         .select({
@@ -245,7 +247,7 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
         .groupBy(blogComments.id)
         .orderBy(desc(blogComments.isPinned), desc(blogComments.createdAt));
 
-    if (rows.length === 0) return { comments: [], total: 0 };
+    if (rows.length === 0) return { comments: [], total: 0, viewerId: userId };
 
     let likedIds = new Set<number>();
     if (userId) {
@@ -287,7 +289,7 @@ async function loadComments(slug: string): Promise<GetCommentsResult> {
         }
     }
 
-    return { comments: roots, total: flat.length };
+    return { comments: roots, total: flat.length, viewerId: userId };
 }
 
 export async function submitComment(
@@ -332,7 +334,6 @@ export async function submitComment(
             .values({ postId, clerkUserId: userId, body: trimmed, parentId: resolvedParentId })
             .returning({ id: blogComments.id });
 
-        revalidatePath(`/blog/${slug}`);
         return { success: true, id: inserted.id };
     } catch (err) {
         if (err instanceof ValidationError) return { success: false, error: err.message };
@@ -367,13 +368,6 @@ export async function deleteComment(
             .set({ isDeleted: true, updatedAt: new Date() })
             .where(eq(blogComments.id, commentId));
 
-        const [post] = await db
-            .select({ slug: blogPosts.slug })
-            .from(blogPosts)
-            .where(eq(blogPosts.id, comment.postId))
-            .limit(1);
-
-        if (post) revalidatePath(`/blog/${post.slug}`);
         return { success: true };
     } catch {
         return { success: false, error: "Something went wrong." };
@@ -401,13 +395,6 @@ export async function togglePinComment(
             .set({ isPinned: !comment.isPinned, updatedAt: new Date() })
             .where(eq(blogComments.id, commentId));
 
-        const [post] = await db
-            .select({ slug: blogPosts.slug })
-            .from(blogPosts)
-            .where(eq(blogPosts.id, comment.postId))
-            .limit(1);
-
-        if (post) revalidatePath(`/blog/${post.slug}`);
         return { success: true };
     } catch {
         return { success: false, error: "Something went wrong." };

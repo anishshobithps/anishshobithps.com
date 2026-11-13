@@ -1,18 +1,10 @@
 import { BlogCover } from "@repo/diagrams/blog-covers";
 import { HeroWithArt } from "@/components/layouts/hero-art";
+import { EndOfPost } from "@/app/(site)/blog/[[...slug]]/_components/end-of-post";
 import {
-  EndOfPost,
-  ScrollToEngagement,
-} from "@/app/(site)/blog/[[...slug]]/_components/end-of-post";
-import {
-  getBlogReadsCount,
-  getCommentCount,
-  trackRead,
-} from "@/app/(site)/blog/[[...slug]]/actions";
-import {
-  CommentsFallback,
-  CommentsSection,
-} from "@/app/(site)/blog/[[...slug]]/_components/comments-section";
+  EngagementSection,
+  PostStatsRow,
+} from "@/app/(site)/blog/[[...slug]]/_components/post-stats";
 import {
   PostLinksRail,
   PostLinksRecap,
@@ -41,19 +33,13 @@ import {
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
-import { auth } from "@clerk/nextjs/server";
-import {
-  CalendarIcon,
-  GitCommitIcon,
-  ClockIcon,
-  EyeIcon,
-} from "@repo/icons";
+import { CalendarIcon, GitCommitIcon, ClockIcon } from "@repo/icons";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 
 import { notFound } from "next/navigation";
-import { Suspense, ViewTransition } from "react";
+import { ViewTransition } from "react";
 import { postTransitionName } from "@/lib/view-transition";
 
 export default async function Page(props: {
@@ -63,12 +49,6 @@ export default async function Page(props: {
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
-  const { userId } = await auth();
-  const [reads, commentCount] = await Promise.all([
-    getBlogReadsCount(page.url),
-    getCommentCount(page.url),
-    trackRead(page.url),
-  ]);
   const MDX = page.data.body;
   const readingTime = (page.data as any)._exports?.readingTime;
 
@@ -192,11 +172,7 @@ export default async function Page(props: {
                 {readingTime.text}
               </TypographyMuted>
             )}
-            <TypographyMuted className="tabular-nums text-xs flex items-center gap-1.5">
-              <EyeIcon className="size-3.5 shrink-0" aria-hidden="true" />
-              {reads} {reads === 1 ? "read" : "reads"}
-            </TypographyMuted>
-            {commentCount > 0 && <ScrollToEngagement count={commentCount} />}
+            <PostStatsRow slug={page.url} />
           </div>
 
           {page.data.description && (
@@ -236,20 +212,11 @@ export default async function Page(props: {
           })}
         />
         <PostLinksRecap links={links} />
-        <EndOfPost commentCount={commentCount} />
+        <EndOfPost slug={page.url} />
         <LazySignature />
       </BlogBody>
 
-      <Section
-        id="engagement"
-        variant="flush"
-        aria-label="Post engagement"
-        data-comment-count={commentCount}
-      >
-        <Suspense fallback={<CommentsFallback />}>
-          <CommentsSection slug={page.url} currentUserId={userId} />
-        </Suspense>
-      </Section>
+      <EngagementSection slug={page.url} />
 
       <Section variant="nav">
         <BlogPostNav
@@ -263,6 +230,8 @@ export default async function Page(props: {
     </>
   );
 }
+
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return source.generateParams();
