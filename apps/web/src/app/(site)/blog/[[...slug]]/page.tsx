@@ -14,7 +14,7 @@ import { PostRevisions } from "@/app/(site)/blog/[[...slug]]/_components/post-re
 import { getModifiedAt, getPostUpdates } from "@/lib/post-updates";
 import { createPreviewLink } from "@/components/link-card/mdx-link";
 import { BlogBody } from "@/components/layouts/blog";
-import { BlogPostNav } from "@/components/layouts/blog-nav";
+import { BlogPostNav, PostPager } from "@/components/layouts/blog-nav";
 import { Section } from "@/components/layouts/page";
 import { JsonLd } from "@/components/shared/json-ld";
 import { LazySignature } from "@/components/shared/lazy-signature";
@@ -57,20 +57,22 @@ export default async function Page(props: {
   });
 
   const currentIndex = allPages.findIndex((p) => p.url === page.url);
-  const prevPost =
-    currentIndex < allPages.length - 1
-      ? {
-          url: allPages[currentIndex + 1].url,
-          title: allPages[currentIndex + 1].data.title,
-        }
-      : null;
-  const nextPost =
-    currentIndex > 0
-      ? {
-          url: allPages[currentIndex - 1].url,
-          title: allPages[currentIndex - 1].data.title,
-        }
-      : null;
+  const neighbour = (index: number) => {
+    const post = allPages[index];
+    if (!post) return null;
+    const minutes = (post.data as { _exports?: { readingTime?: { text?: string } } })._exports?.readingTime?.text;
+    return {
+      url: post.url,
+      title: post.data.title,
+      description: post.data.description ?? "",
+      date: post.data.date ? formatShortDate(post.data.date) : undefined,
+      readingTime: minutes,
+      tags: (post.data.tags ?? []).slice(0, 3),
+      cover: <BlogCover slug={post.slugs.at(-1) ?? ""} number={allPages.length - index} />,
+    };
+  };
+  const prevPost = currentIndex < allPages.length - 1 ? neighbour(currentIndex + 1) : null;
+  const nextPost = currentIndex > 0 ? neighbour(currentIndex - 1) : null;
   const postUrl = `${siteConfig.baseUrl}${page.url}`;
   const links = page.data.links ?? [];
   const updates = getPostUpdates(page.data);
@@ -92,17 +94,12 @@ export default async function Page(props: {
         type="breadcrumb"
         items={[
           { name: "Home", url: siteConfig.baseUrl },
-          { name: "Blogs", url: `${siteConfig.baseUrl}/blogs` },
+          { name: "Blog", url: `${siteConfig.baseUrl}/blogs` },
           { name: page.data.title, url: postUrl },
         ]}
       />
       <Section variant="nav">
-        <BlogPostNav
-          pageUrl={postUrl}
-          title={page.data.title}
-          prevPost={prevPost}
-          nextPost={nextPost}
-        />
+        <BlogPostNav pageUrl={postUrl} title={page.data.title} />
       </Section>
 
       <Section variant="hero" aria-label="Post header">
@@ -218,14 +215,8 @@ export default async function Page(props: {
 
       <EngagementSection slug={page.url} />
 
-      <Section variant="nav">
-        <BlogPostNav
-          label="More posts"
-          pageUrl={postUrl}
-          title={page.data.title}
-          prevPost={prevPost}
-          nextPost={nextPost}
-        />
+      <Section variant="compact" aria-label="More posts">
+        <PostPager older={prevPost} newer={nextPost} />
       </Section>
     </>
   );
