@@ -3,6 +3,7 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
+      "@scripts/*": ["./scripts/*"],
       "fumadocs-mdx:collections/*": ["./.source/*"]
     }
   },

@@ -2,6 +2,20 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import { plugin as shadcn } from "@shadcn/lint";
 
+const relativeImportMessage =
+  'No relative imports. Use "@/" inside apps/web, or the package name such as "@repo/ui/lib/cn" inside a package.';
+
+const relativeImportSelectors = [
+  {
+    selector: 'ImportExpression > Literal.source[value=/^\\.\\.?(\\/|$)/]',
+    message: relativeImportMessage,
+  },
+  {
+    selector: "CallExpression[callee.object.name='vi'] > Literal.arguments:first-child[value=/^\\.\\.?(\\/|$)/]",
+    message: relativeImportMessage,
+  },
+];
+
 export function createNextConfig({
   vendoredFiles = [],
   noTailwindFiles = [],
@@ -33,6 +47,18 @@ export function createNextConfig({
           },
         ]
       : []),
+    {
+      files: ['**/*.{ts,tsx,mts}'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: [{ regex: '^\\.{1,2}(/|$)', message: relativeImportMessage }],
+          },
+        ],
+        'no-restricted-syntax': ['error', ...relativeImportSelectors],
+      },
+    },
     {
       files: ['src/**/*.{ts,tsx}'],
       plugins: { shadcn },
@@ -81,6 +107,7 @@ export function createNextConfig({
       rules: {
         'no-restricted-syntax': [
           'error',
+          ...relativeImportSelectors,
           {
             selector: "JSXOpeningElement[name.name='button']",
             message: 'Use <Button> from "@repo/ui/components/button" instead of a raw <button>.',
