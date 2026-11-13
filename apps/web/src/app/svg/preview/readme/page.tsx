@@ -27,7 +27,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** GitHub's profile README column, and a phone, as in the README repo's own preview. */
 const WIDTHS = { desktop: 846, phone: 343 } as const;
 
 type Width = keyof typeof WIDTHS;
@@ -49,11 +48,6 @@ function hrefWith(settings: Settings, change: Partial<Settings>) {
   return `/svg/preview/readme?${new URLSearchParams({ ...settings, ...change })}`;
 }
 
-/**
- * Live mode points each card at /svg, so it shows the data GitHub would get.
- * Fixtures mode renders each template's first fixture, for when a card's
- * data isn't reachable from here (no GITHUB_TOKEN, no database).
- */
 async function source(type: string, query: Query, settings: Settings): Promise<Source> {
   const template = getTemplate(type);
   if (!template) throw new Error(`README uses unknown card "${type}"`);
@@ -98,7 +92,6 @@ function Inline({ text }: { text: string }) {
   return <>{nodes}</>;
 }
 
-/** Each block spaced and sized the way GitHub's markdown CSS does it. */
 function Rendered({ block, image }: { block: Block; image: Source | null }) {
   switch (block.kind) {
     case "heading":
@@ -188,7 +181,8 @@ export default async function ReadmePreviewPage({
           <Segmented
             label="Width"
             options={(["desktop", "phone"] as const).map((width) => ({
-              label: `${width === "desktop" ? "Desktop" : "Phone"} · ${WIDTHS[width]}px`,
+              label: width === "desktop" ? "Desktop" : "Phone",
+              detail: `${WIDTHS[width]}px`,
               href: hrefWith(settings, { width }),
               active: settings.width === width,
             }))}

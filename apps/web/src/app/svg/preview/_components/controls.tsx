@@ -3,9 +3,11 @@ import Link from "next/link";
 import { Button } from "@repo/ui/components/button";
 import { ButtonGroup } from "@repo/ui/components/button-group";
 import { SectionLabel } from "@repo/ui/components/typography";
+import { Separator } from "@repo/ui/components/separator";
 
 interface Option {
   label: string;
+  detail?: string;
   href: string;
   active: boolean;
 }
@@ -27,6 +29,12 @@ export function Segmented({ label, options }: { label: string; options: Option[]
               aria-current={option.active ? "page" : undefined}
             >
               {option.label}
+              {option.detail && (
+                <>
+                  <Separator orientation="vertical" />
+                  {option.detail}
+                </>
+              )}
             </Link>
           </Button>
         ))}

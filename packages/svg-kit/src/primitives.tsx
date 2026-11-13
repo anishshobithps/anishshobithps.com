@@ -119,6 +119,37 @@ export function Label({
   );
 }
 
+export function Parts({
+  theme,
+  parts,
+}: Themed & { parts: (ReactNode | false | null | undefined)[] }) {
+  const c = palette(theme);
+  const shown = parts.filter(
+    (part): part is ReactNode =>
+      part !== false && part !== null && part !== undefined && part !== "",
+  );
+  return (
+    <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      {shown.map((part, index) => (
+        <Fragment key={index}>
+          {index > 0 && (
+            <span
+              style={{
+                width: HAIRLINE,
+                height: 10,
+                flexShrink: 0,
+                backgroundColor: c.muted,
+                opacity: 0.5,
+              }}
+            />
+          )}
+          <span>{part}</span>
+        </Fragment>
+      ))}
+    </span>
+  );
+}
+
 export function CardHeader({
   theme,
   label,
@@ -229,14 +260,22 @@ function Stat({
   theme,
   value,
   label,
+  detail,
   accent = false,
-}: Themed & { value: ReactNode; label: ReactNode; accent?: boolean }) {
+}: Themed & {
+  value: ReactNode;
+  label: ReactNode;
+  detail?: ReactNode;
+  accent?: boolean;
+}) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       <Figure theme={theme} tone={accent ? "accent" : "strong"}>
         {value}
       </Figure>
-      <Label theme={theme}>{label}</Label>
+      <Label theme={theme}>
+        {detail ? <Parts theme={theme} parts={[label, detail]} /> : label}
+      </Label>
     </div>
   );
 }
@@ -245,7 +284,12 @@ export function Stats({
   theme,
   items,
 }: Themed & {
-  items: { label: string; value: ReactNode; accent?: boolean }[];
+  items: {
+    label: string;
+    detail?: ReactNode;
+    value: ReactNode;
+    accent?: boolean;
+  }[];
 }) {
   return (
     <div
@@ -256,7 +300,7 @@ export function Stats({
         gap: HAIRLINE,
       }}
     >
-      {items.map(({ label, value, accent }) => (
+      {items.map(({ label, detail, value, accent }) => (
         <Cell
           key={label}
           theme={theme}
@@ -267,7 +311,13 @@ export function Stats({
             paddingRight: GUTTER,
           }}
         >
-          <Stat theme={theme} value={value} label={label} accent={accent} />
+          <Stat
+            theme={theme}
+            value={value}
+            label={label}
+            detail={detail}
+            accent={accent}
+          />
         </Cell>
       ))}
     </div>

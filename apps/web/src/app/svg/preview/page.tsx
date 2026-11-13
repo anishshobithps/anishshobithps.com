@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import NextImage from "next/image";
 import { notFound } from "next/navigation";
 import { PreviewTabs } from "@/app/svg/preview/_components/controls";
+import { Separator } from "@repo/ui/components/separator";
 import {
   SectionLabel,
   TypographyH1,
@@ -88,7 +89,11 @@ function Panel({ render, href }: { render: Render; href?: string }) {
         />
       </div>
       <figcaption className="flex items-center justify-between gap-4">
-        <SectionLabel pixel>{`${render.theme} · ${(render.bytes / 1024).toFixed(1)} KB`}</SectionLabel>
+        <span className="flex items-center">
+          <SectionLabel pixel>{render.theme}</SectionLabel>
+          <Separator orientation="vertical" />
+          <SectionLabel pixel>{`${(render.bytes / 1024).toFixed(1)} KB`}</SectionLabel>
+        </span>
         {href && (
           <a href={href} className="text-xs text-muted-foreground underline underline-offset-4">
             Live

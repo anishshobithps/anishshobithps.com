@@ -24,6 +24,7 @@ import {
   Legend,
   Stats,
   STATS_HEIGHT,
+  Parts,
 } from "@repo/svg-kit/primitives";
 import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/svg-kit/template";
 
@@ -71,15 +72,18 @@ async function loadGitHub(): Promise<GitHubActivity> {
 }
 
 function meta({ github, wakatime }: Data) {
-  if (github && wakatime) return "GitHub + WakaTime · local time";
+  if (github && wakatime) return ["GitHub + WakaTime", "local time"];
   if (wakatime) {
-    return `${Math.round(wakatime.seconds / HOUR)} hrs coded · last ${wakatime.days} days`;
+    return [
+      `${Math.round(wakatime.seconds / HOUR)} hrs coded`,
+      `last ${wakatime.days} days`,
+    ];
   }
   if (github) {
     const since = github.since ? ` since ${formatMonthYear(github.since)}` : "";
-    return `${github.commits} commits${since}`;
+    return [`${github.commits} commits${since}`];
   }
-  return "";
+  return [];
 }
 
 function fixtureMatrix(seed: number) {
@@ -136,7 +140,11 @@ export const activity = defineTemplate({
 
     return (
       <Frame theme={theme} {...SIZE}>
-        <CardHeader theme={theme} label="When I code" meta={meta(data)} />
+        <CardHeader
+          theme={theme}
+          label="When I code"
+          meta={<Parts theme={theme} parts={meta(data)} />}
+        />
         <Cell
           theme={theme}
           style={{
@@ -196,7 +204,8 @@ export const activity = defineTemplate({
           items={[
             { label: "Peak hour", value: summary.empty ? "—" : summary.peak },
             {
-              label: "9 PM–2 AM · one more commit",
+              label: "9 PM–2 AM",
+              detail: "one more commit",
               value: `${summary.lateShare}%`,
               accent: true,
             },

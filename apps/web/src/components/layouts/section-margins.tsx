@@ -1,8 +1,9 @@
 "use client";
 
 import { SectionLabel } from "@repo/ui/components/typography";
+import { Separator } from "@repo/ui/components/separator";
 import { cn } from "@repo/ui/lib/cn";
-import { useEffect, useId, useRef, useState } from "react";
+import { Fragment, useEffect, useId, useRef, useState } from "react";
 
 const RULER_STEP = 80;
 const LENS = 144;
@@ -95,9 +96,9 @@ export function SectionMargins({
     lens: `${uid}-lens`,
   };
 
-  const dimension = [label, height ? `${height}px` : null]
-    .filter(Boolean)
-    .join(" · ");
+  const dimension = [label, height ? `${height}px` : null].filter(
+    (part): part is string => Boolean(part),
+  );
 
   return (
     <div
@@ -282,10 +283,17 @@ export function SectionMargins({
           </SectionLabel>
         </span>
 
-        {dimension && (
+        {dimension.length > 0 && (
           <span className="absolute top-1/2 left-6 -translate-1/2 bg-background py-3">
             <SectionLabel pixel accent={active} asChild>
-              <span data-slot="section-dimension">{dimension}</span>
+              <span data-slot="section-dimension" className="flex items-center">
+                {dimension.map((part, index) => (
+                  <Fragment key={part}>
+                    {index > 0 && <Separator />}
+                    <span>{part}</span>
+                  </Fragment>
+                ))}
+              </span>
             </SectionLabel>
           </span>
         )}

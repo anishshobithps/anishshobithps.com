@@ -9,6 +9,7 @@ import {
   TrashIcon,
 } from "@repo/icons";
 import { Badge } from "@repo/ui/components/badge";
+import { Separator } from "@repo/ui/components/separator";
 import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
@@ -112,8 +113,13 @@ export const GuestbookEntry = memo(function GuestbookEntry({
             <TypographySmall className="font-semibold leading-none">
               {entry.user.name}
             </TypographySmall>
-            <TypographyMuted className="text-xs tabular-nums">
-              {entry.number !== undefined && <>#{entry.number} · </>}
+            <TypographyMuted className="flex items-center text-xs tabular-nums">
+              {entry.number !== undefined && (
+                <>
+                  <span>#{entry.number}</span>
+                  <Separator orientation="vertical" />
+                </>
+              )}
               <time dateTime={entry.createdAt} suppressHydrationWarning>
                 {timeAgo(entry.createdAt)}
               </time>

@@ -16,7 +16,6 @@ const HOME: Place = {
   longitude: 74.88,
 };
 
-/** Where to look: a city to geocode, coordinates, or neither for home. */
 export interface PlaceQuery {
   city?: string;
   country?: string;
@@ -31,7 +30,6 @@ export interface Weather {
   humidity: number;
   code: number;
   isDay: boolean;
-  /** Local wall-clock times, e.g. "2026-10-12T06:20". */
   sunrise: string;
   sunset: string;
 }
@@ -69,7 +67,6 @@ async function openMeteo<T>(url: string) {
   return res.json() as Promise<T>;
 }
 
-/** Open-Meteo's geocoder picks the most populous match, so `country` settles which Paris. */
 async function geocode(city: string, country?: string): Promise<Place> {
   const params = new URLSearchParams({
     name: city,
@@ -110,7 +107,6 @@ async function resolvePlace({ city, country, lat, lon, name }: PlaceQuery) {
   return name ? { ...HOME, name } : HOME;
 }
 
-/** Open-Meteo: free, keyless, and fine with a request per place every half hour. */
 export async function loadWeather(
   query: PlaceQuery & { units: "c" | "f" },
 ): Promise<LocalWeather> {
@@ -141,7 +137,6 @@ export async function loadWeather(
   };
 }
 
-/** WMO weather interpretation codes, as Open-Meteo documents them. */
 export function describeWeather(code: number, isDay = true) {
   if (code === 0) return isDay ? "Clear sky" : "Clear night";
   if (code <= 2) return "Partly cloudy";
@@ -155,16 +150,11 @@ export function describeWeather(code: number, isDay = true) {
   return "Thunderstorm";
 }
 
-/** Hour of a local wall-clock stamp like "2026-10-12T06:20", as a fraction. */
 export function hourOf(stamp: string) {
   const match = stamp.match(/T(\d{2}):(\d{2})/);
   return match ? Number(match[1]) + Number(match[2]) / 60 : null;
 }
 
-/**
- * "IST · GMT+5:30", "CEST · GMT+2", or just "GMT+9" where no locale has a
- * common abbreviation for the zone.
- */
 export function zoneLabel(timeZone: string, now: Date) {
   const name = (locale: string, style: "short" | "shortOffset") =>
     new Intl.DateTimeFormat(locale, { timeZone, timeZoneName: style })
@@ -174,5 +164,5 @@ export function zoneLabel(timeZone: string, now: Date) {
   const abbreviation = ["en-US", "en-GB", "en-IN", "en-AU"]
     .map((locale) => name(locale, "short"))
     .find((short) => short && !short.startsWith("GMT"));
-  return abbreviation ? `${abbreviation} · ${offset}` : offset;
+  return abbreviation ? [abbreviation, offset] : [offset];
 }

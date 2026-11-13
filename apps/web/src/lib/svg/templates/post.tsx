@@ -11,6 +11,7 @@ import {
   Pill,
   Title,
   truncate,
+  Parts,
 } from "@repo/svg-kit/primitives";
 import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/svg-kit/template";
 
@@ -21,9 +22,7 @@ function meta({ date, readingMinutes }: PostCard) {
   return [
     date && formatShortDate(date),
     readingMinutes && `${readingMinutes} min read`,
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  ];
 }
 
 const FIXTURE: PostCard = {
@@ -95,7 +94,9 @@ export const post = defineTemplate({
             gap: 16,
           }}
         >
-          <Label theme={theme}>{meta(data)}</Label>
+          <Label theme={theme}>
+            <Parts theme={theme} parts={meta(data)} />
+          </Label>
           <div style={{ display: "flex", gap: 8 }}>
             {data.tags.slice(0, MAX_TAGS).map((tag) => (
               <Pill key={tag} theme={theme}>

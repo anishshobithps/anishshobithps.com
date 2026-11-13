@@ -177,7 +177,8 @@ export const calendar = defineTemplate({
             },
             { label: "Longest streak", value: plural(longest, "day") },
             {
-              label: best ? `Best day · ${formatMonthDay(best.date)}` : "Best day",
+              label: "Best day",
+              detail: best ? formatMonthDay(best.date) : undefined,
               value: best ? best.count.toLocaleString("en-US") : "—",
             },
             { label: "Active days", value: active.toLocaleString("en-US") },

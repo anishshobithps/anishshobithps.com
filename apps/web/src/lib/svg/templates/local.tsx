@@ -13,6 +13,7 @@ import {
   Cell,
   Figure,
   Frame,
+  Parts,
   Grid,
   GUTTER,
   HAIRLINE,
@@ -178,7 +179,12 @@ export const local = defineTemplate({
         <CardHeader
           theme={theme}
           label="Right now"
-          meta={`${truncate(data.place, 36)} · ${zoneLabel(data.timeZone, now)}`}
+          meta={
+            <Parts
+              theme={theme}
+              parts={[truncate(data.place, 36), ...zoneLabel(data.timeZone, now)]}
+            />
+          }
         />
         <Cell
           theme={theme}

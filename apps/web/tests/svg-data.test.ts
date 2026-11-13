@@ -145,7 +145,6 @@ describe("parseContributionsPage", () => {
     `<td tabindex="0" data-ix="0" style="width: 10px" data-date="${date}" id="${id}" data-level="${level}" role="gridcell" class="ContributionCalendar-day"></td>`;
   const tip = (id: string, text: string) =>
     `<tool-tip id="tooltip-${id}" for="${id}" popover="manual" data-type="label" class="sr-only position-absolute">${text}</tool-tip>`;
-  // GitHub lays the grid out row by row (all Sundays, then all Mondays), not in date order.
   const html = [
     cell("2026-10-04", "day-0-0", 0),
     cell("2026-10-11", "day-0-1", 4),
@@ -187,8 +186,8 @@ describe("weather helpers", () => {
 
   it("names a zone by abbreviation where one exists, else by offset", () => {
     const summer = new Date(Date.UTC(2026, 6, 1, 12));
-    expect(zoneLabel("Asia/Kolkata", summer)).toBe("IST · GMT+5:30");
-    expect(zoneLabel("Europe/Berlin", summer)).toBe("CEST · GMT+2");
-    expect(zoneLabel("Asia/Tokyo", summer)).toBe("GMT+9");
+    expect(zoneLabel("Asia/Kolkata", summer)).toEqual(["IST", "GMT+5:30"]);
+    expect(zoneLabel("Europe/Berlin", summer)).toEqual(["CEST", "GMT+2"]);
+    expect(zoneLabel("Asia/Tokyo", summer)).toEqual(["GMT+9"]);
   });
 });

@@ -15,6 +15,7 @@ import {
   Label,
   Stats,
   STATS_HEIGHT,
+  Parts,
 } from "@repo/svg-kit/primitives";
 import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/svg-kit/template";
 
@@ -106,7 +107,9 @@ export const resume = defineTemplate({
 
     return (
       <Frame theme={theme} {...SIZE}>
-        <CardHeader theme={theme} label="Résumé" meta="LaTeX · Docker · GitHub Actions" />
+        <CardHeader theme={theme} label="Résumé" meta={
+            <Parts theme={theme} parts={["LaTeX", "Docker", "GitHub Actions"]} />
+          } />
         <Cell
           theme={theme}
           style={{ flexShrink: 0, height: BODY_HEIGHT, gap: 40, padding: GUTTER }}
@@ -139,7 +142,8 @@ export const resume = defineTemplate({
           items={[
             { label: "Builds", value: data.builds.toLocaleString("en-US") },
             {
-              label: first && latest ? `Downloads · ${first.tag}–${latest.tag}` : "Downloads",
+              label: "Downloads",
+              detail: first && latest ? `${first.tag}–${latest.tag}` : undefined,
               value: total.toLocaleString("en-US"),
               accent: true,
             },

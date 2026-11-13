@@ -5,6 +5,7 @@ import {
   Frame,
   GUTTER,
   Label,
+  Parts,
   truncate,
 } from "@repo/svg-kit/primitives";
 import { CARD_WIDTH, type Theme } from "@repo/svg-kit/template";
@@ -47,7 +48,7 @@ export function ErrorCard({
         }}
       >
         <Label theme={theme} tone="accent">
-          {`svg card · ${TITLES[kind]}`}
+          <Parts theme={theme} parts={["svg card", TITLES[kind]]} />
         </Label>
         <Body theme={theme} lines={1}>
           {truncate(message, 110)}
