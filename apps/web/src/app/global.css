@@ -416,6 +416,16 @@ html[data-theme-transition]::view-transition-old(root) {
 }
 html[data-theme-transition]::view-transition-new(root) {
   z-index: 9999;
+  animation: theme-reveal 450ms ease-in-out both;
+}
+
+@keyframes theme-reveal {
+  from {
+    clip-path: circle(0 at var(--theme-x) var(--theme-y));
+  }
+  to {
+    clip-path: circle(var(--theme-r) at var(--theme-x) var(--theme-y));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

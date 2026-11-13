@@ -8,7 +8,7 @@ import {
 } from "@/components/shared/doodles";
 import { Logo } from "@/components/shared/logo";
 import { NowPlaying } from "@/components/shared/now-playing";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { ThemeCycle } from "@/components/shared/theme-toggle";
 import { Button } from "@repo/ui/components/button";
 import {
   SectionLabel,
@@ -139,7 +139,7 @@ export function Footer() {
             </TypographyMuted>
             <div className="flex items-center gap-2 self-start sm:self-auto">
               <ThemeNudge />
-              <ThemeToggle aria-label="Toggle theme" />
+              <ThemeCycle className="size-8.5 rounded-full pointer-coarse:size-11" />
             </div>
           </div>
         </div>
