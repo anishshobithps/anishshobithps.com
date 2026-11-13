@@ -21,7 +21,7 @@ import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import { ArrowDownIcon, DownloadIcon } from "@repo/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
 import { LinkPreviewPanel } from "@/components/shared/link-preview-panel";
-import { SoundPanel } from "@/components/shared/sound-controls";
+import { SoundPanel } from "@/components/shared/sound-panel";
 import {
   CommentBubble,
   ReadingProgress,
