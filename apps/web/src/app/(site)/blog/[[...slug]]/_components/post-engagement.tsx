@@ -21,12 +21,11 @@ import { SectionLabel } from "@repo/ui/components/typography";
 import { nowISO } from "@repo/core/date";
 import { playCue } from "@repo/sounds/sound-player";
 import type { CueName } from "@repo/sounds/sound-cues";
-import { classifyError, typedToast } from "@/lib/toast";
+import { classifyError, toast, typedToast } from "@/lib/toast";
 import { useSiteAuth } from "@/components/shared/site-auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 
 function patchLike(
   list: CommentWithMeta[],

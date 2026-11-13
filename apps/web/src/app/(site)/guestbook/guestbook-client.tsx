@@ -23,7 +23,7 @@ import { Spinner } from "@repo/ui/components/spinner";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { nowISO } from "@repo/core/date";
 import { playCue } from "@repo/sounds/sound-player";
-import { toastError, typedToast } from "@/lib/toast";
+import { toast, toastError, typedToast } from "@/lib/toast";
 import { SignInTrigger, useSiteAuth } from "@/components/shared/site-auth";
 import {
   useInfiniteQuery,
@@ -33,7 +33,6 @@ import {
 } from "@tanstack/react-query";
 import { useVirtualList } from "@repo/virtual/use-virtual-list";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 
 const MAX_MESSAGE_LENGTH = 280;
 const GUESTBOOK_KEY = ["guestbook"] as const;

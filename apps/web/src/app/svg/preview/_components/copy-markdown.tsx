@@ -1,6 +1,6 @@
 "use client";
 
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { CopyIcon } from "@repo/icons";
 import { Button } from "@repo/ui/components/button";
 

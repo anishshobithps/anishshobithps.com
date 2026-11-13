@@ -15,7 +15,7 @@ import {
   LinkedinLogoIcon,
 } from "@repo/icons";
 import { playCue } from "@repo/sounds/sound-player";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import type { Route } from "next";
 
 function preventNavigation(event: React.MouseEvent) {

@@ -2,8 +2,7 @@
 
 import { QueryProvider as BaseQueryProvider } from "@repo/query/provider";
 import type { ReactNode } from "react";
-import { toast } from "sonner";
-import { toastError } from "@/lib/toast";
+import { toast, toastError } from "@/lib/toast";
 
 const notify = {
   success: (message: string) => {

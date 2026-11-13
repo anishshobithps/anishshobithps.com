@@ -3,7 +3,7 @@ import { CommandMenuHost } from "@/components/shared/command-menu-host";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { SoundEffects } from "@/components/shared/sound-effects";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
-import { Toaster } from "@repo/ui/components/sonner";
+import { ToasterHost } from "@/components/shared/toaster-host";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { siteConfig } from "@repo/site-config";
 import { ThemeProvider } from "next-themes";
@@ -110,7 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <SoundEffects />
               <CommandMenuHost />
               {children}
-              <Toaster />
+              <ToasterHost />
             </PhosphorProvider>
           </TooltipProvider>
         </ThemeProvider>
