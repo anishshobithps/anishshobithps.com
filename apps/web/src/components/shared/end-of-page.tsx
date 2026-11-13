@@ -6,6 +6,7 @@ import {
   TypographyMuted,
 } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
+import { prefersReducedMotion } from "@repo/ui/lib/motion-preference";
 import { Signpost } from "@/components/shared/doodles";
 import type { Route } from "next";
 import Link from "next/link";
@@ -14,7 +15,7 @@ import type { CSSProperties, ReactNode } from "react";
 
 const DESTINATIONS = [
   { href: "/guestbook", label: "Guestbook", note: "sign it!", accent: true },
-  { href: "/blogs", label: "Blogs", note: "rants & fixes" },
+  { href: "/blogs", label: "Blog", note: "rants & fixes" },
   { href: "/projects", label: "Projects", note: "shipped chaos" },
   { href: "/resume", label: "Resume", note: "the serious one" },
 ];
@@ -69,7 +70,7 @@ function PlankText({
 }
 
 function backToTop() {
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduce = prefersReducedMotion();
   window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   document.getElementById("main-content")?.focus({ preventScroll: true });
 }

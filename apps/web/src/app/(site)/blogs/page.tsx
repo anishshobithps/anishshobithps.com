@@ -20,7 +20,7 @@ import { Suspense } from "react";
 import { toISOString, toTimestamp } from "@repo/core/date";
 
 export const metadata: Metadata = buildMeta({
-  title: "Blogs",
+  title: "Blog",
   pageTitle: "Blog Posts & Writing",
   description:
     "Structured thoughts, semi-structured experiments, and occasional overengineering. Deep dives into engineering, design, and the things I build at 2am.",
@@ -60,13 +60,13 @@ export default function BlogPage() {
     <>
       <JsonLd
         type="webpage"
-        title="Blogs"
+        title="Blog"
         description="Structured thoughts, semi-structured experiments, and occasional overengineering."
         canonicalUrl={`${siteConfig.baseUrl}/blogs`}
       />
       <Section variant="hero" aria-label="Blog header">
         <HeroWithArt art={<PageArt name="blogs" data={shelf} />}>
-          <TypographyH1>Blogs</TypographyH1>
+          <TypographyH1>Blog</TypographyH1>
           <TypographyLead>
             Writing about what I built,{" "}
             <TypographyMark>what broke</TypographyMark>, and occasionally both at

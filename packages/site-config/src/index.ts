@@ -26,7 +26,7 @@ export const siteConfig = {
         "https://github.com/anishshobithps/resume/releases/latest/download/Anish_Shobith_P_S_Resume.pdf",
     nav: [
         { href: "/projects", label: "Projects" },
-        { href: "/blogs", label: "Blogs" },
+        { href: "/blogs", label: "Blog" },
         { href: "/resume", label: "Resume" },
         { href: "/guestbook", label: "Guestbook" },
     ] as const,
