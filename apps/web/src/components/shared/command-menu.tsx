@@ -17,13 +17,17 @@ import {
 import {
   BookOpenIcon,
   BriefcaseIcon,
+  CopyIcon,
   DownloadIcon,
+  EnvelopeIcon,
   FileTextIcon,
   GithubLogoIcon,
   HouseIcon,
   LinkedinLogoIcon,
   MoonIcon,
+  PauseIcon,
   PencilIcon,
+  PlayIcon,
   SpeakerHighIcon,
   SpeakerSlashIcon,
   SunIcon,
@@ -40,6 +44,9 @@ import { themeCue } from "@repo/sounds/sound-cues";
 import { disableSound, enableSound, playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
+import { useMotionSetting } from "@repo/ui/hooks/use-prefers-reduced-motion";
+import { copyEmail } from "@/lib/copy-email";
+import { setMotionOff } from "@repo/ui/lib/motion-preference";
 
 const NAV_ICONS = {
   "/projects": BriefcaseIcon,
@@ -63,6 +70,7 @@ export function CommandMenu() {
   const router = useRouter();
   const { setTheme } = useTheme();
   const { enabled: soundEnabled } = useSoundPreferences();
+  const motionSetting = useMotionSetting();
   const isMac = useIsMac();
   const themeShortcut = isMac ? "⇧⌘D" : "Ctrl+Shift+D";
 
@@ -107,11 +115,19 @@ export function CommandMenu() {
               </CommandItem>
             );
           })}
+          <CommandItem onSelect={() => runCommand(() => router.push("/#contact"))}>
+            <EnvelopeIcon aria-hidden="true" />
+            Contact
+          </CommandItem>
         </CommandGroup>
 
         <CommandSeparator />
 
         <CommandGroup heading="Actions">
+          <CommandItem onSelect={() => runCommand(() => void copyEmail())}>
+            <CopyIcon aria-hidden="true" />
+            Copy email address
+          </CommandItem>
           <CommandItem onSelect={() => runCommand(() => applyTheme("light"))}>
             <SunIcon aria-hidden="true" />
             Switch to light theme
@@ -151,6 +167,20 @@ export function CommandMenu() {
             {soundEnabled ? "Turn sound off" : "Turn sound on"}
             <CommandShortcut>SFX</CommandShortcut>
           </CommandItem>
+          {motionSetting !== "system" && (
+            <CommandItem
+              onSelect={() =>
+                runCommand(() => setMotionOff(motionSetting === "on"))
+              }
+            >
+              {motionSetting === "on" ? (
+                <PauseIcon aria-hidden="true" />
+              ) : (
+                <PlayIcon aria-hidden="true" />
+              )}
+              {motionSetting === "on" ? "Turn motion off" : "Turn motion on"}
+            </CommandItem>
+          )}
         </CommandGroup>
 
         <CommandSeparator />
