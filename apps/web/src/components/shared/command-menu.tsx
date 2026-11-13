@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -34,7 +34,6 @@ import {
   getCommandMenuServerSnapshot,
   setCommandMenuOpen,
   subscribeCommandMenu,
-  toggleCommandMenu,
 } from "@/lib/command-menu-store";
 import { siteConfig } from "@repo/site-config";
 import { themeCue } from "@repo/sounds/sound-cues";
@@ -55,14 +54,6 @@ const SOCIAL_ICONS = {
   x: XLogoIcon,
 } as const;
 
-const EDITABLE_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
-
-function isEditableTarget(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  if (EDITABLE_TAGS.has(target.tagName)) return true;
-  return target.isContentEditable;
-}
-
 export function CommandMenu() {
   const open = useSyncExternalStore(
     subscribeCommandMenu,
@@ -74,20 +65,6 @@ export function CommandMenu() {
   const { enabled: soundEnabled } = useSoundPreferences();
   const isMac = useIsMac();
   const themeShortcut = isMac ? "⇧⌘D" : "Ctrl+Shift+D";
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      const isCmdOrCtrlK =
-        event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey);
-      if (!isCmdOrCtrlK || isEditableTarget(event.target)) return;
-
-      event.preventDefault();
-      toggleCommandMenu();
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
 
   const runCommand = useCallback((action: () => void) => {
     setCommandMenuOpen(false);
