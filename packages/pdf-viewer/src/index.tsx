@@ -101,10 +101,11 @@ interface PdfViewerProps extends HTMLAttributes<HTMLDivElement> {
   downloadHref?: string;
   children?: ReactNode;
   loader?: ReactNode;
+  deferMs?: number;
 }
 
 export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
-  ({ file, downloadHref, children, loader, className, ...props }, ref) => {
+  ({ file, downloadHref, children, loader, deferMs = 0, className, ...props }, ref) => {
     const [doc, dispatch] = useReducer(docReducer, initialDocState);
     const { numPages, currentPage, docKey, loading } = doc;
     const [zoom, setZoom] = useState(1);
@@ -119,14 +120,22 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
     }, [docKey]);
 
     useEffect(() => {
-      import("react-pdf").then(({ pdfjs }) => {
-        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-          "pdfjs-dist/build/pdf.worker.min.mjs",
-          import.meta.url,
-        ).toString();
-        setWorkerReady(true);
-      });
-    }, []);
+      let cancelled = false;
+      const timer = window.setTimeout(() => {
+        import("react-pdf").then(({ pdfjs }) => {
+          if (cancelled) return;
+          pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+            "pdfjs-dist/build/pdf.worker.min.mjs",
+            import.meta.url,
+          ).toString();
+          setWorkerReady(true);
+        });
+      }, deferMs);
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timer);
+      };
+    }, [deferMs]);
 
     const onResize = useCallback<ResizeObserverCallback>((entries) => {
       const entry = entries[0];

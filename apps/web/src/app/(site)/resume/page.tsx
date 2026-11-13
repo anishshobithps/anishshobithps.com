@@ -69,6 +69,7 @@ export default function ResumePage() {
         <PdfViewer
           file="/api/resume"
           downloadHref="/api/resume/download"
+          deferMs={1500}
           aria-label={`Resume PDF: ${filename}`}
           loader={
             <div
