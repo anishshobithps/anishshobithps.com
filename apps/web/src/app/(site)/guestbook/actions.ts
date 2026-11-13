@@ -8,7 +8,7 @@ import { resolvePagination } from "@repo/core/pagination";
 import { safeQuery } from "@/lib/safe-query";
 import { sanitizeText, ValidationError, validateLength } from "@repo/core/text";
 import { auth } from "@clerk/nextjs/server";
-import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath, updateTag } from "next/cache";
 import { GUESTBOOK_PREVIEW_TAG } from "@/lib/guestbook-preview";
 
@@ -64,7 +64,12 @@ async function loadGuestbookEntries(
         { defaultLimit: GUESTBOOK_PAGE_SIZE, maxLimit: GUESTBOOK_MAX_PAGE_SIZE },
     );
 
-    const [rows, [totalRow]] = await Promise.all([
+    const likeCount = sql<number>`(select count(*)::int from ${guestbookLikes} where ${guestbookLikes.entryId} = ${guestbookEntries.id})`;
+    const likedByMe = userId
+        ? sql<boolean>`exists (select 1 from ${guestbookLikes} where ${guestbookLikes.entryId} = ${guestbookEntries.id} and ${guestbookLikes.clerkUserId} = ${userId})`
+        : sql<boolean>`false`;
+
+    const [rows, [totalRow]] = await db.batch([
         db
             .select({
                 id: guestbookEntries.id,
@@ -72,14 +77,13 @@ async function loadGuestbookEntries(
                 message: guestbookEntries.message,
                 isPinned: guestbookEntries.isPinned,
                 createdAt: guestbookEntries.createdAt,
-                likeCount: sql<number>`count(${guestbookLikes.entryId})::int`,
+                likeCount,
+                likedByMe,
                 number: sql<number>`(row_number() over (order by ${guestbookEntries.createdAt}, ${guestbookEntries.id}))::int`,
                 visit: sql<number>`(row_number() over (partition by ${guestbookEntries.clerkUserId} order by ${guestbookEntries.createdAt}, ${guestbookEntries.id}))::int`,
             })
             .from(guestbookEntries)
-            .leftJoin(guestbookLikes, eq(guestbookEntries.id, guestbookLikes.entryId))
             .where(eq(guestbookEntries.isDeleted, false))
-            .groupBy(guestbookEntries.id)
             .orderBy(desc(guestbookEntries.isPinned), desc(guestbookEntries.createdAt))
             .limit(page.limit)
             .offset(page.offset),
@@ -89,20 +93,6 @@ async function loadGuestbookEntries(
     const total = totalRow?.count ?? 0;
     if (rows.length === 0) return { entries: [], total, hasMore: false, viewerId: userId };
 
-    let likedEntryIds = new Set<number>();
-    if (userId) {
-        const likes = await db
-            .select({ entryId: guestbookLikes.entryId })
-            .from(guestbookLikes)
-            .where(
-                and(
-                    eq(guestbookLikes.clerkUserId, userId),
-                    inArray(guestbookLikes.entryId, rows.map((r) => r.id)),
-                ),
-            );
-        likedEntryIds = new Set(likes.map((l) => l.entryId));
-    }
-
     const userMap = await getClerkUserMap(rows.map((r) => r.clerkUserId));
 
     const entries: GuestbookEntryWithMeta[] = rows.map((row) => ({
@@ -111,7 +101,7 @@ async function loadGuestbookEntries(
         isPinned: row.isPinned,
         createdAt: row.createdAt.toISOString(),
         likeCount: row.likeCount,
-        likedByMe: likedEntryIds.has(row.id),
+        likedByMe: row.likedByMe,
         user: resolveUser(userMap, row.clerkUserId),
         number: row.number,
         visit: row.visit,
@@ -130,18 +120,22 @@ export async function submitGuestbookEntry(
         const message = sanitizeText(rawMessage);
         validateLength(message, { min: MIN_MESSAGE_LENGTH, max: MAX_MESSAGE_LENGTH, label: "Message" });
 
-        const [inserted] = await db
-            .insert(guestbookEntries)
-            .values({ clerkUserId: userId, message })
-            .returning({ id: guestbookEntries.id });
-
-        const [visits] = await db
-            .select({ count: count() })
-            .from(guestbookEntries)
-            .where(and(eq(guestbookEntries.clerkUserId, userId), eq(guestbookEntries.isDeleted, false)));
+        const result = await db.execute<{ id: number; visits: number }>(sql`
+            with inserted as (
+                insert into guestbook_entries (clerk_user_id, message)
+                values (${userId}, ${message})
+                returning id
+            )
+            select
+                id,
+                ((select count(*) from guestbook_entries where clerk_user_id = ${userId} and is_deleted = false) + 1)::int as visits
+            from inserted
+        `);
+        const inserted = result.rows[0];
+        if (!inserted) throw new Error("Insert returned no row");
 
         refreshPublicPreview();
-        return { success: true, id: inserted.id, visit: visits?.count ?? 1 };
+        return { success: true, id: inserted.id, visit: inserted.visits };
     } catch (err) {
         if (err instanceof ValidationError) return { success: false, error: err.message };
         console.error("[submitGuestbookEntry]", err);
@@ -156,25 +150,30 @@ export async function deleteGuestbookEntry(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "Not authenticated." };
 
-        const [entry] = await db
-            .select({ clerkUserId: guestbookEntries.clerkUserId })
-            .from(guestbookEntries)
-            .where(and(eq(guestbookEntries.id, entryId), eq(guestbookEntries.isDeleted, false)))
-            .limit(1);
-
-        if (!entry) return { success: false, error: "Entry not found." };
-
-        const isOwner = entry.clerkUserId === userId;
         const isSiteOwner = userId === ENV.OWNER_CLERK_USER_ID;
 
-        if (!isOwner && !isSiteOwner) {
-            return { success: false, error: "You don't have permission to delete this entry." };
-        }
-
-        await db
+        const updated = await db
             .update(guestbookEntries)
             .set({ isDeleted: true, updatedAt: new Date() })
-            .where(eq(guestbookEntries.id, entryId));
+            .where(
+                and(
+                    eq(guestbookEntries.id, entryId),
+                    eq(guestbookEntries.isDeleted, false),
+                    isSiteOwner ? undefined : eq(guestbookEntries.clerkUserId, userId),
+                ),
+            )
+            .returning({ id: guestbookEntries.id });
+
+        if (updated.length === 0) {
+            const [exists] = await db
+                .select({ id: guestbookEntries.id })
+                .from(guestbookEntries)
+                .where(and(eq(guestbookEntries.id, entryId), eq(guestbookEntries.isDeleted, false)))
+                .limit(1);
+            return exists
+                ? { success: false, error: "You don't have permission to delete this entry." }
+                : { success: false, error: "Entry not found." };
+        }
 
         refreshPublicPreview();
         return { success: true };
@@ -192,18 +191,13 @@ export async function togglePinEntry(
             return { success: false, error: "Not authorized." };
         }
 
-        const [entry] = await db
-            .select({ isPinned: guestbookEntries.isPinned })
-            .from(guestbookEntries)
-            .where(eq(guestbookEntries.id, entryId))
-            .limit(1);
-
-        if (!entry) return { success: false, error: "Entry not found." };
-
-        await db
+        const updated = await db
             .update(guestbookEntries)
-            .set({ isPinned: !entry.isPinned, updatedAt: new Date() })
-            .where(eq(guestbookEntries.id, entryId));
+            .set({ isPinned: sql`not ${guestbookEntries.isPinned}`, updatedAt: new Date() })
+            .where(eq(guestbookEntries.id, entryId))
+            .returning({ id: guestbookEntries.id });
+
+        if (updated.length === 0) return { success: false, error: "Entry not found." };
 
         refreshPublicPreview();
         return { success: true };
@@ -219,20 +213,14 @@ export async function toggleLike(
         const { userId } = await auth();
         if (!userId) return { success: false, error: "You must be signed in to like entries." };
 
-        const [existing] = await db
-            .select()
-            .from(guestbookLikes)
+        const removed = await db
+            .delete(guestbookLikes)
             .where(and(eq(guestbookLikes.entryId, entryId), eq(guestbookLikes.clerkUserId, userId)))
-            .limit(1);
+            .returning({ entryId: guestbookLikes.entryId });
 
-        if (existing) {
-            await db
-                .delete(guestbookLikes)
-                .where(and(eq(guestbookLikes.entryId, entryId), eq(guestbookLikes.clerkUserId, userId)));
-            return { success: true, liked: false };
-        }
+        if (removed.length > 0) return { success: true, liked: false };
 
-        await db.insert(guestbookLikes).values({ entryId, clerkUserId: userId });
+        await db.insert(guestbookLikes).values({ entryId, clerkUserId: userId }).onConflictDoNothing();
         return { success: true, liked: true };
     } catch {
         return { success: false, error: "Something went wrong." };
