@@ -1,119 +1,22 @@
 "use client";
 
 import { Section } from "@/components/layouts/page";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@repo/ui/components/collapsible";
 import { Button } from "@repo/ui/components/button";
-import { Text, TypographySmall } from "@repo/ui/components/typography";
+import { SectionLabel, Text } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
 import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
-import { TOCItem, TOCItems } from "fumadocs-ui/components/toc/clerk";
+import { TOCProvider, TOCScrollArea } from "fumadocs-ui/components/toc";
+import { LinkIcon } from "@repo/icons";
+import { clearReading, setReading, setTocOpen, useReading } from "@/lib/reading-store";
 import {
-  TOCProvider,
-  TOCScrollArea,
-  useTOCItems,
-} from "fumadocs-ui/components/toc";
-import { CaretDownIcon, LinkIcon, TextAlignLeftIcon } from "@repo/icons";
-import {
-  type ComponentProps,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
-
-function TOCList() {
-  const items = useTOCItems();
-  if (items.length === 0) return null;
-  return (
-    <TOCItems className="[--color-fd-primary:var(--brand)]">
-      {items.map((item) => (
-        <TOCItem
-          key={item.url}
-          item={item}
-          className="data-[active=true]:font-medium data-[active=true]:text-(--brand-text)!"
-        />
-      ))}
-    </TOCItems>
-  );
-}
-
-function ProgressCircle({
-  value,
-  strokeWidth = 2,
-  size = 24,
-  min = 0,
-  max = 100,
-  className,
-  ...props
-}: ComponentProps<"svg"> & {
-  value: number;
-  strokeWidth?: number;
-  size?: number;
-  min?: number;
-  max?: number;
-}) {
-  const normalized = clamp(value, min, max);
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const progress = (normalized / max) * circumference;
-  const angle = -Math.PI / 2 + (normalized / max) * 2 * Math.PI;
-  const tipX = size / 2 + radius * Math.cos(angle);
-  const tipY = size / 2 + radius * Math.sin(angle);
-
-  const cp = {
-    cx: size / 2,
-    cy: size / 2,
-    r: radius,
-    fill: "none",
-    strokeWidth,
-  };
-
-  return (
-    <svg
-      viewBox={`0 0 ${size} ${size}`}
-      width={size}
-      height={size}
-      aria-valuenow={normalized}
-      aria-valuemin={min}
-      aria-valuemax={max}
-      className={className}
-      {...props}
-      role="progressbar"
-      aria-label={`Reading progress: ${Math.round(normalized)}%`}
-    >
-      <circle {...cp} className="stroke-current/20" />
-      <circle
-        {...cp}
-        stroke="currentColor"
-        strokeDasharray={circumference}
-        strokeDashoffset={circumference - progress}
-        strokeLinecap="round"
-        transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        className="transition-[stroke-dashoffset] duration-300 ease-out"
-      />
-      {normalized > 0 && normalized < max && (
-        <circle
-          cx={tipX}
-          cy={tipY}
-          r={strokeWidth * 0.85}
-          fill="currentColor"
-          className="transition-[cx,cy] duration-300 ease-out"
-        />
-      )}
-    </svg>
-  );
-}
+  currentSection,
+  HalftoneMeter,
+  PressList,
+  useReadingProgress,
+  useTOCState,
+} from "@/components/layouts/blog-toc";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 function DrawerTab({
   selected,
@@ -138,16 +41,37 @@ function DrawerTab({
   );
 }
 
+function ReadingPublisher({ progress, engaged }: { progress: number; engaged: boolean }) {
+  const state = useTOCState();
+  const section = currentSection(state);
+  const item = section.index === -1 ? undefined : state.items[section.index];
+
+  useEffect(() => {
+    const anchor = item ? item.url.slice(1) : "";
+    const heading =
+      typeof item?.title === "string"
+        ? item.title
+        : (document.getElementById(anchor)?.textContent ?? "");
+    setReading({
+      engaged,
+      progress,
+      section: section.number,
+      sections: state.sections,
+      heading,
+      anchor,
+    });
+  }, [engaged, progress, section.number, state.sections, item]);
+
+  useEffect(() => () => clearReading(), []);
+
+  return null;
+}
+
 function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: number }) {
-  const items = useTOCItems();
+  const state = useTOCState();
   const active = useActiveAnchor();
-  const [open, setOpen] = useState(false);
+  const { tocOpen: open } = useReading();
   const [tab, setTab] = useState<"contents" | "links">("contents");
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -157,7 +81,7 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
     const container = scrollContainerRef.current;
     if (!container) return;
     const onLinkClick = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest("a")) setOpen(false);
+      if ((e.target as HTMLElement).closest("a")) setTocOpen(false);
     };
     container.addEventListener("click", onLinkClick);
     return () => container.removeEventListener("click", onLinkClick);
@@ -178,10 +102,12 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
   useEffect(() => {
     if (!open) return;
     const onPointerDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Element;
+      if (rootRef.current?.contains(target) || target.closest("[data-reading-trigger]")) return;
+      setTocOpen(false);
     };
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") setTocOpen(false);
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -191,139 +117,52 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
     };
   }, [open]);
 
-  const selected = useMemo(
-    () => items.findIndex((item) => active === item.url.slice(1)),
-    [items, active],
-  );
+  useEffect(() => () => setTocOpen(false), []);
 
-  if (items.length === 0) return null;
+  if (state.items.length === 0) return null;
 
   return (
     <>
       {open && (
         <div
-          className="fixed inset-0 z-40 xl:hidden bg-background/60 pointer-events-none animate-in fade-in-0 duration-200"
+          className="pointer-events-none fixed inset-0 z-40 bg-background/60 animate-in fade-in-0 duration-200 xl:hidden"
           aria-hidden
         />
       )}
-      <div
-        ref={rootRef}
-        className="sticky top-14 z-40 -mt-px border border-line bg-background xl:hidden"
-      >
-        <Collapsible
-          open={open}
-          onOpenChange={(next) => {
-            setOpen(next);
-            if (next) setTab("contents");
-          }}
+      <div ref={rootRef} className="sticky top-14 z-40 h-0 xl:hidden">
+        <div
+          id="post-contents"
+          className={cn(
+            "absolute -inset-x-px top-px overflow-hidden border border-t-0 border-line bg-background shadow-lg transition duration-200 ease-out motion-reduce:transition-none",
+            open
+              ? "visible translate-y-0 opacity-100"
+              : "pointer-events-none invisible -translate-y-1 opacity-0",
+          )}
         >
-          <header
-            className={cn(
-              "transition-shadow",
-              open && "shadow-lg",
-            )}
-          >
-            <div className="flex items-stretch">
-            <CollapsibleTrigger
-              className="flex min-w-0 flex-1 h-10 items-center text-sm gap-2.5 px-gutter cursor-pointer"
-            >
-              <ProgressCircle
-                value={(selected + 1) / Math.max(1, items.length)}
-                max={1}
-                className={cn(
-                  "size-4 text-muted-foreground transition-colors",
-                  selected !== -1 && "text-(--brand)",
-                )}
-              />
-              <span className="sr-only">Table of contents, </span>
-              <span
-                className={cn(
-                  "flex-1 truncate text-start",
-                  selected !== -1 ? "text-foreground" : "text-muted-foreground",
-                )}
-              >
-                {selected !== -1 ? items[selected]?.title : "On this page"}
-              </span>
-              <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-                {selected !== -1 ? selected + 1 : 0}
-                <span className="mx-0.5" aria-hidden="true">/</span>
-                <span className="sr-only"> of </span>
-                {items.length}
-              </span>
-              <CaretDownIcon
-                aria-hidden="true"
-                className={cn(
-                  "size-4 shrink-0 text-muted-foreground transition-transform",
-                  open && "rotate-180",
-                )}
-              />
-            </CollapsibleTrigger>
+          <div className="px-gutter py-3" ref={scrollContainerRef}>
             {rail && (
-              <div className="flex shrink-0 border-l border-line">
-                <Button
-                  type="button"
-                  variant={open && tab === "links" ? "ghost" : "muted"}
-                  size="lg"
-                  aria-expanded={open && tab === "links"}
-                  aria-label={`Links from this post, ${railCount}`}
-                  onClick={() => {
-                    if (open && tab === "links") {
-                      setOpen(false);
-                      return;
-                    }
-                    setTab("links");
-                    setOpen(true);
-                  }}
-                >
-                  <LinkIcon aria-hidden="true" />
-                  {railCount}
-                </Button>
+              <div className="mb-2 flex gap-1 rounded-md bg-muted p-0.5">
+                <DrawerTab selected={tab === "contents"} onClick={() => setTab("contents")}>
+                  Contents
+                </DrawerTab>
+                <DrawerTab selected={tab === "links"} onClick={() => setTab("links")}>
+                  Links {railCount}
+                </DrawerTab>
               </div>
             )}
-            </div>
-
-            <CollapsibleContent
-              className={cn(
-                "overflow-hidden bg-background",
-                mounted &&
-                  "data-[state=open]:animate-fd-collapsible-down data-[state=closed]:animate-fd-collapsible-up",
-              )}
-            >
-              <div
-                className="px-gutter pb-3"
-                ref={scrollContainerRef}
-              >
-                {rail && (
-                  <div className="mb-2 flex gap-1 rounded-md bg-muted p-0.5">
-                    <DrawerTab
-                      selected={tab === "contents"}
-                      onClick={() => setTab("contents")}
-                    >
-                      Contents
-                    </DrawerTab>
-                    <DrawerTab selected={tab === "links"} onClick={() => setTab("links")}>
-                      Links {railCount}
-                    </DrawerTab>
-                  </div>
-                )}
-                {tab === "links" && rail ? (
-                  <div className="-mx-2.5 max-h-[50svh] overflow-y-auto overscroll-contain py-1">
-                    {rail}
-                  </div>
-                ) : (
-                  <TOCScrollArea
-                    ref={viewportRef}
-                    className="overscroll-contain max-h-[50svh]"
-                  >
-                    <ScrollProvider containerRef={disabledAutoScrollRef}>
-                      <TOCList />
-                    </ScrollProvider>
-                  </TOCScrollArea>
-                )}
+            {tab === "links" && rail ? (
+              <div className="-mx-2.5 max-h-[60svh] overflow-y-auto overscroll-contain py-1">
+                {rail}
               </div>
-            </CollapsibleContent>
-          </header>
-        </Collapsible>
+            ) : (
+              <TOCScrollArea ref={viewportRef} className="max-h-[60svh] overscroll-contain">
+                <ScrollProvider containerRef={disabledAutoScrollRef}>
+                  <PressList />
+                </ScrollProvider>
+              </TOCScrollArea>
+            )}
+          </div>
+        </div>
       </div>
     </>
   );
@@ -337,23 +176,33 @@ interface BlogBodyProps {
 }
 
 export function BlogBody({ toc, rail, railCount, children }: BlogBodyProps) {
+  const articleRef = useRef<HTMLElement>(null);
+  const { progress, engaged } = useReadingProgress(articleRef);
   return (
     <TOCProvider toc={toc}>
+      <ReadingPublisher progress={progress} engaged={engaged} />
       <MobileTOC rail={rail} railCount={railCount} />
 
       <Section variant="article">
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_240px] gap-12">
-          <article className="prose min-w-0">{children}</article>
+          <article ref={articleRef} className="prose min-w-0">
+            {children}
+          </article>
           <div className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
             <div className="pl-8 sticky top-20 flex max-h-[calc(100vh-6rem)] flex-col gap-6">
               <nav aria-label="Table of contents" className="flex min-h-0 flex-col">
-                <TypographySmall className="text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <TextAlignLeftIcon className="size-3.5 shrink-0" aria-hidden="true" />
-                  On this page
-                </TypographySmall>
+                <div className="mb-4 flex flex-col gap-2.5">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <SectionLabel pixel>On this page</SectionLabel>
+                    <SectionLabel pixel accent>
+                      {`${Math.round(progress * 100)}%`}
+                    </SectionLabel>
+                  </div>
+                  <HalftoneMeter progress={progress} />
+                </div>
 
                 <TOCScrollArea className="**:data-[slot=scroll-area-viewport]:scroll-fade-effect-y">
-                  <TOCList />
+                  <PressList />
                 </TOCScrollArea>
               </nav>
               {rail && (
