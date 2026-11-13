@@ -47,18 +47,12 @@ export async function POST(req: Request) {
 
     if (event.type === "user.deleted" && event.data.id) {
         const userId = event.data.id;
-        await db
-            .delete(guestbookLikes)
-            .where(eq(guestbookLikes.clerkUserId, userId));
-        await db
-            .delete(guestbookEntries)
-            .where(eq(guestbookEntries.clerkUserId, userId));
-        await db
-            .delete(blogCommentLikes)
-            .where(eq(blogCommentLikes.clerkUserId, userId));
-        await db
-            .delete(blogComments)
-            .where(eq(blogComments.clerkUserId, userId));
+        await db.batch([
+            db.delete(guestbookLikes).where(eq(guestbookLikes.clerkUserId, userId)),
+            db.delete(guestbookEntries).where(eq(guestbookEntries.clerkUserId, userId)),
+            db.delete(blogCommentLikes).where(eq(blogCommentLikes.clerkUserId, userId)),
+            db.delete(blogComments).where(eq(blogComments.clerkUserId, userId)),
+        ]);
     }
 
     return new Response(null, { status: 200 });
