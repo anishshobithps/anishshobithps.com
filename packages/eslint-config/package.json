@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@shadcn/lint": "^0.2.3",
-    "eslint-config-next": "16.4.3"
+    "eslint-config-next": "16.4.6"
   },
   "peerDependencies": {
     "eslint": "catalog:"

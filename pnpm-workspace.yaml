@@ -2,7 +2,7 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  next: ^16.4.3
+  next: ^16.4.6
   react: ^19.3.1
   react-dom: ^19.3.1
   typescript: ^7.0.2
@@ -28,7 +28,7 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 overrides:
-  '@next/env': 'npm:@varlock/nextjs-integration'
+  '@next/env': 'npm:@varlock/nextjs-integration@2.0.0'
   '@esbuild-kit/esm-loader': 'npm:tsx@^4'
   postcss@<8.5.10: ^8.5.10
   fast-uri@<3.1.9: ^3.1.9
