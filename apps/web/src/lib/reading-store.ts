@@ -60,3 +60,11 @@ export function useReading() {
     () => idle,
   );
 }
+
+export function useReadingSelector<T>(select: (reading: ReadingState) => T) {
+  return useSyncExternalStore(
+    subscribe,
+    () => select(state),
+    () => select(idle),
+  );
+}

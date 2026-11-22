@@ -8,7 +8,7 @@ import type { TOCItemType } from "fumadocs-core/toc";
 import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
 import { TOCProvider, TOCScrollArea } from "fumadocs-ui/components/toc";
 import { LinkIcon } from "@repo/icons";
-import { clearReading, setReading, setTocOpen, useReading } from "@/lib/reading-store";
+import { clearReading, setReading, setTocOpen, useReadingSelector } from "@/lib/reading-store";
 import {
   currentSection,
   HalftoneMeter,
@@ -16,7 +16,7 @@ import {
   useReadingProgress,
   useTOCState,
 } from "@/components/layouts/blog-toc";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, type RefObject, useEffect, useRef, useState } from "react";
 
 function DrawerTab({
   selected,
@@ -70,7 +70,7 @@ function ReadingPublisher({ progress, engaged }: { progress: number; engaged: bo
 function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: number }) {
   const state = useTOCState();
   const active = useActiveAnchor();
-  const { tocOpen: open } = useReading();
+  const open = useReadingSelector((state) => state.tocOpen);
   const [tab, setTab] = useState<"contents" | "links">("contents");
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -168,6 +168,22 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
   );
 }
 
+function ReadingMeter({ target }: { target: RefObject<HTMLElement | null> }) {
+  const { progress, engaged } = useReadingProgress(target);
+  return (
+    <div className="mb-4 flex flex-col gap-2.5">
+      <ReadingPublisher progress={progress} engaged={engaged} />
+      <div className="flex items-baseline justify-between gap-2">
+        <SectionLabel pixel>On this page</SectionLabel>
+        <SectionLabel pixel accent>
+          {`${Math.round(progress * 100)}%`}
+        </SectionLabel>
+      </div>
+      <HalftoneMeter progress={progress} />
+    </div>
+  );
+}
+
 interface BlogBodyProps {
   toc: TOCItemType[];
   rail?: ReactNode;
@@ -177,10 +193,8 @@ interface BlogBodyProps {
 
 export function BlogBody({ toc, rail, railCount, children }: BlogBodyProps) {
   const articleRef = useRef<HTMLElement>(null);
-  const { progress, engaged } = useReadingProgress(articleRef);
   return (
     <TOCProvider toc={toc}>
-      <ReadingPublisher progress={progress} engaged={engaged} />
       <MobileTOC rail={rail} railCount={railCount} />
 
       <Section variant="article">
@@ -191,15 +205,7 @@ export function BlogBody({ toc, rail, railCount, children }: BlogBodyProps) {
           <div className="hidden xl:block relative border-l -mt-8 xl:-mt-12 pt-8 xl:pt-12 -mb-8 xl:-mb-12 pb-8 xl:pb-12">
             <div className="pl-8 sticky top-20 flex max-h-[calc(100vh-6rem)] flex-col gap-6">
               <nav aria-label="Table of contents" className="flex min-h-0 flex-col">
-                <div className="mb-4 flex flex-col gap-2.5">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <SectionLabel pixel>On this page</SectionLabel>
-                    <SectionLabel pixel accent>
-                      {`${Math.round(progress * 100)}%`}
-                    </SectionLabel>
-                  </div>
-                  <HalftoneMeter progress={progress} />
-                </div>
+                <ReadingMeter target={articleRef} />
 
                 <TOCScrollArea className="**:data-[slot=scroll-area-viewport]:scroll-fade-effect-y">
                   <PressList />

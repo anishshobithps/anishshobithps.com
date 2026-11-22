@@ -31,7 +31,8 @@ export function useReadingProgress(target: RefObject<HTMLElement | null>) {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const span = rect.height - window.innerHeight;
-      const progress = span <= 0 ? (rect.top <= 0 ? 1 : 0) : clamp(-rect.top / span);
+      const raw = span <= 0 ? (rect.top <= 0 ? 1 : 0) : clamp(-rect.top / span);
+      const progress = Math.round(raw * 100) / 100;
       const engaged = rect.top < 72 && rect.bottom > 72;
       setReading((prev) =>
         prev.progress === progress && prev.engaged === engaged ? prev : { progress, engaged },
@@ -164,6 +165,7 @@ export function PressList({ className }: { className?: string }) {
     const svg = svgRef.current;
     if (!list || !svg) return;
     const place = () => {
+      if (list.getClientRects().length === 0) return;
       const d = railPath(list, nested);
       svg.setAttribute("height", String(list.scrollHeight));
       for (const path of svg.querySelectorAll("path")) path.setAttribute("d", d);

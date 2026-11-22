@@ -18,7 +18,7 @@ import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
-import { type ReadingState, setTocOpen, useReading } from "@/lib/reading-store";
+import { setTocOpen, useReading, useReadingSelector } from "@/lib/reading-store";
 import { playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import {
@@ -60,7 +60,8 @@ function useWide() {
   );
 }
 
-function ReadingBar({ reading }: { reading: ReadingState }) {
+function ReadingBar() {
+  const reading = useReading();
   return (
     <Button
       type="button"
@@ -129,9 +130,9 @@ export function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
-  const reading = useReading();
+  const following = useReadingSelector((state) => state.engaged && state.sections > 0);
   const wide = useWide();
-  const engaged = !wide && reading.engaged && reading.sections > 0;
+  const engaged = !wide && following;
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -203,7 +204,7 @@ export function Header() {
 
           {engaged && (
             <div className="mx-2 flex min-w-0 flex-1 animate-in fade-in-0 slide-in-from-bottom-1 duration-300 motion-reduce:animate-none md:mx-6">
-              <ReadingBar reading={reading} />
+              <ReadingBar />
             </div>
           )}
 
