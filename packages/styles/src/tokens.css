@@ -130,8 +130,9 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
-  --scrollbar-thumb: oklch(0.65 0 0 / 0.35);
-  --scrollbar-border: oklch(1 0 0);
+  --scrollbar-thumb: oklch(0.62 0 0);
+  --scrollbar-rail-thumb: var(--brand);
+  --scrollbar-rail-thumb-hover: var(--brand-text);
   --hatch-line: color-mix(in oklab, var(--line) 40%, transparent);
   --surface-hover: color-mix(in oklab, var(--muted) 30%, var(--background));
   --surface-pinned: color-mix(in oklab, var(--primary) 3%, var(--background));
@@ -182,8 +183,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
-  --scrollbar-thumb: oklch(0.35 0.005 285.823);
-  --scrollbar-border: oklch(0.141 0.005 285.823);
+  --scrollbar-thumb: oklch(0.55 0.005 285.823);
+  --scrollbar-rail-thumb: var(--brand-text);
+  --scrollbar-rail-thumb-hover: var(--selection-bg);
   --glow: oklch(0.72 0.15 155 / 0.16);
   --tap-highlight: oklch(0.72 0.15 155 / 0.2);
   --color-available: oklch(0.78 0.19 142);

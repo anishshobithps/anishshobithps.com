@@ -448,23 +448,58 @@ html[data-motion="reduce"]::view-transition-new(*) {
   animation: none !important;
 }
 
-*::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
+@layer base {
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) transparent;
+    }
 
-*::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 6px;
-  border: 3px solid var(--scrollbar-border);
-}
+    html {
+      scrollbar-color: var(--scrollbar-rail-thumb) transparent;
+    }
+  }
 
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
+  @media (forced-colors: none) {
+    *::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
 
-*::-webkit-scrollbar-corner {
-  background: transparent;
+    *::-webkit-scrollbar-track,
+    *::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: 9999px;
+      background: var(--scrollbar-thumb) padding-box;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background-color: var(--muted-foreground);
+    }
+
+    body::-webkit-scrollbar {
+      width: 14px;
+    }
+
+    body::-webkit-scrollbar-track {
+      @apply hatch;
+      border-inline-start: 1px solid var(--line);
+    }
+
+    body::-webkit-scrollbar-thumb {
+      border-width: 3px;
+      background-color: var(--scrollbar-rail-thumb);
+    }
+
+    body::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:active {
+      background-color: var(--scrollbar-rail-thumb-hover);
+    }
+  }
 }
 
 ::selection {

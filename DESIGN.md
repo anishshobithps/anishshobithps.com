@@ -278,6 +278,9 @@ A pill in Register Green at 8% with a 30% border and Register Green Text label. 
 ### Doodles and Nudges
 Pixel-font notes with hand-drawn Register Green arrows that draw themselves in, pointing at real things (the photo, the latest post). Small flat critters walk along the hatched bands between sections. They are always decorative and `aria-hidden`.
 
+### Scrollbars
+The page scrollbar is a rail: a 14px track printed with the section-band hatch behind a 1px hairline, and a Register Green pill marking where the reader is (Register Green Night in dark theme). The pill darkens to Register Green Text on hover in light theme and lifts to Highlighter in dark. Inner scrollers get a thin neutral grey pill on a clear track. Firefox gets the same colours through `scrollbar-color` without the hatch, and forced-colors mode keeps the system scrollbar.
+
 ### Quick Menu
 A floating, draggable button fronted by the logo mascot. It opens a panel with context tools: reading progress and a jump to comments on posts, download on the resume, sign-in on the blog and guestbook, and sound settings. It remembers where it was dropped.
 
