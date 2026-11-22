@@ -47,44 +47,43 @@ export function PhotoCallout() {
 export function IceCreamNote() {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <svg
-        viewBox="0 0 16 24"
-        aria-hidden="true"
-        className="h-6 w-4 overflow-visible"
-      >
-        <path
-          d="M3.5 11 L8 22.5 L12.5 11 Z"
-          className="fill-(--brand)/10 stroke-muted-foreground"
-          strokeWidth="1"
-          strokeLinejoin="round"
+      <span aria-hidden="true" className="relative shrink-0">
+        <svg
+          viewBox="0 0 16 24"
+          className="block h-6 w-4 overflow-visible"
+        >
+          <path
+            d="M3.5 11 L8 22.5 L12.5 11 Z"
+            className="fill-(--brand)/10 stroke-muted-foreground"
+            strokeWidth="1"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M5.2 13 L10.6 18 M10.8 13 L5.4 18"
+            className="stroke-muted-foreground/60"
+            strokeWidth="0.7"
+          />
+          <circle
+            cx="8"
+            cy="7.5"
+            r="5"
+            className="fill-(--brand)/35 stroke-(--brand)"
+            strokeWidth="1.1"
+          />
+          <path
+            d="M10.6 11.3 q0.9 2.2 0 3.2 q-0.8 -0.6 0 -3.2"
+            className="fill-(--brand)/35 stroke-(--brand)"
+            strokeWidth="0.8"
+          />
+          <circle cx="6" cy="6" r="0.7" className="fill-foreground/70" />
+          <circle cx="9.6" cy="5" r="0.7" className="fill-foreground/70" />
+          <circle cx="8.6" cy="9" r="0.7" className="fill-foreground/70" />
+        </svg>
+        <span
+          className="absolute rounded-full bg-(--brand) animate-doodle-drip"
+          style={{ left: 9.85, top: 14.85, width: 1.5, height: 1.5 }}
         />
-        <path
-          d="M5.2 13 L10.6 18 M10.8 13 L5.4 18"
-          className="stroke-muted-foreground/60"
-          strokeWidth="0.7"
-        />
-        <circle
-          cx="8"
-          cy="7.5"
-          r="5"
-          className="fill-(--brand)/35 stroke-(--brand)"
-          strokeWidth="1.1"
-        />
-        <path
-          d="M10.6 11.3 q0.9 2.2 0 3.2 q-0.8 -0.6 0 -3.2"
-          className="fill-(--brand)/35 stroke-(--brand)"
-          strokeWidth="0.8"
-        />
-        <circle cx="6" cy="6" r="0.7" className="fill-foreground/70" />
-        <circle cx="9.6" cy="5" r="0.7" className="fill-foreground/70" />
-        <circle cx="8.6" cy="9" r="0.7" className="fill-foreground/70" />
-        <circle
-          cx="10.6"
-          cy="15.6"
-          r="0.75"
-          className="[transform-box:fill-box] animate-doodle-drip fill-(--brand)"
-        />
-      </svg>
+      </span>
       <SectionLabel pixel asChild aria-hidden={undefined}>
         <span>runs on ice cream</span>
       </SectionLabel>

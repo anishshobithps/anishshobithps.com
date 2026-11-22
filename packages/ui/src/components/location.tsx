@@ -12,19 +12,21 @@ function SkyIcon({ hour }: { hour: number | null }) {
 
   if (hour >= 6 && hour < 18) {
     return (
-      <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0">
-        <g className="origin-center [transform-box:fill-box] motion-safe:animate-[spin_14s_linear_infinite]">
-          {Array.from({ length: 8 }, (_, i) => (
-            <path
-              key={i}
-              d="M8 1.2 V2.8"
-              strokeWidth="1.3"
-              strokeLinecap="round"
-              transform={`rotate(${i * 45} 8 8)`}
-              className="stroke-(--color-sun)"
-            />
-          ))}
-        </g>
+      <svg
+        viewBox="0 0 16 16"
+        aria-hidden="true"
+        className="size-4 shrink-0 motion-safe:animate-[spin_14s_linear_infinite]"
+      >
+        {Array.from({ length: 8 }, (_, i) => (
+          <path
+            key={i}
+            d="M8 1.2 V2.8"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            transform={`rotate(${i * 45} 8 8)`}
+            className="stroke-(--color-sun)"
+          />
+        ))}
         <circle cx="8" cy="8" r="3.2" className="fill-(--color-sun)" />
       </svg>
     );

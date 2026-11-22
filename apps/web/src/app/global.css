@@ -370,6 +370,12 @@ html[data-motion="reduce"] {
   }
 }
 
+[data-offscreen],
+[data-offscreen]::before,
+[data-offscreen]::after {
+  animation-play-state: paused !important;
+}
+
 @keyframes guestbook-marquee {
   to {
     transform: translateX(-50%);
@@ -476,7 +482,9 @@ html[data-motion="reduce"]::view-transition-new(*) {
   --animate-iso-twinkle: iso-twinkle 3s ease-in-out infinite;
   --animate-iso-ripple: iso-ripple 1.8s ease-out infinite;
   --animate-nudge-draw: nudge-draw 1.2s cubic-bezier(0.6, 0, 0.2, 1) var(--nudge-delay, 0ms) forwards;
-  --animate-nudge-draw-loop: nudge-draw-loop 3.2s ease-in-out infinite;
+  --animate-nudge-wipe: nudge-wipe 1.2s cubic-bezier(0.6, 0, 0.2, 1) var(--nudge-delay, 0ms) forwards;
+  --animate-nudge-wipe-loop: nudge-wipe-loop 3.2s ease-in-out infinite;
+  --animate-nudge-unwipe-loop: nudge-unwipe-loop 3.2s ease-in-out infinite;
   --animate-nudge-pop: nudge-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) var(--nudge-delay, 0ms) forwards;
   --animate-nudge-pop-loop: nudge-pop-loop 3.2s ease-in-out infinite;
   --animate-nudge-type: nudge-type 0.45s ease-out var(--nudge-delay, 0ms) forwards;
@@ -723,21 +731,38 @@ html[data-motion="reduce"]::view-transition-new(*) {
     }
   }
 
-  @keyframes nudge-draw-loop {
+  @keyframes nudge-wipe {
+    to {
+      translate: 0 0;
+    }
+  }
+
+  @keyframes nudge-wipe-loop {
     0% {
-      stroke-dashoffset: 1;
+      translate: -100% 0;
       opacity: 1;
     }
 
     45%,
     85% {
-      stroke-dashoffset: 0;
+      translate: 0 0;
       opacity: 1;
     }
 
     100% {
-      stroke-dashoffset: 0;
+      translate: 0 0;
       opacity: 0;
+    }
+  }
+
+  @keyframes nudge-unwipe-loop {
+    0% {
+      translate: 100% 0;
+    }
+
+    45%,
+    100% {
+      translate: 0 0;
     }
   }
 
