@@ -18,13 +18,10 @@ const toastCues: Record<ToastType, CueName> = {
 
 const hostListeners = new Set<() => void>();
 let hostRequested = false;
-let markReady: () => void = () => {};
-let ready: Promise<void> | null = null;
+let ready: PromiseWithResolvers<void> | null = null;
 
-function toasterReady(): Promise<void> {
-    ready ??= new Promise<void>((resolve) => {
-        markReady = resolve;
-    });
+function toasterReady(): PromiseWithResolvers<void> {
+    ready ??= Promise.withResolvers<void>();
     return ready;
 }
 
@@ -46,15 +43,17 @@ export function requestToasterHost(): void {
 }
 
 export function notifyToasterReady(): void {
-    void toasterReady();
-    markReady();
+    toasterReady().resolve();
 }
 
 async function show(
     run: (sonner: typeof import("sonner")) => unknown,
 ): Promise<void> {
     requestToasterHost();
-    const [sonner] = await Promise.all([import("sonner"), toasterReady()]);
+    const [sonner] = await Promise.all([
+        import("sonner"),
+        toasterReady().promise,
+    ]);
     run(sonner);
 }
 
