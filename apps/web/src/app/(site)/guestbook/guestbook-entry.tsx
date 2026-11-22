@@ -113,7 +113,10 @@ export const GuestbookEntry = memo(function GuestbookEntry({
             <TypographySmall className="font-semibold leading-none">
               {entry.user.name}
             </TypographySmall>
-            <TypographyMuted className="flex items-center text-xs tabular-nums">
+            <TypographyMuted
+              as="div"
+              className="flex items-center text-xs tabular-nums"
+            >
               {entry.number !== undefined && (
                 <>
                   <span>#{entry.number}</span>
