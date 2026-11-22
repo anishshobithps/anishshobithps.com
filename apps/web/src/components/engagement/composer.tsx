@@ -5,10 +5,15 @@ import { Spinner } from "@repo/ui/components/spinner";
 import { Button } from "@repo/ui/components/button";
 import { Textarea } from "@repo/ui/components/textarea";
 import { TypographyMuted } from "@repo/ui/components/typography";
-import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@repo/sounds/sound-player";
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 type ComposerSubmitResult = void | boolean;
 
@@ -54,7 +59,6 @@ export function Composer({
   const [emptyError, setEmptyError] = useState(false);
   const errorId = useId();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  useAutoResizeTextarea(textareaRef, value, maxHeight);
   const pending = disabled || submitting;
 
   useEffect(() => {
@@ -146,7 +150,8 @@ export function Composer({
         }
         aria-invalid={emptyError || undefined}
         disabled={pending}
-        className="resize-none min-h-20 max-h-50"
+        className="resize-none min-h-20 max-h-(--composer-max)"
+        style={{ "--composer-max": `${maxHeight}px` } as CSSProperties}
         autoComplete="off"
       />
       {emptyError && (
