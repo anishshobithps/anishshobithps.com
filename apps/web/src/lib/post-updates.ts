@@ -14,7 +14,7 @@ interface WithUpdates {
 }
 
 export function getPostUpdates(data: WithUpdates): PostUpdate[] {
-  return [...(data.updates ?? [])].sort(
+  return (data.updates ?? []).toSorted(
     (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
   );
 }

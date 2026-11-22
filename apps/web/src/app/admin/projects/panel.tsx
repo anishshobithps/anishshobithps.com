@@ -333,7 +333,7 @@ export function ProjectsPanel() {
     if (pendingId === null) move.mutate({ id, direction });
   }
 
-  const sorted = [...projects].sort(
+  const sorted = projects.toSorted(
     (a, b) => a.sortOrder - b.sortOrder || a.id - b.id,
   );
 
