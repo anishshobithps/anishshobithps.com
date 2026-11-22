@@ -14,6 +14,7 @@ function Turntable({ playing }: { playing: boolean }) {
       className="size-9 shrink-0 overflow-visible"
     >
       <g
+        suppressHydrationWarning
         className={cn(
           "origin-center [transform-box:fill-box]",
           playing && "motion-safe:animate-[spin_1.8s_linear_infinite]",
