@@ -11,7 +11,6 @@ import {
   deleteComment,
   togglePinComment,
 } from "@/app/(site)/blog/[[...slug]]/actions";
-import type { AdminCommentRow } from "@/app/admin/actions";
 import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,
@@ -136,14 +135,10 @@ export function CommentsPanel() {
     return true;
   });
 
-  const grouped = filtered.reduce<Record<string, AdminCommentRow[]>>(
-    (acc, c) => {
-      (acc[c.postSlug] ??= []).push(c);
-      return acc;
-    },
-    {},
-  );
-  const slugs = Object.keys(grouped).sort();
+  const grouped = Object.groupBy(filtered, (c) => c.postSlug);
+  const groups = Object.keys(grouped)
+    .sort()
+    .map((slug) => ({ slug, rows: grouped[slug] ?? [] }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -180,7 +175,7 @@ export function CommentsPanel() {
           : `${filtered.length} comment${filtered.length === 1 ? "" : "s"} shown.`}
       </TypographyMuted>
 
-      {slugs.length === 0 && (
+      {groups.length === 0 && (
         <Empty bordered>
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -204,7 +199,7 @@ export function CommentsPanel() {
       )}
 
       <div className="flex flex-col gap-8">
-        {slugs.map((slug) => (
+        {groups.map(({ slug, rows }) => (
           <div key={slug} className="flex flex-col gap-0">
             <div className="flex items-center justify-between mb-3">
               <SectionHeader className="text-sm mb-0 min-w-0 mr-3">
@@ -218,13 +213,13 @@ export function CommentsPanel() {
                 </Link>
               </SectionHeader>
               <TypographyMuted className="text-xs shrink-0">
-                {grouped[slug].length} comment
-                {grouped[slug].length !== 1 ? "s" : ""}
+                {rows.length} comment
+                {rows.length !== 1 ? "s" : ""}
               </TypographyMuted>
             </div>
 
             <div className="flex flex-col divide-y divide-border border rounded-lg overflow-hidden">
-              {grouped[slug].map((comment) => (
+              {rows.map((comment) => (
                 <div
                   key={comment.id}
                   className={cn(
