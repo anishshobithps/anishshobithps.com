@@ -1,5 +1,5 @@
 import { OG_SIZE, OGImage } from "@/components/shared/OG";
-import { loadFonts } from "@repo/svg-kit/fonts";
+import { loadFonts } from "@repo/ui/svg-kit/fonts";
 import { ImageResponse } from "takumi-js/response";
 import type { NextRequest } from "next/server";
 

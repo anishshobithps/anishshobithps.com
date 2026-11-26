@@ -22,8 +22,8 @@ import {
   Stats,
   STATS_HEIGHT,
   truncate,
-} from "@repo/svg-kit/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/svg-kit/template";
+} from "@repo/ui/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/ui/svg-kit/template";
 
 const CELL = 29;
 const GAP = 4;

@@ -13,7 +13,14 @@
     "./scripts/*": "./scripts/*.ts",
     "./iso/components/classes": "./src/iso/components/classes.ts",
     "./iso/components/*": "./src/iso/components/*.tsx",
-    "./iso/*": "./src/iso/*.ts"
+    "./iso/*": "./src/iso/*.ts",
+    "./svg-kit/error": "./src/svg-kit/error.tsx",
+    "./svg-kit/fonts": "./src/svg-kit/fonts.ts",
+    "./svg-kit/palette": "./src/svg-kit/palette.ts",
+    "./svg-kit/params": "./src/svg-kit/params.ts",
+    "./svg-kit/primitives": "./src/svg-kit/primitives.tsx",
+    "./svg-kit/render": "./src/svg-kit/render.tsx",
+    "./svg-kit/template": "./src/svg-kit/template.ts"
   },
   "scripts": {
     "lint": "eslint",
@@ -24,6 +31,7 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/icons": "workspace:*",
+    "@repo/site-config": "workspace:*",
     "@tanstack/react-table": "catalog:",
     "@tanstack/react-virtual": "catalog:",
     "@wojtekmaj/react-hooks": "^2.3.0",
@@ -40,7 +48,9 @@
     "react-pdf": "^11.0.0",
     "recharts": "catalog:",
     "sonner": "^2.0.8",
-    "vaul": "^1.1.2"
+    "takumi-js": "^2.18.2",
+    "vaul": "^1.1.2",
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "next": "catalog:",

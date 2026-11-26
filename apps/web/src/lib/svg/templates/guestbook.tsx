@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { formatRelativeDate } from "@repo/core/date";
 import { type Guestbook, loadGuestbook } from "@/lib/svg/data/guestbook";
-import { FONT_STACK, FONTS } from "@repo/svg-kit/fonts";
-import { palette } from "@repo/svg-kit/palette";
-import { limit } from "@repo/svg-kit/params";
+import { FONT_STACK, FONTS } from "@repo/ui/svg-kit/fonts";
+import { palette } from "@repo/ui/svg-kit/palette";
+import { limit } from "@repo/ui/svg-kit/params";
 import {
   Body,
   CardHeader,
@@ -16,8 +16,8 @@ import {
   plural,
   Row,
   truncate,
-} from "@repo/svg-kit/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/svg-kit/template";
+} from "@repo/ui/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/ui/svg-kit/template";
 import { sanitizeText } from "@repo/core/text";
 
 const ROW_HEIGHT = 72;

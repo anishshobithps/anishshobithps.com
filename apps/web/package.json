@@ -36,7 +36,6 @@
     "@repo/query": "workspace:*",
     "@repo/site-config": "workspace:*",
     "@repo/sounds": "workspace:*",
-    "@repo/svg-kit": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-table": "catalog:",

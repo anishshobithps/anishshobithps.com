@@ -1,5 +1,5 @@
 import { themeColor } from "@repo/ui/styles/theme-tokens";
-import type { Theme } from "@repo/svg-kit/template";
+import type { Theme } from "@repo/ui/svg-kit/template";
 
 function build(theme: Theme) {
   const token = (name: string) => themeColor(`var(--${name})`, theme);

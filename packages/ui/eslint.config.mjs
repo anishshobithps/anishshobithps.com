@@ -2,6 +2,7 @@ import { createNextConfig } from "@repo/eslint-config/next";
 
 export default createNextConfig({
   uiGlob: "src/{components,hooks,lib,styles}/**",
+  noTailwindFiles: ["src/svg-kit/**/*.tsx"],
   vendoredFiles: [
     "src/components/media-player.tsx",
     "src/lib/compose-refs.ts",

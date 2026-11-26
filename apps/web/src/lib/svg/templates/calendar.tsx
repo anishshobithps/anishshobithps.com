@@ -19,8 +19,8 @@ import {
   plural,
   Stats,
   STATS_HEIGHT,
-} from "@repo/svg-kit/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/svg-kit/template";
+} from "@repo/ui/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR, type Theme } from "@repo/ui/svg-kit/template";
 
 const CELL = 11;
 const GAP = 3;

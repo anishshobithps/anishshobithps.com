@@ -7,8 +7,8 @@ import {
   Label,
   Parts,
   truncate,
-} from "@repo/svg-kit/primitives";
-import { CARD_WIDTH, type Theme } from "@repo/svg-kit/template";
+} from "@repo/ui/svg-kit/primitives";
+import { CARD_WIDTH, type Theme } from "@repo/ui/svg-kit/template";
 
 export type SvgErrorKind =
   | "unknown-type"

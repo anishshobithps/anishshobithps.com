@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { FONT_STACK, FONTS } from "@repo/svg-kit/fonts";
-import { palette } from "@repo/svg-kit/palette";
-import { Hairline, Label, truncate } from "@repo/svg-kit/primitives";
-import { CARD_WIDTH, defineTemplate, type Theme } from "@repo/svg-kit/template";
+import { FONT_STACK, FONTS } from "@repo/ui/svg-kit/fonts";
+import { palette } from "@repo/ui/svg-kit/palette";
+import { Hairline, Label, truncate } from "@repo/ui/svg-kit/primitives";
+import { CARD_WIDTH, defineTemplate, type Theme } from "@repo/ui/svg-kit/template";
 import { padIndex } from "@repo/core/text";
 
 const BADGE = 24;

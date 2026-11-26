@@ -1,6 +1,6 @@
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { MASCOT_POINTS } from "@/components/shared/logo-mascot";
-import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/svg-kit/fonts";
+import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/ui/svg-kit/fonts";
 import { themeColor } from "@repo/ui/styles/theme-tokens";
 import type { CSSProperties, ReactNode } from "react";
 
