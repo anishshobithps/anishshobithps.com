@@ -10,7 +10,7 @@ import { ThemeHotkey } from "@/components/shared/theme-hotkey";
 import { ToasterHost } from "@/components/shared/toaster-host";
 import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { MOTION_INIT_SCRIPT } from "@repo/ui/lib/motion-preference";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { ThemeProvider } from "next-themes";
 import type { Metadata, Viewport } from "next";
 import {

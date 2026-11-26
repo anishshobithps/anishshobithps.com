@@ -10,7 +10,7 @@ import { ArtStage } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
 import { IsoArt } from "@repo/ui/components/art/iso-art";
 import { workbenchScene } from "@repo/ui/art/scenes/workbench";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import {
   TypographyH1,
   TypographyLead,

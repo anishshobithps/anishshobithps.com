@@ -1,5 +1,5 @@
 import { type CSSProperties, Fragment, type ReactNode } from "react";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/ui/cards/fonts";
 import { palette } from "@repo/ui/cards/palette";
 import type { Theme } from "@repo/ui/cards/template";

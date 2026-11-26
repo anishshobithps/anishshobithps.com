@@ -31,7 +31,7 @@ Only one `next dev` can run per project at a time. Next takes a lock and a secon
 
 ## Environment variables
 
-Create `apps/web/.env.local`. [varlock](https://varlock.dev) validates it against `apps/web/.env.schema`, which also imports the schemas in `packages/site-config` and `packages/db`. `pnpm --filter web exec varlock load` names anything that is missing or malformed, and the build and `pnpm dev` stop for the same reason. Six variables are required: `DATABASE_URL`, `IP_HASH_SALT`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, and `OWNER_CLERK_USER_ID`.
+Create `apps/web/.env.local`. [varlock](https://varlock.dev) validates it against `apps/web/.env.schema`, which also imports the schemas in `packages/core` and `packages/db`. `pnpm --filter web exec varlock load` names anything that is missing or malformed, and the build and `pnpm dev` stop for the same reason. Six variables are required: `DATABASE_URL`, `IP_HASH_SALT`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, and `OWNER_CLERK_USER_ID`.
 
 ```env
 DATABASE_URL=postgresql://...

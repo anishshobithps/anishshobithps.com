@@ -1,4 +1,4 @@
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { formatRelativeDate, formatShortDate } from "@repo/core/date";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import {
   BookOpenIcon,
   DiscordLogoIcon,

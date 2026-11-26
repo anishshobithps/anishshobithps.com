@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import * as opentype from "opentype.js";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 
 const FONT_SIZE = 14;
 const HEIGHT = 100;

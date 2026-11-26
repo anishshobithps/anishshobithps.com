@@ -1,6 +1,6 @@
 import { Children, isValidElement, type ComponentProps, type ReactNode } from "react";
 import { classifyLink } from "@repo/core/link-target";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { LinkCard } from "@/components/link-card/link-card";
 import { PreviewLink, PreviewSup } from "@/components/link-card/preview-link";
 

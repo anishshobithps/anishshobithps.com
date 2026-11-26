@@ -1,5 +1,5 @@
 import { buildMeta } from "@/lib/metadata";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = buildMeta({

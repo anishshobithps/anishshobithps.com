@@ -15,7 +15,7 @@ import {
   TypographyMuted,
   TypographySmall,
 } from "@repo/ui/components/typography";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { currentYear } from "@repo/core/date";
 import { ConsentSettingsLink } from "@/components/consent/consent-settings-link";

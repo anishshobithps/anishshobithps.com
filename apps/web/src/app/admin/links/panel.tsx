@@ -26,7 +26,7 @@ import {
   type SlugPair,
 } from "@repo/core/links-schema";
 import { slugify } from "@repo/core/text";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import {
   Form,
   FormControl,

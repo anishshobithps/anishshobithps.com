@@ -5,7 +5,7 @@ import { RulesIFollow } from "@/app/(site)/_components/rules";
 import { BlogTeaser } from "@/app/(site)/_components/blog-teaser";
 import { GuestbookTeaser } from "@/app/(site)/_components/guestbook-teaser";
 import { JsonLd } from "@/components/shared/json-ld";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { buildMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 

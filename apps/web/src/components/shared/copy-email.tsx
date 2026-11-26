@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CheckIcon, CopyIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { Text } from "@repo/ui/components/typography";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { copyEmail } from "@/lib/copy-email";
 
 export function CopyEmail() {

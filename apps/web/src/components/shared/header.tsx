@@ -15,7 +15,7 @@ import {
   NavigationMenuList,
 } from "@repo/ui/components/navigation-menu";
 import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/lib/command-menu-store";
 import { setTocOpen, useReading, useReadingSelector } from "@/lib/reading-store";

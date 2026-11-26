@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { classifyLink, type LinkTarget } from "@repo/core/link-target";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { displayHost, isPublicHttpsUrl } from "@/lib/link-preview/http";
 import { resolveDiscord } from "@/lib/link-preview/providers/discord";
 import { resolveGeneric } from "@/lib/link-preview/providers/generic";

@@ -1,6 +1,6 @@
 import { ENV } from "varlock/env";
 import { unstable_cache } from "next/cache";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { posthogHosts, posthogRegion } from "@/lib/analytics/hosts";
 import type { AnalyticsEvents } from "@/lib/analytics/events";
 import {

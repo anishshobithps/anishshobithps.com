@@ -1,4 +1,4 @@
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { source } from "@/lib/source";
 import type { LinkPreview } from "@/lib/link-preview/types";
 

@@ -30,7 +30,6 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@repo/core": "workspace:*",
-    "@repo/site-config": "workspace:*",
     "@tanstack/react-table": "catalog:",
     "@tanstack/react-virtual": "catalog:",
     "@wojtekmaj/react-hooks": "^2.3.0",

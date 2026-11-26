@@ -1,5 +1,5 @@
 import { ENV } from "varlock/env";
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import {
   defineConfig,
   inspectPolicyRules,

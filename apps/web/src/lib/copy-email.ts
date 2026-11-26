@@ -1,4 +1,4 @@
-import { siteConfig } from "@repo/site-config";
+import { siteConfig } from "@repo/core/site-config";
 import { playCue } from "@repo/sounds/sound-player";
 import { toast } from "@/lib/toast";
 import { track } from "@/lib/analytics/events";

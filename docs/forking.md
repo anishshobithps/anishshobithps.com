@@ -15,7 +15,7 @@ A fork can keep, modify, and redistribute the MIT code. It can't publish modifie
 ## Before a fork goes live
 
 - [ ] Delete `apps/web/content/blog/` and write your own posts. See [Writing posts](writing-posts.md).
-- [ ] Update [`packages/site-config/src/index.ts`](../packages/site-config/src/index.ts): name, domain, email, socials, repo, resume URL, `availableForHire`.
+- [ ] Update [`packages/core/src/site-config.ts`](../packages/core/src/site-config.ts): name, domain, email, socials, repo, resume URL, `availableForHire`.
 - [ ] Replace the logo and mascot (`logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx`) and `apps/web/public/favicon-*.svg`.
 - [ ] Replace or remove the doodles, page scenes, blog covers, and the OG card design. The print engine in `packages/ui/src/art/` stays, so draw your own with it. See [The art](art.md).
 - [ ] Change the fallback name, domain, and role in [`apps/web/src/app/og/route.tsx`](../apps/web/src/app/og/route.tsx).
