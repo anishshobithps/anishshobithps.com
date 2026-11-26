@@ -47,6 +47,7 @@ import {
 import { TypographySmall, TypographyMuted } from "@repo/ui/components/typography";
 import { formatShortDate } from "@repo/core/date";
 import { cn } from "@repo/ui/lib/cn";
+import { ExpandableText } from "@/app/admin/_components/expandable-text";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),
@@ -200,11 +201,17 @@ export function GuestbookPanel() {
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                  <TypographySmall className="font-medium">
+                  <TypographySmall
+                    className="min-w-0 max-w-full truncate font-medium"
+                    title={entry.user.name}
+                  >
                     {entry.user.name}
                   </TypographySmall>
                   {entry.user.username && (
-                    <TypographyMuted className="text-xs">
+                    <TypographyMuted
+                      className="min-w-0 max-w-full truncate text-xs"
+                      title={`@${entry.user.username}`}
+                    >
                       @{entry.user.username}
                     </TypographyMuted>
                   )}
@@ -214,16 +221,11 @@ export function GuestbookPanel() {
                       Pinned
                     </Badge>
                   )}
-                  <TypographyMuted className="text-xs ml-auto">
+                  <TypographyMuted className="ml-auto shrink-0 text-xs tabular-nums">
                     {formatShortDate(entry.createdAt)}
                   </TypographyMuted>
                 </div>
-                <TypographySmall
-                  as="p"
-                  className="font-normal leading-relaxed break-words"
-                >
-                  {entry.message}
-                </TypographySmall>
+                <ExpandableText>{entry.message}</ExpandableText>
                 <TypographyMuted
                   as="span"
                   aria-label={`${entry.likeCount} like${entry.likeCount !== 1 ? "s" : ""}`}
@@ -270,7 +272,7 @@ export function GuestbookPanel() {
                       <AlertDialogTitle>Delete entry?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This entry by{" "}
-                        <span className="font-medium text-foreground">
+                        <span className="font-medium text-foreground wrap-anywhere">
                           {entry.user.name}
                         </span>{" "}
                         will be permanently removed and cannot be recovered.

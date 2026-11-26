@@ -36,7 +36,7 @@ export default async function AdminLayout({
         <QueryProvider>
           <SidebarProvider data-analytics-block="">
             <AdminSidebar />
-            <SidebarInset>
+            <SidebarInset className="min-w-0">
               <AdminHeader />
               {children}
             </SidebarInset>

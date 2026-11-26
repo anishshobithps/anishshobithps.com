@@ -81,7 +81,7 @@ import {
 } from "@repo/ui/components/table";
 import { Badge } from "@repo/ui/components/badge";
 import { cn } from "@repo/ui/lib/cn";
-import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
+import { TypographyMuted } from "@repo/ui/components/typography";
 
 const optionalUrlField = z
   .string()
@@ -339,9 +339,8 @@ export function ProjectsPanel() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <TypographySmall className="font-semibold">Projects</TypographySmall>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <TypographyMuted
             role="status"
             aria-live="polite"
@@ -387,8 +386,8 @@ export function ProjectsPanel() {
                 <TableHead className="w-16">Order</TableHead>
                 <TableHead>Project</TableHead>
                 <TableHead className="hidden md:table-cell">Stack</TableHead>
-                <TableHead className="w-20 text-center">Visible</TableHead>
-                <TableHead className="w-20 text-right">Actions</TableHead>
+                <TableHead className="w-16 text-center">Visible</TableHead>
+                <TableHead className="w-16 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -435,33 +434,40 @@ export function ProjectsPanel() {
                       </ButtonGroup>
                     </TableCell>
 
-                    <TableCell className="py-3">
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold leading-tight">
+                    <TableCell className="min-w-32 py-3 whitespace-normal sm:min-w-56">
+                      <div className="flex min-w-0 flex-col gap-0.5">
+                        <div className="flex min-w-0 items-start gap-2">
+                          <span
+                            className="line-clamp-2 text-sm font-semibold leading-tight wrap-anywhere"
+                            title={project.title}
+                          >
                             {project.title}
                           </span>
                           {!project.enabled && (
                             <Badge
                               variant="outline"
-                              className="text-3xs px-1.5 py-0 h-4"
+                              className="h-4 shrink-0 px-1.5 py-0 text-3xs"
                             >
                               Hidden
                             </Badge>
                           )}
                         </div>
-                        <TypographyMuted className="text-xs line-clamp-2 leading-relaxed max-w-sm">
+                        <TypographyMuted
+                          className="line-clamp-2 max-w-sm text-xs leading-relaxed wrap-anywhere"
+                          title={project.description}
+                        >
                           {project.description}
                         </TypographyMuted>
                       </div>
                     </TableCell>
 
-                    <TableCell className="hidden md:table-cell py-3">
+                    <TableCell className="hidden max-w-64 py-3 whitespace-normal md:table-cell">
                       <div className="flex flex-wrap gap-1">
                         {project.highlights.slice(0, 4).map((h) => (
                           <span
                             key={h}
-                            className="rounded bg-muted px-1.5 py-0.5 font-mono text-3xs text-muted-foreground"
+                            title={h}
+                            className="max-w-40 truncate rounded bg-muted px-1.5 py-0.5 font-mono text-3xs text-muted-foreground"
                           >
                             {h}
                           </span>
@@ -513,7 +519,7 @@ export function ProjectsPanel() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
+                              <AlertDialogTitle className="wrap-anywhere">
                                 Delete &quot;{project.title}&quot;?
                               </AlertDialogTitle>
                               <AlertDialogDescription>

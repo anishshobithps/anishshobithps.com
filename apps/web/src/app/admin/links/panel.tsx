@@ -117,9 +117,9 @@ const linkColumns: ColumnDef<typeof sortableTableFeatures, AdminLink>[] = [
 
 const HEAD_CLASS: Record<string, string> = {
   target: "hidden md:table-cell",
-  clicks: "w-16 text-right",
-  enabled: "w-20 text-center",
-  actions: "w-20 text-right",
+  clicks: "hidden w-14 text-right sm:table-cell",
+  enabled: "w-16 text-center",
+  actions: "w-16 text-right",
 };
 
 const emptyValues: LinkFormValues = {
@@ -554,11 +554,8 @@ export function LinksPanel() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <TypographySmall className="font-semibold">
-            Links
-          </TypographySmall>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <TypographyMuted
             role="status"
             aria-live="polite"
@@ -614,15 +611,16 @@ export function LinksPanel() {
                       isRowPending && "opacity-40 pointer-events-none",
                     )}
                   >
-                    <TableCell className="py-3">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex flex-wrap items-center gap-1.5">
+                    <TableCell className="max-w-36 py-3 whitespace-normal sm:max-w-sm">
+                      <div className="flex min-w-0 flex-col gap-1">
+                        <div className="flex min-w-0 flex-wrap items-center gap-1.5">
                           <TypographySmall asChild>
                             <a
                               href={`/${primaryPath}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="font-mono hover:underline"
+                              title={`/${primaryPath}`}
+                              className="min-w-0 max-w-full truncate font-mono hover:underline"
                             >
                               /{primaryPath}
                             </a>
@@ -652,13 +650,26 @@ export function LinksPanel() {
                                 key={`${a.tag}/${a.slug}`}
                                 asChild
                               >
-                                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-3xs">
+                                <span
+                                  title={`/${formatPath(a)}`}
+                                  className="max-w-full truncate rounded bg-muted px-1.5 py-0.5 font-mono text-3xs"
+                                >
                                   /{formatPath(a)}
                                 </span>
                               </TypographyMuted>
                             ))}
                           </div>
                         )}
+                        <TypographyMuted
+                          className="truncate text-xs md:hidden"
+                          title={link.target}
+                        >
+                          {link.target}
+                        </TypographyMuted>
+                        <TypographyMuted className="text-xs tabular-nums sm:hidden">
+                          {link.clicks.toLocaleString()}{" "}
+                          {link.clicks === 1 ? "click" : "clicks"}
+                        </TypographyMuted>
                       </div>
                     </TableCell>
 
@@ -668,7 +679,8 @@ export function LinksPanel() {
                           href={link.target}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs hover:text-foreground truncate"
+                          title={link.target}
+                          className="inline-flex max-w-full items-center gap-1 text-xs hover:text-foreground"
                         >
                           <span className="truncate">{link.target}</span>
                           <ArrowSquareOutIcon
@@ -679,7 +691,7 @@ export function LinksPanel() {
                       </TypographyMuted>
                     </TableCell>
 
-                    <TableCell className="text-right py-3">
+                    <TableCell className="hidden py-3 text-right sm:table-cell">
                       <TypographyMuted className="tabular-nums">
                         {link.clicks.toLocaleString()}
                       </TypographyMuted>
@@ -722,7 +734,7 @@ export function LinksPanel() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
+                              <AlertDialogTitle className="wrap-anywhere">
                                 Delete /{primaryPath}?
                               </AlertDialogTitle>
                               <AlertDialogDescription>

@@ -47,13 +47,14 @@ import {
   EmptyTitle,
 } from "@repo/ui/components/empty";
 import {
+  Text,
   TypographySmall,
   TypographyMuted,
-  SectionHeader,
 } from "@repo/ui/components/typography";
 import { formatShortDate } from "@repo/core/date";
 import { cn } from "@repo/ui/lib/cn";
 import type { Route } from "next";
+import { ExpandableText } from "@/app/admin/_components/expandable-text";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),
@@ -201,17 +202,17 @@ export function CommentsPanel() {
       <div className="flex flex-col gap-8">
         {groups.map(({ slug, rows }) => (
           <div key={slug} className="flex flex-col gap-0">
-            <div className="flex items-center justify-between mb-3">
-              <SectionHeader className="text-sm mb-0 min-w-0 mr-3">
+            <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
+              <Text variant="title" as="h2" className="min-w-0 truncate">
                 <Link
                   href={slug as Route}
                   target="_blank"
-                  className="hover:underline underline-offset-2 truncate block"
+                  className="hover:underline underline-offset-2"
                   title={slug}
                 >
                   {slugToTitle(slug)}
                 </Link>
-              </SectionHeader>
+              </Text>
               <TypographyMuted className="text-xs shrink-0">
                 {rows.length} comment
                 {rows.length !== 1 ? "s" : ""}
@@ -249,11 +250,17 @@ export function CommentsPanel() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                      <TypographySmall className="font-medium">
+                      <TypographySmall
+                        className="min-w-0 max-w-full truncate font-medium"
+                        title={comment.user.name}
+                      >
                         {comment.user.name}
                       </TypographySmall>
                       {comment.user.username && (
-                        <TypographyMuted className="text-xs">
+                        <TypographyMuted
+                          className="min-w-0 max-w-full truncate text-xs"
+                          title={`@${comment.user.username}`}
+                        >
                           @{comment.user.username}
                         </TypographyMuted>
                       )}
@@ -266,16 +273,11 @@ export function CommentsPanel() {
                       {comment.parentId !== null && (
                         <Badge variant="outline">Reply</Badge>
                       )}
-                      <TypographyMuted className="text-xs ml-auto">
+                      <TypographyMuted className="ml-auto shrink-0 text-xs tabular-nums">
                         {formatShortDate(comment.createdAt)}
                       </TypographyMuted>
                     </div>
-                    <TypographySmall
-                      as="p"
-                      className="font-normal leading-relaxed break-words"
-                    >
-                      {comment.body}
-                    </TypographySmall>
+                    <ExpandableText>{comment.body}</ExpandableText>
                     <TypographyMuted
                       as="span"
                       aria-label={`${comment.likeCount} like${comment.likeCount !== 1 ? "s" : ""}`}
@@ -325,7 +327,7 @@ export function CommentsPanel() {
                             <AlertDialogTitle>Delete comment?</AlertDialogTitle>
                             <AlertDialogDescription>
                               This comment by{" "}
-                              <span className="font-medium text-foreground">
+                              <span className="font-medium text-foreground wrap-anywhere">
                                 {comment.user.name}
                               </span>{" "}
                               will be permanently removed and cannot be
