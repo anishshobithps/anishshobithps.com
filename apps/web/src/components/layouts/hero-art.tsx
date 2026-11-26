@@ -1,5 +1,5 @@
-import { IsoStage } from "@repo/iso/components/iso-stage";
-import { isoCanvas } from "@repo/iso/components/classes";
+import { IsoStage } from "@repo/ui/iso/components/iso-stage";
+import { isoCanvas } from "@repo/ui/iso/components/classes";
 import { cn } from "@repo/ui/lib/cn";
 import type { ReactNode } from "react";
 

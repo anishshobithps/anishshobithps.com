@@ -1,5 +1,5 @@
 import { ArtStage } from "@/components/layouts/hero-art";
-import { PageArt } from "@repo/iso/components/page-art";
+import { PageArt } from "@repo/ui/iso/components/page-art";
 import Link from "next/link";
 import { InlineArt } from "@/components/shared/inline-art";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/icons";

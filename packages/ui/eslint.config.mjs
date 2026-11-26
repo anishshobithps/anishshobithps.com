@@ -1,7 +1,7 @@
 import { createNextConfig } from "@repo/eslint-config/next";
 
 export default createNextConfig({
-  uiGlob: "src/**",
+  uiGlob: "src/{components,hooks,lib,styles}/**",
   vendoredFiles: [
     "src/components/media-player.tsx",
     "src/lib/compose-refs.ts",
@@ -12,6 +12,12 @@ export default createNextConfig({
       files: ["src/components/sonner.tsx"],
       rules: {
         "shadcn/no-unknown-classes": "off",
+      },
+    },
+    {
+      files: ["src/iso/components/git-chaos.tsx"],
+      rules: {
+        "shadcn/no-inline-styles": "off",
       },
     },
   ],

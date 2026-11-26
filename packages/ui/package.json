@@ -10,7 +10,10 @@
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./styles/theme-tokens": "./src/styles/theme-tokens.ts",
     "./styles/tokens.generated": "./src/styles/tokens.generated.ts",
-    "./scripts/*": "./scripts/*.ts"
+    "./scripts/*": "./scripts/*.ts",
+    "./iso/components/classes": "./src/iso/components/classes.ts",
+    "./iso/components/*": "./src/iso/components/*.tsx",
+    "./iso/*": "./src/iso/*.ts"
   },
   "scripts": {
     "lint": "eslint",

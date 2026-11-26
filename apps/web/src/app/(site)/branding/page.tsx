@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import { PageArt } from "@repo/iso/components/page-art";
+import { PageArt } from "@repo/ui/iso/components/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { SectionMargins } from "@/components/layouts/section-margins";
 import {

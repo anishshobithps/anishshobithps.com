@@ -33,7 +33,6 @@
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/icons": "workspace:*",
-    "@repo/iso": "workspace:*",
     "@repo/query": "workspace:*",
     "@repo/site-config": "workspace:*",
     "@repo/sounds": "workspace:*",

@@ -3,7 +3,7 @@
 import { ArrowRightIcon } from "@repo/icons";
 import { cn } from "@repo/ui/lib/cn";
 import { prefersReducedMotion } from "@repo/ui/lib/motion-preference";
-import { isoType } from "@repo/iso/components/classes";
+import { isoType } from "@repo/ui/iso/components/classes";
 import { useEffect, useState } from "react";
 
 const PHRASES = [

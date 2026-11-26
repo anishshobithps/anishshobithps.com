@@ -1,5 +1,5 @@
-import { IsoArt } from "@repo/iso/components/iso-art";
-import { sheetScene } from "@repo/iso/scenes/sheet";
+import { IsoArt } from "@repo/ui/iso/components/iso-art";
+import { sheetScene } from "@repo/ui/iso/scenes/sheet";
 import { SectionLabel } from "@repo/ui/components/typography";
 
 export function PostGridFiller({ next }: { next: number }) {
