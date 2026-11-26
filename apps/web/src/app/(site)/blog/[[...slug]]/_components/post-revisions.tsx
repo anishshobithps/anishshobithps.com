@@ -23,6 +23,15 @@ import {
   useSeenRevision,
 } from "@/lib/revision-seen";
 import type { PostUpdateKind } from "@/lib/post-updates";
+import {
+  Timeline,
+  TimelineConnector,
+  TimelineDescription,
+  TimelineItem,
+  TimelineMarker,
+  TimelineTime,
+  TimelineTitle,
+} from "@ui-sdk/react/timeline";
 
 interface RevisionEntry {
   day: string;
@@ -53,30 +62,13 @@ interface RevisionGroup {
   runs: RevisionRun[];
 }
 
-function TimelineMark({
-  active = false,
-  first = false,
-  last = false,
-}: {
-  active?: boolean;
-  first?: boolean;
-  last?: boolean;
-}) {
+function RevisionMarker({ active = false }: { active?: boolean }) {
   return (
-    <span aria-hidden="true" className="relative w-4 shrink-0">
-      {!(first && last) && (
+    <>
+      <TimelineMarker className="col-start-1 row-start-1 flex h-5 items-center justify-center">
         <span
           className={cn(
-            "absolute inset-x-0 mx-auto w-px bg-border",
-            first ? "top-2.5" : "top-0",
-            last ? "h-2.5" : "bottom-0",
-          )}
-        />
-      )}
-      <span className="relative z-10 flex h-5 items-center">
-        <span
-          className={cn(
-            "flex size-4 items-center justify-center rounded-full border bg-popover",
+            "relative z-10 flex size-4 items-center justify-center rounded-full border bg-popover",
             active && "border-primary",
           )}
         >
@@ -87,10 +79,14 @@ function TimelineMark({
             )}
           />
         </span>
-      </span>
-    </span>
+      </TimelineMarker>
+      <TimelineConnector className="absolute top-2.5 bottom-0 left-2 w-px -translate-x-1/2 bg-border group-last/event:hidden group-data-last/event:hidden" />
+    </>
   );
 }
+
+const eventClassName =
+  "group/event relative grid grid-cols-[1rem_minmax(0,1fr)] gap-x-3 rounded-sm pb-5 outline-none last:pb-0 focus-visible:ring-3 focus-visible:ring-ring/50";
 
 export function PostRevisions({
   slug,
@@ -166,28 +162,25 @@ export function PostRevisions({
             {entries.length} {entries.length === 1 ? "change" : "changes"}
           </Text>
         </div>
-        <ol role="list" className="mt-4 flex flex-col tabular-nums">
-          {groups.map((group, index) => {
+        <Timeline aria-label="Revision log" className="mt-4 flex flex-col tabular-nums">
+          {groups.map((group) => {
             const fresh = isNew(group.day);
-            const last = index === groups.length - 1 && !publishedDay;
 
             return (
-              <li key={group.day} className="flex gap-3">
-                <TimelineMark active={fresh} first={index === 0} last={last} />
-                <div
-                  className={cn(
-                    "flex min-w-0 flex-1 flex-col gap-3",
-                    !last && "pb-5",
-                  )}
+              <TimelineItem key={group.day} className={eventClassName}>
+                <RevisionMarker active={fresh} />
+                <div className="col-start-2 flex h-5 items-center gap-2">
+                  <TimelineTitle render={<Text variant="title" as="span" />}>
+                    <time dateTime={group.day}>
+                      {formatShortDate(group.day)}
+                    </time>
+                  </TimelineTitle>
+                  {fresh && <Badge variant="default">New for you</Badge>}
+                </div>
+                <TimelineDescription
+                  render={<div />}
+                  className="col-start-2 mt-3"
                 >
-                  <div className="flex items-center gap-2">
-                    <Text variant="title" as="span">
-                      <time dateTime={group.day}>
-                        {formatShortDate(group.day)}
-                      </time>
-                    </Text>
-                    {fresh && <Badge variant="default">New for you</Badge>}
-                  </div>
                   <ul role="list" className="flex flex-col gap-3">
                     {group.runs.map((run, runIndex) => {
                       const { label, Icon } = KINDS[run.kind];
@@ -214,26 +207,27 @@ export function PostRevisions({
                       );
                     })}
                   </ul>
-                </div>
-              </li>
+                </TimelineDescription>
+              </TimelineItem>
             );
           })}
           {publishedDay && (
-            <li className="flex gap-3">
-              <TimelineMark last />
-              <div className="flex items-center gap-2">
-                <Text variant="title" as="span">
+            <TimelineItem className={eventClassName}>
+              <RevisionMarker />
+              <div className="col-start-2 flex h-5 items-center gap-2">
+                <TimelineTitle render={<Text variant="title" as="span" />}>
                   Published
-                </Text>
-                <Text variant="caption" as="span">
-                  <time dateTime={publishedDay}>
-                    {formatShortDate(publishedDay)}
-                  </time>
-                </Text>
+                </TimelineTitle>
+                <TimelineTime
+                  dateTime={publishedDay}
+                  render={<Text variant="caption" as="time" />}
+                >
+                  {formatShortDate(publishedDay)}
+                </TimelineTime>
               </div>
-            </li>
+            </TimelineItem>
           )}
-        </ol>
+        </Timeline>
       </PopoverContent>
     </Popover>
   );
