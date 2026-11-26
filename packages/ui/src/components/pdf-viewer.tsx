@@ -13,11 +13,21 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { Slot } from "radix-ui";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
+import {
+  NumberInput,
+  NumberInputControl,
+} from "@ui-sdk/react/number-input";
+import {
+  Toolbar,
+  ToolbarButton,
+  ToolbarGroup,
+  ToolbarInput,
+  ToolbarLink,
+} from "@ui-sdk/react/toolbar";
 
-import { Button } from "@repo/ui/components/button";
-import { ButtonGroup, ButtonGroupText } from "@repo/ui/components/button-group";
+import { Button, buttonVariants } from "@repo/ui/components/button";
+import { Text } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
 import {
   CaretLeftIcon,
@@ -57,12 +67,14 @@ type DocState = {
   currentPage: number;
   docKey: number;
   loading: boolean;
+  rendered: boolean;
 };
 
 type DocAction =
   | { type: "reload" }
   | { type: "loaded"; numPages: number }
   | { type: "load-failed" }
+  | { type: "rendered" }
   | { type: "go-to-page"; page: number };
 
 const initialDocState: DocState = {
@@ -70,6 +82,7 @@ const initialDocState: DocState = {
   currentPage: 1,
   docKey: 0,
   loading: true,
+  rendered: false,
 };
 
 function docReducer(state: DocState, action: DocAction): DocState {
@@ -80,12 +93,20 @@ function docReducer(state: DocState, action: DocAction): DocState {
       return { ...state, numPages: action.numPages, loading: false };
     case "load-failed":
       return { ...state, loading: false };
+    case "rendered":
+      return { ...state, rendered: true };
     case "go-to-page":
       return {
         ...state,
         currentPage: Math.min(Math.max(action.page, 1), state.numPages ?? 1),
       };
   }
+}
+
+const ZOOM = { min: 0.5, max: 3, step: 0.1 };
+
+function clampZoom(value: number) {
+  return Math.min(ZOOM.max, Math.max(ZOOM.min, +value.toFixed(1)));
 }
 
 const PdfContext = createContext<PdfContextValue | null>(null);
@@ -108,17 +129,12 @@ interface PdfViewerProps extends HTMLAttributes<HTMLDivElement> {
 export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
   ({ file, downloadHref, children, loader, deferMs = 0, startOnInteraction = false, className, ...props }, ref) => {
     const [doc, dispatch] = useReducer(docReducer, initialDocState);
-    const { numPages, currentPage, docKey, loading } = doc;
+    const { numPages, currentPage, docKey, loading, rendered } = doc;
     const [zoom, setZoom] = useState(1);
 
     const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const [workerReady, setWorkerReady] = useState(false);
-    const [rendered, setRendered] = useState(false);
-
-    useEffect(() => {
-      setRendered(false);
-    }, [docKey]);
 
     useEffect(() => {
       let cancelled = false;
@@ -173,9 +189,26 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
 
     const reload = useCallback(() => dispatch({ type: "reload" }), []);
     const goToPage = useCallback(
-      (page: number) => dispatch({ type: "go-to-page", page }),
-      [],
+      (page: number) => {
+        dispatch({ type: "go-to-page", page });
+        containerRef
+          ?.querySelector(`[data-page-number="${page}"]`)
+          ?.scrollIntoView({ block: "start", behavior: "smooth" });
+      },
+      [containerRef],
     );
+
+    const onScroll = useCallback(() => {
+      if (!containerRef) return;
+      const line = containerRef.scrollTop + containerRef.clientHeight / 3;
+      let page = 1;
+      for (const node of containerRef.querySelectorAll<HTMLElement>(
+        "[data-page-number]",
+      )) {
+        if (node.offsetTop <= line) page = Number(node.dataset.pageNumber);
+      }
+      if (page !== currentPage) dispatch({ type: "go-to-page", page });
+    }, [containerRef, currentPage]);
 
     const pageWidth = containerWidth > 0 ? Math.min(containerWidth, 900) : null;
 
@@ -214,6 +247,7 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
             tabIndex={0}
             role="region"
             aria-label="Document pages"
+            onScroll={numPages && numPages > 1 ? onScroll : undefined}
             className="relative flex-1 overflow-auto bg-muted/10 outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-ring/50"
           >
             {!rendered && (loading || numPages) && (
@@ -244,7 +278,7 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
                       renderTextLayer={false}
                       renderAnnotationLayer={false}
                       onRenderSuccess={() => {
-                        if (i === 0) setRendered(true);
+                        if (i === 0) dispatch({ type: "rendered" });
                       }}
                     />
                   ))}
@@ -273,38 +307,30 @@ PdfViewer.displayName = "PdfViewer";
 
 export const PdfViewerToolbar = forwardRef<
   HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
->(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot.Root : "div";
-  return (
-    <Comp
-      ref={ref}
-      className={cn(
-        "flex items-center gap-2 border-b border-border bg-background px-3 py-2 sm:px-4",
-        className,
-      )}
-      {...props}
-    />
-  );
-});
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <Toolbar
+    ref={ref}
+    aria-label="Document controls"
+    className={cn(
+      "flex items-center gap-2 border-b border-border bg-background px-3 py-2 sm:px-4",
+      className,
+    )}
+    {...props}
+  />
+));
 PdfViewerToolbar.displayName = "PdfViewerToolbar";
 
 export const PdfViewerFooter = forwardRef<
   HTMLDivElement,
-  HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
->(({ asChild, className, ...props }, ref) => {
-  const Comp = asChild ? Slot.Root : "div";
-  return (
-    <Comp
-      ref={ref}
-      className={cn(
-        "border-t border-border bg-background px-4 py-2",
-        className,
-      )}
-      {...props}
-    />
-  );
-});
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("border-t border-border bg-background px-4 py-2", className)}
+    {...props}
+  />
+));
 PdfViewerFooter.displayName = "PdfViewerFooter";
 
 export const PdfViewerFilename = forwardRef<
@@ -316,13 +342,12 @@ export const PdfViewerFilename = forwardRef<
   return (
     <span
       ref={ref}
-      className={cn(
-        "min-w-0 flex-1 truncate font-mono text-[11px] text-muted-foreground",
-        className,
-      )}
+      className={cn("min-w-0 flex-1 truncate font-mono text-muted-foreground", className)}
       {...props}
     >
-      {label}
+      <Text as="span" variant="none" className="text-[11px]">
+        {label}
+      </Text>
     </span>
   );
 });
@@ -335,121 +360,167 @@ export const PdfViewerControls = ({
   <div className={cn("flex items-center gap-1", className)} {...props} />
 );
 
-export const PdfViewerPagination = () => {
+const iconButton = <Button variant="outline" size="icon" />;
+
+const joinedStart = "rounded-r-none";
+const joinedEnd = "rounded-l-none";
+const joinedField =
+  "h-9 w-14 border-y border-input bg-transparent px-1 text-center font-mono text-xs tabular-nums outline-none focus-visible:relative focus-visible:z-10 focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30";
+
+export const PdfViewerPagination = ({
+  "aria-label": label = "Page navigation",
+}: {
+  "aria-label"?: string;
+}) => {
   const { currentPage, goToPage, numPages } = usePdf();
   if (!numPages || numPages <= 1) return null;
 
   return (
-    <ButtonGroup aria-label="Page navigation">
-      <Button
-        variant="outline"
-        size="icon"
+    <ToolbarGroup aria-label={label} className="flex items-center">
+      <ToolbarButton
         aria-label="Previous page"
         data-sound="flip"
+        disabled={currentPage <= 1}
+        className={joinedStart}
+        render={iconButton}
         onClick={() => goToPage(currentPage - 1)}
       >
         <CaretLeftIcon className="size-4" aria-hidden="true" />
-      </Button>
-
-      <ButtonGroupText
-        className="px-2.5 font-mono text-xs"
-        aria-live="polite"
-        aria-label={`Page ${currentPage} of ${numPages}`}
+      </ToolbarButton>
+      <NumberInput
+        value={currentPage}
+        min={1}
+        max={numPages}
+        step={1}
+        onValueChange={(page) => {
+          if (page !== null) goToPage(page);
+        }}
       >
-        {currentPage}/{numPages}
-      </ButtonGroupText>
-
-      <Button
-        variant="outline"
-        size="icon"
+        <ToolbarInput
+          render={
+            <NumberInputControl
+              aria-label={`Page, of ${numPages}`}
+              className={joinedField}
+            />
+          }
+        />
+      </NumberInput>
+      <ToolbarButton
         aria-label="Next page"
         data-sound="flip"
+        disabled={currentPage >= numPages}
+        className={joinedEnd}
+        render={iconButton}
         onClick={() => goToPage(currentPage + 1)}
       >
         <CaretRightIcon className="size-4" aria-hidden="true" />
-      </Button>
-    </ButtonGroup>
+      </ToolbarButton>
+    </ToolbarGroup>
   );
 };
 
-export const PdfViewerZoom = () => {
+export const PdfViewerZoom = ({
+  "aria-label": label = "Zoom controls",
+}: {
+  "aria-label"?: string;
+}) => {
   const { zoom, setZoom } = usePdf();
 
   return (
-    <ButtonGroup aria-label="Zoom controls">
-      <Button
-        variant="outline"
-        size="icon"
+    <ToolbarGroup aria-label={label} className="flex items-center">
+      <ToolbarButton
         aria-label="Zoom out"
-        onClick={() => setZoom((z) => Math.max(+(z - 0.1).toFixed(1), 0.5))}
+        disabled={zoom <= ZOOM.min}
+        className={joinedStart}
+        render={iconButton}
+        onClick={() => setZoom((z) => clampZoom(z - ZOOM.step))}
       >
         <MagnifyingGlassMinusIcon className="size-4" aria-hidden="true" />
-      </Button>
-
-      <ButtonGroupText
-        className="justify-center px-2.5 font-mono text-xs tabular-nums"
-        aria-live="polite"
-        aria-label={`Zoom: ${Math.round(zoom * 100)}%`}
+      </ToolbarButton>
+      <NumberInput
+        value={zoom}
+        min={ZOOM.min}
+        max={ZOOM.max}
+        step={ZOOM.step}
+        format={{ style: "percent" }}
+        onValueChange={(value) => {
+          if (value !== null) setZoom(clampZoom(value));
+        }}
       >
-        {Math.round(zoom * 100)}%
-      </ButtonGroupText>
-
-      <Button
-        variant="outline"
-        size="icon"
+        <ToolbarInput
+          render={
+            <NumberInputControl aria-label="Zoom" className={joinedField} />
+          }
+        />
+      </NumberInput>
+      <ToolbarButton
         aria-label="Zoom in"
-        onClick={() => setZoom((z) => Math.min(+(z + 0.1).toFixed(1), 3))}
+        disabled={zoom >= ZOOM.max}
+        className={joinedEnd}
+        render={iconButton}
+        onClick={() => setZoom((z) => clampZoom(z + ZOOM.step))}
       >
         <MagnifyingGlassPlusIcon className="size-4" aria-hidden="true" />
-      </Button>
-    </ButtonGroup>
+      </ToolbarButton>
+    </ToolbarGroup>
   );
 };
 
-export const PdfViewerReload = () => {
+export const PdfViewerReload = ({
+  "aria-label": label = "Reload PDF",
+}: {
+  "aria-label"?: string;
+}) => {
   const { reload } = usePdf();
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={reload}
-      aria-label="Reload PDF"
-    >
-      <ArrowClockwiseIcon className="size-4" />
-    </Button>
+    <ToolbarButton aria-label={label} render={iconButton} onClick={reload}>
+      <ArrowClockwiseIcon className="size-4" aria-hidden="true" />
+    </ToolbarButton>
   );
 };
 
-export const PdfViewerOpen = () => {
+export const PdfViewerOpen = ({
+  "aria-label": label = "Open PDF in new tab",
+}: {
+  "aria-label"?: string;
+}) => {
   const { file } = usePdf();
   return (
-    <Button variant="outline" size="icon" asChild>
-      <a
-        href={file}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Open PDF in new tab"
-      >
-        <ArrowSquareOutIcon className="size-4" aria-hidden="true" />
-      </a>
-    </Button>
+    <ToolbarLink
+      href={file}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className={buttonVariants({ variant: "outline", size: "icon" })}
+    >
+      <ArrowSquareOutIcon className="size-4" aria-hidden="true" />
+    </ToolbarLink>
   );
 };
 
-export const PdfViewerDownload = ({ label }: { label?: string }) => {
+export const PdfViewerDownload = ({
+  label,
+  "aria-label": ariaLabel,
+}: {
+  label?: string;
+  "aria-label"?: string;
+}) => {
   const { downloadHref } = usePdf();
   return (
-    <Button size="sm" asChild className="sm:px-3 px-2">
-      <a
-        href={downloadHref}
-        data-sound="download"
-        aria-label={label ? `${label}, download as PDF` : "Download as PDF"}
-      >
-        <DownloadIcon className="size-4" aria-hidden="true" />
+    <ToolbarLink
+      href={downloadHref}
+      data-sound="download"
+      aria-label={ariaLabel ?? (label ? `${label}, download as PDF` : "Download as PDF")}
+      className={cn(buttonVariants({ size: "sm" }), "px-2 sm:px-3")}
+    >
+      <DownloadIcon className="size-4" aria-hidden="true" />
+      {label && (
         <span className="hidden sm:inline" aria-hidden="true">
-          {label}
+          <Text as="span" variant="none">
+            {label}
+          </Text>
         </span>
-      </a>
-    </Button>
+      )}
+    </ToolbarLink>
   );
 };

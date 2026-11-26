@@ -125,7 +125,7 @@ Each folder under `packages/ui/src` is one module, imported by its path:
 
 | Module | Import | What it holds |
 | --- | --- | --- |
-| `components/` | `@repo/ui/components/button` | shadcn primitives, Typography, and the site's shared components (media player, PDF viewer, sortable table header, signature, location tag) |
+| `components/` | `@repo/ui/components/button` | shadcn primitives, Typography, and the site's shared components: the media player (Video.js for playback, fullscreen, hotkeys and auto-hide; ui-sdk for the controls agents can drive), the PDF viewer (react-pdf with a ui-sdk toolbar), the sortable table header, signature, and location tag |
 | `art/` | `@repo/ui/art/page-art`, `@repo/ui/art/print`, `@repo/ui/art/scenes/branding` | The whole art system: the components that draw it (`IsoArt`, `IsoStage`, `IsoMotion`, `PageArt`, `StripArt`, `BlogCover`, `GitChaos`), the two-plate print engine (`geometry`, `figure`, `print`, `classes`, `animation`), and every scene. Kept out of `components/` so the shadcn lint rules treat only primitives as primitives |
 | `cards/` | `@repo/ui/cards/render` | Fonts, palette, primitives, params, templates, and the renderer for the /svg and OG cards |
 | `icons/` | `@repo/ui/icons` | The green-glass Phosphor icons and brand logos; `icons/generated.tsx` is written by `pnpm --filter web icons` |
