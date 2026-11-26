@@ -13,6 +13,7 @@ import { padIndex } from "@repo/core/text";
 import { Button } from "@repo/ui/components/button";
 import { ArrowRightIcon, ArrowUpRightIcon } from "@repo/icons";
 import Link from "next/link";
+import { InlineArt } from "@/components/shared/inline-art";
 import type { Route } from "next";
 
 interface Proof {
@@ -50,7 +51,8 @@ export function RulesIFollow() {
       <div className="flex max-w-3xl flex-col gap-3">
         <TypographyH2>Rules I follow</TypographyH2>
         <TypographyLead>
-          I build with structure and a bias toward automation, because
+          I build with structure and a bias toward automation{" "}
+          <InlineArt name="gears" />, because
           software should feel simple even when the logic behind it isn&apos;t.
         </TypographyLead>
       </div>

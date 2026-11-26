@@ -1,6 +1,7 @@
 import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@repo/diagrams/page-art";
 import Link from "next/link";
+import { InlineArt } from "@/components/shared/inline-art";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/icons";
 import { Section } from "@/components/layouts/page";
 import { Reveal } from "@/components/shared/reveal";
@@ -33,7 +34,8 @@ export function Contact() {
               <TypographyLead>
                 If you’re working on something ambitious and need a software
                 developer who prefers{" "}
-                <TypographyMark>clarity over chaos</TypographyMark>, we’ll
+                <TypographyMark>clarity over chaos</TypographyMark>{" "}
+                <InlineArt name="plane" />, we’ll
                 probably get along.
               </TypographyLead>
 

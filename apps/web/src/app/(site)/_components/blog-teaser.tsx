@@ -12,6 +12,7 @@ import { Button } from "@repo/ui/components/button";
 import { CaretRightIcon } from "@repo/icons";
 import { formatShortDate, toISOString } from "@repo/core/date";
 import Link from "next/link";
+import { InlineArt } from "@/components/shared/inline-art";
 import type { Route } from "next";
 
 export function BlogTeaser() {
@@ -32,7 +33,8 @@ export function BlogTeaser() {
           <div className="flex max-w-2xl min-w-0 flex-col gap-3">
             <TypographyH2>Latest posts</TypographyH2>
             <TypographyLead>
-              Code, breakdowns, and the occasional 3am adventure.
+              Code, breakdowns, and the occasional 3am adventure{" "}
+              <InlineArt name="mug" />
             </TypographyLead>
           </div>
           <Button asChild variant="outline">

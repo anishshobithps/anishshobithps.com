@@ -22,6 +22,7 @@ import { HireSign } from "@/app/(site)/_components/hire-sign";
 import { HeroNudges } from "@/app/(site)/_components/hero-nudges";
 import { IceCreamNote, PhotoCallout } from "@/components/shared/doodles";
 import { getLatestPost } from "@/lib/source";
+import { InlineArt } from "@/components/shared/inline-art";
 
 const scene = workbenchScene();
 
@@ -63,7 +64,7 @@ export function Hero() {
 
             <TypographyLead>
               I build <TypographyMark>interfaces and tooling</TypographyMark>,
-              the occasional bot, and questionable automation scripts, mostly so
+              the occasional bot <InlineArt name="bot" />, and questionable automation scripts, mostly so
               I don&apos;t have to repeat myself.
             </TypographyLead>
 
