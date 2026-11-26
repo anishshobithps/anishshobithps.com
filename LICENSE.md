@@ -87,6 +87,7 @@ For example, in a component that renders an illustration, the JSX that wraps and
 | `public/favicon-dark.svg`, `public/favicon-light.svg`                                    | Logo favicons                                                                                 |
 | `src/components/shared/logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx`                     | The logo, wordmark, and mascot                                                                |
 | `src/components/shared/doodles.tsx`                                                      | Hand-drawn doodles and the reaction mascot                                                    |
+| `src/components/shared/inline-art.tsx`                                                   | The small glass pieces set inside sentences                                                   |
 | `src/components/shared/OG.tsx`                                                           | The OpenGraph card design                                                                     |
 | `src/components/diagrams/page-art.tsx`, `blog-covers.tsx`, `git-chaos.tsx`, `layers.tsx` | Isometric page scenes and blog covers                                                         |
 | `README.md`                                                                              | Narrative documentation and creative copy; functional code within it remains MIT under Part I |

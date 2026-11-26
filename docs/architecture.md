@@ -116,7 +116,7 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/db` | `packages/db` | Drizzle schema, client, and committed migrations | none |
 | `@repo/diagrams` | `packages/diagrams` | React components that draw the print scenes, page art, and blog covers | iso, ui |
 | `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
-| `@repo/icons` | `packages/icons` | Phosphor icon re-exports | none |
+| `@repo/icons` | `packages/icons` | Phosphor icons rendered as green glass, plus Phosphor brand logos | none |
 | `@repo/iso` | `packages/iso` | Two-plate print SVG engine and every scene | none |
 | `@repo/media-player` | `packages/media-player` | The video player and media-chrome | icons, ui |
 | `@repo/pdf-viewer` | `packages/pdf-viewer` | react-pdf viewer | icons, ui |
