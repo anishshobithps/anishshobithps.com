@@ -28,7 +28,7 @@ function getBackendClient() {
     return backendClient;
 }
 
-export const CLERK_USERS_TAG = "clerk-users";
+const CLERK_USERS_TAG = "clerk-users";
 
 export function clerkUserTag(id: string): string {
     return `clerk-user:${id}`;

@@ -49,7 +49,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
   MDX: "#fcb32c",
 }
 
-export function getLanguageColor(language: string): string {
+function getLanguageColor(language: string): string {
   return LANGUAGE_COLORS[language] ?? "#8b8b8b"
 }
 

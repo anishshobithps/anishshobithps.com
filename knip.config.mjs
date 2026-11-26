@@ -1,25 +1,15 @@
-/** @type {import('knip').KnipConfig} */
 const config = {
   tags: ["-lintignore"],
   workspaces: {
     ".": {
       ignore: ["tools/**", "unlighthouse.config.ts"],
-      ignoreDependencies: ["next"],
+      ignoreDependencies: ["next", "varlock"],
+      ignoreBinaries: ["measure"],
     },
     "apps/web": {
-      ignore: [
-        "source.config.ts",
-        "src/lib/source.ts",
-        "src/lib/remarkReadingTime.ts",
-        "scripts/get-spotify-refresh-token.ts",
-      ],
+      ignore: ["src/lib/source.ts"],
       entry: ["c15t.config.ts"],
-      ignoreDependencies: [
-        "mdast",
-        "reading-time",
-        "unist-util-visit",
-        "vfile",
-      ],
+      ignoreDependencies: ["sharp", "simple-icons"],
     },
     "packages/*": {},
   },

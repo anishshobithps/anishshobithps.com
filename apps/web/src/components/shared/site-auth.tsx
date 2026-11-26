@@ -18,7 +18,7 @@ import {
   type ReactNode,
 } from "react";
 
-export interface AuthUser {
+interface AuthUser {
   id: string;
   fullName: string | null;
   username: string | null;

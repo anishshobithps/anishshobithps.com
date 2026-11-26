@@ -36,7 +36,7 @@ export function isToasterHostRequested(): boolean {
     return hostRequested;
 }
 
-export function requestToasterHost(): void {
+function requestToasterHost(): void {
     if (hostRequested) return;
     hostRequested = true;
     for (const listener of hostListeners) listener();

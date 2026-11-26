@@ -38,19 +38,6 @@ export function buildOGUrl(params: OGParams = {}): string {
     return new URL(buildOGPath(params), siteConfig.baseUrl).toString();
 }
 
-export function buildOGMeta(params: OGParams) {
-    const imageUrl = buildOGUrl(params);
-    return {
-        openGraph: {
-            images: [{ url: imageUrl, width: 1200, height: 630 }],
-        },
-        twitter: {
-            card: "summary_large_image" as const,
-            images: [imageUrl],
-        },
-    };
-}
-
 export function buildMeta(
     params: OGParams & {
         pageTitle?: string;

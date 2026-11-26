@@ -89,7 +89,7 @@ async function getOrCreatePost(slug: string): Promise<number | null> {
     return retry?.id ?? null;
 }
 
-export interface PostStats {
+interface PostStats {
     reads: number;
     commentCount: number;
 }
@@ -198,18 +198,10 @@ export interface CommentWithMeta {
     replies: CommentWithMeta[];
 }
 
-export interface GetCommentsResult {
+interface GetCommentsResult {
     comments: CommentWithMeta[];
     total: number;
     viewerId: string | null;
-}
-
-export async function getComments(slug: string): Promise<GetCommentsResult> {
-    return safeQuery("getComments", () => loadComments(slug), {
-        comments: [],
-        total: 0,
-        viewerId: null,
-    });
 }
 
 function commentsQuery(postId: number, userId: string | null) {

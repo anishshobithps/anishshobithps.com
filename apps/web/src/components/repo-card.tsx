@@ -183,4 +183,4 @@ async function RepoCard({
   )
 }
 
-export { RepoCard, repoCardVariants }
+export { RepoCard }
