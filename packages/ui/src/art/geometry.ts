@@ -32,8 +32,6 @@ export interface SolidPaths {
   seamless?: boolean;
 }
 
-
-
 export const AZIMUTH = 45;
 export const ELEVATION = 30;
 export const SHADES = 4;
@@ -81,8 +79,6 @@ export function pathOf(points: Flat[], closed = false) {
   if (!points.length) return "";
   return points.map(([x, y], at) => `${at ? "L" : "M"}${tenth(x)} ${tenth(y)}`).join("") + (closed ? "Z" : "");
 }
-
-export const joinPaths = (paths: string[]) => paths.filter(Boolean).join("");
 
 export function roundedPlan({ x, y, w, d, r }: Plan, steps = 8): Plane[] {
   const radius = Math.max(0, Math.min(r, w / 2, d / 2));
@@ -249,10 +245,6 @@ export function circleRing(cx: number, cy: number, radius: number, steps = 40): 
   });
 }
 
-export function cylinder(cx: number, cy: number, radius: number, z: number, height: number, projection: Projection, steps = 32, bevel = 0) {
-  return extrude(circleRing(cx, cy, radius, steps), z, height, projection, { convex: true, bevel });
-}
-
 export const insetPlan = ({ x, y, w, d, r }: Plan, by: number): Plan => ({ x: x + by, y: y + by, w: w - by * 2, d: d - by * 2, r: Math.max(0, r - by) });
 
 export function onTop(points: Plane[], z: number, projection: Projection, closed = false) {
@@ -273,16 +265,6 @@ export const rise = (at: Plane, from: number, to: number, projection: Projection
 export const ring = (cx: number, cy: number, radius: number, z: number, projection: Projection, steps = 40) =>
   onTop(circleRing(cx, cy, radius, steps), z, projection, true);
 
-export const pointsAt = (points: Point3[], projection: Projection): Flat[] => points.map((point) => iso(point, projection));
-
-export function dotGrid(x: number, y: number, columns: number, rows: number, gap: number, z: number, projection: Projection): Flat[] {
-  const dots: Flat[] = [];
-  for (let row = 0; row < rows; row++) {
-    for (let column = 0; column < columns; column++) dots.push(iso([x + column * gap, y + row * gap, z], projection));
-  }
-  return dots;
-}
-
 export function corners({ x, y, w, d }: Plan, inset = 0): Plane[] {
   return [
     [x + inset, y + inset],
@@ -298,138 +280,6 @@ export function boxCorners({ x, y, w, d }: Plan, z0: number, z1: number): Point3
   return out;
 }
 
-export function knurl(cx: number, cy: number, radius: number, z0: number, z1: number, count: number, projection: Projection, inset = 0.4) {
-  const [vx, vy] = towardViewer(projection);
-  const lines: string[] = [];
-  for (let index = 0; index < count; index++) {
-    const angle = (index / count) * Math.PI * 2;
-    const nx = Math.cos(angle);
-    const ny = Math.sin(angle);
-    if (nx * vx + ny * vy < 0.15) continue;
-    lines.push(segment([cx + radius * nx, cy + radius * ny, z0 + inset], [cx + radius * nx, cy + radius * ny, z1 - inset], projection));
-  }
-  return lines.join("");
-}
-
-export function sideArc(cx: number, cy: number, radius: number, z: number, projection: Projection, steps = 24) {
-  const [vx, vy] = towardViewer(projection);
-  const facing = Math.atan2(vy, vx);
-  const points: Flat[] = [];
-  for (let step = 0; step <= steps; step++) {
-    const angle = facing - Math.PI / 2 + (step / steps) * Math.PI;
-    points.push(iso([cx + radius * Math.cos(angle), cy + radius * Math.sin(angle), z], projection));
-  }
-  return pathOf(points);
-}
-
-export function ringSeam(ring: Plane[], z: number, projection: Projection) {
-  const count = ring.length;
-  const counter = signedArea(ring) > 0;
-  const [vx, vy] = towardViewer(projection);
-  const facing = ring.map(([ax, ay], index) => {
-    const [bx, by] = ring[(index + 1) % count]!;
-    const dx = bx - ax;
-    const dy = by - ay;
-    const [nx, ny] = counter ? [dy, -dx] : [-dy, dx];
-    return nx * vx + ny * vy > 1e-9;
-  });
-  return runsOf(facing, true).map((run) => pathOf(run.map((index) => iso([ring[index]![0], ring[index]![1], z], projection)))).join("");
-}
-
-export const sideSeam = (plan: Plan, z: number, projection: Projection, steps = 8) => ringSeam(ringOf(plan, steps), z, projection);
-
-export function sideRing(center: Point3, radius: number, axis: "x" | "y", projection: Projection, steps = 20) {
-  const [px, py, pz] = center;
-  const points: Flat[] = [];
-  for (let step = 0; step < steps; step++) {
-    const angle = (step / steps) * Math.PI * 2;
-    const u = radius * Math.cos(angle);
-    const v = radius * Math.sin(angle);
-    points.push(iso(axis === "x" ? [px, py + u, pz + v] : [px + u, py, pz + v], projection));
-  }
-  return pathOf(points, true);
-}
-
-export function coil(from: number, to: number, center: Plane, radius: number, turns: number, axis: "x" | "y", projection: Projection, perTurn = 16) {
-  const count = Math.max(1, Math.round(turns * perTurn));
-  const back: string[] = [];
-  const front: string[] = [];
-  let run: Flat[] = [];
-  let near: boolean | null = null;
-  for (let index = 0; index <= count; index++) {
-    const share = index / count;
-    const angle = share * turns * Math.PI * 2;
-    const u = radius * Math.cos(angle);
-    const v = radius * Math.sin(angle);
-    const along = from + (to - from) * share;
-    const point: Point3 = axis === "x" ? [along, center[0] + u, center[1] + v] : [center[0] + u, along, center[1] + v];
-    const normal: Point3 = axis === "x" ? [0, Math.cos(angle), Math.sin(angle)] : [Math.cos(angle), 0, Math.sin(angle)];
-    const facing = depthOf(normal, projection) > 0;
-    const flat = iso(point, projection);
-    if (near === null) near = facing;
-    if (facing !== near) {
-      run.push(flat);
-      (near ? front : back).push(pathOf(run));
-      run = [flat];
-      near = facing;
-      continue;
-    }
-    run.push(flat);
-  }
-  if (run.length > 1) (near ? front : back).push(pathOf(run));
-  return { back: back.join(""), front: front.join("") };
-}
-
-export interface Ticks {
-  minor: string;
-  major: string;
-}
-
-export function topTicks(from: number, to: number, step: number, every: number, edge: number, z: number, lengths: [number, number], projection: Projection, axis: "x" | "y" = "x"): Ticks {
-  const minor: string[] = [];
-  const major: string[] = [];
-  const first = Math.ceil(from / step) * step;
-  for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
-    const big = index % every === 0;
-    const length = big ? lengths[1] : lengths[0];
-    const a: Plane = axis === "x" ? [at, edge] : [edge, at];
-    const b: Plane = axis === "x" ? [at, edge + length] : [edge + length, at];
-    (big ? major : minor).push(lineOnTop(a, b, z, projection));
-  }
-  return { minor: minor.join(""), major: major.join("") };
-}
-
-export function sideTicks(from: number, to: number, step: number, every: number, face: number, top: number, lengths: [number, number], projection: Projection, axis: "x" | "y" = "x"): Ticks {
-  const minor: string[] = [];
-  const major: string[] = [];
-  const first = Math.ceil(from / step) * step;
-  for (let at = first, index = Math.round(first / step); at <= to + 1e-9; at += step, index++) {
-    const big = index % every === 0;
-    const length = big ? lengths[1] : lengths[0];
-    const a: Point3 = axis === "x" ? [at, face, top] : [face, at, top];
-    const b: Point3 = axis === "x" ? [at, face, top - length] : [face, at, top - length];
-    (big ? major : minor).push(segment(a, b, projection));
-  }
-  return { minor: minor.join(""), major: major.join("") };
-}
-
-export function radialTicks(cx: number, cy: number, radius: number, count: number, every: number, z: number, lengths: [number, number], projection: Projection, from = 0, span = Math.PI * 2): Ticks {
-  const minor: string[] = [];
-  const major: string[] = [];
-  const closed = Math.abs(span - Math.PI * 2) < 1e-9;
-  const steps = closed ? count : count + 1;
-  for (let index = 0; index < steps; index++) {
-    const angle = from + (index / count) * span;
-    const big = index % every === 0;
-    const inner = radius - (big ? lengths[1] : lengths[0]);
-    const sx = Math.sin(angle);
-    const sy = -Math.cos(angle);
-    (big ? major : minor).push(lineOnTop([cx + sx * inner, cy + sy * inner], [cx + sx * radius, cy + sy * radius], z, projection));
-  }
-  return { minor: minor.join(""), major: major.join("") };
-}
-
-
 export function axisVector(projection: Projection, [dx, dy, dz]: Point3): Flat {
   const origin = iso([0, 0, 0], projection);
   const moved = iso([dx, dy, dz], projection);
@@ -437,11 +287,6 @@ export function axisVector(projection: Projection, [dx, dy, dz]: Point3): Flat {
 }
 
 const fine = (value: number) => Math.round(value * 100) / 100;
-
-export function translateAlong(projection: Projection, by: Point3) {
-  const [x, y] = axisVector(projection, by);
-  return `translate(${fine(x)} ${fine(y)})`;
-}
 
 const thousandth = (value: number) => Math.round(value * 1000) / 1000;
 
@@ -457,11 +302,6 @@ function axesAt(at: Plane, z: number, projection: Projection) {
 const matrixOf = (u: Flat, v: Flat, origin: Flat) =>
   `matrix(${thousandth(u[0])} ${thousandth(u[1])} ${thousandth(v[0])} ${thousandth(v[1])} ${thousandth(origin[0])} ${thousandth(origin[1])})`;
 
-export function holdStill(element: Element, [dx, dy]: Flat) {
-  const text = dx || dy ? `translate(${-dx} ${-dy})` : "";
-  element.querySelectorAll("[data-hold]").forEach((node) => (text ? node.setAttribute("transform", text) : node.removeAttribute("transform")));
-}
-
 export function topMatrix(at: Plane, z: number, projection: Projection, along: "x" | "y" = "x") {
   const { origin, x, y } = axesAt(at, z, projection);
   return along === "x" ? matrixOf(x, y, origin) : matrixOf([-y[0], -y[1]], x, origin);
@@ -471,11 +311,6 @@ export function sideMatrix(at: Plane, z: number, projection: Projection, face: "
   const { origin, x, y, z: up } = axesAt(at, z, projection);
   const down: Flat = [-up[0], -up[1]];
   return face === "left" ? matrixOf(x, down, origin) : matrixOf([-y[0], -y[1]], down, origin);
-}
-
-export function screenRise(height: number, projection: Projection) {
-  const { cosE, k } = cameraOf(projection);
-  return height * cosE * k;
 }
 
 export interface FitOptions {

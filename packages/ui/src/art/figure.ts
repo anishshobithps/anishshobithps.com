@@ -145,7 +145,6 @@ const round = (n: number, places = 2) => {
   return Object.is(v, -0) ? 0 : v;
 };
 
-export const smoothstep = (t: number) => t * t * (3 - 2 * t);
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 
 export class Figure {
@@ -258,7 +257,6 @@ export class Figure {
     return k.sideMatrix(at, z, this.P, face);
   }
 
-
   build(meta: Omit<Scene, "id" | "body" | "tracks" | "period" | "width" | "height"> & { width: number; height: number }): Scene {
     const defs = this.defs.length ? `<defs>${this.defs.join("")}</defs>` : "";
     const id = `${this.id}${meta.width}x${meta.height}`;
@@ -271,10 +269,6 @@ export class Figure {
       ...meta,
     };
   }
-}
-
-export function byDepth<T extends readonly number[]>(points: T[], P: Projection) {
-  return [...points].sort((a, b) => k.depthOf([a[0]!, a[1]!, a[2] ?? 0], P) - k.depthOf([b[0]!, b[1]!, b[2] ?? 0], P));
 }
 
 export function lengths(points: Flat[]) {
