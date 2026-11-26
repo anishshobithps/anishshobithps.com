@@ -16,28 +16,24 @@ import {
   useReadingProgress,
   useTOCState,
 } from "@/components/layouts/blog-toc";
-import { type ReactNode, type RefObject, useEffect, useRef, useState } from "react";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
+import { type ReactNode, type RefObject, useEffect, useRef } from "react";
 
-function DrawerTab({
-  selected,
-  onClick,
-  children,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
+function DrawerTab({ value, children }: { value: string; children: ReactNode }) {
   return (
-    <Button
-      type="button"
-      variant={selected ? "outline" : "muted"}
-      size="sm"
-      aria-pressed={selected}
-      onClick={onClick}
-      className="flex-1"
+    <TabsTab
+      value={value}
+      render={(props, state) => (
+        <Button
+          {...props}
+          variant={state.selected ? "outline" : "muted"}
+          size="sm"
+          className="flex-1"
+        />
+      )}
     >
       {children}
-    </Button>
+    </TabsTab>
   );
 }
 
@@ -71,7 +67,6 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
   const state = useTOCState();
   const active = useActiveAnchor();
   const open = useReadingSelector((state) => state.tocOpen);
-  const [tab, setTab] = useState<"contents" | "links">("contents");
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -121,6 +116,14 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
 
   if (state.items.length === 0) return null;
 
+  const contents = (
+    <TOCScrollArea ref={viewportRef} className="max-h-[60svh] overscroll-contain">
+      <ScrollProvider containerRef={disabledAutoScrollRef}>
+        <PressList />
+      </ScrollProvider>
+    </TOCScrollArea>
+  );
+
   return (
     <>
       {open && (
@@ -140,26 +143,27 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
           )}
         >
           <div className="px-gutter py-3" ref={scrollContainerRef}>
-            {rail && (
-              <div className="mb-2 flex gap-1 rounded-md bg-muted p-0.5">
-                <DrawerTab selected={tab === "contents"} onClick={() => setTab("contents")}>
-                  Contents
-                </DrawerTab>
-                <DrawerTab selected={tab === "links"} onClick={() => setTab("links")}>
-                  Links {railCount}
-                </DrawerTab>
-              </div>
-            )}
-            {tab === "links" && rail ? (
-              <div className="-mx-2.5 max-h-[60svh] overflow-y-auto overscroll-contain py-1">
-                {rail}
-              </div>
+            {rail ? (
+              <Tabs defaultValue="contents">
+                <TabsList
+                  aria-label="Post navigation"
+                  className="mb-2 flex gap-1 rounded-md bg-muted p-0.5"
+                >
+                  <DrawerTab value="contents">Contents</DrawerTab>
+                  <DrawerTab value="links">Links {railCount}</DrawerTab>
+                </TabsList>
+                <TabsPanel value="contents" className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+                  {contents}
+                </TabsPanel>
+                <TabsPanel
+                  value="links"
+                  className="-mx-2.5 max-h-[60svh] overflow-y-auto overscroll-contain py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                >
+                  {rail}
+                </TabsPanel>
+              </Tabs>
             ) : (
-              <TOCScrollArea ref={viewportRef} className="max-h-[60svh] overscroll-contain">
-                <ScrollProvider containerRef={disabledAutoScrollRef}>
-                  <PressList />
-                </ScrollProvider>
-              </TOCScrollArea>
+              contents
             )}
           </div>
         </div>
