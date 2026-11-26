@@ -12,8 +12,13 @@ import {
   ThumbsUpIcon,
 } from "@repo/icons";
 import { Button } from "@repo/ui/components/button";
-import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
+import {
+  Text,
+  TypographyMuted,
+  TypographySmall,
+} from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
+import { Toggle, ToggleGroup, ToggleIcon } from "@ui-sdk/react/toggle";
 import { useState } from "react";
 
 export interface MoodState {
@@ -26,37 +31,29 @@ const MOODS = [
     id: "terrible" as MoodId,
     label: "Not for me",
     icon: ThumbsDownIcon,
-    activeClassName:
-      "border-red-500/40 bg-red-500/10 text-red-700 hover:bg-red-500/15 hover:text-red-700 dark:text-red-400 dark:hover:text-red-400",
-    inactiveClassName:
-      "hover:border-red-500/20 hover:bg-red-500/5 hover:text-red-700 dark:hover:text-red-400",
+    toneClassName:
+      "hover:border-destructive/30 hover:bg-destructive/5 data-pressed:border-destructive/60 data-pressed:bg-destructive/15 dark:hover:border-destructive/30 dark:hover:bg-destructive/5 dark:data-pressed:border-destructive/60 dark:data-pressed:bg-destructive/15",
   },
   {
     id: "bad" as MoodId,
     label: "Meh",
     icon: SmileyMehIcon,
-    activeClassName:
-      "border-orange-500/40 bg-orange-500/10 text-orange-800 hover:bg-orange-500/15 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-400",
-    inactiveClassName:
-      "hover:border-orange-500/20 hover:bg-orange-500/5 hover:text-orange-800 dark:hover:text-orange-400",
+    toneClassName:
+      "hover:border-warning/30 hover:bg-warning/5 data-pressed:border-warning/60 data-pressed:bg-warning/15 dark:hover:border-warning/30 dark:hover:bg-warning/5 dark:data-pressed:border-warning/60 dark:data-pressed:bg-warning/15",
   },
   {
     id: "good" as MoodId,
     label: "Liked it",
     icon: ThumbsUpIcon,
-    activeClassName:
-      "border-blue-500/40 bg-blue-500/10 text-blue-700 hover:bg-blue-500/15 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-400",
-    inactiveClassName:
-      "hover:border-blue-500/20 hover:bg-blue-500/5 hover:text-blue-700 dark:hover:text-blue-400",
+    toneClassName:
+      "hover:border-(--color-available)/30 hover:bg-(--color-available)/5 data-pressed:border-(--color-available)/60 data-pressed:bg-(--color-available)/15 dark:hover:border-(--color-available)/30 dark:hover:bg-(--color-available)/5 dark:data-pressed:border-(--color-available)/60 dark:data-pressed:bg-(--color-available)/15",
   },
   {
     id: "amazing" as MoodId,
     label: "Loved it",
     icon: HeartIcon,
-    activeClassName:
-      "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-400",
-    inactiveClassName:
-      "hover:border-emerald-500/20 hover:bg-emerald-500/5 hover:text-emerald-700 dark:hover:text-emerald-400",
+    toneClassName:
+      "hover:border-(--color-heart)/30 hover:bg-(--color-heart)/5 data-pressed:border-(--color-heart)/60 data-pressed:bg-(--color-heart)/15 dark:hover:border-(--color-heart)/30 dark:hover:bg-(--color-heart)/5 dark:data-pressed:border-(--color-heart)/60 dark:data-pressed:bg-(--color-heart)/15",
   },
 ] as const;
 
@@ -91,43 +88,46 @@ export function MoodPicker({
           </TypographyMuted>
         </div>
       </div>
-      <fieldset
+      <ToggleGroup
         aria-label="Rate this post"
-        className="flex flex-wrap gap-2 justify-center border-0 p-0 m-0"
+        value={moodOptimistic.value ? [moodOptimistic.value] : []}
+        onValueChange={(next: string[]) => {
+          const picked = (next[0] as MoodId | undefined) ?? moodOptimistic.value;
+          if (picked) onSelect(picked);
+        }}
+        className="flex flex-wrap justify-center gap-2"
       >
-        {MOODS.map(
-          ({ id, label, icon: Icon, activeClassName, inactiveClassName }) => {
-            const isActive = moodOptimistic.value === id;
-            const count = moodLoading ? null : (moodOptimistic.counts[id] ?? 0);
+        {MOODS.map(({ id, label, icon: Icon, toneClassName }) => {
+          const count = moodLoading ? null : (moodOptimistic.counts[id] ?? 0);
 
-            return (
-              <Button
-                key={id}
-                variant="outline"
-                size="sm"
-                onClick={() => onSelect(id)}
-                onMouseEnter={() => setHoveredMood(id)}
-                onMouseLeave={() => setHoveredMood(null)}
-                aria-pressed={isActive}
-                aria-label={`${label}${count !== null && count > 0 ? `, ${count} reaction${count === 1 ? "" : "s"}` : ""}`}
-                className={cn(
-                  "gap-2 transition-[color,background-color,border-color] duration-150 cursor-pointer",
-                  // eslint-disable-next-line shadcn/require-static-classes
-                  isActive ? activeClassName : inactiveClassName,
-                )}
-              >
-                <Icon data-icon="inline-start" size={14} aria-hidden="true" />
-                {label}
-                {count !== null && count > 0 && (
-                  <span className="tabular-nums text-xs opacity-70">
+          return (
+            <Toggle
+              key={id}
+              value={id}
+              render={<Button variant="outline" size="sm" />}
+              onMouseEnter={() => setHoveredMood(id)}
+              onMouseLeave={() => setHoveredMood(null)}
+              aria-label={`${label}${count !== null && count > 0 ? `, ${count} reaction${count === 1 ? "" : "s"}` : ""}`}
+              className={cn(
+                "cursor-pointer gap-2 transition-[color,background-color,border-color] duration-150",
+                toneClassName,
+              )}
+            >
+              <ToggleIcon>
+                <Icon size={14} />
+              </ToggleIcon>
+              {label}
+              {count !== null && count > 0 && (
+                <span className="tabular-nums">
+                  <Text as="span" variant="caption">
                     {count}
-                  </span>
-                )}
-              </Button>
-            );
-          },
-        )}
-      </fieldset>
+                  </Text>
+                </span>
+              )}
+            </Toggle>
+          );
+        })}
+      </ToggleGroup>
       {!moodLoading && (
         <TypographyMuted className="text-xs tabular-nums">
           {total === 0
