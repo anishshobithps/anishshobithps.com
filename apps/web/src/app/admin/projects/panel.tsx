@@ -62,7 +62,7 @@ import {
   TrashIcon,
   PlusIcon,
   FolderOpenIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import {
   Empty,
   EmptyContent,

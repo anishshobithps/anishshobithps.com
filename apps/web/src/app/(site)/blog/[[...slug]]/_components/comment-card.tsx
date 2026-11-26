@@ -8,7 +8,7 @@ import {
   HeartIcon,
   PushPinSimpleIcon,
   TrashIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import {

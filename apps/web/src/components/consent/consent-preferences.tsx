@@ -13,7 +13,7 @@ import {
   useHeadlessConsentUI,
   useVendorsListedUnder,
 } from "@c15t/nextjs/headless";
-import { CaretDownIcon } from "@repo/icons";
+import { CaretDownIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import {
   Collapsible,

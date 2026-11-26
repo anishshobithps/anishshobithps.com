@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretDownIcon, CheckIcon, TagIcon, XIcon } from "@repo/icons";
+import { CaretDownIcon, CheckIcon, TagIcon, XIcon } from "@repo/ui/icons";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import {
   Combobox,

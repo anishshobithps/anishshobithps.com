@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretDownIcon, ChatCircleIcon } from "@repo/icons";
+import { CaretDownIcon, ChatCircleIcon } from "@repo/ui/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
 import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@repo/ui/components/button";

@@ -1,7 +1,7 @@
 "use client";
 
 import { BouncingLogos } from "@/components/shared/bouncing-logo";
-import { HouseIcon, SignOutIcon, WarningIcon } from "@repo/icons";
+import { HouseIcon, SignOutIcon, WarningIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import {
   ButtonGroup,

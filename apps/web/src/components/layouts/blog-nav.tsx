@@ -20,7 +20,7 @@ import {
   LinkIcon,
   XLogoIcon,
   LinkedinLogoIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { playCue } from "@repo/sounds/sound-player";
 import { toast } from "@/lib/toast";
 import type { Route } from "next";

@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { SignInTrigger, useSiteAuth } from "@/components/shared/site-auth";
 import { Button } from "@repo/ui/components/button";
 import { Text } from "@repo/ui/components/typography";
-import { SignInIcon, SignOutIcon } from "@repo/icons";
+import { SignInIcon, SignOutIcon } from "@repo/ui/icons";
 import { EmptyAvatar, Pass } from "@/components/shared/hub-widgets";
 import { Avatar } from "@/components/engagement/avatar";
 

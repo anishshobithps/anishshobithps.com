@@ -81,7 +81,7 @@ import {
   ImageIcon,
   ArrowSquareOutIcon,
   LinkIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import {
   Empty,
   EmptyContent,

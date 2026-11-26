@@ -13,7 +13,7 @@ const EXTRA_WEIGHTS = ["bold", "duotone"] as const;
 
 const LINE_GLYPH = /^(Caret.*|Arrow.*|Trend.*|TextAlignLeft|TextT|Check|X|Plus|List|DotsThree|Pulse|Spinner|Code|Link|Repeat)$/;
 
-const indexSource = readFileSync(join(root, "packages/icons/src/index.tsx"), "utf8");
+const indexSource = readFileSync(join(root, "packages/ui/src/icons/index.tsx"), "utf8");
 const names = [...indexSource.matchAll(/^\s+([A-Za-z0-9]+Icon),$/gm)].map((m) => m[1]!);
 
 function walk(dir: string): string[] {
@@ -64,7 +64,7 @@ function shapes(element: ReactElement): Node[] {
 
 async function main() {
   const lines: string[] = [
-    `import { GlassIcon, ShapeIcon, type GlassShapes, type IconShapes, type ShapeIconProps } from "@repo/icons/create-icon";`,
+    `import { GlassIcon, ShapeIcon, type GlassShapes, type IconShapes, type ShapeIconProps } from "@repo/ui/icons/create-icon";`,
     "",
   ];
 
@@ -110,7 +110,7 @@ async function main() {
     );
   }
 
-  writeFileSync(join(root, "packages/icons/src/icons.generated.tsx"), lines.join("\n"));
+  writeFileSync(join(root, "packages/ui/src/icons/icons.generated.tsx"), lines.join("\n"));
   console.log(`icons: ${names.length} generated, logos keep their phosphor weights`);
 }
 

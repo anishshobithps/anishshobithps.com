@@ -11,7 +11,7 @@ import {
 } from "@repo/ui/components/typography";
 import { padIndex } from "@repo/core/text";
 import { Button } from "@repo/ui/components/button";
-import { ArrowRightIcon, ArrowUpRightIcon } from "@repo/icons";
+import { ArrowRightIcon, ArrowUpRightIcon } from "@repo/ui/icons";
 import Link from "next/link";
 import { InlineArt } from "@/components/shared/inline-art";
 import type { Route } from "next";

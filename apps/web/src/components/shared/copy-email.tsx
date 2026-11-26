@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckIcon, CopyIcon } from "@repo/icons";
+import { CheckIcon, CopyIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { Text } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";

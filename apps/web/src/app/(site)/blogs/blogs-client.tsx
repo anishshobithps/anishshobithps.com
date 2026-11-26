@@ -27,7 +27,7 @@ import { TypographyMuted } from "@repo/ui/components/typography";
 import { Reveal } from "@/components/shared/reveal";
 import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@repo/sounds/sound-player";
-import { MagnifyingGlassIcon, XIcon } from "@repo/icons";
+import { MagnifyingGlassIcon, XIcon } from "@repo/ui/icons";
 import {
   parseAsArrayOf,
   parseAsInteger,

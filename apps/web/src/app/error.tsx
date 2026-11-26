@@ -5,7 +5,7 @@ import { Empty, EmptyContent, EmptyHeader } from "@repo/ui/components/empty";
 import {
   HouseIcon,
   ArrowCounterClockwiseIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import {
   Text,
   TypographyMuted,

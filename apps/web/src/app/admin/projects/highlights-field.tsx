@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, PlusIcon, XIcon } from "@repo/icons";
+import { CheckIcon, PlusIcon, XIcon } from "@repo/ui/icons";
 import { PROJECT_LIMITS } from "@repo/core/projects-schema";
 import { FormLabel, useFormField } from "@repo/ui/components/form";
 import { Text } from "@repo/ui/components/typography";

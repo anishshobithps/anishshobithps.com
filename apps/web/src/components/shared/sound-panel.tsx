@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 
-import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/icons";
+import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/ui/icons";
 import { Label } from "@repo/ui/components/label";
 import { Slider } from "@repo/ui/components/slider";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";

@@ -32,7 +32,6 @@
     "@phosphor-icons/react": "^2.1.10",
     "@repo/core": "workspace:*",
     "@repo/db": "workspace:*",
-    "@repo/icons": "workspace:*",
     "@repo/query": "workspace:*",
     "@repo/site-config": "workspace:*",
     "@repo/sounds": "workspace:*",

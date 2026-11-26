@@ -26,7 +26,7 @@ import {
   ListIcon,
   MagnifyingGlassIcon,
   XIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {

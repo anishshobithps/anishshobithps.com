@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PulseIcon, WarningIcon } from "@repo/icons";
+import { PulseIcon, WarningIcon } from "@repo/ui/icons";
 import {
   Card,
   CardAction,

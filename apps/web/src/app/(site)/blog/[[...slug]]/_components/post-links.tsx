@@ -1,4 +1,4 @@
-import { LinkIcon } from "@repo/icons";
+import { LinkIcon } from "@repo/ui/icons";
 import { Text } from "@repo/ui/components/typography";
 import { LinkCard } from "@/components/link-card/link-card";
 import { Reveal } from "@/components/shared/reveal";

@@ -7,7 +7,7 @@ import {
   PushPinSimpleIcon,
   RepeatIcon,
   TrashIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import { Separator } from "@repo/ui/components/separator";
 import { Button } from "@repo/ui/components/button";

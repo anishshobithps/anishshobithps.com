@@ -1,4 +1,4 @@
-import { CaretUpDownIcon } from "@repo/icons";
+import { CaretUpDownIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import type { ReactTable, RowData } from "@tanstack/react-table";

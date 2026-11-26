@@ -22,7 +22,7 @@ import {
   PulseIcon,
   SignOutIcon,
   FolderOpenIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { LogoIcon } from "@/components/shared/logo-icon";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";

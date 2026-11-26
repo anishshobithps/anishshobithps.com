@@ -4,7 +4,7 @@ import type { Route } from "next";
 import { cva } from "class-variance-authority";
 import { cn } from "@repo/ui/lib/cn";
 import { Text } from "@repo/ui/components/typography";
-import { ArrowUpRightIcon } from "@repo/icons";
+import { ArrowUpRightIcon } from "@repo/ui/icons";
 import { resolveLinkPreview } from "@/lib/link-preview/resolve";
 import type { LinkPreview } from "@/lib/link-preview/types";
 import { LinkImage } from "@/components/link-card/link-image";

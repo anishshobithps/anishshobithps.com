@@ -4,7 +4,7 @@ import {
   CaretLeftIcon,
   CaretRightIcon,
   DotsThreeIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 
 import { cn } from "@repo/ui/lib/cn";
 import { buttonVariants, type Button } from "@repo/ui/components/button";

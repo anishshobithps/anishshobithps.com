@@ -6,7 +6,7 @@ import {
   HeartIcon,
   LinkIcon,
   SmileyMehIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import {
   Table,

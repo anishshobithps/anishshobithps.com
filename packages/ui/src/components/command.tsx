@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
-import { MagnifyingGlassIcon } from "@repo/icons";
+import { MagnifyingGlassIcon } from "@repo/ui/icons";
 
 import { cn } from "@repo/ui/lib/cn";
 import {

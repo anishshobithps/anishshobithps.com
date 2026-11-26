@@ -13,7 +13,7 @@ import { Section } from "@/components/layouts/page";
 import { useSiteAuth } from "@/components/shared/site-auth";
 import { queryKeys } from "@/lib/query-keys";
 import { TypographyMuted } from "@repo/ui/components/typography";
-import { EyeIcon } from "@repo/icons";
+import { EyeIcon } from "@repo/ui/icons";
 
 export function PostStatsRow({ slug }: { slug: string }) {
   const { data, isError } = usePostData(slug);

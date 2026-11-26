@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { TrendDownIcon, TrendUpIcon } from "@repo/icons";
+import { TrendDownIcon, TrendUpIcon } from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import {
   Card,

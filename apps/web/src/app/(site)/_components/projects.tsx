@@ -20,7 +20,7 @@ import {
   GithubLogoIcon,
   ArrowUpRightIcon,
   ArrowRightIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import Link from "next/link";
 import { padIndex } from "@repo/core/text";
 import type { Route } from "next";

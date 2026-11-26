@@ -1,6 +1,6 @@
 import { Button } from "@repo/ui/components/button";
 import { Empty, EmptyContent, EmptyHeader } from "@repo/ui/components/empty";
-import { HouseIcon } from "@repo/icons";
+import { HouseIcon } from "@repo/ui/icons";
 import { PageArt } from "@repo/ui/iso/components/page-art";
 import { ArtStage } from "@/components/layouts/hero-art";
 import {

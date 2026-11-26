@@ -7,7 +7,7 @@ import {
   useHeadlessConsentUI,
   useIABPolicyGuard,
 } from "@c15t/nextjs/headless";
-import { XIcon } from "@repo/icons";
+import { XIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import {
   Dialog,

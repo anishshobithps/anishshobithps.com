@@ -1,4 +1,4 @@
-import { SpinnerIcon } from "@repo/icons";
+import { SpinnerIcon } from "@repo/ui/icons";
 import { cn } from "cn";
 
 function Spinner({ className, ...props }: React.ComponentProps<"svg">) {

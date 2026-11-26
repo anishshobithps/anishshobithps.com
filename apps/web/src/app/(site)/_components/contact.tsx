@@ -2,7 +2,7 @@ import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@repo/ui/iso/components/page-art";
 import Link from "next/link";
 import { InlineArt } from "@/components/shared/inline-art";
-import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/icons";
+import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/ui/icons";
 import { Section } from "@/components/layouts/page";
 import { Reveal } from "@/components/shared/reveal";
 import {

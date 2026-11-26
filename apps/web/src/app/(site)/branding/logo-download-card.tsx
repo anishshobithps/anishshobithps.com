@@ -11,7 +11,7 @@ import {
 } from "@repo/ui/components/select";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/site-config";
-import { CodeIcon, ImageIcon } from "@repo/icons";
+import { CodeIcon, ImageIcon } from "@repo/ui/icons";
 import { useRef, useState } from "react";
 import { track } from "@/lib/analytics/events";
 

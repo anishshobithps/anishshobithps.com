@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon } from "@repo/icons";
+import { ArrowRightIcon } from "@repo/ui/icons";
 import { cn } from "@repo/ui/lib/cn";
 import { prefersReducedMotion } from "@repo/ui/lib/motion-preference";
 import { isoType } from "@repo/ui/iso/components/classes";

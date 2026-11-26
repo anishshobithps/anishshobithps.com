@@ -2,7 +2,7 @@
 
 import { applyTheme, themes } from "@/components/shared/theme-toggle";
 import { setSoundOn } from "@/components/shared/sound-controls";
-import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/icons";
+import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { ToggleGroup, ToggleGroupItem } from "@repo/ui/components/toggle-group";
 import { cn } from "@repo/ui/lib/cn";

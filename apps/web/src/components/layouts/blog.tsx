@@ -7,7 +7,7 @@ import { cn } from "@repo/ui/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
 import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
 import { TOCProvider, TOCScrollArea } from "fumadocs-ui/components/toc";
-import { LinkIcon } from "@repo/icons";
+import { LinkIcon } from "@repo/ui/icons";
 import { clearReading, setReading, setTocOpen, useReadingSelector } from "@/lib/reading-store";
 import {
   currentSection,

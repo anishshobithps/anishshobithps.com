@@ -6,7 +6,7 @@ import {
   type ComposerSubmitHandler,
 } from "@/components/engagement/composer";
 import { TypingBubble } from "@/components/shared/doodles";
-import { SignInIcon, SignOutIcon } from "@repo/icons";
+import { SignInIcon, SignOutIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { SignInTrigger } from "@/components/shared/site-auth";

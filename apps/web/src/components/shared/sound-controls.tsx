@@ -5,7 +5,7 @@ import type { ComponentProps } from "react";
 import {
   SpeakerHighIcon,
   SpeakerSlashIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { Switch } from "@repo/ui/components/switch";
 import {

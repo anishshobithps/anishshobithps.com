@@ -9,7 +9,7 @@ import { Reveal } from "@/components/shared/reveal";
 import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@repo/ui/iso/components/page-art";
 import { Button } from "@repo/ui/components/button";
-import { CaretRightIcon } from "@repo/icons";
+import { CaretRightIcon } from "@repo/ui/icons";
 import { formatShortDate, toISOString } from "@repo/core/date";
 import Link from "next/link";
 import { InlineArt } from "@/components/shared/inline-art";

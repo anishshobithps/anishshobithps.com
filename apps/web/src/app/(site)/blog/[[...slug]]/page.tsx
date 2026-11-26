@@ -33,7 +33,7 @@ import {
 import { buildMeta } from "@/lib/metadata";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
-import { CalendarIcon, GitCommitIcon, ClockIcon } from "@repo/icons";
+import { CalendarIcon, GitCommitIcon, ClockIcon } from "@repo/ui/icons";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata, Route } from "next";
 import Link from "next/link";

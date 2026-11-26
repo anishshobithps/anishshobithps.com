@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 
-import { LinkIcon } from "@repo/icons";
+import { LinkIcon } from "@repo/ui/icons";
 import { Label } from "@repo/ui/components/label";
 import { Switch } from "@repo/ui/components/switch";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";

@@ -1,7 +1,7 @@
 import { IsoStage } from "@repo/ui/iso/components/iso-stage";
 import { isoCanvas, nudgeDraw } from "@repo/ui/iso/components/classes";
 import { cn } from "@repo/ui/lib/cn";
-import { ArrowRightIcon } from "@repo/icons";
+import { ArrowRightIcon } from "@repo/ui/icons";
 import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";
 import type { Route } from "next";
 import Link from "next/link";

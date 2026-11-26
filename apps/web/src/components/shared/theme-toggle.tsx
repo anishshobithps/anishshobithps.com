@@ -1,6 +1,6 @@
 "use client";
 
-import { MonitorIcon, MoonIcon, SunIcon } from "@repo/icons";
+import { MonitorIcon, MoonIcon, SunIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { ToggleGroup, ToggleGroupItem } from "@repo/ui/components/toggle-group";
 import {

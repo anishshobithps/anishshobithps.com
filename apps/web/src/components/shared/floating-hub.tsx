@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useRef, useState } from "react";
 
 import { Button } from "@repo/ui/components/button";
-import { XIcon } from "@repo/icons";
+import { XIcon } from "@repo/ui/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
 import { useDraggable } from "@/hooks/use-draggable";
 import { useIsMobile } from "@repo/ui/hooks/use-mobile";

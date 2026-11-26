@@ -5,7 +5,7 @@ import {
   CheckIcon,
   CaretRightIcon,
   CircleIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
 import { cn } from "@repo/ui/lib/cn";

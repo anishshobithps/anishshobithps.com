@@ -33,7 +33,7 @@ import {
   SpeakerSlashIcon,
   SunIcon,
   XLogoIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import {
   getCommandMenuOpen,
   getCommandMenuServerSnapshot,

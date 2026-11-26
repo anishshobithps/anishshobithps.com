@@ -71,7 +71,7 @@ ESLint is on 10. `eslint-plugin-import`, `eslint-plugin-jsx-a11y` and `eslint-pl
 
 - **Text uses the Typography components.** `Text`, `TypographyMuted`, `TypographySmall`, the heading components, and the rest in `packages/ui/src/components/typography.tsx`. Not raw `<p>`, `<span>`, or `<small>`. Use `asChild` when text has to be another element, like an `<a>`.
 - **Forms use the shadcn `Form`** (`packages/ui/src/components/form.tsx`, react-hook-form underneath) rather than hand-wired `useState`. With zod 4, resolve with `standardSchemaResolver` from `@hookform/resolvers/standard-schema`, because `zodResolver` has a type mismatch with `@hookform/resolvers` 5.
-- **Icons come from `@repo/icons`**, which renders the Phosphor icons the site uses as green glass. To add one, list it in `packages/icons/src/index.tsx` and run `pnpm --filter web icons`.
+- **Icons come from `@repo/ui/icons`**, which renders the Phosphor icons the site uses as green glass. To add one, list it in `packages/ui/src/icons/index.tsx` and run `pnpm --filter web icons`.
 - **Class names merge through `cn`** from `@/lib/cn`.
 - **Server actions return an `ActionResult`** (`packages/core/src/action-result.ts`) instead of throwing, and client code runs them through `useActionMutation`, which turns failures into toasts. Admin mutations go through `adminMutation` so the owner check can't be forgotten.
 - **Reads that can fail use `safeQuery`**, so a database hiccup shows a fallback instead of an error page.

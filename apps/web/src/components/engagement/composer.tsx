@@ -1,6 +1,6 @@
 "use client";
 
-import { PaperPlaneTiltIcon } from "@repo/icons";
+import { PaperPlaneTiltIcon } from "@repo/ui/icons";
 import { Spinner } from "@repo/ui/components/spinner";
 import { Button } from "@repo/ui/components/button";
 import { Textarea } from "@repo/ui/components/textarea";

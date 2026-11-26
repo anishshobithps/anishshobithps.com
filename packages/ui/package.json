@@ -20,7 +20,10 @@
     "./svg-kit/params": "./src/svg-kit/params.ts",
     "./svg-kit/primitives": "./src/svg-kit/primitives.tsx",
     "./svg-kit/render": "./src/svg-kit/render.tsx",
-    "./svg-kit/template": "./src/svg-kit/template.ts"
+    "./svg-kit/template": "./src/svg-kit/template.ts",
+    "./icons": "./src/icons/index.tsx",
+    "./icons/create-icon": "./src/icons/create-icon.tsx",
+    "./icons/icons.generated": "./src/icons/icons.generated.tsx"
   },
   "scripts": {
     "lint": "eslint",
@@ -29,8 +32,8 @@
     "generate": "tsx scripts/build-tokens.ts"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@repo/core": "workspace:*",
-    "@repo/icons": "workspace:*",
     "@repo/site-config": "workspace:*",
     "@tanstack/react-table": "catalog:",
     "@tanstack/react-virtual": "catalog:",

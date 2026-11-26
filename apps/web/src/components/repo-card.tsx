@@ -14,7 +14,7 @@ import {
   GithubLogoIcon,
   ScalesIcon,
   StarIcon,
-} from "@repo/icons"
+} from "@repo/ui/icons"
 
 const repoCardVariants = cva(
   "flex flex-col gap-3 rounded-lg border transition-colors",

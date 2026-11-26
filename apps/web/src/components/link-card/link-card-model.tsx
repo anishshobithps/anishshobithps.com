@@ -16,7 +16,7 @@ import {
   YoutubeLogoIcon,
   GitForkIcon,
   ClockIcon,
-} from "@repo/icons";
+} from "@repo/ui/icons";
 import { formatCount } from "@/lib/github";
 import type { LinkPreview } from "@/lib/link-preview/types";
 import { LinkImage } from "@/components/link-card/link-image";
