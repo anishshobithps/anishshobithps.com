@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FootnoteDefinition, FootnoteReference, Root, RootContent } from "mdast";
-import { remarkCitations } from "@/lib/remarkCitations";
+import { remarkCitations } from "@/lib/remark/citations";
 
 function reference(identifier: string): FootnoteReference {
     return { type: "footnoteReference", identifier, label: identifier };
