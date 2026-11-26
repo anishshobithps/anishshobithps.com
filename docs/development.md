@@ -55,7 +55,7 @@ Path aliases work in tests, so import from `@/lib/...` like the app does. For co
 - `no-raw-colors`, `no-arbitrary-values`, `no-inline-styles`, `no-unknown-classes`, `require-static-classes`: use tokens and static class names.
 - Raw `<button>`, `<input>`, `<select>`, `<textarea>`, `<label>`, `<hr>`, `<kbd>`, `<dialog>`, `<details>`, `<summary>`, and table elements are banned in TSX. Use the components in `packages/ui/src/components/`.
 
-`packages/ui/src/components/**` is exempt from the restyle rules, and a few files that render without Tailwind (the OG card, the `/svg` templates, the generated icons) are exempt from the class rules. The shared config is in `packages/eslint-config`.
+The shadcn primitives in `packages/ui/src/components/` (not `components/art/`), plus `hooks/`, `lib/`, and `styles/`, are exempt from the restyle rules, and a few files that render without Tailwind (the OG card, the `/svg` templates, the generated icons) are exempt from the class rules. The shared config is in `packages/eslint-config`.
 
 ESLint is on 10. `eslint-plugin-import`, `eslint-plugin-jsx-a11y` and `eslint-plugin-react` have not widened their peer ranges yet, so `pnpm-workspace.yaml` allows ESLint 10 for them. Lint is not part of CI because the codebase still has existing violations, so a red `pnpm lint` isn't necessarily yours. Compare against `main`, and keep the files you touch clean.
 
@@ -86,7 +86,7 @@ The shadcn CLI is configured in [`components.json`](../components.json), with th
 pnpm exec shadcn add slider
 ```
 
-The CLI may write `import { cn } from "cn"`. Change it to `@/lib/cn` to match the rest of the code. New components land in `packages/ui/src/components/`, and they're exempt from the restyle lint rules, so keep the primitives generic and put site-specific styling in the component that uses them.
+The CLI may write `import { cn } from "cn"`. Change it to `@repo/ui/lib/cn` to match the rest of the code. New components land in `packages/ui/src/components/`, and they're exempt from the restyle lint rules, so keep the primitives generic and put site-specific styling in the component that uses them.
 
 ## Browser support
 

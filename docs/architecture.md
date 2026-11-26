@@ -116,8 +116,22 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
 | `@repo/sounds` | `packages/sounds` | Sound engine, player, cues, preferences, and the palette | none |
 | `@repo/tsconfig` | `packages/tsconfig` | Base, Next, and library tsconfig presets | none |
-| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, UI hooks, the green-glass Phosphor icons and brand logos, the virtual list hook, the sortable table header, the media player, the PDF viewer, the design tokens with their build scripts, in `src/art` the two-plate print engine and every scene (drawn by `src/components/art`), and in `src/cards` the fonts, palette, primitives, and renderer for /svg and OG cards | core |
+| `@repo/ui` | `packages/ui` | Everything visual: primitives, art, cards, icons, and tokens (modules below) | core |
 | `@repo/vitest-config` | `packages/vitest-config` | Shared Vitest config | none |
+
+### Inside `@repo/ui`
+
+Each folder under `packages/ui/src` is one module, imported by its path:
+
+| Module | Import | What it holds |
+| --- | --- | --- |
+| `components/` | `@repo/ui/components/button` | shadcn primitives, Typography, and the site's shared components (media player, PDF viewer, sortable table header, signature, location tag) |
+| `components/art/` | `@repo/ui/components/art/page-art` | React components that draw the art: `IsoArt`, `IsoStage`, `IsoMotion`, `PageArt`, `StripArt`, `BlogCover`, `GitChaos` |
+| `art/` | `@repo/ui/art/print`, `@repo/ui/art/scenes/branding` | The two-plate print engine (`geometry`, `figure`, `print`, `classes`, `animation`) and every scene |
+| `cards/` | `@repo/ui/cards/render` | Fonts, palette, primitives, params, templates, and the renderer for the /svg and OG cards |
+| `icons/` | `@repo/ui/icons` | The green-glass Phosphor icons and brand logos; `icons/generated.tsx` is written by `pnpm --filter web icons` |
+| `styles/` | `@repo/ui/styles/tokens.css`, `@repo/ui/styles/theme-tokens` | Design tokens and their server-side resolver; `pnpm --filter @repo/ui generate` rebuilds `tokens.generated.ts` |
+| `hooks/`, `lib/` | `@repo/ui/hooks/use-virtual-list`, `@repo/ui/lib/cn` | UI hooks and helpers |
 
 Commands run through Turborepo from the root: `pnpm dev`, `pnpm build`, `pnpm turbo run types:check test`, and `pnpm lint:ws` (sherif) for dependency consistency. Lint config, tsconfig, and Vitest config come from the three tooling packages, so a rule changes in one place.
 
