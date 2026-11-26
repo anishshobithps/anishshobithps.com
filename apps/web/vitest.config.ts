@@ -9,4 +9,26 @@ export default createVitestConfig({
       ),
     },
   },
+  test: {
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "node",
+          include: ["tests/**/*.test.ts"],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "dom",
+          include: ["tests/**/*.test.tsx"],
+          exclude: ["**/node_modules/**", "tests/**/*.test.ts"],
+          environment: "jsdom",
+          setupFiles: ["./tests/support/dom-setup.ts"],
+          css: false,
+        },
+      },
+    ],
+  },
 });

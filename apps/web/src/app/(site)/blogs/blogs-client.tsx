@@ -1,13 +1,6 @@
 "use client";
 
-import { Button } from "@repo/ui/components/button";
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-} from "@repo/ui/components/button-group";
-import { Checkbox } from "@repo/ui/components/checkbox";
 import { Divider } from "@repo/ui/components/divider";
-import { Label } from "@repo/ui/components/label";
 import {
   InputGroup,
   InputGroupAddon,
@@ -24,26 +17,17 @@ import {
   PaginationPrevious,
 } from "@repo/ui/components/pagination";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@repo/ui/components/popover";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
-import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
+import { TypographyMuted } from "@repo/ui/components/typography";
 import { Reveal } from "@/components/shared/reveal";
 import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@repo/sounds/sound-player";
-import {
-  MagnifyingGlassIcon,
-  TagIcon,
-  XIcon,
-} from "@repo/icons";
+import { MagnifyingGlassIcon, XIcon } from "@repo/icons";
 import {
   parseAsArrayOf,
   parseAsInteger,
@@ -59,6 +43,7 @@ import {
 } from "react";
 import { PostCard } from "@/app/(site)/blogs/post-card";
 import { postGrid } from "@/app/(site)/blogs/post-grid";
+import { TagFilter } from "@/app/(site)/blogs/tag-filter";
 import { track } from "@/lib/analytics/events";
 
 export type BlogPost = {
@@ -194,85 +179,18 @@ export function BlogsClient({
           </InputGroup>
         </div>
 
-        <ButtonGroup className="w-full sm:w-auto [&>button]:flex-1 *:data-[slot=select-trigger]:flex-1">
+        <div className="flex w-full gap-3 sm:w-auto">
           {allTags.length > 0 && (
-            <>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    aria-label={
-                      tags.length > 0
-                        ? `Filter by tags, ${tags.length} selected`
-                        : "Filter by tags"
-                    }
-                    className="cursor-pointer gap-1.5 shrink-0 justify-start font-semibold"
-                  >
-                    <TagIcon
-                  data-icon="inline-start"
-                  className="size-4"
-                  aria-hidden="true"
-                />
-
-                    <span className="text-left">Tags</span>
-                    {tags.length > 0 && (
-                      <span
-                        aria-hidden="true"
-                        className="flex items-center justify-center rounded-full bg-primary text-primary-foreground size-5 text-xs"
-                      >
-                        {tags.length}
-                      </span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-52 p-3">
-                  <div className="flex items-center justify-between w-full mb-2">
-                    <TypographySmall>Filter by tag</TypographySmall>
-                    {tags.length > 0 && (
-                      <Button
-                        variant="secondary"
-                        size="xs"
-                        onClick={() => setParams({ tags: [], page: 1 })}
-                        className="cursor-pointer h-auto px-1 py-0"
-                        aria-label="Clear all tag filters"
-                      >
-                        <XIcon className="size-4" aria-hidden="true" />
-                      </Button>
-                    )}
-                  </div>
-                  <ul
-                    role="list"
-                    aria-label="Available tags"
-                    className="flex flex-col gap-0.5 max-h-56 overflow-y-auto"
-                  >
-                    {allTags.map((tag) => (
-                      <li key={tag}>
-                        <Label className="rounded-sm px-2 py-1.5 cursor-pointer hover:bg-accent transition-colors">
-                          <Checkbox
-                            checked={tags.includes(tag)}
-                            aria-label={`Filter by ${tag}`}
-                            onCheckedChange={(checked) => {
-                              playCue("select");
-                              setParams({
-                                tags:
-                                  checked === true
-                                    ? [...tags, tag]
-                                    : tags.filter((t) => t !== tag),
-                                page: 1,
-                              });
-                            }}
-                          />
-                          <TypographySmall className="font-semibold">
-                            {tag}
-                          </TypographySmall>
-                        </Label>
-                      </li>
-                    ))}
-                  </ul>
-                </PopoverContent>
-              </Popover>
-              <ButtonGroupSeparator />
-            </>
+            <div className="min-w-0 flex-1 sm:w-72 sm:flex-none">
+              <TagFilter
+                allTags={allTags}
+                tags={tags}
+                onTagsChange={(next) => {
+                  playCue("select");
+                  setParams({ tags: next, page: 1 });
+                }}
+              />
+            </div>
           )}
 
           <Select
@@ -282,7 +200,7 @@ export function BlogsClient({
             }
           >
             <SelectTrigger
-              className="cursor-pointer font-semibold w-full"
+              className="cursor-pointer font-semibold shrink-0"
               aria-label="Posts per page"
             >
               <SelectValue />
@@ -299,7 +217,7 @@ export function BlogsClient({
               ))}
             </SelectContent>
           </Select>
-        </ButtonGroup>
+        </div>
       </div>
 
       <TypographyMuted role="status" className="sr-only">
@@ -307,32 +225,6 @@ export function BlogsClient({
           ? `${filtered.length} ${filtered.length === 1 ? "post" : "posts"} found`
           : ""}
       </TypographyMuted>
-
-      {tags.length > 0 && (
-        <ul
-          role="list"
-          aria-label="Active tag filters"
-          className="flex flex-wrap gap-1.5 pb-3"
-        >
-          {tags.map((tag) => (
-            <li key={tag}>
-              <Button
-                variant="secondary"
-                size="xs"
-                onClick={() => {
-                  playCue("select");
-                  setParams({ tags: tags.filter((t) => t !== tag), page: 1 });
-                }}
-                aria-label={`Remove ${tag} filter`}
-                className="flex items-center bg-primary/10 py-0.5 font-mono text-primary hover:bg-primary/20 cursor-pointer h-auto"
-              >
-                {tag}
-                <XIcon className="size-3" aria-hidden="true" />
-              </Button>
-            </li>
-          ))}
-        </ul>
-      )}
 
       <Divider />
 

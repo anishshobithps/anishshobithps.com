@@ -36,3 +36,9 @@ A pnpm workspace run by Turborepo. Node 24, pnpm 11.
 - Never `pkill next`. The owner's dev server holds port 3000, so use another port.
 - The `.env.schema` files are the source of truth for environment variables. Never print `.env.local` values.
 - Text goes through the Typography components, and forms through the shadcn `Form`.
+
+## ui-sdk
+
+`@ui-sdk/react` and `@ui-sdk/core` are installed in `apps/web`. Before using ui-sdk, follow the ui-sdk skill if it's installed, and read `apps/web/node_modules/@ui-sdk/react/docs/llms.txt`. To build a new component, also search `apps/web/node_modules/@ui-sdk/react/docs/core.md` by heading, and read `rendering.md` next to it.
+
+ui-sdk parts ship unstyled. Style them only with the shadcn theme tokens (`bg-background`, `text-foreground`, `bg-muted`, `border-input`, `ring-ring`, `bg-popover`, `text-muted-foreground`, and the rest in `packages/styles/src/tokens.css`), never raw palette classes like `neutral-300` or hex values, and never the fallback colours in ui-sdk's demo CSS. State goes through the `data-*` variants, for example `data-pressed:bg-accent`. Don't import `@ui-sdk/core/web.css` for its look; if a part needs it, point its `--ui-*` tokens at the shadcn variables (`--ui-background: var(--background)` and so on) so nothing renders off-theme. The `@layer ui-sdk;` line at the top of `apps/web/src/app/global.css` must stay above `@import "tailwindcss"`. The no-comments rule above beats the skill's "comments are rare" rule.
