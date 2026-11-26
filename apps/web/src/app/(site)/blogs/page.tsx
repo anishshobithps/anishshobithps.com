@@ -1,5 +1,5 @@
-import { BlogCover } from "@repo/ui/components/art/blog-cover";
-import { PageArt, type ShelfPost } from "@repo/ui/components/art/page-art";
+import { BlogCover } from "@repo/ui/art/blog-cover";
+import { PageArt, type ShelfPost } from "@repo/ui/art/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { BlogsClient, type BlogPost } from "@/app/(site)/blogs/blogs-client";
 import { BlogsSkeleton } from "@/app/(site)/blogs/blogs-skeleton";

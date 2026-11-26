@@ -1,4 +1,4 @@
-import { IsoArt } from "@repo/ui/components/art/iso-art";
+import { IsoArt } from "@repo/ui/art/iso-art";
 import { sheetScene } from "@repo/ui/art/scenes/sheet";
 import { SectionLabel } from "@repo/ui/components/typography";
 

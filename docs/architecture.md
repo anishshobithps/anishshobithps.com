@@ -126,8 +126,7 @@ Each folder under `packages/ui/src` is one module, imported by its path:
 | Module | Import | What it holds |
 | --- | --- | --- |
 | `components/` | `@repo/ui/components/button` | shadcn primitives, Typography, and the site's shared components (media player, PDF viewer, sortable table header, signature, location tag) |
-| `components/art/` | `@repo/ui/components/art/page-art` | React components that draw the art: `IsoArt`, `IsoStage`, `IsoMotion`, `PageArt`, `StripArt`, `BlogCover`, `GitChaos` |
-| `art/` | `@repo/ui/art/print`, `@repo/ui/art/scenes/branding` | The two-plate print engine (`geometry`, `figure`, `print`, `classes`, `animation`) and every scene |
+| `art/` | `@repo/ui/art/page-art`, `@repo/ui/art/print`, `@repo/ui/art/scenes/branding` | The whole art system: the components that draw it (`IsoArt`, `IsoStage`, `IsoMotion`, `PageArt`, `StripArt`, `BlogCover`, `GitChaos`), the two-plate print engine (`geometry`, `figure`, `print`, `classes`, `animation`), and every scene. Kept out of `components/` so the shadcn lint rules treat only primitives as primitives |
 | `cards/` | `@repo/ui/cards/render` | Fonts, palette, primitives, params, templates, and the renderer for the /svg and OG cards |
 | `icons/` | `@repo/ui/icons` | The green-glass Phosphor icons and brand logos; `icons/generated.tsx` is written by `pnpm --filter web icons` |
 | `styles/` | `@repo/ui/styles/tokens.css`, `@repo/ui/styles/theme-tokens` | Design tokens and their server-side resolver; `pnpm --filter @repo/ui generate` rebuilds `tokens.generated.ts` |

@@ -1,4 +1,4 @@
-import { IsoStage } from "@repo/ui/components/art/iso-stage";
+import { IsoStage } from "@repo/ui/art/iso-stage";
 import { isoCanvas } from "@repo/ui/art/animation";
 import { ArrowRightIcon } from "@repo/ui/icons";
 import {

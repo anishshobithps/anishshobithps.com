@@ -1,4 +1,4 @@
-import { PageArt } from "@repo/ui/components/art/page-art";
+import { PageArt } from "@repo/ui/art/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { ProjectGrid } from "@/app/(site)/_components/projects";
 import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";

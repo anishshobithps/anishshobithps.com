@@ -10,7 +10,7 @@ import { resumeScene } from "@repo/ui/art/scenes/resume";
 import { type ShelfPost, shelfScene } from "@repo/ui/art/scenes/shelf";
 import { siteMapScene } from "@repo/ui/art/scenes/site-map";
 import { tracesScene } from "@repo/ui/art/scenes/traces";
-import { IsoArt } from "@repo/ui/components/art/iso-art";
+import { IsoArt } from "@repo/ui/art/iso-art";
 
 export type { ShelfPost };
 

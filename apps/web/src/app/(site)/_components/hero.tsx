@@ -8,7 +8,7 @@ import {
 } from "@repo/ui/components/button-group";
 import { ArtStage } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
-import { IsoArt } from "@repo/ui/components/art/iso-art";
+import { IsoArt } from "@repo/ui/art/iso-art";
 import { workbenchScene } from "@repo/ui/art/scenes/workbench";
 import { siteConfig } from "@repo/core/site-config";
 import {

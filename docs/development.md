@@ -55,7 +55,7 @@ Path aliases work in tests, so import from `@/lib/...` like the app does. For co
 - `no-raw-colors`, `no-arbitrary-values`, `no-inline-styles`, `no-unknown-classes`, `require-static-classes`: use tokens and static class names.
 - Raw `<button>`, `<input>`, `<select>`, `<textarea>`, `<label>`, `<hr>`, `<kbd>`, `<dialog>`, `<details>`, `<summary>`, and table elements are banned in TSX. Use the components in `packages/ui/src/components/`.
 
-The shadcn primitives in `packages/ui/src/components/` (not `components/art/`), plus `hooks/`, `lib/`, and `styles/`, are exempt from the restyle rules, and a few files that render without Tailwind (the OG card, the `/svg` templates, the generated icons) are exempt from the class rules. The shared config is in `packages/eslint-config`.
+The shadcn primitives in `packages/ui/src/components/`, plus `hooks/`, `lib/`, and `styles/`, are exempt from the restyle rules, and a few files that render without Tailwind (the OG card, the `/svg` templates, the generated icons) are exempt from the class rules. The shared config is in `packages/eslint-config`.
 
 ESLint is on 10. `eslint-plugin-import`, `eslint-plugin-jsx-a11y` and `eslint-plugin-react` have not widened their peer ranges yet, so `pnpm-workspace.yaml` allows ESLint 10 for them. Lint is not part of CI because the codebase still has existing violations, so a red `pnpm lint` isn't necessarily yours. Compare against `main`, and keep the files you touch clean.
 

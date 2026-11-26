@@ -1,6 +1,6 @@
 import type { Scene } from "@repo/ui/art/figure";
 import { nightShelfScene } from "@repo/ui/art/scenes/night-shelf";
-import { IsoArt } from "@repo/ui/components/art/iso-art";
+import { IsoArt } from "@repo/ui/art/iso-art";
 
 type Make = (width: number, height: number) => Scene;
 

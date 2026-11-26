@@ -1,4 +1,4 @@
-import { PageArt } from "@repo/ui/components/art/page-art";
+import { PageArt } from "@repo/ui/art/page-art";
 import { HeroWithArt } from "@/components/layouts/hero-art";
 import { Section } from "@/components/layouts/page";
 import {

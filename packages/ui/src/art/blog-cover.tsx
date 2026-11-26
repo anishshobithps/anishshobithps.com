@@ -4,7 +4,7 @@ import { graphemeScene } from "@repo/ui/art/scenes/grapheme";
 import { resumeCoverScene } from "@repo/ui/art/scenes/resume-cover";
 import { sheetScene } from "@repo/ui/art/scenes/sheet";
 import { stairsScene } from "@repo/ui/art/scenes/stairs";
-import { IsoArt } from "@repo/ui/components/art/iso-art";
+import { IsoArt } from "@repo/ui/art/iso-art";
 
 type Make = (width: number, height: number) => Scene;
 
