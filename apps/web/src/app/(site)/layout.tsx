@@ -8,7 +8,7 @@ import { AuthProvider } from "@/components/shared/site-auth";
 import {
   FloatingHubServer,
   FloatingHubFallback,
-} from "@/components/shared/floating-hub-server";
+} from "@/components/hub/floating-hub-server";
 import { Suspense } from "react";
 
 export default function SiteLayout({

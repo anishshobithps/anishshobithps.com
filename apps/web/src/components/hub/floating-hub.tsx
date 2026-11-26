@@ -11,7 +11,7 @@ import { useIsMobile } from "@repo/ui/hooks/use-mobile";
 import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@repo/sounds/sound-player";
 
-const HubPanel = dynamic(() => import("@/components/shared/hub-panel"), {
+const HubPanel = dynamic(() => import("@/components/hub/panel"), {
   ssr: false,
 });
 

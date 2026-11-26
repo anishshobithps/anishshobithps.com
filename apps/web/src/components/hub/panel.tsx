@@ -26,7 +26,7 @@ import { MotionPanel } from "@/components/shared/motion-panel";
 import {
   CommentBubble,
   ReadingProgress,
-} from "@/components/shared/hub-widgets";
+} from "@/components/hub/widgets";
 import { useEngagementAnchor } from "@/hooks/use-engagement-anchor";
 
 const CARD_CLASS =
@@ -102,7 +102,7 @@ function DragTip() {
   );
 }
 
-const HubAuth = dynamic(() => import("@/components/shared/hub-auth"), {
+const HubAuth = dynamic(() => import("@/components/hub/auth"), {
   loading: () => <AuthSkeleton />,
 });
 

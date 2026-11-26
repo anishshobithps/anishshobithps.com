@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { FloatingHub } from "@/components/shared/floating-hub";
+import { FloatingHub } from "@/components/hub/floating-hub";
 import { RepoCard } from "@/components/repo-card";
 import { siteConfig } from "@repo/core/site-config";
 

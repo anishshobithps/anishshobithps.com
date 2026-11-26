@@ -5,7 +5,7 @@ import { SignInTrigger, useSiteAuth } from "@/components/shared/site-auth";
 import { Button } from "@repo/ui/components/button";
 import { Text } from "@repo/ui/components/typography";
 import { SignInIcon, SignOutIcon } from "@repo/ui/icons";
-import { EmptyAvatar, Pass } from "@/components/shared/hub-widgets";
+import { EmptyAvatar, Pass } from "@/components/hub/widgets";
 import { Avatar } from "@/components/engagement/avatar";
 
 export default function HubAuth({ onClose }: { onClose: () => void }) {
