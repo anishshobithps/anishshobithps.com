@@ -34,8 +34,8 @@ packages/sounds/src/sound-cues.ts          cue names, as a type and a runtime li
 packages/sounds/src/sound-preferences.ts   enabled + volume store, localStorage, cross-tab sync
 packages/sounds/src/sound-player.ts        playCue, unlock, enable/disable, limiter, lazy palette load
 packages/sounds/src/use-sound-preferences.ts
-apps/web/src/components/shared/sound-effects.tsx    mounted once in the root layout
-apps/web/src/components/shared/sound-controls.tsx   header button, switch, hub card
+apps/web/src/components/preferences/sound-effects.tsx    mounted once in the root layout
+apps/web/src/components/preferences/sound-controls.tsx   header button, switch, hub card
 ```
 
 Choices worth knowing:

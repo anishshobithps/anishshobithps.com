@@ -8,7 +8,7 @@ import {
 } from "@/components/shared/doodles";
 import { Logo } from "@/components/shared/logo";
 import { NowPlaying } from "@/components/shared/now-playing";
-import { ThemeCycle } from "@/components/shared/theme-toggle";
+import { ThemeCycle } from "@/components/preferences/theme-toggle";
 import { Button } from "@repo/ui/components/button";
 import {
   SectionLabel,

@@ -1,10 +1,10 @@
 "use client";
 
-import { AppearanceControl } from "@/components/shared/appearance-control";
+import { AppearanceControl } from "@/components/preferences/appearance-control";
 import { pad, RegisterDial } from "@/components/layouts/blog-toc";
 import { Logo } from "@/components/shared/logo";
-import { SoundToggle } from "@/components/shared/sound-controls";
-import { ThemeCycle } from "@/components/shared/theme-toggle";
+import { SoundToggle } from "@/components/preferences/sound-controls";
+import { ThemeCycle } from "@/components/preferences/theme-toggle";
 import { Button } from "@repo/ui/components/button";
 import { ButtonGroup } from "@repo/ui/components/button-group";
 import { Kbd } from "@repo/ui/components/kbd";

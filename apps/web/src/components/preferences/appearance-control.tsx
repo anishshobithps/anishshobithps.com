@@ -1,7 +1,7 @@
 "use client";
 
-import { applyTheme, themes } from "@/components/shared/theme-toggle";
-import { setSoundOn } from "@/components/shared/sound-controls";
+import { applyTheme, themes } from "@/components/preferences/theme-toggle";
+import { setSoundOn } from "@/components/preferences/sound-controls";
 import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/ui/icons";
 import { Button } from "@repo/ui/components/button";
 import { ToggleGroup, ToggleGroupItem } from "@repo/ui/components/toggle-group";

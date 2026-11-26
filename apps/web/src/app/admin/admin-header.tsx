@@ -2,7 +2,7 @@
 
 import { SidebarTrigger } from "@repo/ui/components/sidebar";
 import { Separator } from "@repo/ui/components/separator";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { ThemeToggle } from "@/components/preferences/theme-toggle";
 import { Text } from "@repo/ui/components/typography";
 import { usePathname } from "next/navigation";
 import { adminNav } from "@/app/admin/sidebar";

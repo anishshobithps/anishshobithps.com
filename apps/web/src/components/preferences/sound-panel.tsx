@@ -6,7 +6,7 @@ import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/ui/icons";
 import { Label } from "@repo/ui/components/label";
 import { Slider } from "@repo/ui/components/slider";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
-import { SoundSwitch } from "@/components/shared/sound-controls";
+import { SoundSwitch } from "@/components/preferences/sound-controls";
 import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 import { setSoundVolume } from "@repo/sounds/sound-preferences";
 import { playCue } from "@repo/sounds/sound-player";

@@ -20,9 +20,9 @@ import { Button } from "@repo/ui/components/button";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import { ArrowDownIcon, DownloadIcon } from "@repo/ui/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
-import { LinkPreviewPanel } from "@/components/shared/link-preview-panel";
-import { SoundPanel } from "@/components/shared/sound-panel";
-import { MotionPanel } from "@/components/shared/motion-panel";
+import { LinkPreviewPanel } from "@/components/preferences/link-preview-panel";
+import { SoundPanel } from "@/components/preferences/sound-panel";
+import { MotionPanel } from "@/components/preferences/motion-panel";
 import {
   CommentBubble,
   ReadingProgress,
