@@ -120,10 +120,9 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/query` | `packages/query` | TanStack Query client, provider, prefetch, and mutation hook | core |
 | `@repo/site-config` | `packages/site-config` | Site name, links, and the env schema it needs | none |
 | `@repo/sounds` | `packages/sounds` | Sound engine, player, cues, preferences, and the palette | none |
-| `@repo/styles` | `packages/styles` | Design tokens, theme tokens, and their build scripts | none |
-| `@repo/svg-kit` | `packages/svg-kit` | Fonts, palette, primitives, and the renderer for /svg cards | core, site-config, styles |
+| `@repo/svg-kit` | `packages/svg-kit` | Fonts, palette, primitives, and the renderer for /svg cards | core, site-config, ui |
 | `@repo/tsconfig` | `packages/tsconfig` | Base, Next, and library tsconfig presets | none |
-| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, UI hooks, the virtual list hook, the sortable table header, the media player, and the PDF viewer | core, icons |
+| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, UI hooks, the virtual list hook, the sortable table header, the media player, the PDF viewer, and the design tokens with their build scripts | core, icons |
 | `@repo/vitest-config` | `packages/vitest-config` | Shared Vitest config | none |
 
 Commands run through Turborepo from the root: `pnpm dev`, `pnpm build`, `pnpm turbo run types:check test`, and `pnpm lint:ws` (sherif) for dependency consistency. Lint config, tsconfig, and Vitest config come from the three tooling packages, so a rule changes in one place.

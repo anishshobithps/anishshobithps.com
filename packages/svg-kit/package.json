@@ -19,7 +19,7 @@
   "dependencies": {
     "@repo/core": "workspace:*",
     "@repo/site-config": "workspace:*",
-    "@repo/styles": "workspace:*",
+    "@repo/ui": "workspace:*",
     "takumi-js": "^2.18.2",
     "zod": "catalog:"
   },

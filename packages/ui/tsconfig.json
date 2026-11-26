@@ -6,6 +6,8 @@
     ]
   },
   "include": [
-    "src"
+    "src",
+    "tests",
+    "scripts"
   ]
 }

@@ -1,4 +1,4 @@
-import { themeColor } from "@repo/styles/theme-tokens";
+import { themeColor } from "@repo/ui/styles/theme-tokens";
 import type { Theme } from "@repo/svg-kit/template";
 
 function build(theme: Theme) {

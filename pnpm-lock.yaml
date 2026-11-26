@@ -143,9 +143,6 @@ importers:
       '@repo/sounds':
         specifier: workspace:*
         version: link:../../packages/sounds
-      '@repo/styles':
-        specifier: workspace:*
-        version: link:../../packages/styles
       '@repo/svg-kit':
         specifier: workspace:*
         version: link:../../packages/svg-kit
@@ -561,40 +558,6 @@ importers:
         specifier: 'catalog:'
         version: 5.0.5(@types/node@26.6.6)(jsdom@31.0.1(@napi-rs/canvas@1.0.13))(msw@2.15.0(@types/node@26.6.6)(typescript@7.0.2))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
-  packages/styles:
-    dependencies:
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@repo/vitest-config':
-        specifier: workspace:*
-        version: link:../vitest-config
-      '@types/culori':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@types/node':
-        specifier: 'catalog:'
-        version: 26.6.6
-      eslint:
-        specifier: 'catalog:'
-        version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
-      tsx:
-        specifier: 'catalog:'
-        version: 4.23.15
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
-      vitest:
-        specifier: 'catalog:'
-        version: 5.0.5(@types/node@26.6.6)(jsdom@31.0.1(@napi-rs/canvas@1.0.13))(msw@2.15.0(@types/node@26.6.6)(typescript@7.0.2))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
-
   packages/svg-kit:
     dependencies:
       '@repo/core':
@@ -603,9 +566,9 @@ importers:
       '@repo/site-config':
         specifier: workspace:*
         version: link:../site-config
-      '@repo/styles':
+      '@repo/ui':
         specifier: workspace:*
-        version: link:../styles
+        version: link:../ui
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -667,6 +630,9 @@ importers:
       cn:
         specifier: ^0.5.0
         version: 0.5.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
       media-chrome:
         specifier: ^4.19.4
         version: 4.19.4(react@19.3.1)
@@ -713,6 +679,12 @@ importers:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@repo/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      '@types/culori':
+        specifier: ^4.0.1
+        version: 4.0.1
       '@types/node':
         specifier: 'catalog:'
         version: 26.6.6
@@ -725,9 +697,15 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.5(@types/node@26.6.6)(jsdom@31.0.1(@napi-rs/canvas@1.0.13))(msw@2.15.0(@types/node@26.6.6)(typescript@7.0.2))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/vitest-config:
     devDependencies:

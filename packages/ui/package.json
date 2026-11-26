@@ -6,11 +6,17 @@
   "exports": {
     "./components/*": "./src/components/*.tsx",
     "./lib/*": "./src/lib/*.ts",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./hooks/*": "./src/hooks/*.ts",
+    "./styles/tokens.css": "./src/styles/tokens.css",
+    "./styles/theme-tokens": "./src/styles/theme-tokens.ts",
+    "./styles/tokens.generated": "./src/styles/tokens.generated.ts",
+    "./scripts/*": "./scripts/*.ts"
   },
   "scripts": {
     "lint": "eslint",
-    "types:check": "tsc --noEmit"
+    "types:check": "tsc --noEmit",
+    "test": "vitest run",
+    "generate": "tsx scripts/build-tokens.ts"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
@@ -21,6 +27,7 @@
     "class-variance-authority": "catalog:",
     "cmdk": "^1.1.1",
     "cn": "^0.5.0",
+    "culori": "^4.0.2",
     "media-chrome": "^4.19.4",
     "motion": "^14.7.1",
     "next-themes": "^0.4.6",
@@ -40,10 +47,14 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@types/culori": "^4.0.1",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:"
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

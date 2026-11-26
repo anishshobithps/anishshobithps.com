@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { extractTokens } from "@repo/styles/scripts/extract-tokens";
-import { DARK_TOKENS, ROOT_TOKENS } from "@repo/styles/tokens.generated";
+import { extractTokens } from "@repo/ui/scripts/extract-tokens";
+import { DARK_TOKENS, ROOT_TOKENS } from "@repo/ui/styles/tokens.generated";
 
 const css = readFileSync(
-  new URL("../src/tokens.css", import.meta.url),
+  new URL("../src/styles/tokens.css", import.meta.url),
   "utf8",
 );
 

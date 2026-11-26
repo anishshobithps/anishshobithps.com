@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
-import { themeColor } from "@repo/styles/theme-tokens";
+import { themeColor } from "@repo/ui/styles/theme-tokens";
 
 type Theme = "light" | "dark";
 type Point = [number, number];

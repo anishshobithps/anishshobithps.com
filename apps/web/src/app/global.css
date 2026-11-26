@@ -4,7 +4,7 @@
 @import "./fumadocs.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@repo/styles/tokens.css";
+@import "@repo/ui/styles/tokens.css";
 @import "./cursors.css";
 
 @source "../../../../packages";

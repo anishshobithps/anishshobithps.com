@@ -83,7 +83,7 @@ Every post already gets a cover: the numbered sheet, with a swipe of green that 
 
 ## Colour
 
-Colours come from the tokens in [`packages/styles/src/tokens.css`](../packages/styles/src/tokens.css): `--iso-plate-ink`, `--iso-plate-green`, `--iso-screen`, `--iso-paper` and `--iso-dot`, exposed as `fill-iso-*` and `stroke-iso-*`. The OG route runs on the server, where CSS variables don't exist, so [`packages/styles/src/theme-tokens.ts`](../packages/styles/src/theme-tokens.ts) reads that file and resolves `var()` and `color-mix()` into hex. The OG card has no blend modes, so its overprint is drawn as plain shapes.
+Colours come from the tokens in [`packages/ui/src/styles/tokens.css`](../packages/ui/src/styles/tokens.css): `--iso-plate-ink`, `--iso-plate-green`, `--iso-screen`, `--iso-paper` and `--iso-dot`, exposed as `fill-iso-*` and `stroke-iso-*`. The OG route runs on the server, where CSS variables don't exist, so [`packages/ui/src/styles/theme-tokens.ts`](../packages/ui/src/styles/theme-tokens.ts) reads that file and resolves `var()` and `color-mix()` into hex. The OG card has no blend modes, so its overprint is drawn as plain shapes.
 
 ## Licensing
 
