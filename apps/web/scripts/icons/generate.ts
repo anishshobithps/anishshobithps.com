@@ -11,6 +11,8 @@ const phosphor = dirname(require.resolve("@phosphor-icons/react/package.json"));
 const BASE_WEIGHTS = ["regular", "fill"] as const;
 const EXTRA_WEIGHTS = ["bold", "duotone"] as const;
 
+const LINE_GLYPH = /^(Caret.*|Arrow.*|Trend.*|TextAlignLeft|TextT|Check|X|Plus|List|DotsThree|Pulse|Spinner|Code|Link|Repeat)$/;
+
 const indexSource = readFileSync(join(root, "packages/icons/src/index.tsx"), "utf8");
 const names = [...indexSource.matchAll(/^\s+([A-Za-z0-9]+Icon),$/gm)].map((m) => m[1]!);
 
@@ -62,7 +64,7 @@ function shapes(element: ReactElement): Node[] {
 
 async function main() {
   const lines: string[] = [
-    `import { ShapeIcon, type IconShapes, type ShapeIconProps } from "@repo/icons/create-icon";`,
+    `import { GlassIcon, ShapeIcon, type GlassShapes, type IconShapes, type ShapeIconProps } from "@repo/icons/create-icon";`,
     "",
   ];
 
@@ -71,6 +73,25 @@ async function main() {
     const mod = (await import(pathToFileURL(join(phosphor, "dist/defs", `${base}.es.js`)).href)) as {
       default: Map<string, ReactElement>;
     };
+    const constantBase = base.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
+    if (!base.endsWith("Logo")) {
+      const pick = (weight: string) => {
+        const element = mod.default.get(weight);
+        if (!element) throw new Error(`${name} has no ${weight} weight`);
+        return shapes(element);
+      };
+      const lineGlyph = LINE_GLYPH.test(base);
+      const glass = { body: lineGlyph ? [] : pick("fill"), rim: pick(lineGlyph ? "bold" : "regular") };
+      lines.push(
+        `const ${constantBase}_GLASS: GlassShapes = ${JSON.stringify(glass)};`,
+        "",
+        `export function ${name}(props: ShapeIconProps) {`,
+        `  return <GlassIcon shapes={${constantBase}_GLASS} {...props} />;`,
+        `}`,
+        "",
+      );
+      continue;
+    }
     const wanted = weightsFor(name);
     const entry: Record<string, Node[]> = {};
     for (const weight of wanted) {
@@ -78,7 +99,7 @@ async function main() {
       if (!element) throw new Error(`${name} has no ${weight} weight`);
       entry[weight] = shapes(element);
     }
-    const constant = `${base.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase()}_SHAPES`;
+    const constant = `${constantBase}_SHAPES`;
     lines.push(
       `const ${constant}: IconShapes = ${JSON.stringify(entry)};`,
       "",
@@ -90,7 +111,7 @@ async function main() {
   }
 
   writeFileSync(join(root, "packages/icons/src/icons.generated.tsx"), lines.join("\n"));
-  console.log(`icons: ${names.length} generated`);
+  console.log(`icons: ${names.length} generated, logos keep their phosphor weights`);
 }
 
 void main();
