@@ -46,7 +46,7 @@ import { disableSound, enableSound, playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 import { useMotionSetting } from "@repo/ui/hooks/use-prefers-reduced-motion";
-import { copyEmail } from "@/lib/copy-email";
+import { copyEmail } from "@/components/shared/copy-email";
 import { useHeadlessConsentUI } from "@c15t/nextjs/headless";
 import { track } from "@/lib/analytics/events";
 import { setMotionOff } from "@repo/ui/lib/motion-preference";
