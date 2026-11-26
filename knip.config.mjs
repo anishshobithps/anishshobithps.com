@@ -13,6 +13,7 @@ const config = {
         "src/lib/remarkReadingTime.ts",
         "scripts/get-spotify-refresh-token.ts",
       ],
+      entry: ["c15t.config.ts"],
       ignoreDependencies: [
         "mdast",
         "reading-time",

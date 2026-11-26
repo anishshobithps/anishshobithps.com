@@ -22,6 +22,8 @@
     "db:push": "pnpm --filter @repo/db run db:push",
     "db:studio": "pnpm --filter @repo/db run db:studio",
     "db:check": "pnpm --filter @repo/db run db:check",
+    "db:consent:plan": "pnpm --filter web run db:consent:plan",
+    "db:consent:migrate": "pnpm --filter web run db:consent:migrate",
     "db:seed:guestbook": "pnpm --filter web run db:seed:guestbook",
     "db:seed:guestbook:cleanup": "pnpm --filter web run db:seed:guestbook:cleanup",
     "db:seed:links": "pnpm --filter web run db:seed:links",

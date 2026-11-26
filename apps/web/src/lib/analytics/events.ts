@@ -60,6 +60,7 @@ export interface AnalyticsIdentity {
 export function syncIdentity(user: AnalyticsIdentity | null): void {
   if (typeof window === "undefined" || !posthog.__loaded) return;
   if (user) {
+    if (!posthog.has_opted_in_capturing()) return;
     posthog.identify(user.id, {
       username: user.username,
       name: user.fullName,

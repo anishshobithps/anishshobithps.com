@@ -76,6 +76,8 @@ export function initAnalytics() {
     rewriteRequestPath: stripTrailingSlash,
     defaults: "2026-08-30",
     persistence: "localStorage",
+    opt_out_capturing_by_default: true,
+    cookieless_mode: "on_reject",
     person_profiles: "identified_only",
     capture_pageview: "history_change",
     capture_pageleave: true,

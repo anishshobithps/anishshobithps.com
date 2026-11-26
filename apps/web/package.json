@@ -9,6 +9,8 @@
     "db:seed:guestbook": "varlock run -- tsx scripts/seed-guestbook.ts",
     "db:seed:guestbook:cleanup": "varlock run -- tsx scripts/seed-guestbook.ts --cleanup",
     "db:seed:links": "varlock run -- tsx scripts/seed-links.ts",
+    "db:consent:plan": "varlock run -- tsx scripts/consent/migrate.mts",
+    "db:consent:migrate": "varlock run -- tsx scripts/consent/migrate.mts --apply",
     "spotify:token": "varlock run -- tsx scripts/get-spotify-refresh-token.ts",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
     "test": "vitest run",

@@ -1,5 +1,6 @@
 import { createMDX } from "fumadocs-mdx/next";
 import { varlockNextConfigPlugin } from "@varlock/nextjs-integration/plugin";
+import { withConsentManifest } from "@c15t/nextjs/build";
 
 const withMDX = createMDX();
 const withVarlock = varlockNextConfigPlugin();
@@ -12,7 +13,7 @@ const config = {
   reactStrictMode: true,
   poweredByHeader: false,
   allowedDevOrigins: ["http://127.0.0.1:3000"],
-  serverExternalPackages: ["takumi-js"],
+  serverExternalPackages: ["takumi-js", "@c15t/backend"],
   typedRoutes: true,
   reactCompiler: { compilationMode: "annotation" },
   experimental: {
@@ -125,4 +126,4 @@ const config = {
   },
 };
 
-export default withVarlock(withMDX(config));
+export default withConsentManifest(withVarlock(withMDX(config)));

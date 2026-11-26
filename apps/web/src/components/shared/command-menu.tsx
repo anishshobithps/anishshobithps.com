@@ -21,6 +21,7 @@ import {
   DownloadIcon,
   EnvelopeIcon,
   FileTextIcon,
+  GearIcon,
   GithubLogoIcon,
   HouseIcon,
   LinkedinLogoIcon,
@@ -46,6 +47,7 @@ import { useIsMac } from "@/hooks/use-is-mac";
 import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 import { useMotionSetting } from "@repo/ui/hooks/use-prefers-reduced-motion";
 import { copyEmail } from "@/lib/copy-email";
+import { useHeadlessConsentUI } from "@c15t/nextjs/headless";
 import { track } from "@/lib/analytics/events";
 import { setMotionOff } from "@repo/ui/lib/motion-preference";
 
@@ -74,6 +76,7 @@ export function CommandMenu() {
   const motionSetting = useMotionSetting();
   const isMac = useIsMac();
   const themeShortcut = isMac ? "⇧⌘D" : "Ctrl+Shift+D";
+  const { openDialog: openConsentSettings } = useHeadlessConsentUI();
 
   const runCommand = useCallback(
     (command: string, action: () => void, target?: string) => {
@@ -202,6 +205,12 @@ export function CommandMenu() {
             )}
             {soundEnabled ? "Turn sound off" : "Turn sound on"}
             <CommandShortcut>SFX</CommandShortcut>
+          </CommandItem>
+          <CommandItem
+            onSelect={() => runCommand("privacy_settings", openConsentSettings)}
+          >
+            <GearIcon aria-hidden="true" />
+            Privacy settings
           </CommandItem>
           {motionSetting !== "system" && (
             <CommandItem

@@ -1,6 +1,9 @@
 import { ENV } from "varlock/env";
 import { AnalyticsContext } from "@/components/shared/analytics-context";
 import { CommandMenuHost } from "@/components/shared/command-menu-host";
+import { ConsentBanner } from "@/components/consent/consent-banner";
+import { ConsentDialog } from "@/components/consent/consent-dialog";
+import { ConsentRoot } from "@c15t/nextjs";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { SoundEffects } from "@/components/shared/sound-effects";
 import { ThemeHotkey } from "@/components/shared/theme-hotkey";
@@ -112,8 +115,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <AnalyticsContext />
               <ThemeHotkey />
               <SoundEffects />
-              <CommandMenuHost />
-              {children}
+              <ConsentRoot>
+                <CommandMenuHost />
+                {children}
+                <ConsentBanner />
+                <ConsentDialog />
+              </ConsentRoot>
               <ToasterHost />
             </PhosphorProvider>
           </TooltipProvider>

@@ -18,6 +18,7 @@ import {
 import { siteConfig } from "@repo/site-config";
 import { getPlatformIcon } from "@/components/shared/platform-icons";
 import { currentYear } from "@repo/core/date";
+import { ConsentSettingsLink } from "@/components/consent/consent-settings-link";
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Route } from "next";
@@ -122,6 +123,16 @@ export function Footer() {
                         </Link>
                       </li>
                     ))}
+                    {variant === "site" && (
+                      <li>
+                        <ConsentSettingsLink
+                          data-sound="tap"
+                          className="h-auto min-h-8 p-0 font-normal text-muted-foreground underline-offset-4 transition-colors hover:text-foreground pointer-coarse:min-h-11"
+                        >
+                          <TypographySmall>Privacy settings</TypographySmall>
+                        </ConsentSettingsLink>
+                      </li>
+                    )}
                   </ul>
                 </nav>
               ))}
