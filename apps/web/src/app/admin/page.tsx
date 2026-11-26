@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/ui/components/table";
-import { assertAdmin } from "@/lib/assert-admin";
+import { assertAdmin } from "@/lib/admin";
 import { getContentAnalytics } from "@/lib/admin-analytics/database";
 import { formatNumber, slugTitle } from "@/lib/admin-analytics/format";
 import { getBehaviorSummary, getTraffic } from "@/lib/admin-analytics/posthog";

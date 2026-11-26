@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@repo/ui/components/table";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
-import { assertAdmin } from "@/lib/assert-admin";
+import { assertAdmin } from "@/lib/admin";
 import {
   formatDuration,
   formatNumber,

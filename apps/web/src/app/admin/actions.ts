@@ -9,9 +9,8 @@ import {
     guestbookLikes,
     projects,
 } from "@repo/db/schema";
-import { adminMutation } from "@/lib/admin-action";
+import { adminMutation, assertAdmin } from "@/lib/admin";
 import type { ActionResult } from "@repo/core/action-result";
-import { assertAdmin } from "@/lib/assert-admin";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
 import { PROJECTS_CACHE_TAG } from "@/lib/projects";
 import { safeQuery } from "@/lib/safe-query";

@@ -2,9 +2,8 @@
 
 import { db } from "@repo/db";
 import { links, linkSlugs } from "@repo/db/schema";
-import { adminMutation } from "@/lib/admin-action";
+import { adminMutation, assertAdmin } from "@/lib/admin";
 import type { ActionResult } from "@repo/core/action-result";
-import { assertAdmin } from "@/lib/assert-admin";
 import { findSlugConflicts, LINKS_CACHE_TAG } from "@/lib/links";
 import {
   formatPath,
