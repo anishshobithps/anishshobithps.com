@@ -17,7 +17,7 @@ import {
 import {
   getCommandMenuOpen,
   subscribeCommandMenu,
-} from "@/lib/command-menu-store";
+} from "@/components/command-menu/store";
 import { registerContext, track } from "@/lib/analytics/events";
 
 function watch<T>(

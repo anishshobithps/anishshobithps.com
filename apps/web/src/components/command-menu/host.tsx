@@ -7,10 +7,10 @@ import {
   getCommandMenuServerSnapshot,
   subscribeCommandMenu,
   toggleCommandMenu,
-} from "@/lib/command-menu-store";
+} from "@/components/command-menu/store";
 
 const CommandMenu = dynamic(
-  () => import("@/components/shared/command-menu").then((m) => m.CommandMenu),
+  () => import("@/components/command-menu/menu").then((m) => m.CommandMenu),
   { ssr: false },
 );
 

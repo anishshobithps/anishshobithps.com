@@ -39,7 +39,7 @@ import {
   getCommandMenuServerSnapshot,
   setCommandMenuOpen,
   subscribeCommandMenu,
-} from "@/lib/command-menu-store";
+} from "@/components/command-menu/store";
 import { siteConfig } from "@repo/core/site-config";
 import { themeCue } from "@repo/sounds/sound-cues";
 import { disableSound, enableSound, playCue } from "@repo/sounds/sound-player";

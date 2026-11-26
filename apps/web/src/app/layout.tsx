@@ -1,6 +1,6 @@
 import { ENV } from "varlock/env";
 import { AnalyticsContext } from "@/components/shared/analytics-context";
-import { CommandMenuHost } from "@/components/shared/command-menu-host";
+import { CommandMenuHost } from "@/components/command-menu/host";
 import { ConsentBanner } from "@/components/consent/consent-banner";
 import { ConsentDialog } from "@/components/consent/consent-dialog";
 import { ConsentRoot } from "@c15t/nextjs";
