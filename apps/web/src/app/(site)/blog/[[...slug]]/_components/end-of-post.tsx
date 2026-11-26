@@ -5,7 +5,7 @@ import { LogoMascot } from "@/components/shared/logo-mascot";
 import { Reveal } from "@/components/shared/reveal";
 import { Button } from "@repo/ui/components/button";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
-import { gitDraw, gitPop } from "@repo/ui/iso/components/classes";
+import { gitDraw, gitPop } from "@repo/ui/art/animation";
 import { cn } from "@repo/ui/lib/cn";
 import { useEffect, useRef, type CSSProperties } from "react";
 import { track } from "@/lib/analytics/events";

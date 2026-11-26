@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@repo/ui/svg-kit/fonts", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@repo/ui/svg-kit/fonts")>()),
+vi.mock("@repo/ui/cards/fonts", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@repo/ui/cards/fonts")>()),
   loadFonts: async () => [],
 }));
 
@@ -19,7 +19,7 @@ vi.mock("@/lib/svg/data/guestbook", () => ({
 }));
 
 vi.mock("@/lib/svg/data/weather", async (importOriginal) => {
-  const { SvgParamError } = await import("@repo/ui/svg-kit/template");
+  const { SvgParamError } = await import("@repo/ui/cards/template");
   return {
     ...(await importOriginal<typeof import("@/lib/svg/data/weather")>()),
     loadWeather: async ({ city }: { city?: string }) => {

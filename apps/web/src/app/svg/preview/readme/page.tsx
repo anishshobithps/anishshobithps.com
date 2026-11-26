@@ -17,8 +17,8 @@ import {
   TypographyMuted,
 } from "@repo/ui/components/typography";
 import { getTemplate } from "@/lib/svg/registry";
-import { renderTemplate } from "@repo/ui/svg-kit/render";
-import type { Query, Theme } from "@repo/ui/svg-kit/template";
+import { renderTemplate } from "@repo/ui/cards/render";
+import type { Query, Theme } from "@repo/ui/cards/template";
 
 export const dynamic = "force-dynamic";
 

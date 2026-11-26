@@ -98,4 +98,4 @@ export {
   XIcon,
   XLogoIcon,
   YoutubeLogoIcon,
-} from "@repo/ui/icons/icons.generated";
+} from "@repo/ui/icons/generated";

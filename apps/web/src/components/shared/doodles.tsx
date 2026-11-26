@@ -1,5 +1,5 @@
 import { SectionLabel } from "@repo/ui/components/typography";
-import { gitDraw, isoType, nudgeDraw } from "@repo/ui/iso/components/classes";
+import { gitDraw, isoType, nudgeDraw } from "@repo/ui/art/animation";
 import { MascotFigure, type MascotEyes } from "@/components/shared/logo-mascot";
 import { cn } from "@repo/ui/lib/cn";
 import type { CSSProperties } from "react";

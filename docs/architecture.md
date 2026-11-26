@@ -118,7 +118,7 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/site-config` | `packages/site-config` | Site name, links, and the env schema it needs | none |
 | `@repo/sounds` | `packages/sounds` | Sound engine, player, cues, preferences, and the palette | none |
 | `@repo/tsconfig` | `packages/tsconfig` | Base, Next, and library tsconfig presets | none |
-| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, UI hooks, the green-glass Phosphor icons and brand logos, the virtual list hook, the sortable table header, the media player, the PDF viewer, the design tokens with their build scripts, in `src/iso` the two-plate print engine, every scene, and the components that draw them, and in `src/svg-kit` the fonts, palette, primitives, and renderer for /svg cards | core, site-config |
+| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, UI hooks, the green-glass Phosphor icons and brand logos, the virtual list hook, the sortable table header, the media player, the PDF viewer, the design tokens with their build scripts, in `src/art` the two-plate print engine and every scene (drawn by `src/components/art`), and in `src/cards` the fonts, palette, primitives, and renderer for /svg and OG cards | core, site-config |
 | `@repo/vitest-config` | `packages/vitest-config` | Shared Vitest config | none |
 
 Commands run through Turborepo from the root: `pnpm dev`, `pnpm build`, `pnpm turbo run types:check test`, and `pnpm lint:ws` (sherif) for dependency consistency. Lint config, tsconfig, and Vitest config come from the three tooling packages, so a rule changes in one place.

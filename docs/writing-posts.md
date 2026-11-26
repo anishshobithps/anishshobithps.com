@@ -120,7 +120,7 @@ Video goes through the media player in `packages/ui/src/components/media-player.
 
 ## The cover
 
-Every post gets a cover. A post without an entry gets the numbered sheet, with its post number and a swipe of green that is different for every slug. To give a post its own scene, add its slug to the `covers` map in [`packages/ui/src/iso/components/blog-covers.tsx`](../packages/ui/src/iso/components/blog-covers.tsx), pointing at a scene from `packages/ui/src/iso/scenes/`. See [The art](art.md) for how scenes are built.
+Every post gets a cover. A post without an entry gets the numbered sheet, with its post number and a swipe of green that is different for every slug. To give a post its own scene, add its slug to the `covers` map in [`packages/ui/src/components/art/blog-cover.tsx`](../packages/ui/src/components/art/blog-cover.tsx), pointing at a scene from `packages/ui/src/art/scenes/`. See [The art](art.md) for how scenes are built.
 
 ## What a post gets for free
 

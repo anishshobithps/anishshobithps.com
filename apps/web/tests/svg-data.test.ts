@@ -9,7 +9,7 @@ import {
 } from "@/lib/svg/data/activity";
 import { type CalendarDay, parseContributionsPage, summarizeCalendar } from "@/lib/svg/data/github";
 import { describeWeather, formatCoordinates, hourOf, zoneLabel } from "@/lib/svg/data/weather";
-import { plural, truncate } from "@repo/ui/svg-kit/primitives";
+import { plural, truncate } from "@repo/ui/cards/primitives";
 
 const THU = 3;
 const FRI = 4;

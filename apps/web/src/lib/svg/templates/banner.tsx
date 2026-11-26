@@ -3,10 +3,10 @@ import { join } from "node:path";
 import type { CSSProperties, ReactNode } from "react";
 import { z } from "zod";
 import { siteConfig } from "@repo/site-config";
-import { FONT_STACK, FONTS } from "@repo/ui/svg-kit/fonts";
-import { palette } from "@repo/ui/svg-kit/palette";
-import { Label, truncate } from "@repo/ui/svg-kit/primitives";
-import { CARD_WIDTH, defineTemplate, type Theme } from "@repo/ui/svg-kit/template";
+import { FONT_STACK, FONTS } from "@repo/ui/cards/fonts";
+import { palette } from "@repo/ui/cards/palette";
+import { Label, truncate } from "@repo/ui/cards/primitives";
+import { CARD_WIDTH, defineTemplate, type Theme } from "@repo/ui/cards/template";
 
 const SIZE = { width: CARD_WIDTH, height: 280 };
 

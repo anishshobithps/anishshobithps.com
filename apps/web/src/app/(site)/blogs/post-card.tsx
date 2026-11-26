@@ -1,5 +1,5 @@
-import { IsoStage } from "@repo/ui/iso/components/iso-stage";
-import { isoCanvas } from "@repo/ui/iso/components/classes";
+import { IsoStage } from "@repo/ui/components/art/iso-stage";
+import { isoCanvas } from "@repo/ui/art/animation";
 import { ArrowRightIcon } from "@repo/ui/icons";
 import {
   Heading,

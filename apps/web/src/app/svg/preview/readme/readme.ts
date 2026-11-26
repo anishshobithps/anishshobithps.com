@@ -1,4 +1,4 @@
-import type { Query, Theme } from "@repo/ui/svg-kit/template";
+import type { Query, Theme } from "@repo/ui/cards/template";
 
 /** Inline text allows `[label](url)` links and nothing else. */
 type Inline = string;

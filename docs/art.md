@@ -12,18 +12,18 @@ Every figure is drawn the same way: a two-colour riso print. Black ink and the s
 
 | Piece | Where |
 | --- | --- |
-| Print engine | [`packages/ui/src/iso/`](../packages/ui/src/iso/): `figure.ts` (the scene model and its markup), `iso-kit.ts` (projection, extruded solids, the plan oblique camera), `print.ts` (plates, halftone screens, register, flat shapes) |
-| Scenes | [`packages/ui/src/iso/scenes/`](../packages/ui/src/iso/scenes/), one file per figure |
-| Rendering a scene | [`iso-art.tsx`](../packages/ui/src/iso/components/iso-art.tsx) draws it as inline SVG, and [`iso-stage.tsx`](../packages/ui/src/iso/components/iso-stage.tsx) plays its motion while it's on screen |
-| Page figures | [`page-art.tsx`](../packages/ui/src/iso/components/page-art.tsx) maps a page name to a scene, and passes the page's real data to it |
-| Blog covers | [`blog-covers.tsx`](../packages/ui/src/iso/components/blog-covers.tsx) maps a post slug to a scene, and falls back to the numbered sheet |
-| Shared animation classes | [`classes.ts`](../packages/ui/src/iso/components/classes.ts) |
+| Print engine | [`packages/ui/src/art/`](../packages/ui/src/art/): `figure.ts` (the scene model and its markup), `iso-kit.ts` (projection, extruded solids, the plan oblique camera), `print.ts` (plates, halftone screens, register, flat shapes) |
+| Scenes | [`packages/ui/src/art/scenes/`](../packages/ui/src/art/scenes/), one file per figure |
+| Rendering a scene | [`iso-art.tsx`](../packages/ui/src/components/art/iso-art.tsx) draws it as inline SVG, and [`iso-stage.tsx`](../packages/ui/src/components/art/iso-stage.tsx) plays its motion while it's on screen |
+| Page figures | [`page-art.tsx`](../packages/ui/src/components/art/page-art.tsx) maps a page name to a scene, and passes the page's real data to it |
+| Blog covers | [`blog-covers.tsx`](../packages/ui/src/components/art/blog-cover.tsx) maps a post slug to a scene, and falls back to the numbered sheet |
+| Shared animation classes | [`classes.ts`](../packages/ui/src/art/animation.ts) |
 | Doodles and nudges | [`apps/web/src/components/shared/doodles.tsx`](../apps/web/src/components/shared/doodles.tsx) |
 | Logo and mascot | `logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx` in `apps/web/src/components/shared/` |
 | OpenGraph card | [`apps/web/src/components/shared/OG.tsx`](../apps/web/src/components/shared/OG.tsx), rendered by `/og`. The mascot is printed in ink with its green plate off register |
 | Cursors | [`apps/web/scripts/cursors/generate.ts`](../apps/web/scripts/cursors/generate.ts) draws five cursors in light and dark from the theme tokens. Each one is inlined as a data URI in the `--cursor-*` variables of `apps/web/src/app/cursors.css`. `pnpm cursors` regenerates both |
-| Home hero | [`workbench.ts`](../packages/ui/src/iso/scenes/workbench.ts) draws a print shop floor with the robot shown at four stages: guide lines, ink, a green plate off register, and registered and awake |
-| Footer strip | [`strip-art.tsx`](../packages/ui/src/iso/components/strip-art.tsx) renders the [night shelf](../packages/ui/src/iso/scenes/night-shelf.ts) and crops it to the middle on phones. In dark mode the lamp is on and the bot sleeps. In light mode the bot is awake |
+| Home hero | [`workbench.ts`](../packages/ui/src/art/scenes/workbench.ts) draws a print shop floor with the robot shown at four stages: guide lines, ink, a green plate off register, and registered and awake |
+| Footer strip | [`strip-art.tsx`](../packages/ui/src/components/art/strip-art.tsx) renders the [night shelf](../packages/ui/src/art/scenes/night-shelf.ts) and crops it to the middle on phones. In dark mode the lamp is on and the bot sleeps. In light mode the bot is awake |
 | Band doodles | [`band-doodle.tsx`](../apps/web/src/components/shared/band-doodle.tsx) draws five small flat critters on the hatched dividers between sections. Pass `doodle` to `<Section>` |
 | Inline art | [`inline-art.tsx`](../apps/web/src/components/shared/inline-art.tsx) draws six small green glass pieces that sit inside the home page leads: a bot, a toolbox, a 3am mug, gears, a pencil leaving a trace, and a paper plane. Use `<InlineArt name="..." />` in running text. They share the icons' glass tokens |
 | Icons | `@repo/icons` renders Phosphor's shapes as green glass: the `fill` weight is a tinted body with a soft shadow and the `regular` weight is a gradient rim. The colours are the `--glass-*` tokens in `tokens.css`. `weight="fill"` prints the body solid. Brand logos keep their Phosphor weights. `pnpm --filter web icons` regenerates the set |
@@ -63,7 +63,7 @@ Never use: base plates, feet, screws, ruler strips, label plates, knurled knobs,
 
 ## How a scene works
 
-A scene is one drawn object: static SVG markup plus the keyframes that move it. The engine in `packages/ui/src/iso/` touches neither React nor the DOM. It builds the markup as a string, and motion is sampled at build time.
+A scene is one drawn object: static SVG markup plus the keyframes that move it. The engine in `packages/ui/src/art/` touches neither React nor the DOM. It builds the markup as a string, and motion is sampled at build time.
 
 On the site, `PageArt` and `BlogCover` build each scene once on the server and cache it. `IsoArt` writes the markup into an SVG, and `IsoStage` watches the element and plays the motion while it's visible. The registration settle is a one-shot track (`once`), and it plays again when the figure re-enters the view.
 
@@ -71,7 +71,7 @@ Elevation and plan figures are drawn directly in viewBox units with the helpers 
 
 ### Adding a page figure
 
-1. Add a file in `packages/ui/src/iso/scenes/` that exports a function returning a `Scene`. Take the page's data as the first argument if the figure should grow with it.
+1. Add a file in `packages/ui/src/art/scenes/` that exports a function returning a `Scene`. Take the page's data as the first argument if the figure should grow with it.
 2. Add it to the `scenes` object in `page-art.tsx`.
 3. Render it with `<PageArt name="yourScene" data={...} />`. For data that needs a query, wrap it in an async server component inside `<Suspense>` and use the empty figure as the fallback.
 

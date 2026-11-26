@@ -10,9 +10,9 @@ import {
   TypographyMuted,
 } from "@repo/ui/components/typography";
 import { templates } from "@/lib/svg/registry";
-import { renderError, renderTemplate } from "@repo/ui/svg-kit/render";
-import type { AnySvgTemplate, Query, Theme } from "@repo/ui/svg-kit/template";
-import { ERROR_SIZE, type SvgErrorKind } from "@repo/ui/svg-kit/error";
+import { renderError, renderTemplate } from "@repo/ui/cards/render";
+import type { AnySvgTemplate, Query, Theme } from "@repo/ui/cards/template";
+import { ERROR_SIZE, type SvgErrorKind } from "@repo/ui/cards/error";
 import { themeColor } from "@repo/ui/styles/theme-tokens";
 
 export const dynamic = "force-dynamic";

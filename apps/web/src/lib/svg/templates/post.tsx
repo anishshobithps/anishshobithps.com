@@ -12,8 +12,8 @@ import {
   Title,
   truncate,
   Parts,
-} from "@repo/ui/svg-kit/primitives";
-import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/ui/svg-kit/template";
+} from "@repo/ui/cards/primitives";
+import { CARD_WIDTH, defineTemplate, HOUR } from "@repo/ui/cards/template";
 
 const SIZE = { width: CARD_WIDTH, height: 256 };
 const MAX_TAGS = 3;

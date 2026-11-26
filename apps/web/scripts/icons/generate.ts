@@ -32,7 +32,7 @@ const sources = [join(root, "apps/web/src"), ...readdirSync(join(root, "packages
       return [];
     }
   })
-  .filter((file) => /\.tsx?$/.test(file) && !file.includes("icons.generated"))
+  .filter((file) => /\.tsx?$/.test(file) && !file.includes("icons/generated"))
   .map((file) => readFileSync(file, "utf8"));
 
 const weightedSources = sources.filter((text) => /\bweight\b\s*[=:]/.test(text));
@@ -110,7 +110,7 @@ async function main() {
     );
   }
 
-  writeFileSync(join(root, "packages/ui/src/icons/icons.generated.tsx"), lines.join("\n"));
+  writeFileSync(join(root, "packages/ui/src/icons/generated.tsx"), lines.join("\n"));
   console.log(`icons: ${names.length} generated, logos keep their phosphor weights`);
 }
 
