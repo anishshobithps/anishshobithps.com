@@ -16,8 +16,8 @@ import {
 } from "@repo/ui/components/form";
 import { Spinner } from "@repo/ui/components/spinner";
 import { useQuery } from "@tanstack/react-query";
-import { useActionMutation } from "@repo/query/use-action-mutation";
-import { queryKeys } from "@/lib/query-keys";
+import { useActionMutation } from "@/lib/query/use-action-mutation";
+import { queryKeys } from "@/lib/query/keys";
 import {
   createProject,
   getAdminProjects,

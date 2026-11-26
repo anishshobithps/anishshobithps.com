@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { PostBundle } from "@/app/(site)/blog/[[...slug]]/actions";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/query/keys";
 import { track } from "@/lib/analytics/events";
 
 const readSlugs = new Set<string>();

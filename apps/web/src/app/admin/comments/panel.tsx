@@ -2,8 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getAllAdminComments } from "@/app/admin/actions";
-import { useActionMutation } from "@repo/query/use-action-mutation";
-import { queryKeys } from "@/lib/query-keys";
+import { useActionMutation } from "@/lib/query/use-action-mutation";
+import { queryKeys } from "@/lib/query/keys";
 import { useQueryStates, parseAsString, parseAsBoolean } from "nuqs";
 import NextImage from "next/image";
 import Link from "next/link";

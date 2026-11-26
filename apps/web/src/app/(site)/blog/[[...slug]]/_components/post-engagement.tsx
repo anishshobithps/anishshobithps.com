@@ -25,7 +25,7 @@ import type { CueName } from "@repo/sounds/sound-cues";
 import { classifyError, toast, typedToast } from "@/lib/toast";
 import { useSiteAuth } from "@/components/shared/site-auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/query/keys";
 import { track } from "@/lib/analytics/events";
 import { useCallback, useMemo, useRef, useState } from "react";
 

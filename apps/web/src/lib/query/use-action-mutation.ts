@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import type { ActionResult } from "@repo/core/action-result";
-import { useNotify } from "@repo/query/notify";
+import { useNotify } from "@/lib/query/notify";
 
 export function useActionMutation<TVariables>({
   action,

@@ -1,6 +1,6 @@
 "use client";
 
-import { QueryProvider as BaseQueryProvider } from "@repo/query/provider";
+import { QueryProvider as BaseQueryProvider } from "@/lib/query/provider";
 import type { ReactNode } from "react";
 import { toast, toastError } from "@/lib/toast";
 

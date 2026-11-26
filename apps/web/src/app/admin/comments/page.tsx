@@ -1,7 +1,7 @@
 import { getAllAdminComments } from "@/app/admin/actions";
 import { AdminPage } from "@/app/admin/_components/admin-page";
-import { Prefetch } from "@repo/query/prefetch";
-import { queryKeys } from "@/lib/query-keys";
+import { Prefetch } from "@/lib/query/prefetch";
+import { queryKeys } from "@/lib/query/keys";
 import { CommentsPanel } from "@/app/admin/comments/panel";
 
 export default function AdminCommentsPage() {

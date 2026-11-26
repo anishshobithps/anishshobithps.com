@@ -8,7 +8,7 @@ async function load(isServer: boolean) {
         ...(await importOriginal<typeof import("@tanstack/react-query")>()),
         isServer,
     }));
-    return import("@repo/query/client");
+    return import("@/lib/query/client");
 }
 
 afterEach(() => {

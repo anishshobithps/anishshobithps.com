@@ -11,7 +11,7 @@ import {
 import { usePostData } from "@/app/(site)/blog/[[...slug]]/_components/use-post-data";
 import { Section } from "@/components/layouts/page";
 import { useSiteAuth } from "@/components/shared/site-auth";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/query/keys";
 import { TypographyMuted } from "@repo/ui/components/typography";
 import { EyeIcon } from "@repo/ui/icons";
 
