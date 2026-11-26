@@ -25,6 +25,7 @@ import Link from "next/link";
 import { padIndex } from "@repo/core/text";
 import type { Route } from "next";
 import { Suspense } from "react";
+import { InlineArt } from "@/components/shared/inline-art";
 import { getPublicProjects } from "@/lib/projects";
 import { unstable_rethrow } from "next/navigation";
 
@@ -174,7 +175,8 @@ export function BuiltThings() {
         <div className="flex max-w-3xl flex-col gap-3">
           <TypographyH2>Things I&apos;ve built</TypographyH2>
           <TypographyLead>
-            A mix of real systems, useful tools, and controlled chaos.
+            A mix of real systems, useful tools <InlineArt name="toolbox" />, and
+            controlled chaos.
           </TypographyLead>
         </div>
       </Reveal>

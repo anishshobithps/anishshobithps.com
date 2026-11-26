@@ -11,6 +11,7 @@ import { PageArt } from "@repo/diagrams/page-art";
 import { Button } from "@repo/ui/components/button";
 import { CaretRightIcon } from "@repo/icons";
 import Link from "next/link";
+import { InlineArt } from "@/components/shared/inline-art";
 
 export async function GuestbookTeaser() {
   const entries = pickRandom(await getGuestbookPreviewPool(), 15);
@@ -23,7 +24,8 @@ export async function GuestbookTeaser() {
             <div className="flex max-w-2xl flex-col gap-3">
               <TypographyH2>From the guestbook</TypographyH2>
               <TypographyLead>
-                People who stopped by and left a trace. Add yours.
+                People who stopped by and left a trace <InlineArt name="pen" />. Add
+                yours.
               </TypographyLead>
             </div>
             <Button asChild variant="outline">
