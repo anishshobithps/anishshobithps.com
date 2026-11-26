@@ -18,7 +18,7 @@ import {
   PdfViewerReload,
   PdfViewerToolbar,
   PdfViewerZoom,
-} from "@repo/pdf-viewer";
+} from "@repo/ui/components/pdf-viewer";
 import { getResumeFilename } from "@/lib/resume";
 import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
 import { Reveal } from "@/components/shared/reveal";

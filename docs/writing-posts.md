@@ -116,7 +116,7 @@ Numbers follow the order the markers first appear, and citing the same id again 
 
 To place a card in the body, write `<LinkCard url="https://…" />`, or put a URL on a line of its own and it becomes one. Passing `label` or `note` works the same as in frontmatter. Ordinary links in prose keep working as they were, and an external one opens a small preview when hovered.
 
-Video goes through the media player in `packages/media-player/src/index.tsx`. Import it at the top of the post, and see an existing post for the pattern. Videos stream from Cloudinary, which needs `res.cloudinary.com` allowed in the CSP, and it already is. Images inside posts are served from this domain.
+Video goes through the media player in `packages/ui/src/components/media-player.tsx`. Import it from `@repo/ui/components/media-player` at the top of the post, and see an existing post for the pattern. Videos stream from Cloudinary, which needs `res.cloudinary.com` allowed in the CSP, and it already is. Images inside posts are served from this domain.
 
 ## The cover
 
