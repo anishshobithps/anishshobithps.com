@@ -13,7 +13,7 @@ Run the site locally, with the services it talks to.
 - A Postgres database on [Neon](https://neon.tech). The free tier works. The app uses Neon's serverless HTTP driver (`packages/db/src/index.ts`), so a plain local Postgres won't connect.
 - A [Clerk](https://clerk.com) application for sign-in. It powers the guestbook, comments, and admin.
 
-Spotify, WakaTime, a GitHub token, and Umami are optional. See [Environment variables](#environment-variables).
+Spotify, WakaTime, a GitHub token, Umami, and PostHog are optional. See [Environment variables](#environment-variables).
 
 ## First run
 
@@ -21,10 +21,11 @@ Spotify, WakaTime, a GitHub token, and Umami are optional. See [Environment vari
 pnpm install
 pnpm --filter web exec varlock load   # checks apps/web/.env.local against the schema
 pnpm db:migrate         # applies the committed migrations in packages/db/drizzle/
+pnpm db:consent:migrate # creates the consent tables in the c15t schema
 pnpm dev                # http://localhost:3000
 ```
 
-`pnpm install` also runs `fumadocs-mdx`, which generates the `.source/` folder the blog reads from. `pnpm db:migrate` needs `DATABASE_URL`, so create `apps/web/.env.local` first.
+`pnpm install` also runs `fumadocs-mdx`, which generates the `.source/` folder the blog reads from. Both migrations need `DATABASE_URL`, so create `apps/web/.env.local` first. Until the consent tables exist, the banner can't save a choice.
 
 Only one `next dev` can run per project at a time. Next takes a lock and a second one exits.
 
@@ -47,6 +48,8 @@ SPOTIFY_REFRESH_TOKEN=
 
 NEXT_PUBLIC_BASE_URL=https://anishshobithps.com
 NEXT_PUBLIC_UMAMI_WEBSITE_ID=
+NEXT_PUBLIC_POSTHOG_KEY=
+POSTHOG_PERSONAL_API_KEY=
 GITHUB_TOKEN=
 WAKATIME_API_KEY=
 SHORTLINK_DOMAIN=
@@ -61,7 +64,12 @@ SHORTLINK_DOMAIN=
 | `CLERK_WEBHOOK_SECRET` | `/api/webhooks/clerk` | The endpoint answers 500 without it. See [Clerk](#clerk). |
 | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN` | The "now playing" line in the footer | See [Spotify](#spotify). |
 | `NEXT_PUBLIC_BASE_URL` | Canonical URLs, sitemap, feeds, OpenGraph | Falls back to `NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL`, then `http://localhost:3000`. |
-| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Analytics | Optional. The script is only added in production builds. |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami page counts | Optional. The script is only added in production builds. |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog analytics, heatmaps, and replays | Optional. The project key (`phc_...`). PostHog only starts in production builds. See [Analytics and consent](analytics.md). |
+| `NEXT_PUBLIC_POSTHOG_REGION` | Which PostHog cloud the relay points at | Optional. `us` or `eu`, `us` by default. |
+| `POSTHOG_PERSONAL_API_KEY` | The admin's PostHog panels | Optional. A personal key (`phx_...`) with the Query: Read scope, limited to the site's project. |
+| `POSTHOG_PROJECT_ID` | The admin's PostHog panels | Optional. Defaults to this site's project in the schema. |
+| `C15T_DATABASE_URL` | Consent records | Optional. The consent backend uses the direct host of `DATABASE_URL` when this is unset. |
 | `GITHUB_TOKEN` | The repo card and the `/svg` cards | Optional. Lifts GitHub's anonymous rate limit. |
 | `WAKATIME_API_KEY` | `/svg?type=activity&source=wakatime` and `both` | Optional. |
 | `SHORTLINK_DOMAIN` | A second domain that serves short links only | Optional. `NEXT_PUBLIC_SHORTLINK_DOMAIN` is read as a fallback. See [Short links](short-links.md). |

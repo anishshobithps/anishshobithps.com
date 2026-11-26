@@ -35,6 +35,8 @@ What's in the site, where it lives, and how a request moves through it.
 | `/sitemap.xml`, `/robots.txt` | The sitemap is built from the post source, so new posts show up without touching it |
 | `/<slug>`, `/<tag>/<slug>` | Short-link resolver with click counts. See [Short links](short-links.md) |
 | `/api/webhooks/clerk` | Receives Clerk's `user.deleted` event and removes that user's rows |
+| `/api/c15t/*` | The self-hosted consent backend. See [Analytics and consent](analytics.md#consent) |
+| `/stats/*`, `/relay/*` | Rewrites to Umami and PostHog, so analytics stay on this domain |
 
 On every page:
 
@@ -42,11 +44,12 @@ On every page:
 - A floating quick menu, fronted by the logo mascot. On a post it shows reading progress and jumps to the comments. On `/resume` it downloads the PDF. On the blog and guestbook it holds the sign-in pass. It also holds the sound settings. Drag it anywhere and it remembers the spot.
 - The footer shows what I'm listening to on Spotify, refreshed every minute through the server.
 - Optional UI sounds, off until a visitor turns them on. See [Sound](sound.md).
+- A consent banner where the law asks for one, and "Privacy settings" in the footer and command palette. See [Analytics and consent](analytics.md).
 
 ## How a request moves
 
 1. **`apps/web/src/proxy.ts`** sees every request first. On the main domain it hands off to Clerk's middleware. If `SHORTLINK_DOMAIN` is set and the request arrives on that host, Clerk is skipped. Slugs pass through, and anything that belongs to the main site is redirected to the main domain with a 308. The list of main-site paths is in `packages/core/src/reserved-segments.ts`.
-2. **`apps/web/src/app/layout.tsx`** sets up the fonts, theme (next-themes), URL state (nuqs), TanStack Query, tooltips, the icon provider, the command menu, the sound effects, and the toaster.
+2. **`apps/web/src/instrumentation-client.ts`** starts PostHog before hydration in production builds. **`apps/web/src/app/layout.tsx`** sets up the fonts, theme (next-themes), URL state (nuqs), TanStack Query, tooltips, the icon provider, the analytics context, the consent root with its banner and dialog, the command menu, the sound effects, and the toaster.
 3. **`apps/web/src/app/(site)/layout.tsx`** wraps the public pages in `ClerkProvider`, the header, the footer, the floating quick menu, and the page shell. **`apps/web/src/app/admin/layout.tsx`** has its own gate and sidebar.
 4. **Pages** read from Postgres or the MDX source. Reads that can fail go through `safeQuery` (`apps/web/src/lib/safe-query.ts`), which logs the error and returns a fallback, so a database hiccup degrades a number instead of breaking a page.
 5. **Mutations** are server actions in `actions.ts` files next to the pages. They check identity, write, and `revalidatePath` the affected page. The client updates optimistically and rolls back if the action reports a failure.
@@ -61,6 +64,7 @@ On every page:
 | Repo card | GitHub API, server side | Cached on the server |
 | `/svg` card data | GitHub, WakaTime, Open-Meteo, Postgres | Per-loader `unstable_cache`. See [SVG cards](svg-cards.md) |
 | Posts | `apps/web/content/blog` through fumadocs | Built at build time |
+| Admin analytics | PostHog's query API and Postgres | PostHog queries cached for five minutes, tagged `admin-analytics` |
 
 Everything the browser needs from a third party goes through this site. Spotify, GitHub, and the resume are fetched on the server, and fonts are self-hosted. [Deployment](deployment.md) lists the few exceptions the CSP allows.
 
@@ -75,19 +79,25 @@ apps/web/              the Next.js app
   .env.schema          every environment variable, checked by varlock
   src/
     proxy.ts           Clerk middleware and short-link domain routing
+    instrumentation-client.ts  starts PostHog before hydration
     app/(site)/        public pages
     app/admin/         owner-only dashboard
-    app/api/           resume proxy and Clerk webhook
+    app/api/           resume proxy, Clerk webhook, and the c15t consent backend
     app/[...link]/     short-link resolver (catch-all, keep it last)
     app/og/            OpenGraph image route
     app/svg/           SVG card route and the dev-only /svg/preview
     components/
       shared/          header, footer, quick menu, command palette, doodles, logo and mascot, OG card
       engagement/      comment and guestbook panels
+      consent/         consent banner, preferences dialog, and settings link
       layouts/         page, blog, and hero shells
     hooks/             client hooks (draggable, engagement anchor, ...)
     lib/               everything not React that belongs to the app
     lib/svg/           SVG card templates, loaders, and the post data they read
+    lib/analytics/     PostHog init, the typed event catalog, and server-side capture
+    lib/admin-analytics/  the queries behind the admin's analytics pages
+    lib/consent/       the c15t backend config and policy
+  c15t.config.ts       consent client config: mode, copy, and the PostHog consent hook
 packages/              the workspace packages, listed below
 docs/                  these pages
 .github/               CI workflow and the README artwork
@@ -127,5 +137,6 @@ Commands run through Turborepo from the root: `pnpm dev`, `pnpm build`, `pnpm tu
 - Reactions and view counts are anonymous, with no account needed. Identity is a SHA-256 of `ip:IP_HASH_SALT` (`apps/web/src/lib/ip.ts`), giving one row per post per hash. The raw IP is never stored. See [Database](database.md).
 - Comments and the guestbook need Clerk. Deleting a Clerk account removes that user's rows through the webhook.
 - Projects, links, and engagement live in Postgres, and posts live in `apps/web/content/blog`. Nothing is hardcoded that shouldn't be.
+- Analytics never leave this domain from the browser. Umami goes through `/stats`, PostHog through `/relay`, and PostHog waits for consent where the law asks for it. See [Analytics and consent](analytics.md).
 - The artwork is authored in code rather than imported as raster exports. The isometric scenes, blog covers, doodles, mascot, and OG card are SVG drawn in TypeScript and TSX, coloured from the same CSS tokens as the rest of the UI, and they respect `prefers-reduced-motion`. See [The art](art.md).
 - The build never migrates the database. Schema changes are applied by hand. See [Database](database.md#migrations).

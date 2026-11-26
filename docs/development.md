@@ -22,6 +22,8 @@ pnpm lint:ws       # sherif: dependency versions line up across the workspace
 pnpm db:migrate   # apply committed migrations
 pnpm db:push      # push the schema directly (dev only, skips migrations)
 pnpm db:studio    # Drizzle Studio
+pnpm db:consent:plan     # read-only plan for the c15t consent tables
+pnpm db:consent:migrate  # create or upgrade the c15t consent tables
 
 pnpm db:seed:guestbook          # seed fake guestbook entries
 pnpm db:seed:guestbook:cleanup  # remove the seeded entries

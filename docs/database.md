@@ -46,6 +46,26 @@ When a Clerk account is deleted, `/api/webhooks/clerk` removes that user's guest
 
 Reads degrade rather than fail. Loaders wrap queries in `safeQuery`, which logs the error and returns a fallback such as `0` or an empty list.
 
+## Consent records
+
+The consent banner's records live in the same database, in their own `c15t` schema. c15t creates and migrates those tables itself, so they aren't in `schema.ts`, and Drizzle never sees them because it only reads `public`.
+
+| Table | Holds |
+| --- | --- |
+| `subject` | A random ID per browser that made a choice |
+| `consent` | Each choice: what was allowed, the policy, the user agent, the language, where it was made (banner or dialog), how long it took, and when. The IP address column stays empty |
+| `runtimePolicyDecision` | The policy decision a choice was made under, with the country and region from Vercel's headers and the language |
+| `consentPolicy`, `consentPurpose`, `domain` | The policy versions and purposes a choice was made against |
+| `auditLog` | c15t's own change log |
+| `c15t_migrations` | c15t's migration ledger |
+
+```bash
+pnpm db:consent:plan     # read-only: what c15t would create or change
+pnpm db:consent:migrate  # apply it
+```
+
+Neon's pooled host refuses the `search_path` setting that keeps these tables in their schema, so the consent backend and these scripts use the direct host of `DATABASE_URL`. See [Analytics and consent](analytics.md#the-backend).
+
 ## Migrations
 
 Migrations are SQL files in `packages/db/drizzle/` with their snapshots in `packages/db/drizzle/meta/`. They're committed, and the config is [`packages/db/drizzle.config.ts`](../packages/db/drizzle.config.ts). It reads `DATABASE_URL`, and the `db:*` scripts run it through varlock, which reads `apps/web/.env.local`.

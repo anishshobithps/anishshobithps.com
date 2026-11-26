@@ -25,6 +25,7 @@ A fork can keep, modify, and redistribute the MIT code. It can't publish modifie
 - [ ] Write your own privacy policy in `apps/web/src/app/(site)/privacy-policy/page.tsx`. This one describes my setup, and it lists the services I use.
 - [ ] Point the CSP, Clerk domain, and redirects in [`next.config.mjs`](../apps/web/next.config.mjs) at your own. See [Deployment](deployment.md).
 - [ ] Edit the seed data in `apps/web/scripts/seed-links.ts`, which holds my links.
+- [ ] Use your own PostHog project. Set `NEXT_PUBLIC_POSTHOG_KEY`, and change the `POSTHOG_PROJECT_ID` default in `apps/web/.env.schema`, which points at mine. Check the consent policy and banner copy in `apps/web/src/lib/consent/backend-config.ts` and `apps/web/c15t.config.ts` fit your site. See [Analytics and consent](analytics.md).
 - [ ] Rewrite the README and these docs in your own words.
 
 ## What can stay

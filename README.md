@@ -41,7 +41,8 @@ Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, b
 
 - A portfolio and a blog. Posts are MDX with printed covers, reading time, anonymous reactions, view counts, and threaded comments.
 - A guestbook and blog comments behind Clerk sign-in, with likes, pinning, and soft delete.
-- Projects and short links that live in Postgres and are managed from an owner-only admin.
+- Projects and short links that live in Postgres and are managed from an owner-only admin, which also charts traffic, behavior, and engagement.
+- First-party analytics: Umami for page counts, and PostHog for heatmaps, replays, and custom events, both sent through this domain. PostHog waits for consent where the law asks for it, through a self-hosted c15t banner.
 - A resume rendered inline from the latest GitHub release.
 - `/svg` cards for GitHub READMEs, `/og` cards for link previews, and an RSS feed.
 - Artwork drawn in code rather than exported: the print scenes, mascot, doodles, and OG card.
@@ -59,6 +60,7 @@ Node 24+ and pnpm 11 (the repo pins `packageManager`, so `corepack enable` is en
 pnpm install
 pnpm --filter web exec varlock load   # checks apps/web/.env.local against the schema
 pnpm db:migrate         # applies the committed migrations in packages/db/drizzle/
+pnpm db:consent:migrate # creates the consent tables in the c15t schema
 pnpm dev                # http://localhost:3000
 ```
 
@@ -75,7 +77,8 @@ Create `apps/web/.env.local` first. [varlock](https://varlock.dev) checks it aga
 | [Database](docs/database.md) | Tables, anonymous identity hashing, migrations |
 | [Development](docs/development.md) | Commands, tests, lint, CI, and the conventions the code follows |
 | [Writing posts](docs/writing-posts.md) | Frontmatter, MDX components, covers, publishing |
-| [Admin](docs/admin.md) | Access, moderation, projects, links, the resume cache |
+| [Admin](docs/admin.md) | Access, the analytics pages, moderation, projects, links, the resume cache |
+| [Analytics and consent](docs/analytics.md) | Umami, PostHog through `/relay`, the custom events, the c15t consent banner and backend |
 | [Short links](docs/short-links.md) | Shapes, previews, reserved paths, a second domain |
 | [SVG cards](docs/svg-cards.md) | The `/svg` endpoint, every template, how it's built |
 | [The art](docs/art.md) | The print engine, scenes, mascot, OG cards, colour tokens |

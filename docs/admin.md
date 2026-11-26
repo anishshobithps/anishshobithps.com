@@ -20,15 +20,34 @@ Set `OWNER_CLERK_USER_ID` to your Clerk user ID. See [Getting started](getting-s
 
 ## Pages
 
+The sidebar groups the pages into Analytics and Manage.
+
 | Page | What you can do |
 | --- | --- |
-| `/admin` | See counts for guestbook entries, comments, unique reads, and reactions. Clear the cached resume PDF |
+| `/admin` | The overview: visitors, page views, new blog readers, conversations, and short-link clicks, a traffic chart, top pages, community activity, and top posts. Clear the cached resume PDF |
+| `/admin/behavior` | What visitors do, from PostHog: sessions, frustrated clicks, errors, Core Web Vitals, custom events, post completion, page engagement, referrers, outbound clicks, devices, and theme |
+| `/admin/content` | What the database records: new readers, reactions, comments, guestbook signatures, and likes per day, every post's numbers, the reaction split, and short-link clicks |
 | `/admin/guestbook` | Search entries, pin or unpin them, and delete them |
 | `/admin/comments` | Search comments across posts, pin or unpin them, and delete them |
 | `/admin/projects` | Create, edit, enable or disable, reorder, and delete the projects shown on `/projects` and the home page |
 | `/admin/links` | Create, edit, enable or disable, and delete short links and their aliases |
 
-The overview shows both active and total counts. Deleted entries and comments are soft-deleted, so the total includes them. See [Database](database.md#moderation-and-deletion).
+Deleted entries and comments are soft-deleted, so they stay in the database. See [Database](database.md#moderation-and-deletion).
+
+## Analytics
+
+The three analytics pages share a 7, 30, or 90 day range picker, kept in the URL as `?range=`. Each number is compared with the period before it.
+
+- PostHog panels need `POSTHOG_PERSONAL_API_KEY`. Without it they say PostHog isn't connected, and the database panels still work. Results are cached for five minutes.
+- The badge on the overview counts visitors PostHog saw in the last 30 minutes.
+- Heatmaps, replays, and error tracking open in PostHog from the buttons on the Behavior page.
+- Umami's numbers stay in Umami's dashboard, because its API needs a paid plan.
+
+How the data is collected is in [Analytics and consent](analytics.md).
+
+## Long content
+
+Names, handles, paths, URLs, and titles truncate, with the full text on hover. Guestbook messages and comments show four lines with a Show more toggle, and keep their line breaks. On phones the links table shows each target and click count under the path, and the content table drops its reaction and comment columns.
 
 ## Moderation
 
@@ -48,4 +67,4 @@ Links are managed here, and `apps/web/scripts/seed-links.ts` can seed a few. Val
 
 ## Resume cache
 
-The resume PDF is fetched from the latest GitHub release and cached for up to an hour. After publishing a new release, use the button on the overview page to clear the cache. The next visit to `/resume` pulls the new PDF.
+The resume PDF is fetched from the latest GitHub release and cached for up to an hour. After publishing a new release, use the button at the bottom of the overview page to clear the cache. The next visit to `/resume` pulls the new PDF.

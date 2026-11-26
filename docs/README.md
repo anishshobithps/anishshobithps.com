@@ -13,7 +13,8 @@ How this site is built, run, and extended. The [README](../README.md) is the sho
 | Know what is stored and how identity hashing works | [Database](database.md) |
 | Run tests and lint, or learn the house rules | [Development](development.md) |
 | Add a blog post | [Writing posts](writing-posts.md) |
-| Moderate content, edit projects, manage links | [Admin](admin.md) |
+| Read the dashboards, moderate content, edit projects, manage links | [Admin](admin.md) |
+| Understand what's tracked, the consent banner, and the PostHog relay | [Analytics and consent](analytics.md) |
 | Make short links, including on a second domain | [Short links](short-links.md) |
 | Put live cards in a GitHub README | [SVG cards](svg-cards.md) |
 | Work on the isometric art, mascot, or OG cards | [The art](art.md) |
