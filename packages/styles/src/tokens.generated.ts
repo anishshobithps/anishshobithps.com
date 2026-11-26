@@ -24,6 +24,11 @@ export const ROOT_TOKENS = {
   "ring": "oklch(0.58 0.14 155)",
   "brand": "oklch(0.58 0.14 155)",
   "brand-text": "oklch(0.44 0.13 155)",
+  "glass-tint-from": "color-mix(in oklab, var(--brand) 14%, transparent)",
+  "glass-tint-to": "color-mix(in oklab, var(--brand) 42%, transparent)",
+  "glass-rim-from": "color-mix(in oklab, var(--brand) 85%, white)",
+  "glass-rim-to": "var(--brand-text)",
+  "glass-shadow": "drop-shadow(0 6px 6px rgb(0 0 0 / 0.18))",
   "brand-foreground": "oklch(0.145 0 0)",
   "warning": "oklch(0.769 0.188 70.08)",
   "warning-foreground": "oklch(0.555 0.163 48.998)",
@@ -107,6 +112,11 @@ export const DARK_TOKENS = {
   "tap-highlight": "oklch(0.72 0.15 155 / 0.2)",
   "color-available": "oklch(0.78 0.19 142)",
   "brand-text": "oklch(0.72 0.15 155)",
+  "glass-tint-from": "color-mix(in oklab, var(--brand-text) 12%, transparent)",
+  "glass-tint-to": "color-mix(in oklab, var(--brand-text) 36%, transparent)",
+  "glass-rim-from": "color-mix(in oklab, var(--brand-text) 45%, white)",
+  "glass-rim-to": "var(--brand-text)",
+  "glass-shadow": "drop-shadow(0 6px 6px rgb(0 0 0 / 0.5))",
   "warning-foreground": "oklch(0.828 0.189 84.429)",
   "iso-plate-green": "var(--brand-text)"
 } as const;
