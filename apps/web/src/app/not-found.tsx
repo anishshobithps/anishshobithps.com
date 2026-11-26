@@ -1,7 +1,7 @@
 import { Button } from "@repo/ui/components/button";
 import { Empty, EmptyContent, EmptyHeader } from "@repo/ui/components/empty";
 import { HouseIcon } from "@repo/icons";
-import { PageArt } from "@repo/diagrams/page-art";
+import { PageArt } from "@repo/iso/components/page-art";
 import { ArtStage } from "@/components/layouts/hero-art";
 import {
   Text,

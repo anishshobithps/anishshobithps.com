@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import * as classes from "@repo/iso/classes";
 
 const tokens = readFileSync(
-  new URL("../../styles/src/tokens.css", import.meta.url),
+  new URL("../../ui/src/styles/tokens.css", import.meta.url),
   "utf8",
 );
 

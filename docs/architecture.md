@@ -113,10 +113,9 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | --- | --- | --- | --- |
 | `@repo/core` | `packages/core` | Pure TypeScript: text, date, xml, pagination, schemas | none |
 | `@repo/db` | `packages/db` | Drizzle schema, client, and committed migrations | none |
-| `@repo/diagrams` | `packages/diagrams` | React components that draw the print scenes, page art, and blog covers | iso, ui |
 | `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
 | `@repo/icons` | `packages/icons` | Phosphor icons rendered as green glass, plus Phosphor brand logos | none |
-| `@repo/iso` | `packages/iso` | Two-plate print SVG engine and every scene | none |
+| `@repo/iso` | `packages/iso` | Two-plate print SVG engine, every scene, and the React components in `src/components` that draw them as page art and blog covers | ui |
 | `@repo/query` | `packages/query` | TanStack Query client, provider, prefetch, and mutation hook | core |
 | `@repo/site-config` | `packages/site-config` | Site name, links, and the env schema it needs | none |
 | `@repo/sounds` | `packages/sounds` | Sound engine, player, cues, preferences, and the palette | none |

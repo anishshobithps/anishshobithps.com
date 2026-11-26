@@ -7,7 +7,7 @@ import {
   isoRipple,
   isoTwinkle,
   isoType,
-} from "@repo/diagrams/classes";
+} from "@repo/iso/components/classes";
 
 const COLS = 42;
 const ROWS = 7;

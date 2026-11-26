@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./components/classes": "./src/components/classes.ts",
+    "./components/*": "./src/components/*.tsx",
     "./*": "./src/*.ts"
   },
   "scripts": {
@@ -11,11 +13,19 @@
     "types:check": "tsc --noEmit",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@repo/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@repo/vitest-config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

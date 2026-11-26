@@ -1,6 +1,6 @@
 import { ArtStage } from "@/components/layouts/hero-art";
 import { EndOfPage } from "@/components/shared/end-of-page";
-import { StripArt } from "@repo/diagrams/strip-art";
+import { StripArt } from "@repo/iso/components/strip-art";
 import {
   GroupGlyph,
   OnlinePing,

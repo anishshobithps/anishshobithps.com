@@ -14,16 +14,16 @@ Every figure is drawn the same way: a two-colour riso print. Black ink and the s
 | --- | --- |
 | Print engine | [`packages/iso/src/`](../packages/iso/src/): `figure.ts` (the scene model and its markup), `iso-kit.ts` (projection, extruded solids, the plan oblique camera), `print.ts` (plates, halftone screens, register, flat shapes) |
 | Scenes | [`packages/iso/src/scenes/`](../packages/iso/src/scenes/), one file per figure |
-| Rendering a scene | [`iso-art.tsx`](../packages/diagrams/src/iso-art.tsx) draws it as inline SVG, and [`iso-stage.tsx`](../packages/diagrams/src/iso-stage.tsx) plays its motion while it's on screen |
-| Page figures | [`page-art.tsx`](../packages/diagrams/src/page-art.tsx) maps a page name to a scene, and passes the page's real data to it |
-| Blog covers | [`blog-covers.tsx`](../packages/diagrams/src/blog-covers.tsx) maps a post slug to a scene, and falls back to the numbered sheet |
-| Shared animation classes | [`classes.ts`](../packages/diagrams/src/classes.ts) |
+| Rendering a scene | [`iso-art.tsx`](../packages/iso/src/components/iso-art.tsx) draws it as inline SVG, and [`iso-stage.tsx`](../packages/iso/src/components/iso-stage.tsx) plays its motion while it's on screen |
+| Page figures | [`page-art.tsx`](../packages/iso/src/components/page-art.tsx) maps a page name to a scene, and passes the page's real data to it |
+| Blog covers | [`blog-covers.tsx`](../packages/iso/src/components/blog-covers.tsx) maps a post slug to a scene, and falls back to the numbered sheet |
+| Shared animation classes | [`classes.ts`](../packages/iso/src/components/classes.ts) |
 | Doodles and nudges | [`apps/web/src/components/shared/doodles.tsx`](../apps/web/src/components/shared/doodles.tsx) |
 | Logo and mascot | `logo.tsx`, `logo-icon.tsx`, `logo-mascot.tsx` in `apps/web/src/components/shared/` |
 | OpenGraph card | [`apps/web/src/components/shared/OG.tsx`](../apps/web/src/components/shared/OG.tsx), rendered by `/og`. The mascot is printed in ink with its green plate off register |
 | Cursors | [`apps/web/scripts/cursors/generate.ts`](../apps/web/scripts/cursors/generate.ts) draws five cursors in light and dark from the theme tokens. Each one is inlined as a data URI in the `--cursor-*` variables of `apps/web/src/app/cursors.css`. `pnpm cursors` regenerates both |
 | Home hero | [`workbench.ts`](../packages/iso/src/scenes/workbench.ts) draws a print shop floor with the robot shown at four stages: guide lines, ink, a green plate off register, and registered and awake |
-| Footer strip | [`strip-art.tsx`](../packages/diagrams/src/strip-art.tsx) renders the [night shelf](../packages/iso/src/scenes/night-shelf.ts) and crops it to the middle on phones. In dark mode the lamp is on and the bot sleeps. In light mode the bot is awake |
+| Footer strip | [`strip-art.tsx`](../packages/iso/src/components/strip-art.tsx) renders the [night shelf](../packages/iso/src/scenes/night-shelf.ts) and crops it to the middle on phones. In dark mode the lamp is on and the bot sleeps. In light mode the bot is awake |
 | Band doodles | [`band-doodle.tsx`](../apps/web/src/components/shared/band-doodle.tsx) draws five small flat critters on the hatched dividers between sections. Pass `doodle` to `<Section>` |
 | Inline art | [`inline-art.tsx`](../apps/web/src/components/shared/inline-art.tsx) draws six small green glass pieces that sit inside the home page leads: a bot, a toolbox, a 3am mug, gears, a pencil leaving a trace, and a paper plane. Use `<InlineArt name="..." />` in running text. They share the icons' glass tokens |
 | Icons | `@repo/icons` renders Phosphor's shapes as green glass: the `fill` weight is a tinted body with a soft shadow and the `regular` weight is a gradient rim. The colours are the `--glass-*` tokens in `tokens.css`. `weight="fill"` prints the body solid. Brand logos keep their Phosphor weights. `pnpm --filter web icons` regenerates the set |
