@@ -26,6 +26,7 @@ import { classifyError, toast, typedToast } from "@/lib/toast";
 import { useSiteAuth } from "@/components/shared/site-auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
+import { track } from "@/lib/analytics/events";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 function patchLike(
@@ -157,6 +158,8 @@ export function PostEngagement({
 
   const { mutate: selectMood } = useMutation({
     mutationFn: (mood: MoodId | "") => submitReaction(slug, mood || null),
+    onSuccess: (_data, mood) =>
+      track("post_reaction_set", { slug, mood: mood || null }),
     onMutate: async (mood) => {
       await queryClient.cancelQueries({ queryKey: reactionsKey });
       const previous = queryClient.getQueryData<MoodState>(reactionsKey);
@@ -202,9 +205,14 @@ export function PostEngagement({
       if (!result.success) throw new Error(result.error);
       return result.id;
     },
-    onSuccess: (id, { tempId }) => {
+    onSuccess: (id, { tempId, body, parentId }) => {
       setBaseComments((prev) => patchConfirm(prev, tempId, id));
       bumpCommentCount(1);
+      track("comment_posted", {
+        slug,
+        is_reply: parentId !== undefined,
+        length: body.length,
+      });
     },
     onError: (error, { tempId }) => {
       setBaseComments((prev) => patchDelete(prev, tempId));
@@ -217,6 +225,7 @@ export function PostEngagement({
       const result = await deleteComment(id);
       if (!result.success) throw new Error(result.error);
     },
+    onSuccess: () => track("comment_deleted", { slug }),
     onMutate: (id) => {
       setBaseComments((prev) => patchDelete(prev, id));
       bumpCommentCount(-1);
@@ -232,6 +241,8 @@ export function PostEngagement({
       const result = await toggleCommentLike(id);
       if (!result.success) throw new Error(result.error);
     },
+    onSuccess: (_data, { liked }) =>
+      track("comment_like_toggled", { slug, liked }),
     onError: (error, { id, liked }) => {
       setBaseComments((prev) => patchLike(prev, id, !liked));
       typedToast(classifyError(error.message), error.message);

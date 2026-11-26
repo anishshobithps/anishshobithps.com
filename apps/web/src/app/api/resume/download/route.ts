@@ -1,8 +1,13 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { fetchResume, forwardResumeHeaders } from "@/lib/resume";
 import { getResumeFilename } from "@/lib/resume";
+import { captureServerEvent, referrerHost } from "@/lib/analytics/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+    const referrer = referrerHost(request.headers.get("referer"));
+    after(() =>
+        captureServerEvent("resume_downloaded", { referrer_host: referrer }),
+    );
     try {
         const res = await fetchResume();
 

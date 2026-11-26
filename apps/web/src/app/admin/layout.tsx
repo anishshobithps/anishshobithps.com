@@ -7,7 +7,9 @@ import { AdminHeader } from "@/app/admin/admin-header";
 import { AdminUnauthorized } from "@/app/admin/unauthorized";
 import { QueryProvider } from "@/components/shared/query-provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { markOwner } from "@/lib/analytics/server";
 import type { Metadata } from "next";
+import { after } from "next/server";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -26,11 +28,13 @@ export default async function AdminLayout({
   if (!userId) return redirectToSignIn({ returnBackUrl: "/admin" });
   if (userId !== ENV.OWNER_CLERK_USER_ID) return <AdminUnauthorized />;
 
+  after(() => markOwner(userId));
+
   return (
     <ClerkProvider>
       <NuqsAdapter>
         <QueryProvider>
-          <SidebarProvider>
+          <SidebarProvider data-analytics-block="">
             <AdminSidebar />
             <SidebarInset>
               <AdminHeader />

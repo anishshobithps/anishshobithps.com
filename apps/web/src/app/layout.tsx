@@ -1,4 +1,5 @@
 import { ENV } from "varlock/env";
+import { AnalyticsContext } from "@/components/shared/analytics-context";
 import { CommandMenuHost } from "@/components/shared/command-menu-host";
 import { PhosphorProvider } from "@/components/shared/phosphor-provider";
 import { SoundEffects } from "@/components/shared/sound-effects";
@@ -108,6 +109,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         >
           <TooltipProvider>
             <PhosphorProvider>
+              <AnalyticsContext />
               <ThemeHotkey />
               <SoundEffects />
               <CommandMenuHost />

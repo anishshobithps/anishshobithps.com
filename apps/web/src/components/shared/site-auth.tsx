@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { hasSessionHint } from "@/lib/session-hint";
+import { track } from "@/lib/analytics/events";
 import { usePathname } from "next/navigation";
 import {
   cloneElement,
@@ -101,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openSignIn = useCallback((options?: SignInOptions) => {
+    track("sign_in_opened", { pathname: window.location.pathname });
     const current = bridgeRef.current;
     if (current?.isLoaded) {
       current.openSignIn(options);

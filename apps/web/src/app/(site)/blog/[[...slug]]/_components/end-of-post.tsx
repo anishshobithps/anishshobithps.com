@@ -7,7 +7,8 @@ import { Button } from "@repo/ui/components/button";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { gitDraw, gitPop } from "@repo/diagrams/classes";
 import { cn } from "@repo/ui/lib/cn";
-import type { CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
+import { track } from "@/lib/analytics/events";
 import { EndMessageSkeleton } from "@/app/(site)/blog/[[...slug]]/_components/post-skeletons";
 import { usePostData } from "@/app/(site)/blog/[[...slug]]/_components/use-post-data";
 
@@ -61,6 +62,22 @@ interface EndOfPostProps {
 export function EndOfPost({ slug, className }: EndOfPostProps) {
   const { data, isError } = usePostData(slug);
   const commentCount = data?.stats.commentCount ?? 0;
+  const sentinel = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const node = sentinel.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        track("post_finished", { slug });
+        observer.disconnect();
+      },
+      { rootMargin: "100000px 0px 0px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [slug]);
   const scrollToEngagement = () => {
     document
       .getElementById("engagement")
@@ -69,6 +86,7 @@ export function EndOfPost({ slug, className }: EndOfPostProps) {
 
   return (
     <Reveal className={cn("mt-14 mb-2", className)}>
+      <span ref={sentinel} aria-hidden="true" className="block h-px" />
       <FinishLine />
       <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">

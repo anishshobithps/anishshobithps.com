@@ -46,6 +46,7 @@ import { useIsMac } from "@/hooks/use-is-mac";
 import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 import { useMotionSetting } from "@repo/ui/hooks/use-prefers-reduced-motion";
 import { copyEmail } from "@/lib/copy-email";
+import { track } from "@/lib/analytics/events";
 import { setMotionOff } from "@repo/ui/lib/motion-preference";
 
 const NAV_ICONS = {
@@ -74,10 +75,17 @@ export function CommandMenu() {
   const isMac = useIsMac();
   const themeShortcut = isMac ? "⇧⌘D" : "Ctrl+Shift+D";
 
-  const runCommand = useCallback((action: () => void) => {
-    setCommandMenuOpen(false);
-    action();
-  }, []);
+  const runCommand = useCallback(
+    (command: string, action: () => void, target?: string) => {
+      track(
+        "command_menu_command",
+        target ? { command, target } : { command },
+      );
+      setCommandMenuOpen(false);
+      action();
+    },
+    [],
+  );
 
   const applyTheme = useCallback(
     (theme: "light" | "dark") => {
@@ -99,7 +107,9 @@ export function CommandMenu() {
         <CommandEmpty>No results found.</CommandEmpty>
 
         <CommandGroup heading="Navigation">
-          <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
+          <CommandItem
+            onSelect={() => runCommand("navigate", () => router.push("/"), "/")}
+          >
             <HouseIcon aria-hidden="true" />
             Home
           </CommandItem>
@@ -108,14 +118,28 @@ export function CommandMenu() {
             return (
               <CommandItem
                 key={item.href}
-                onSelect={() => runCommand(() => router.push(item.href))}
+                onSelect={() =>
+                  runCommand(
+                    "navigate",
+                    () => router.push(item.href),
+                    item.href,
+                  )
+                }
               >
                 <Icon aria-hidden="true" />
                 {item.label}
               </CommandItem>
             );
           })}
-          <CommandItem onSelect={() => runCommand(() => router.push("/#contact"))}>
+          <CommandItem
+            onSelect={() =>
+              runCommand(
+                "navigate",
+                () => router.push("/#contact"),
+                "/#contact",
+              )
+            }
+          >
             <EnvelopeIcon aria-hidden="true" />
             Contact
           </CommandItem>
@@ -124,23 +148,35 @@ export function CommandMenu() {
         <CommandSeparator />
 
         <CommandGroup heading="Actions">
-          <CommandItem onSelect={() => runCommand(() => void copyEmail())}>
+          <CommandItem
+            onSelect={() =>
+              runCommand("copy_email", () => void copyEmail("command_menu"))
+            }
+          >
             <CopyIcon aria-hidden="true" />
             Copy email address
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => applyTheme("light"))}>
+          <CommandItem
+            onSelect={() =>
+              runCommand("theme", () => applyTheme("light"), "light")
+            }
+          >
             <SunIcon aria-hidden="true" />
             Switch to light theme
             <CommandShortcut translate="no">{themeShortcut}</CommandShortcut>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => applyTheme("dark"))}>
+          <CommandItem
+            onSelect={() =>
+              runCommand("theme", () => applyTheme("dark"), "dark")
+            }
+          >
             <MoonIcon aria-hidden="true" />
             Switch to dark theme
             <CommandShortcut translate="no">{themeShortcut}</CommandShortcut>
           </CommandItem>
           <CommandItem
             onSelect={() =>
-              runCommand(() => {
+              runCommand("download_resume", () => {
                 playCue("download");
                 // eslint-disable-next-line @next/next/no-location-assign-relative-destination
                 window.location.href = "/api/resume/download";
@@ -153,7 +189,7 @@ export function CommandMenu() {
           </CommandItem>
           <CommandItem
             onSelect={() =>
-              runCommand(() => {
+              runCommand("sound", () => {
                 if (soundEnabled) disableSound();
                 else void enableSound();
               })
@@ -170,7 +206,9 @@ export function CommandMenu() {
           {motionSetting !== "system" && (
             <CommandItem
               onSelect={() =>
-                runCommand(() => setMotionOff(motionSetting === "on"))
+                runCommand("motion", () =>
+                  setMotionOff(motionSetting === "on"),
+                )
               }
             >
               {motionSetting === "on" ? (
@@ -192,9 +230,13 @@ export function CommandMenu() {
               <CommandItem
                 key={item.platform}
                 onSelect={() =>
-                  runCommand(() => {
-                    window.open(item.href, "_blank", "noopener,noreferrer");
-                  })
+                  runCommand(
+                    "social",
+                    () => {
+                      window.open(item.href, "_blank", "noopener,noreferrer");
+                    },
+                    item.platform,
+                  )
                 }
               >
                 <Icon aria-hidden="true" />

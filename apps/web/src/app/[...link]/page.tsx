@@ -6,7 +6,9 @@ import { escapeInlineScript } from "@repo/core/inline-script";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import type { Metadata, Route } from "next";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { after } from "next/server";
+import { captureServerEvent, referrerHost } from "@/lib/analytics/server";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +24,14 @@ async function resolveFromParams({ params }: PageProps) {
   const { link } = await params;
   const path = parsePath(link);
   return path ? resolveLink(path.tag, path.slug) : null;
+}
+
+function targetHost(target: string): string | null {
+  try {
+    return new URL(target).host || null;
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
@@ -61,11 +71,23 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   };
 }
 
-export default async function LinkResolverPage(props: PageProps) {
-  const link = await resolveFromParams(props);
-  if (!link) notFound();
+export default async function LinkResolverPage({ params }: PageProps) {
+  const path = parsePath((await params).link);
+  const link = path ? await resolveLink(path.tag, path.slug) : null;
+  if (!path || !link) notFound();
 
+  const referrer = referrerHost((await headers()).get("referer"));
   after(() => recordClick(link.id));
+  after(() =>
+    captureServerEvent("short_link_followed", {
+      slug: path.slug,
+      tag: path.tag,
+      permanent: link.permanent,
+      has_preview: hasPreview(link),
+      target_host: targetHost(link.target),
+      referrer_host: referrer,
+    }),
+  );
 
   const { target } = link;
 

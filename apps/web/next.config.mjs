@@ -4,6 +4,9 @@ import { varlockNextConfigPlugin } from "@varlock/nextjs-integration/plugin";
 const withMDX = createMDX();
 const withVarlock = varlockNextConfigPlugin();
 
+const posthogRegion =
+  process.env.NEXT_PUBLIC_POSTHOG_REGION === "eu" ? "eu" : "us";
+
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
@@ -48,6 +51,18 @@ const config = {
       {
         source: "/stats/api/send",
         destination: "https://cloud.umami.is/api/send",
+      },
+      {
+        source: "/relay/static/:path*",
+        destination: `https://${posthogRegion}-assets.i.posthog.com/static/:path*`,
+      },
+      {
+        source: "/relay/array/:path*",
+        destination: `https://${posthogRegion}-assets.i.posthog.com/array/:path*`,
+      },
+      {
+        source: "/relay/:path*",
+        destination: `https://${posthogRegion}.i.posthog.com/:path*/`,
       },
       {
         source: "/blog/:path*.mdx",

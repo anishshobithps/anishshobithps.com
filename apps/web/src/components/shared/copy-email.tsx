@@ -29,7 +29,7 @@ export function CopyEmail() {
         variant="ghost"
         size="icon-sm"
         aria-label={copied ? "Email copied" : "Copy email address"}
-        onClick={async () => setCopied(await copyEmail())}
+        onClick={async () => setCopied(await copyEmail("contact"))}
       >
         {copied ? (
           <CheckIcon aria-hidden="true" />

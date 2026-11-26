@@ -13,6 +13,7 @@ import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography
 import { siteConfig } from "@repo/site-config";
 import { CodeIcon, ImageIcon } from "@repo/icons";
 import { useRef, useState } from "react";
+import { track } from "@/lib/analytics/events";
 
 const DOWNLOAD_SIZES = [16, 32, 64, 128, 256, 512] as const;
 type DownloadSize = (typeof DOWNLOAD_SIZES)[number];
@@ -158,9 +159,11 @@ export function LogoDownloadCard({
           size="sm"
           className="flex-1 h-8 text-xs"
           aria-label={`Download ${label} logo as SVG at ${size}px`}
-          onClick={() =>
-            svgRef.current && downloadSVG(svgRef.current, filename, size)
-          }
+          onClick={() => {
+            if (!svgRef.current) return;
+            downloadSVG(svgRef.current, filename, size);
+            track("logo_downloaded", { format: "svg", size, filename });
+          }}
         >
           <CodeIcon data-icon="inline-start" className="size-3 shrink-0" aria-hidden="true" />
           SVG
@@ -170,9 +173,11 @@ export function LogoDownloadCard({
           size="sm"
           className="flex-1 h-8 text-xs"
           aria-label={`Download ${label} logo as PNG at ${size}px`}
-          onClick={() =>
-            svgRef.current && downloadPNG(svgRef.current, filename, size)
-          }
+          onClick={() => {
+            if (!svgRef.current) return;
+            downloadPNG(svgRef.current, filename, size);
+            track("logo_downloaded", { format: "png", size, filename });
+          }}
         >
           <ImageIcon data-icon="inline-start" className="size-3 shrink-0" aria-hidden="true" />
           PNG

@@ -27,7 +27,7 @@ function onStorage(event: StorageEvent) {
   emit();
 }
 
-function getSnapshot(): boolean {
+export function getLinkPreviewsEnabled(): boolean {
   if (!loaded && typeof window !== "undefined") {
     loaded = true;
     current = readStorage();
@@ -39,7 +39,7 @@ function getServerSnapshot(): boolean {
   return true;
 }
 
-function subscribe(listener: () => void): () => void {
+export function subscribeLinkPreviews(listener: () => void): () => void {
   if (listeners.size === 0) window.addEventListener("storage", onStorage);
   listeners.add(listener);
   return () => {
@@ -61,5 +61,9 @@ export function setLinkPreviewsEnabled(next: boolean) {
 }
 
 export function useLinkPreviewsEnabled(): boolean {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  return useSyncExternalStore(
+    subscribeLinkPreviews,
+    getLinkPreviewsEnabled,
+    getServerSnapshot,
+  );
 }

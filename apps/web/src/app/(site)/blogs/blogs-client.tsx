@@ -50,9 +50,16 @@ import {
   parseAsString,
   useQueryStates,
 } from "nuqs";
-import { type ReactNode, useDeferredValue, useMemo } from "react";
+import {
+  type ReactNode,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { PostCard } from "@/app/(site)/blogs/post-card";
 import { postGrid } from "@/app/(site)/blogs/post-grid";
+import { track } from "@/lib/analytics/events";
 
 export type BlogPost = {
   url: string;
@@ -104,6 +111,29 @@ export function BlogsClient({
     }
     return result;
   }, [posts, deferredQuery, tags]);
+
+  const trimmedQuery = deferredQuery.trim();
+  const tagKey = tags.join(",");
+  const resultCount = filtered.length;
+  const lastFilter = useRef("");
+
+  useEffect(() => {
+    const key = JSON.stringify([trimmedQuery, tagKey]);
+    if (key === lastFilter.current) return;
+    if (!lastFilter.current && !trimmedQuery && !tagKey) {
+      lastFilter.current = key;
+      return;
+    }
+    const id = setTimeout(() => {
+      lastFilter.current = key;
+      track("blog_list_filtered", {
+        query: trimmedQuery,
+        tags: tagKey ? tagKey.split(",") : [],
+        results: resultCount,
+      });
+    }, 800);
+    return () => clearTimeout(id);
+  }, [trimmedQuery, tagKey, resultCount]);
 
   const totalPages = useMemo(
     () => Math.max(1, Math.ceil(filtered.length / per)),

@@ -33,6 +33,7 @@ import {
 } from "@tanstack/react-query";
 import { useVirtualList } from "@repo/virtual/use-virtual-list";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { track } from "@/lib/analytics/events";
 
 const MAX_MESSAGE_LENGTH = 280;
 const GUESTBOOK_KEY = ["guestbook"] as const;
@@ -132,12 +133,14 @@ export function GuestbookClient() {
       if (!result.success) throw new Error(result.error);
       return { id: result.id, visit: result.visit };
     },
-    onSuccess: ({ id, visit }, { tempId }) =>
+    onSuccess: ({ id, visit }, { tempId, message }) => {
+      track("guestbook_signed", { length: message.length });
       patchEntries((list) =>
         list.map((entry) =>
           entry.id === tempId ? { ...entry, id, visit } : entry,
         ),
-      ),
+      );
+    },
     onError: (error, { tempId }) => {
       patchEntries((list) => list.filter((entry) => entry.id !== tempId));
       bumpTotal(-1);
@@ -150,6 +153,8 @@ export function GuestbookClient() {
       const result = await toggleLike(id);
       if (!result.success) throw new Error(result.error);
     },
+    onSuccess: (_data, { liked }) =>
+      track("guestbook_like_toggled", { liked }),
     onError: (error, { id, liked }) => {
       patchEntries((list) =>
         list.map((entry) =>
@@ -252,6 +257,7 @@ export function GuestbookClient() {
       const result = await deleteGuestbookEntry(id);
       if (!result.success) throw new Error(result.error);
     },
+    onSuccess: () => track("guestbook_entry_deleted"),
     onMutate: (id) => {
       const removed = entries.find((entry) => entry.id === id);
       patchEntries((list) => list.filter((entry) => entry.id !== id));

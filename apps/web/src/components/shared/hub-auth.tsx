@@ -40,7 +40,12 @@ export default function HubAuth({ onClose }: { onClose: () => void }) {
               {user.fullName || user.username || "You"}
             </Text>
             {user.email && (
-              <Text as="p" variant="muted" className="truncate text-xs">
+              <Text
+                as="p"
+                variant="muted"
+                className="truncate text-xs"
+                data-analytics-mask=""
+              >
                 {user.email}
               </Text>
             )}
