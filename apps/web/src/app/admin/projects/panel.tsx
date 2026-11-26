@@ -82,6 +82,7 @@ import {
 import { Badge } from "@repo/ui/components/badge";
 import { cn } from "@repo/ui/lib/cn";
 import { TypographyMuted } from "@repo/ui/components/typography";
+import { HighlightsField } from "@/app/admin/projects/highlights-field";
 
 const optionalUrlField = z
   .string()
@@ -93,7 +94,7 @@ const optionalUrlField = z
 const projectFormSchema = z.object({
   title: projectInputSchema.shape.title,
   description: projectInputSchema.shape.description,
-  highlights: z.string(),
+  highlights: projectInputSchema.shape.highlights,
   live: optionalUrlField,
   github: optionalUrlField,
 });
@@ -103,29 +104,16 @@ type FormData = z.input<typeof projectFormSchema>;
 const emptyForm: FormData = {
   title: "",
   description: "",
-  highlights: "",
+  highlights: [],
   live: "",
   github: "",
 };
-
-function parseHighlights(raw: string): string[] {
-  return raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
 
 const textFields = [
   {
     name: "title",
     label: "Title",
     placeholder: "Project name",
-  },
-  {
-    name: "highlights",
-    label: "Tech highlights",
-    hint: "(comma-separated)",
-    placeholder: "TypeScript, React, Bun",
   },
   {
     name: "github",
@@ -187,11 +175,13 @@ function ProjectForm({
   onSubmit,
   onCancel,
   submitting,
+  suggestions,
 }: {
   initial: FormData;
   onSubmit: (data: FormData) => void;
   onCancel: () => void;
   submitting: boolean;
+  suggestions: string[];
 }) {
   const form = useForm<FormData>({
     resolver: standardSchemaResolver(projectFormSchema),
@@ -227,6 +217,21 @@ function ProjectForm({
                   disabled={submitting}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="highlights"
+          render={({ field }) => (
+            <FormItem>
+              <HighlightsField
+                value={field.value}
+                onChange={field.onChange}
+                suggestions={suggestions}
+                disabled={submitting}
+              />
               <FormMessage />
             </FormItem>
           )}
@@ -268,6 +273,9 @@ export function ProjectsPanel() {
     target: ProjectRow | null;
   }>({ open: false, target: null });
   const dialogOpen = dialog.open;
+  const highlightSuggestions = [
+    ...new Set(projects.flatMap((project) => project.highlights)),
+  ];
   const editTarget = dialog.target;
 
   const save = useActionMutation({
@@ -315,7 +323,7 @@ export function ProjectsPanel() {
     save.mutate({
       title: form.title.trim(),
       description: form.description.trim(),
-      highlights: parseHighlights(form.highlights),
+      highlights: form.highlights.map((h) => h.trim()).filter(Boolean),
       live: form.live.trim() || null,
       github: form.github.trim() || null,
     });
@@ -566,7 +574,7 @@ export function ProjectsPanel() {
                 ? {
                     title: editTarget.title,
                     description: editTarget.description,
-                    highlights: editTarget.highlights.join(", "),
+                    highlights: editTarget.highlights,
                     live: editTarget.live ?? "",
                     github: editTarget.github ?? "",
                   }
@@ -575,6 +583,7 @@ export function ProjectsPanel() {
             onSubmit={handleFormSubmit}
             onCancel={() => setDialog((prev) => ({ ...prev, open: false }))}
             submitting={save.isPending}
+            suggestions={highlightSuggestions}
           />
         </DialogContent>
       </Dialog>
