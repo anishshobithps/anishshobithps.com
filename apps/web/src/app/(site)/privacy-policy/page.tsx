@@ -24,7 +24,7 @@ export const metadata: Metadata = buildMeta({
   type: "website",
 });
 
-const LAST_UPDATED = "November 13, 2026";
+const LAST_UPDATED = "November 26, 2026";
 
 const POLICY_HISTORY_URL = `${siteConfig.repoUrl}/commits/main/src/app/(site)/privacy-policy/page.tsx`;
 
@@ -111,10 +111,12 @@ export default function PrivacyPolicyPage() {
               <TypographyMark>{siteConfig.domain}/&lt;slug&gt;</TypographyMark>{" "}
               that redirects somewhere else, or the same slug on the separate
               short-link domain that points at this site) adds one to a counter
-              on that link. No IP address, hash, account, or per-click
-              timestamp is recorded, so the number says how many times a link
-              was followed and{" "}
-              <TypographyMark>nothing about who followed it</TypographyMark>.
+              on that link. No IP address, hash, or account is stored with the
+              counter. A matching event also goes to PostHog (see Analytics
+              below) holding the slug, the destination&apos;s domain, the
+              domain of the page you came from, and a timestamp. It uses a
+              fresh random ID every time, so it says{" "}
+              <TypographyMark>nothing about who followed the link</TypographyMark>.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -197,13 +199,17 @@ export default function PrivacyPolicyPage() {
             video in a post, the player&apos;s{" "}
             <TypographyMark>volume, mute, and subtitle settings</TypographyMark>
             . Clerk&apos;s script also keeps a copy of its own configuration
-            there. Clearing this site&apos;s data in your browser removes all
-            of it.
+            there. Your <TypographyMark>privacy choice</TypographyMark> is kept
+            there too, and, only if analytics are allowed, PostHog keeps a{" "}
+            <TypographyMark>random visitor ID and session ID</TypographyMark>{" "}
+            there (see Analytics below). Clearing this site&apos;s data in your
+            browser removes all of it.
           </TypographyP>
           <TypographyP>
-            This site sets <TypographyMark>no cookies of its own</TypographyMark>.
-            The only cookies come from Clerk and are covered under Third-party
-            services below.
+            The one cookie this site sets itself{" "}
+            <TypographyMark>remembers your privacy choice</TypographyMark>, so
+            the banner doesn&apos;t ask again on every page. The other cookies
+            come from Clerk and are covered under Third-party services below.
           </TypographyP>
         </div>
       </Section>
@@ -248,7 +254,7 @@ export default function PrivacyPolicyPage() {
 
       <Section aria-label="Analytics">
         <SectionHeader>Analytics</SectionHeader>
-        <div className="max-w-2xl">
+        <div className="max-w-2xl space-y-4">
           <TypographyP>
             This site uses{" "}
             <a
@@ -278,6 +284,59 @@ export default function PrivacyPolicyPage() {
             <TypographyMark>proxied through this domain</TypographyMark>, so
             your browser never connects to Umami directly.
           </TypographyP>
+          <TypographyP>
+            The site also uses{" "}
+            <a
+              href="https://posthog.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-external"
+            >
+              PostHog
+            </a>{" "}
+            to see how pages are actually used. It records{" "}
+            <TypographyMark>
+              page views, how far you scroll, where you click, page speed, and
+              errors
+            </TypographyMark>
+            , plus a short list of actions such as changing the theme, copying
+            the email address, reacting to a post, or searching the blog. It
+            also records{" "}
+            <TypographyMark>session replays</TypographyMark>: a reconstruction
+            of the page and your mouse and scroll movement, not a video. Every
+            text field is <TypographyMark>masked</TypographyMark> in replays,
+            so what you type never leaves your browser through PostHog, and the
+            email address on your account is masked too.
+          </TypographyP>
+          <TypographyP>
+            Where the law asks for it, PostHog waits for your permission:
+            visitors in the <TypographyMark>EEA, UK, and Switzerland</TypographyMark>,
+            in Quebec, and anyone whose location can&apos;t be told get a
+            banner first. Visitors in US privacy states can opt out. Everywhere
+            else analytics are on by default. Either way, you can change your
+            choice any time from <TypographyMark>Privacy settings</TypographyMark>{" "}
+            in the footer or the command menu.
+          </TypographyP>
+          <TypographyP>
+            Until you allow analytics, or after you decline, PostHog only
+            counts your visit in <TypographyMark>cookieless mode</TypographyMark>:
+            nothing is stored on your device, there are no replays, and visits
+            are told apart by a hash PostHog computes on its servers from your
+            IP address and browser with a salt that changes every day, so it
+            can&apos;t follow you from one day to the next.
+          </TypographyP>
+          <TypographyP>
+            Once you allow analytics, PostHog uses no cookies either. Its
+            random visitor ID lives in localStorage. If you sign in, that ID is
+            linked to your{" "}
+            <TypographyMark>Clerk user ID, name, and username</TypographyMark>,
+            the same details the guestbook already shows publicly. Your email
+            is never sent. Its script and every event go{" "}
+            <TypographyMark>through this domain</TypographyMark>, so your
+            browser never connects to PostHog directly. If your browser sends{" "}
+            <TypographyMark>Do Not Track</TypographyMark>, PostHog records
+            nothing.
+          </TypographyP>
         </div>
       </Section>
 
@@ -301,6 +360,59 @@ export default function PrivacyPolicyPage() {
               order to serve the page, and keeps short-lived request logs for
               operating the platform. This site doesn&apos;t read those logs
               for anything beyond debugging.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <Heading as="h3" level="h4" divider>Consent records</Heading>
+            <TypographyP>
+              Privacy choices are handled by{" "}
+              <a
+                href="https://c15t.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-external"
+              >
+                c15t
+              </a>
+              , open-source consent software that runs{" "}
+              <TypographyMark>on this site&apos;s own server</TypographyMark>.
+              When you make a choice, a record is saved in this site&apos;s
+              Neon database so the choice can be shown to have been given:{" "}
+              <TypographyMark>
+                a random ID for your browser, what you allowed or declined, the
+                policy you saw, your browser&apos;s user agent and language, the
+                country and region your request came from, whether you chose in
+                the banner or in Privacy settings, how long you took to choose,
+                and a timestamp
+              </TypographyMark>
+              . The country and region come from Vercel&apos;s location
+              headers. Your IP address is not stored with it.
+            </TypographyP>
+          </div>
+          <div className="space-y-2">
+            <Heading as="h3" level="h4" divider>PostHog (Product analytics)</Heading>
+            <TypographyP>
+              Analytics events and session replays described above are stored
+              by{" "}
+              <a
+                href="https://posthog.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-external"
+              >
+                PostHog
+              </a>{" "}
+              and are subject to{" "}
+              <a
+                href="https://posthog.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-external"
+              >
+                PostHog&apos;s Privacy Policy
+              </a>
+              . They are used only to improve this site, and are never sold or
+              shared for advertising.
             </TypographyP>
           </div>
           <div className="space-y-2">
@@ -433,12 +545,15 @@ export default function PrivacyPolicyPage() {
           <TypographyP>
             If you have never signed in to the guestbook or comments, the only
             data stored is an{" "}
-            <TypographyMark>irreversible IP hash</TypographyMark>, and there is
-            no practical way to identify or retrieve those records.
+            <TypographyMark>irreversible IP hash</TypographyMark> and
+            analytics tied to a random ID, and there is no practical way to
+            identify or retrieve those records. Clearing this site&apos;s data
+            in your browser starts you over with a new ID.
           </TypographyP>
           <TypographyP>
             If you have signed in and left a guestbook message, posted a
-            comment, or liked either, you can ask for that data to be erased
+            comment, or liked either, you can ask for that data, and the
+            analytics linked to your account, to be erased
             by emailing{" "}
             <a href={`mailto:${siteConfig.email}`} className="link-external">
               {siteConfig.email}
