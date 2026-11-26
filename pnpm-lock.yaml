@@ -122,9 +122,6 @@ importers:
       '@repo/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@repo/data-table':
-        specifier: workspace:*
-        version: link:../../packages/data-table
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -161,9 +158,6 @@ importers:
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@repo/virtual':
-        specifier: workspace:*
-        version: link:../../packages/virtual
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.105.0(@types/react@19.3.0)(react@19.3.1)
@@ -367,37 +361,6 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 5.0.5(@types/node@26.6.6)(jsdom@31.0.1(@napi-rs/canvas@1.0.13))(msw@2.15.0(@types/node@26.6.6)(typescript@7.0.2))(vite@8.3.5(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
-
-  packages/data-table:
-    dependencies:
-      '@repo/icons':
-        specifier: workspace:*
-        version: link:../icons
-      '@repo/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@tanstack/react-table':
-        specifier: 'catalog:'
-        version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.1
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.3.0
-      eslint:
-        specifier: 'catalog:'
-        version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
 
   packages/db:
     dependencies:
@@ -784,6 +747,12 @@ importers:
       '@repo/icons':
         specifier: workspace:*
         version: link:../icons
+      '@tanstack/react-table':
+        specifier: 'catalog:'
+        version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@tanstack/react-virtual':
+        specifier: 'catalog:'
+        version: 3.14.24(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -836,31 +805,6 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.3.0(@types/react@19.3.0)
-      eslint:
-        specifier: 'catalog:'
-        version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)
-      typescript:
-        specifier: 'catalog:'
-        version: 7.0.2
-
-  packages/virtual:
-    dependencies:
-      '@tanstack/react-virtual':
-        specifier: 'catalog:'
-        version: 3.14.24(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.1
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.3.0
       eslint:
         specifier: 'catalog:'
         version: 10.13.0(jiti@2.7.0)(supports-color@7.2.0)

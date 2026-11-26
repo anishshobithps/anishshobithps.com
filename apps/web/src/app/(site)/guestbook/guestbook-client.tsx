@@ -31,7 +31,7 @@ import {
   useQueryClient,
   type InfiniteData,
 } from "@tanstack/react-query";
-import { useVirtualList } from "@repo/virtual/use-virtual-list";
+import { useVirtualList } from "@repo/ui/hooks/use-virtual-list";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { track } from "@/lib/analytics/events";
 

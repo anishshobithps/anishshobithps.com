@@ -70,8 +70,8 @@ import {
   TableCell,
   TableRow,
 } from "@repo/ui/components/table";
-import { sortableTableFeatures } from "@repo/data-table/features";
-import { SortableTableHeader } from "@repo/data-table/sortable-header";
+import { sortableTableFeatures } from "@repo/ui/lib/table-features";
+import { SortableTableHeader } from "@repo/ui/components/sortable-table-header";
 import { useTable, type ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@repo/ui/components/badge";
 import {

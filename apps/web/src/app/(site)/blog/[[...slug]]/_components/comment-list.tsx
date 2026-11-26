@@ -8,7 +8,7 @@ import { EngagementNudge } from "@/components/engagement/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
 import { PanelRow, panelListItem } from "@/components/layouts/page";
 import { ScrollArea } from "@repo/ui/components/scroll-area";
-import { useVirtualList } from "@repo/virtual/use-virtual-list";
+import { useVirtualList } from "@repo/ui/hooks/use-virtual-list";
 
 export interface CommentListProps {
   comments: CommentWithMeta[];

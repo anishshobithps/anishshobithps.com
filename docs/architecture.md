@@ -112,7 +112,6 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | Package | Path | Purpose | Depends on |
 | --- | --- | --- | --- |
 | `@repo/core` | `packages/core` | Pure TypeScript: text, date, xml, pagination, schemas | none |
-| `@repo/data-table` | `packages/data-table` | TanStack Table features and the sortable header | icons, ui |
 | `@repo/db` | `packages/db` | Drizzle schema, client, and committed migrations | none |
 | `@repo/diagrams` | `packages/diagrams` | React components that draw the print scenes, page art, and blog covers | iso, ui |
 | `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
@@ -126,8 +125,7 @@ The repo is a pnpm workspace run by Turborepo. Every package is private and just
 | `@repo/styles` | `packages/styles` | Design tokens, theme tokens, and their build scripts | none |
 | `@repo/svg-kit` | `packages/svg-kit` | Fonts, palette, primitives, and the renderer for /svg cards | core, site-config, styles |
 | `@repo/tsconfig` | `packages/tsconfig` | Base, Next, and library tsconfig presets | none |
-| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, and UI hooks | core, icons |
-| `@repo/virtual` | `packages/virtual` | TanStack Virtual list hook | none |
+| `@repo/ui` | `packages/ui` | shadcn primitives, Typography, cn, UI hooks, the virtual list hook, and the sortable table header | core, icons |
 | `@repo/vitest-config` | `packages/vitest-config` | Shared Vitest config | none |
 
 Commands run through Turborepo from the root: `pnpm dev`, `pnpm build`, `pnpm turbo run types:check test`, and `pnpm lint:ws` (sherif) for dependency consistency. Lint config, tsconfig, and Vitest config come from the three tooling packages, so a rule changes in one place.

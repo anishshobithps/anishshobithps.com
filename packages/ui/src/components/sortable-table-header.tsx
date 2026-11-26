@@ -2,7 +2,7 @@ import { CaretUpDownIcon } from "@repo/icons";
 import { Button } from "@repo/ui/components/button";
 import { TableHead, TableHeader, TableRow } from "@repo/ui/components/table";
 import type { ReactTable, RowData } from "@tanstack/react-table";
-import type { sortableTableFeatures } from "@repo/data-table/features";
+import type { sortableTableFeatures } from "@repo/ui/lib/table-features";
 
 export function SortableTableHeader<TData extends RowData>({
   table,
@@ -22,7 +22,6 @@ export function SortableTableHeader<TData extends RowData>({
             return (
               <TableHead
                 key={header.id}
-                // eslint-disable-next-line shadcn/require-static-classes
                 className={headClassName?.[header.id]}
                 aria-sort={
                   direction === "asc"
