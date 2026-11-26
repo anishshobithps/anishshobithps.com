@@ -15,9 +15,11 @@ import {
 import {
   BookOpenIcon,
   ChatCircleIcon,
+  CursorClickIcon,
   HouseIcon,
   LinkIcon,
   ListIcon,
+  PulseIcon,
   SignOutIcon,
   FolderOpenIcon,
 } from "@repo/icons";
@@ -27,12 +29,24 @@ import Link from "next/link";
 import type { Route } from "next";
 import { usePathname } from "next/navigation";
 
-const navItems = [
-  { title: "Overview", href: "/admin", icon: ListIcon },
-  { title: "Guestbook", href: "/admin/guestbook", icon: ChatCircleIcon },
-  { title: "Comments", href: "/admin/comments", icon: BookOpenIcon },
-  { title: "Projects", href: "/admin/projects", icon: FolderOpenIcon },
-  { title: "Links", href: "/admin/links", icon: LinkIcon },
+export const adminNav = [
+  {
+    label: "Analytics",
+    items: [
+      { title: "Overview", href: "/admin", icon: ListIcon },
+      { title: "Behavior", href: "/admin/behavior", icon: CursorClickIcon },
+      { title: "Content", href: "/admin/content", icon: PulseIcon },
+    ],
+  },
+  {
+    label: "Manage",
+    items: [
+      { title: "Guestbook", href: "/admin/guestbook", icon: ChatCircleIcon },
+      { title: "Comments", href: "/admin/comments", icon: BookOpenIcon },
+      { title: "Projects", href: "/admin/projects", icon: FolderOpenIcon },
+      { title: "Links", href: "/admin/links", icon: LinkIcon },
+    ],
+  },
 ];
 
 export function AdminSidebar() {
@@ -59,27 +73,27 @@ export function AdminSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">
-            Management
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {navItems.map(({ title, href, icon: Icon }) => (
-              <SidebarMenuItem key={href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === href}
-                  tooltip={title}
-                >
-                  <Link href={href as Route}>
-                    <Icon className="size-4" />
-                    <span>{title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
+        {adminNav.map((group) => (
+          <SidebarGroup key={group.label}>
+            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            <SidebarMenu>
+              {group.items.map(({ title, href, icon: Icon }) => (
+                <SidebarMenuItem key={href}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === href}
+                    tooltip={title}
+                  >
+                    <Link href={href as Route}>
+                      <Icon />
+                      <span>{title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter>
@@ -87,7 +101,7 @@ export function AdminSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Link href="/">
-                <HouseIcon className="size-4" />
+                <HouseIcon />
                 <span>Back to site</span>
               </Link>
             </SidebarMenuButton>
@@ -97,7 +111,7 @@ export function AdminSidebar() {
               onClick={() => signOut({ redirectUrl: "/" })}
               className="text-destructive hover:text-destructive"
             >
-              <SignOutIcon className="size-4" />
+              <SignOutIcon />
               <span>Sign out</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

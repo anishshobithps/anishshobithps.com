@@ -5,8 +5,6 @@ import {
     blogCommentLikes,
     blogComments,
     blogPosts,
-    blogReactions,
-    blogReads,
     guestbookEntries,
     guestbookLikes,
     projects,
@@ -19,7 +17,7 @@ import { PROJECTS_CACHE_TAG } from "@/lib/projects";
 import { safeQuery } from "@/lib/safe-query";
 import { projectInputSchema, type ProjectInput } from "@repo/core/projects-schema";
 import { RESUME_CACHE_TAG } from "@/lib/resume";
-import { asc, count, desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath, updateTag } from "next/cache";
 import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import type { CommentUser } from "@/app/(site)/blog/[[...slug]]/actions";
@@ -33,43 +31,6 @@ export interface AdminCommentRow {
     createdAt: string;
     likeCount: number;
     user: CommentUser;
-}
-
-const EMPTY_STATS = {
-    guestbook: { total: 0, active: 0 },
-    comments: { total: 0, active: 0 },
-    reads: 0,
-    reactions: 0,
-};
-
-export async function getAdminStats() {
-    await assertAdmin();
-    return safeQuery("getAdminStats", loadAdminStats, EMPTY_STATS);
-}
-
-async function loadAdminStats() {
-    const [
-        [guestbookTotal],
-        [guestbookActive],
-        [commentsTotal],
-        [commentsActive],
-        [reads],
-        [reactions],
-    ] = await Promise.all([
-        db.select({ count: count() }).from(guestbookEntries),
-        db.select({ count: count() }).from(guestbookEntries).where(eq(guestbookEntries.isDeleted, false)),
-        db.select({ count: count() }).from(blogComments),
-        db.select({ count: count() }).from(blogComments).where(eq(blogComments.isDeleted, false)),
-        db.select({ count: count() }).from(blogReads),
-        db.select({ count: count() }).from(blogReactions),
-    ]);
-
-    return {
-        guestbook: { total: guestbookTotal?.count ?? 0, active: guestbookActive?.count ?? 0 },
-        comments: { total: commentsTotal?.count ?? 0, active: commentsActive?.count ?? 0 },
-        reads: reads?.count ?? 0,
-        reactions: reactions?.count ?? 0,
-    };
 }
 
 export async function refreshResume(): Promise<ActionResult> {

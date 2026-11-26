@@ -1,20 +1,31 @@
 "use client";
 
 import { SidebarTrigger } from "@repo/ui/components/sidebar";
+import { Separator } from "@repo/ui/components/separator";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { TypographySmall } from "@repo/ui/components/typography";
+import { Text } from "@repo/ui/components/typography";
 import { usePathname } from "next/navigation";
+import { adminNav } from "@/app/admin/sidebar";
+
+function titleFor(pathname: string): string {
+  for (const group of adminNav) {
+    const item = group.items.find((entry) => entry.href === pathname);
+    if (item) return item.title;
+  }
+  return "Admin";
+}
 
 export function AdminHeader() {
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const title = titleFor(pathname);
+
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b px-4">
+    <header className="sticky top-0 z-(--z-rail) flex h-14 shrink-0 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur md:px-4">
       <SidebarTrigger />
-      <div className="flex items-center gap-2">
-        <TypographySmall className="font-semibold capitalize">
-          {pathname.split("/").pop()}
-        </TypographySmall>
-      </div>
+      <Separator orientation="vertical" className="mx-1 data-[orientation=vertical]:h-4" />
+      <Text variant="title" as="span" className="min-w-0 truncate">
+        {title}
+      </Text>
       <div className="ml-auto">
         <ThemeToggle />
       </div>
