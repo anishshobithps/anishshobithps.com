@@ -20,12 +20,7 @@ import {
 import { assertAdmin } from "@/lib/assert-admin";
 import { getContentAnalytics } from "@/lib/admin-analytics/database";
 import { formatNumber, slugTitle } from "@/lib/admin-analytics/format";
-import {
-  getBehaviorSeries,
-  getBehaviorSummary,
-  getPageEngagement,
-  getRecentVisitors,
-} from "@/lib/admin-analytics/posthog";
+import { getBehaviorSummary, getTraffic } from "@/lib/admin-analytics/posthog";
 import { analyticsWindow, parseRange } from "@/lib/admin-analytics/range";
 import { AdminPage } from "@/app/admin/_components/admin-page";
 import { RankedBars, StackedBars, TrendChart } from "@/app/admin/_components/charts";
@@ -42,12 +37,10 @@ export default async function AdminPageRoute({
   await assertAdmin();
   const window = analyticsWindow(parseRange((await searchParams).range));
 
-  const [content, summary, series, pages, recent] = await Promise.all([
+  const [content, summary, trafficData] = await Promise.all([
     getContentAnalytics(window),
     getBehaviorSummary(window),
-    getBehaviorSeries(window),
-    getPageEngagement(window),
-    getRecentVisitors(),
+    getTraffic(window),
   ]);
 
   const traffic = summary.status === "ok" ? summary.data : null;
@@ -58,10 +51,10 @@ export default async function AdminPageRoute({
       description={`Everything from the last ${window.label}: traffic, reading, and the community.`}
       actions={
         <>
-          {recent.status === "ok" && (
+          {traffic && (
             <Badge variant="outline" className="gap-1.5">
               <span className="size-1.5 rounded-full bg-(--brand)" aria-hidden="true" />
-              {recent.data} in the last 30 min
+              {traffic.recentVisitors} in the last 30 min
             </Badge>
           )}
           <RangePicker />
@@ -114,9 +107,9 @@ export default async function AdminPageRoute({
           description="Daily pageviews and visitors from PostHog"
           className="xl:col-span-3"
         >
-          {series.status === "ok" ? (
+          {trafficData.status === "ok" ? (
             <TrendChart
-              data={series.data.map(({ date, pageviews, visitors }) => ({
+              data={trafficData.data.series.map(({ date, pageviews, visitors }) => ({
                 date,
                 pageviews,
                 visitors,
@@ -129,7 +122,7 @@ export default async function AdminPageRoute({
           ) : (
             <SourceNotice
               source="PostHog"
-              result={series}
+              result={trafficData}
               envVars={["POSTHOG_PERSONAL_API_KEY"]}
             />
           )}
@@ -144,9 +137,9 @@ export default async function AdminPageRoute({
             </Button>
           }
         >
-          {pages.status === "ok" ? (
+          {trafficData.status === "ok" ? (
             <RankedBars
-              data={pages.data
+              data={trafficData.data.pages
                 .slice(0, 8)
                 .map((page) => ({ label: page.path, value: page.views }))}
               label="Views"
@@ -154,7 +147,7 @@ export default async function AdminPageRoute({
           ) : (
             <SourceNotice
               source="PostHog"
-              result={pages}
+              result={trafficData}
               envVars={["POSTHOG_PERSONAL_API_KEY"]}
             />
           )}

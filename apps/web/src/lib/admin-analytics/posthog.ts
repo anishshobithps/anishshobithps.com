@@ -30,48 +30,91 @@ export function posthogAppUrl(path = ""): string {
   return projectId ? `${host}/project/${projectId}${path}` : host;
 }
 
-const runQuery = unstable_cache(
-  async (query: string): Promise<PostHogResult<Row[]>> => {
+const MAX_CONCURRENT_QUERIES = 3;
+const QUERY_TIMEOUT_MS = 9_000;
+const WINDOW_STEP_SECONDS = 300;
+
+let activeQueries = 0;
+const waitingQueries: Array<() => void> = [];
+
+async function withQuerySlot<T>(task: () => Promise<T>): Promise<T> {
+  if (activeQueries < MAX_CONCURRENT_QUERIES) {
+    activeQueries++;
+  } else {
+    await new Promise<void>((resolve) => waitingQueries.push(resolve));
+  }
+  try {
+    return await task();
+  } finally {
+    const next = waitingQueries.shift();
+    if (next) next();
+    else activeQueries--;
+  }
+}
+
+class PostHogQueryError extends Error {}
+
+const cachedQuery = unstable_cache(
+  async (query: string): Promise<Row[]> => {
     const creds = credentials();
-    if (!creds) return { status: "unconfigured" };
+    if (!creds) throw new PostHogQueryError("PostHog isn't configured");
     const host = posthogHosts(posthogRegion(ENV.NEXT_PUBLIC_POSTHOG_REGION)).ui;
-    try {
-      const response = await fetch(
-        `${host}/api/projects/${creds.projectId}/query/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${creds.apiKey}`,
-          },
-          body: JSON.stringify({
-            name: "admin dashboard",
-            query: { kind: "HogQLQuery", query },
-          }),
+    const response = await withQuerySlot(() =>
+      fetch(`${host}/api/projects/${creds.projectId}/query/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${creds.apiKey}`,
         },
+        body: JSON.stringify({
+          name: "admin dashboard",
+          query: { kind: "HogQLQuery", query },
+        }),
+        signal: AbortSignal.timeout(QUERY_TIMEOUT_MS),
+      }),
+    );
+    if (response.status === 401 || response.status === 403) {
+      throw new PostHogQueryError(
+        "PostHog rejected the API key. Check that POSTHOG_PERSONAL_API_KEY has the Query: Read scope for this project.",
       );
-      if (!response.ok) {
-        return {
-          status: "error",
-          message: `PostHog answered ${response.status}`,
-        };
-      }
-      const body = (await response.json()) as { results?: Row[] };
-      return { status: "ok", data: body.results ?? [] };
-    } catch (error) {
-      return {
-        status: "error",
-        message:
-          error instanceof Error ? error.message : "PostHog request failed",
-      };
     }
+    if (response.status === 429) {
+      throw new PostHogQueryError(
+        "PostHog's query limit was reached. Try again in a minute.",
+      );
+    }
+    if (!response.ok) {
+      throw new PostHogQueryError(`PostHog answered ${response.status}`);
+    }
+    const body = (await response.json()) as { results?: Row[] };
+    return body.results ?? [];
   },
   ["admin-posthog-query"],
   { revalidate: REVALIDATE_SECONDS, tags: ["admin-analytics"] },
 );
 
+async function runQuery(query: string): Promise<PostHogResult<Row[]>> {
+  if (!credentials()) return { status: "unconfigured" };
+  try {
+    return { status: "ok", data: await cachedQuery(query) };
+  } catch (error) {
+    const timedOut =
+      error instanceof Error &&
+      (error.name === "TimeoutError" || error.name === "AbortError");
+    return {
+      status: "error",
+      message: timedOut
+        ? "PostHog took too long to answer. Try again in a minute."
+        : error instanceof Error
+          ? error.message
+          : "PostHog request failed",
+    };
+  }
+}
+
 function seconds(date: Date): number {
-  return Math.floor(date.getTime() / 1000);
+  const exact = Math.floor(date.getTime() / 1000);
+  return exact - (exact % WINDOW_STEP_SECONDS);
 }
 
 function siteFilter(): string {
@@ -96,13 +139,21 @@ function text(value: string | number | null | undefined): string {
     : String(value);
 }
 
-function map<T>(
-  result: PostHogResult<Row[]>,
-  transform: (rows: Row[]) => T,
+function map<I, T>(
+  result: PostHogResult<I>,
+  transform: (data: I) => T,
 ): PostHogResult<T> {
   return result.status === "ok"
     ? { status: "ok", data: transform(result.data) }
     : result;
+}
+
+export interface WebVitals {
+  lcp: number | null;
+  inp: number | null;
+  cls: number | null;
+  fcp: number | null;
+  samples: number;
 }
 
 export interface BehaviorSummary {
@@ -113,23 +164,39 @@ export interface BehaviorSummary {
   exceptions: number;
   rageClicks: number;
   deadClicks: number;
+  recentVisitors: number;
+  vitals: WebVitals;
+}
+
+function maybeNumber(value: string | number | null | undefined): number | null {
+  if (value === null || value === undefined) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 export async function getBehaviorSummary(
   window: AnalyticsWindow,
 ): Promise<PostHogResult<BehaviorSummary>> {
-  const from = seconds(window.from);
+  const from = `fromUnixTimestamp(${seconds(window.from)})`;
+  const vital = (metric: string) =>
+    `quantileIf(0.75)(toFloat(properties.$web_vitals_${metric}_value), event = '$web_vitals' AND timestamp >= ${from})`;
   const result = await runQuery(`
     SELECT
-      countIf(event = '$pageview' AND timestamp >= fromUnixTimestamp(${from})),
-      uniqIf(person_id, event = '$pageview' AND timestamp >= fromUnixTimestamp(${from})),
-      uniqIf(properties.$session_id, timestamp >= fromUnixTimestamp(${from})),
-      countIf(event = '$pageview' AND timestamp < fromUnixTimestamp(${from})),
-      uniqIf(person_id, event = '$pageview' AND timestamp < fromUnixTimestamp(${from})),
-      uniqIf(properties.$session_id, timestamp < fromUnixTimestamp(${from})),
-      countIf(event = '$exception' AND timestamp >= fromUnixTimestamp(${from})),
-      countIf(event = '$rageclick' AND timestamp >= fromUnixTimestamp(${from})),
-      countIf(event = '$dead_click' AND timestamp >= fromUnixTimestamp(${from}))
+      countIf(event = '$pageview' AND timestamp >= ${from}),
+      uniqIf(person_id, event = '$pageview' AND timestamp >= ${from}),
+      uniqIf(properties.$session_id, timestamp >= ${from}),
+      countIf(event = '$pageview' AND timestamp < ${from}),
+      uniqIf(person_id, event = '$pageview' AND timestamp < ${from}),
+      uniqIf(properties.$session_id, timestamp < ${from}),
+      countIf(event = '$exception' AND timestamp >= ${from}),
+      countIf(event = '$rageclick' AND timestamp >= ${from}),
+      countIf(event = '$dead_click' AND timestamp >= ${from}),
+      uniqIf(person_id, timestamp >= now() - INTERVAL 30 MINUTE),
+      ${vital("LCP")},
+      ${vital("INP")},
+      ${vital("CLS")},
+      ${vital("FCP")},
+      countIf(event = '$web_vitals' AND timestamp >= ${from})
     FROM events
     WHERE ${since(window.previousFrom)} AND ${siteFilter()}
   `);
@@ -145,51 +212,84 @@ export async function getBehaviorSummary(
     exceptions: num(row[6]),
     rageClicks: num(row[7]),
     deadClicks: num(row[8]),
+    recentVisitors: num(row[9]),
+    vitals: {
+      lcp: maybeNumber(row[10]),
+      inp: maybeNumber(row[11]),
+      cls: maybeNumber(row[12]),
+      fcp: maybeNumber(row[13]),
+      samples: num(row[14]),
+    },
   }));
 }
 
-export async function getRecentVisitors(): Promise<PostHogResult<number>> {
-  const result = await runQuery(`
-    SELECT uniq(person_id)
-    FROM events
-    WHERE timestamp >= now() - INTERVAL 30 MINUTE AND ${siteFilter()}
-  `);
-  return map(result, ([row = []]) => num(row[0]));
+interface Part {
+  kind: string;
+  sql: string;
 }
 
-export interface BehaviorDay {
-  date: string;
-  pageviews: number;
-  visitors: number;
-  errors: number;
+interface PackedRow {
+  label: string;
+  a: number | null;
+  b: number | null;
+  c: number | null;
+  d: number | null;
 }
 
-export async function getBehaviorSeries(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<BehaviorDay[]>> {
+function part(
+  kind: string,
+  columns: { label: string; a: string; b?: string; c?: string; d?: string },
+  rest: string,
+): Part {
+  return {
+    kind,
+    sql: `
+      SELECT
+        '${kind}' AS kind,
+        toString(${columns.label}) AS label,
+        toFloat(${columns.a}) AS a,
+        toFloat(${columns.b ?? "0"}) AS b,
+        toFloat(${columns.c ?? "0"}) AS c,
+        toFloat(${columns.d ?? "0"}) AS d
+      ${rest}`,
+  };
+}
+
+async function runPacked(
+  parts: Part[],
+): Promise<PostHogResult<Map<string, PackedRow[]>>> {
   const result = await runQuery(`
-    SELECT
-      toString(toDate(toTimeZone(timestamp, '${ANALYTICS_TIMEZONE}'))) AS day,
-      countIf(event = '$pageview'),
-      uniqIf(person_id, event = '$pageview'),
-      countIf(event = '$exception')
-    FROM events
-    WHERE ${since(window.from)} AND ${siteFilter()}
-    GROUP BY day
-    ORDER BY day
+    SELECT kind, label, a, b, c, d FROM (
+      ${parts.map((item) => item.sql).join("\n      UNION ALL\n")}
+    )
   `);
-  return map(result, (rows) =>
-    fillDays(
-      window,
-      rows.map((row) => ({
-        date: String(row[0]),
-        pageviews: num(row[1]),
-        visitors: num(row[2]),
-        errors: num(row[3]),
-      })),
-      { pageviews: 0, visitors: 0, errors: 0 },
-    ),
-  );
+  return map(result, (rows) => {
+    const grouped = new Map<string, PackedRow[]>(
+      parts.map((item) => [item.kind, []]),
+    );
+    for (const row of rows) {
+      grouped.get(String(row[0]))?.push({
+        label: text(row[1]),
+        a: maybeNumber(row[2]),
+        b: maybeNumber(row[3]),
+        c: maybeNumber(row[4]),
+        d: maybeNumber(row[5]),
+      });
+    }
+    return grouped;
+  });
+}
+
+function rowsOf(packed: Map<string, PackedRow[]>, kind: string): PackedRow[] {
+  return packed.get(kind) ?? [];
+}
+
+function byA(rows: PackedRow[]): PackedRow[] {
+  return rows.toSorted((x, y) => num(y.a) - num(x.a));
+}
+
+function scope(window: AnalyticsWindow): string {
+  return `${since(window.from)} AND ${siteFilter()}`;
 }
 
 const TRACKED_EVENTS = [
@@ -213,65 +313,89 @@ const TRACKED_EVENTS = [
   keyof AnalyticsEvents | "short_link_followed" | "resume_downloaded"
 >;
 
-export interface EventCount {
+const seriesPart = (window: AnalyticsWindow) =>
+  part(
+    "series",
+    {
+      label: `toDate(toTimeZone(timestamp, '${ANALYTICS_TIMEZONE}'))`,
+      a: "countIf(event = '$pageview')",
+      b: "uniqIf(person_id, event = '$pageview')",
+      c: "countIf(event = '$exception')",
+    },
+    `FROM events WHERE ${scope(window)} GROUP BY label`,
+  );
+
+const eventsPart = (window: AnalyticsWindow) =>
+  part(
+    "events",
+    { label: "event", a: "count()", b: "uniq(person_id)" },
+    `FROM events WHERE ${scope(window)} AND event IN (${TRACKED_EVENTS.map((name) => `'${name}'`).join(", ")}) GROUP BY label`,
+  );
+
+const completionPart = (window: AnalyticsWindow) =>
+  part(
+    "completion",
+    {
+      label: "properties.slug",
+      a: "uniqIf(person_id, event = 'post_read')",
+      b: "uniqIf(person_id, event = 'post_finished')",
+    },
+    `FROM events WHERE event IN ('post_read', 'post_finished') AND ${scope(window)} GROUP BY label ORDER BY a DESC LIMIT 10`,
+  );
+
+const pagesPart = (window: AnalyticsWindow) =>
+  part(
+    "pages",
+    {
+      label: "properties.$pathname",
+      a: "countIf(event = '$pageview')",
+      b: "uniqIf(person_id, event = '$pageview')",
+      c: "avgIf(toFloat(properties.$prev_pageview_max_scroll_percentage), event = '$pageleave')",
+      d: "avgIf(toFloat(properties.$prev_pageview_duration), event = '$pageleave')",
+    },
+    `FROM events WHERE event IN ('$pageview', '$pageleave') AND ${scope(window)} GROUP BY label ORDER BY a DESC LIMIT 10`,
+  );
+
+const peoplePart = (kind: string, property: string, window: AnalyticsWindow) =>
+  part(
+    kind,
+    { label: `properties.${property}`, a: "uniq(person_id)" },
+    `FROM events WHERE event = '$pageview' AND ${scope(window)} GROUP BY label ORDER BY a DESC LIMIT 8`,
+  );
+
+const outboundPart = (window: AnalyticsWindow) =>
+  part(
+    "outbound",
+    { label: "properties.host", a: "count()" },
+    `FROM events WHERE event = 'outbound_link_clicked' AND ${scope(window)} GROUP BY label ORDER BY a DESC LIMIT 8`,
+  );
+
+const errorsPart = (window: AnalyticsWindow) =>
+  part(
+    "errors",
+    {
+      label:
+        "coalesce(nullIf(JSONExtractString(properties.$exception_values, 1), ''), nullIf(toString(properties.$exception_message), ''), 'Unknown error')",
+      a: "count()",
+      d: "toUnixTimestamp(max(timestamp))",
+    },
+    `FROM events WHERE event = '$exception' AND ${scope(window)} GROUP BY label ORDER BY a DESC LIMIT 6`,
+  );
+
+interface BehaviorDay {
+  date: string;
+  pageviews: number;
+  visitors: number;
+  errors: number;
+}
+
+interface EventCount {
   event: string;
   count: number;
   people: number;
 }
 
-export async function getEventCounts(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<EventCount[]>> {
-  const names = TRACKED_EVENTS.map((name) => `'${name}'`).join(", ");
-  const result = await runQuery(`
-    SELECT event, count(), uniq(person_id)
-    FROM events
-    WHERE ${since(window.from)} AND ${siteFilter()} AND event IN (${names})
-    GROUP BY event
-    ORDER BY count() DESC
-  `);
-  return map(result, (rows) =>
-    rows.map((row) => ({
-      event: String(row[0]),
-      count: num(row[1]),
-      people: num(row[2]),
-    })),
-  );
-}
-
-export interface WebVitals {
-  lcp: number | null;
-  inp: number | null;
-  cls: number | null;
-  fcp: number | null;
-  samples: number;
-}
-
-export async function getWebVitals(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<WebVitals>> {
-  const p75 = (metric: string) =>
-    `quantile(0.75)(toFloat(properties.$web_vitals_${metric}_value))`;
-  const result = await runQuery(`
-    SELECT ${p75("LCP")}, ${p75("INP")}, ${p75("CLS")}, ${p75("FCP")}, count()
-    FROM events
-    WHERE event = '$web_vitals' AND ${since(window.from)} AND ${siteFilter()}
-  `);
-  const maybe = (value: string | number | null | undefined) => {
-    if (value === null || value === undefined) return null;
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : null;
-  };
-  return map(result, ([row = []]) => ({
-    lcp: maybe(row[0]),
-    inp: maybe(row[1]),
-    cls: maybe(row[2]),
-    fcp: maybe(row[3]),
-    samples: num(row[4]),
-  }));
-}
-
-export interface PageEngagement {
+interface PageEngagement {
   path: string;
   views: number;
   visitors: number;
@@ -279,136 +403,124 @@ export interface PageEngagement {
   seconds: number | null;
 }
 
-export async function getPageEngagement(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<PageEngagement[]>> {
-  const result = await runQuery(`
-    SELECT
-      properties.$pathname AS path,
-      countIf(event = '$pageview') AS views,
-      uniqIf(person_id, event = '$pageview'),
-      avgIf(toFloat(properties.$prev_pageview_max_scroll_percentage), event = '$pageleave'),
-      avgIf(toFloat(properties.$prev_pageview_duration), event = '$pageleave')
-    FROM events
-    WHERE event IN ('$pageview', '$pageleave') AND ${since(window.from)} AND ${siteFilter()}
-    GROUP BY path
-    ORDER BY views DESC
-    LIMIT 10
-  `);
-  return map(result, (rows) =>
-    rows.map((row) => ({
-      path: text(row[0]),
-      views: num(row[1]),
-      visitors: num(row[2]),
-      scroll: row[3] === null ? null : num(row[3]),
-      seconds: row[4] === null ? null : num(row[4]),
-    })),
-  );
-}
-
-export interface PostCompletion {
+interface PostCompletion {
   slug: string;
   readers: number;
   finishers: number;
 }
 
-export async function getPostCompletion(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<PostCompletion[]>> {
-  const result = await runQuery(`
-    SELECT
-      properties.slug AS slug,
-      uniqIf(person_id, event = 'post_read') AS readers,
-      uniqIf(person_id, event = 'post_finished')
-    FROM events
-    WHERE event IN ('post_read', 'post_finished') AND ${since(window.from)} AND ${siteFilter()}
-    GROUP BY slug
-    ORDER BY readers DESC
-    LIMIT 10
-  `);
-  return map(result, (rows) =>
-    rows.map((row) => ({
-      slug: text(row[0]),
-      readers: num(row[1]),
-      finishers: num(row[2]),
-    })),
-  );
-}
-
-export interface Breakdown {
+interface Breakdown {
   label: string;
   value: number;
 }
 
-export async function getBreakdown(
-  window: AnalyticsWindow,
-  property:
-    | "$referring_domain"
-    | "$device_type"
-    | "$browser"
-    | "$geoip_country_code"
-    | "theme_resolved"
-    | "sound_enabled",
-  event = "$pageview",
-): Promise<PostHogResult<Breakdown[]>> {
-  const result = await runQuery(`
-    SELECT toString(properties.${property}) AS label, uniq(person_id) AS people
-    FROM events
-    WHERE event = '${event}' AND ${since(window.from)} AND ${siteFilter()}
-    GROUP BY label
-    ORDER BY people DESC
-    LIMIT 8
-  `);
-  return map(result, (rows) =>
-    rows.map((row) => ({ label: text(row[0]), value: num(row[1]) })),
-  );
-}
-
-export async function getOutboundLinks(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<Breakdown[]>> {
-  const result = await runQuery(`
-    SELECT toString(properties.host) AS host, count() AS clicks
-    FROM events
-    WHERE event = 'outbound_link_clicked' AND ${since(window.from)} AND ${siteFilter()}
-    GROUP BY host
-    ORDER BY clicks DESC
-    LIMIT 8
-  `);
-  return map(result, (rows) =>
-    rows.map((row) => ({ label: text(row[0]), value: num(row[1]) })),
-  );
-}
-
-export interface ErrorGroup {
+interface ErrorGroup {
   message: string;
   count: number;
   lastSeen: string;
 }
 
-export async function getTopErrors(
-  window: AnalyticsWindow,
-): Promise<PostHogResult<ErrorGroup[]>> {
-  const result = await runQuery(`
-    SELECT
-      coalesce(
-        nullIf(JSONExtractString(properties.$exception_values, 1), ''),
-        nullIf(toString(properties.$exception_message), ''),
-        'Unknown error'
-      ) AS message,
-      count() AS occurrences,
-      toString(max(timestamp))
-    FROM events
-    WHERE event = '$exception' AND ${since(window.from)} AND ${siteFilter()}
-    GROUP BY message
-    ORDER BY occurrences DESC
-    LIMIT 6
-  `);
-  return map(result, (rows) =>
+function toSeries(window: AnalyticsWindow, rows: PackedRow[]): BehaviorDay[] {
+  return fillDays(
+    window,
     rows.map((row) => ({
-      message: text(row[0]),
-      count: num(row[1]),
-      lastSeen: String(row[2] ?? ""),
+      date: row.label,
+      pageviews: num(row.a),
+      visitors: num(row.b),
+      errors: num(row.c),
     })),
+    { pageviews: 0, visitors: 0, errors: 0 },
   );
+}
+
+function toPages(rows: PackedRow[]): PageEngagement[] {
+  return byA(rows).map((row) => ({
+    path: row.label,
+    views: num(row.a),
+    visitors: num(row.b),
+    scroll: row.c,
+    seconds: row.d,
+  }));
+}
+
+function toBreakdown(rows: PackedRow[]): Breakdown[] {
+  return byA(rows).map((row) => ({ label: row.label, value: num(row.a) }));
+}
+
+export interface Traffic {
+  series: BehaviorDay[];
+  pages: PageEngagement[];
+}
+
+export async function getTraffic(
+  window: AnalyticsWindow,
+): Promise<PostHogResult<Traffic>> {
+  const result = await runPacked([seriesPart(window), pagesPart(window)]);
+  return map(result, (packed) => ({
+    series: toSeries(window, rowsOf(packed, "series")),
+    pages: toPages(rowsOf(packed, "pages")),
+  }));
+}
+
+export interface BehaviorActivity {
+  series: BehaviorDay[];
+  events: EventCount[];
+  completion: PostCompletion[];
+}
+
+export async function getBehaviorActivity(
+  window: AnalyticsWindow,
+): Promise<PostHogResult<BehaviorActivity>> {
+  const result = await runPacked([
+    seriesPart(window),
+    eventsPart(window),
+    completionPart(window),
+  ]);
+  return map(result, (packed) => ({
+    series: toSeries(window, rowsOf(packed, "series")),
+    events: byA(rowsOf(packed, "events")).map((row) => ({
+      event: row.label,
+      count: num(row.a),
+      people: num(row.b),
+    })),
+    completion: byA(rowsOf(packed, "completion")).map((row) => ({
+      slug: row.label,
+      readers: num(row.a),
+      finishers: num(row.b),
+    })),
+  }));
+}
+
+export interface BehaviorDetail {
+  pages: PageEngagement[];
+  referrers: Breakdown[];
+  devices: Breakdown[];
+  themes: Breakdown[];
+  outbound: Breakdown[];
+  errors: ErrorGroup[];
+}
+
+export async function getBehaviorDetail(
+  window: AnalyticsWindow,
+): Promise<PostHogResult<BehaviorDetail>> {
+  const result = await runPacked([
+    pagesPart(window),
+    peoplePart("referrers", "$referring_domain", window),
+    peoplePart("devices", "$device_type", window),
+    peoplePart("themes", "theme_resolved", window),
+    outboundPart(window),
+    errorsPart(window),
+  ]);
+  return map(result, (packed) => ({
+    pages: toPages(rowsOf(packed, "pages")),
+    referrers: toBreakdown(rowsOf(packed, "referrers")),
+    devices: toBreakdown(rowsOf(packed, "devices")),
+    themes: toBreakdown(rowsOf(packed, "themes")),
+    outbound: toBreakdown(rowsOf(packed, "outbound")),
+    errors: byA(rowsOf(packed, "errors")).map((row) => ({
+      message: row.label,
+      count: num(row.a),
+      lastSeen: row.d ? new Date(row.d * 1000).toISOString() : "",
+    })),
+  }));
 }

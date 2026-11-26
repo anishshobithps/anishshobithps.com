@@ -105,7 +105,9 @@ The c15t backend runs inside the app at `/api/c15t` ([`apps/web/src/app/api/c15t
 
 The analytics pages in the admin read from PostHog and the database. See [Admin](admin.md#analytics).
 
-- PostHog queries run through its query API with `POSTHOG_PERSONAL_API_KEY`, against `POSTHOG_PROJECT_ID`, filtered to this site's hosts plus the server events. They're cached for five minutes. The queries are in [`apps/web/src/lib/admin-analytics/posthog.ts`](../apps/web/src/lib/admin-analytics/posthog.ts).
+- PostHog queries run through its query API with `POSTHOG_PERSONAL_API_KEY`, against `POSTHOG_PROJECT_ID`, filtered to this site's hosts plus the server events. The queries are in [`apps/web/src/lib/admin-analytics/posthog.ts`](../apps/web/src/lib/admin-analytics/posthog.ts).
+- PostHog's API runs three queries at a time per project, and each round trip from Vercel takes a second or two. So each page packs its sections into at most three queries with `UNION ALL`, and they all run in one round. Don't add a query per panel. Add a part to an existing packed query instead.
+- Results are cached for five minutes, with the time window rounded to five minutes so the cache actually hits. Failures aren't cached. Each query times out after nine seconds and shows a notice instead of breaking the page, and the admin routes may run for 60 seconds.
 - Database numbers come from [`apps/web/src/lib/admin-analytics/database.ts`](../apps/web/src/lib/admin-analytics/database.ts).
 - Without the PostHog key, its panels say so and the database panels still work.
 

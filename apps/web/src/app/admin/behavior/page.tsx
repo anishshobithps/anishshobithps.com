@@ -25,16 +25,11 @@ import {
   slugTitle,
 } from "@/lib/admin-analytics/format";
 import {
-  getBehaviorSeries,
+  getBehaviorActivity,
+  getBehaviorDetail,
   getBehaviorSummary,
-  getBreakdown,
-  getEventCounts,
-  getOutboundLinks,
-  getPageEngagement,
-  getPostCompletion,
-  getTopErrors,
-  getWebVitals,
   posthogAppUrl,
+  type PostHogResult,
   type WebVitals,
 } from "@/lib/admin-analytics/posthog";
 import { analyticsWindow, parseRange } from "@/lib/admin-analytics/range";
@@ -86,6 +81,15 @@ function vitalRating(value: number, good: number, poor: number) {
   return { label: "Poor", variant: "destructive" as const };
 }
 
+function pick<T, U>(
+  result: PostHogResult<T>,
+  select: (data: T) => U,
+): PostHogResult<U> {
+  return result.status === "ok"
+    ? { status: "ok", data: select(result.data) }
+    : result;
+}
+
 export default async function AdminBehaviorPage({
   searchParams,
 }: {
@@ -94,31 +98,21 @@ export default async function AdminBehaviorPage({
   await assertAdmin();
   const window = analyticsWindow(parseRange((await searchParams).range));
 
-  const [
-    summary,
-    series,
-    events,
-    vitals,
-    pages,
-    completion,
-    referrers,
-    devices,
-    themes,
-    outbound,
-    errors,
-  ] = await Promise.all([
+  const [summary, activity, detail] = await Promise.all([
     getBehaviorSummary(window),
-    getBehaviorSeries(window),
-    getEventCounts(window),
-    getWebVitals(window),
-    getPageEngagement(window),
-    getPostCompletion(window),
-    getBreakdown(window, "$referring_domain"),
-    getBreakdown(window, "$device_type"),
-    getBreakdown(window, "theme_resolved"),
-    getOutboundLinks(window),
-    getTopErrors(window),
+    getBehaviorActivity(window),
+    getBehaviorDetail(window),
   ]);
+  const vitals = pick(summary, (data) => data.vitals);
+  const series = pick(activity, (data) => data.series);
+  const events = pick(activity, (data) => data.events);
+  const completion = pick(activity, (data) => data.completion);
+  const pages = pick(detail, (data) => data.pages);
+  const referrers = pick(detail, (data) => data.referrers);
+  const devices = pick(detail, (data) => data.devices);
+  const themes = pick(detail, (data) => data.themes);
+  const outbound = pick(detail, (data) => data.outbound);
+  const errors = pick(detail, (data) => data.errors);
 
   const links = (
     <>
