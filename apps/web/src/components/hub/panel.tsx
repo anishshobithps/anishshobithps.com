@@ -2,20 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import type { RefObject } from "react";
 
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerTitle,
-} from "@repo/ui/components/drawer";
-import {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-} from "@repo/ui/components/popover";
-import { ScrollArea } from "@repo/ui/components/scroll-area";
 import { Button } from "@repo/ui/components/button";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import { ArrowDownIcon, DownloadIcon } from "@repo/ui/icons";
@@ -124,7 +111,7 @@ function AuthSection({ onClose }: { onClose: () => void }) {
   );
 }
 
-function HubBody({
+export default function HubPanel({
   repoCard,
   onClose,
 }: {
@@ -138,8 +125,10 @@ function HubBody({
   const isResume = pathname === "/resume";
 
   return (
-    // eslint-disable-next-line shadcn/no-arbitrary-values
-    <div className="flex flex-col gap-6 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+    <div
+      className="flex flex-col gap-6 p-4"
+      style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}
+    >
       <HubHeader />
 
       {engagement.present && (
@@ -234,64 +223,3 @@ function HubBody({
   );
 }
 
-
-interface HubPanelProps {
-  open: boolean;
-  onOpenChange: (next: boolean) => void;
-  isMobile: boolean;
-  boundary: Element | null;
-  fabRef: RefObject<HTMLButtonElement | null>;
-  repoCard: React.ReactNode;
-}
-
-export default function HubPanel({
-  open,
-  onOpenChange,
-  isMobile,
-  boundary,
-  fabRef,
-  repoCard,
-}: HubPanelProps) {
-  if (isMobile) {
-    return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent>
-          <DrawerTitle className="sr-only">Quick menu</DrawerTitle>
-          <DrawerDescription className="sr-only">
-            Quick actions for this page and the source repository.
-          </DrawerDescription>
-          <ScrollArea className="w-full [&>[data-slot=scroll-area-viewport]]:max-h-[70dvh]">
-            <div className="mx-auto w-full max-w-md">
-              <HubBody
-                repoCard={repoCard}
-                onClose={() => onOpenChange(false)}
-              />
-            </div>
-          </ScrollArea>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
-
-  return (
-    <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverAnchor virtualRef={fabRef} />
-      <PopoverContent
-        side="top"
-        align="end"
-        sideOffset={12}
-        collisionPadding={16}
-        collisionBoundary={boundary ?? undefined}
-        onInteractOutside={(event) => {
-          if (fabRef.current?.contains(event.target as Node)) {
-            event.preventDefault();
-          }
-        }}
-        className="max-h-[80vh] w-96 overflow-y-auto p-0"
-        aria-label="Quick menu"
-      >
-        <HubBody repoCard={repoCard} onClose={() => onOpenChange(false)} />
-      </PopoverContent>
-    </Popover>
-  );
-}

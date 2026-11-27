@@ -12,6 +12,9 @@ Element.prototype.getAnimations = () => [];
 Element.prototype.scrollIntoView = function () {};
 Element.prototype.checkVisibility = () => true;
 Element.prototype.getClientRects = () => [] as unknown as DOMRectList;
+Element.prototype.setPointerCapture = function () {};
+Element.prototype.releasePointerCapture = function () {};
+Element.prototype.hasPointerCapture = () => false;
 window.matchMedia = (query: string) =>
   ({
     matches: false,

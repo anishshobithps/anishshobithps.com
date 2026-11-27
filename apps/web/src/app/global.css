@@ -41,6 +41,7 @@
     @apply bg-background text-foreground;
     overflow-x: clip;
     cursor: var(--cursor-arrow);
+    --sheet-backdrop: color-mix(in oklab, var(--background) 70%, transparent);
   }
 
   *:where(a, button, [role="button"], .cursor-pointer) {
