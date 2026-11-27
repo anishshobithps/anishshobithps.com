@@ -33,6 +33,17 @@ globalThis.ResizeObserver ??= class {
   unobserve() {}
   disconnect() {}
 };
+globalThis.IntersectionObserver ??= class {
+  readonly root = null;
+  readonly rootMargin = "";
+  readonly thresholds = [];
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return [];
+  }
+} as unknown as typeof IntersectionObserver;
 document.head.append(
   Object.assign(document.createElement("style"), {
     textContent: "[popover] { display: block !important }",

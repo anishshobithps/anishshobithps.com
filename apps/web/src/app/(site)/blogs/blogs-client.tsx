@@ -7,28 +7,39 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@repo/ui/components/input-group";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@repo/ui/components/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@repo/ui/components/select";
+import { buttonVariants } from "@repo/ui/components/button";
 import { TypographyMuted } from "@repo/ui/components/typography";
 import { Reveal } from "@repo/ui/blocks/reveal";
 import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@repo/sounds/sound-player";
-import { MagnifyingGlassIcon, XIcon } from "@repo/ui/icons";
 import {
+  CaretDownIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+  CheckIcon,
+  DotsThreeIcon,
+  MagnifyingGlassIcon,
+  XIcon,
+} from "@repo/ui/icons";
+import {
+  Pagination,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationList,
+  PaginationNext,
+  PaginationPrevious,
+} from "@ui-sdk/react/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectItemIndicator,
+  SelectTrigger,
+  SelectValue,
+} from "@ui-sdk/react/select";
+import {
+  createSerializer,
   parseAsArrayOf,
   parseAsInteger,
   parseAsString,
@@ -56,7 +67,10 @@ export type BlogPost = {
   cover: ReactNode;
 };
 
-const PER_PAGE_OPTIONS = [5, 10, 15, 20];
+const PER_PAGE_OPTIONS = [5, 10, 15, 20].map((n) => ({
+  value: String(n),
+  label: `${n} per page`,
+}));
 
 const searchParsers = {
   q: parseAsString.withDefault(""),
@@ -64,6 +78,15 @@ const searchParsers = {
   page: parseAsInteger.withDefault(1),
   per: parseAsInteger.withDefault(10),
 };
+
+const serialize = createSerializer(searchParsers);
+
+const stepClass = ({ disabled }: { disabled: boolean }) =>
+  cn(
+    buttonVariants({ variant: "outline" }),
+    "gap-1 px-2.5",
+    disabled && "pointer-events-none opacity-50",
+  );
 
 export function BlogsClient({
   posts,
@@ -141,11 +164,6 @@ export function BlogsClient({
       : undefined;
   const grid = postGrid(paginated, Boolean(featured));
 
-  const pageNumbers = useMemo(
-    () => buildPageNumbers(currentPage, totalPages),
-    [currentPage, totalPages],
-  );
-
   return (
     <div className="flex flex-col -mt-6">
       <div
@@ -194,25 +212,39 @@ export function BlogsClient({
           )}
 
           <Select
+            items={PER_PAGE_OPTIONS}
             value={String(per)}
-            onValueChange={(val) =>
-              setParams({ per: parseInt(val, 10), page: 1 })
-            }
+            onValueChange={(val) => {
+              if (typeof val === "string") {
+                setParams({ per: parseInt(val, 10), page: 1 });
+              }
+            }}
           >
             <SelectTrigger
-              className="cursor-pointer font-semibold shrink-0"
               aria-label="Posts per page"
+              className="flex h-9 shrink-0 cursor-pointer items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 text-sm font-semibold whitespace-nowrap shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30 dark:hover:bg-input/50"
             >
               <SelectValue />
+              <CaretDownIcon
+                aria-hidden="true"
+                className="size-4 text-muted-foreground"
+              />
             </SelectTrigger>
-            <SelectContent>
-              {PER_PAGE_OPTIONS.map((n) => (
+            <SelectContent
+              align="end"
+              sideOffset={4}
+              className="max-h-[min(18rem,var(--available-height))] min-w-(--anchor-width) origin-(--transform-origin) overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md transition-[opacity,scale] duration-150 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 motion-reduce:transition-none"
+            >
+              {PER_PAGE_OPTIONS.map((option) => (
                 <SelectItem
-                  key={n}
-                  value={String(n)}
-                  className="cursor-pointer font-semibold"
+                  key={option.value}
+                  value={option.value}
+                  className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm font-semibold select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
                 >
-                  {n} per page
+                  {option.label}
+                  <SelectItemIndicator className="ms-auto text-primary">
+                    <CheckIcon aria-hidden="true" className="size-4" />
+                  </SelectItemIndicator>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -296,72 +328,65 @@ export function BlogsClient({
               {filtered.length} post{filtered.length !== 1 ? "s" : ""}
             </TypographyMuted>
             {totalPages > 1 && (
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (currentPage > 1) {
-                          playCue("flip");
-                          setParams({ page: currentPage - 1 });
-                        }
-                      }}
-                      aria-label="Go to previous page"
-                      aria-disabled={currentPage <= 1}
-                      className={cn(
-                        "cursor-pointer",
-                        currentPage <= 1 && "pointer-events-none opacity-50",
-                      )}
-                    />
-                  </PaginationItem>
-                  {pageNumbers.map((p, i) =>
-                    p === "..." ? (
-                      <PaginationItem
-                        key={`ellipsis-${pageNumbers[i - 1] ?? "start"}`}
-                      >
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    ) : (
-                      <PaginationItem key={p}>
-                        <PaginationLink
-                          href="#"
-                          isActive={p === currentPage}
-                          aria-label={`Go to page ${p}`}
-                          aria-current={p === currentPage ? "page" : undefined}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (p !== currentPage) playCue("flip");
-                            setParams({ page: p as number });
-                          }}
-                          className="cursor-pointer"
+              <Pagination
+                aria-label="Blog pages"
+                page={currentPage}
+                pageCount={totalPages}
+                getHref={(target) => serialize({ ...params, page: target })}
+                onPageChange={(target, details) => {
+                  details.cancel();
+                  playCue("flip");
+                  setParams({ page: target });
+                }}
+                className="mx-auto flex w-full justify-center"
+              >
+                <PaginationList className="flex flex-row items-center gap-1">
+                  {({ items }) => (
+                    <>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          aria-label="Go to previous page"
+                          className={stepClass}
                         >
-                          {p}
-                        </PaginationLink>
+                          <CaretLeftIcon aria-hidden="true" />
+                          <span className="hidden sm:block">Previous</span>
+                        </PaginationPrevious>
                       </PaginationItem>
-                    ),
+                      {items.map((item) => (
+                        <PaginationItem key={item}>
+                          {typeof item === "number" ? (
+                            <PaginationLink
+                              page={item}
+                              aria-label={`Go to page ${item}`}
+                              className={({ current }) =>
+                                buttonVariants({
+                                  variant: current ? "default" : "outline",
+                                  size: "icon",
+                                })
+                              }
+                            />
+                          ) : (
+                            <PaginationEllipsis className="flex size-9 items-center justify-center">
+                              <DotsThreeIcon
+                                aria-hidden="true"
+                                className="size-4"
+                              />
+                            </PaginationEllipsis>
+                          )}
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          aria-label="Go to next page"
+                          className={stepClass}
+                        >
+                          <span className="hidden sm:block">Next</span>
+                          <CaretRightIcon aria-hidden="true" />
+                        </PaginationNext>
+                      </PaginationItem>
+                    </>
                   )}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (currentPage < totalPages) {
-                          playCue("flip");
-                          setParams({ page: currentPage + 1 });
-                        }
-                      }}
-                      aria-label="Go to next page"
-                      aria-disabled={currentPage >= totalPages}
-                      className={cn(
-                        "cursor-pointer",
-                        currentPage >= totalPages &&
-                          "pointer-events-none opacity-50",
-                      )}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
+                </PaginationList>
               </Pagination>
             )}
           </div>
@@ -369,12 +394,4 @@ export function BlogsClient({
       )}
     </div>
   );
-}
-
-function buildPageNumbers(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  if (current <= 4) return [1, 2, 3, 4, 5, "...", total];
-  if (current >= total - 3)
-    return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
-  return [1, "...", current - 1, current, current + 1, "...", total];
 }
