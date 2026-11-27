@@ -2,7 +2,7 @@ import { getAllAdminGuestbookEntries } from "@/app/admin/actions";
 import { AdminPage } from "@/app/admin/_components/admin-page";
 import { Prefetch } from "@/lib/query/prefetch";
 import { queryKeys } from "@/lib/query/keys";
-import { GuestbookPanel } from "@/app/admin/guestbook/panel";
+import { GuestbookPanel } from "@/app/admin/_components/moderation-panel";
 
 export default function AdminGuestbookPage() {
   return (
