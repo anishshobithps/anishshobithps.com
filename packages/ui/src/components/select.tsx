@@ -2,18 +2,7 @@
 
 import * as React from "react";
 import { CheckIcon, CaretDownIcon } from "@repo/ui/icons";
-import {
-  Select as SelectPrimitive,
-  SelectContent as SelectContentPrimitive,
-  SelectGroup as SelectGroupPrimitive,
-  SelectGroupLabel,
-  SelectItem as SelectItemPrimitive,
-  SelectItemIndicator,
-  SelectSeparator as SelectSeparatorPrimitive,
-  SelectTrigger as SelectTriggerPrimitive,
-  SelectValue as SelectValuePrimitive,
-  type SelectProps,
-} from "@ui-sdk/react/select";
+import { Select as SelectPrimitive, SelectContent as SelectContentPrimitive, SelectItem as SelectItemPrimitive, SelectItemIndicator, SelectTrigger as SelectTriggerPrimitive, SelectValue as SelectValuePrimitive, type SelectProps } from "@ui-sdk/react/select";
 
 import { cn } from "@repo/ui/lib/cn";
 
@@ -45,10 +34,6 @@ function Select({
       {...props}
     />
   );
-}
-
-function SelectGroup(props: React.ComponentProps<typeof SelectGroupPrimitive>) {
-  return <SelectGroupPrimitive {...props} />;
 }
 
 function SelectValue(props: React.ComponentProps<typeof SelectValuePrimitive>) {
@@ -97,18 +82,6 @@ function SelectContent({
   );
 }
 
-function SelectLabel({
-  className,
-  ...props
-}: Styled<React.ComponentProps<typeof SelectGroupLabel>>) {
-  return (
-    <SelectGroupLabel
-      className={cn("text-muted-foreground px-2 py-1.5 text-xs", className)}
-      {...props}
-    />
-  );
-}
-
 function textOf(node: React.ReactNode): string {
   return React.Children.toArray(node)
     .map((child) =>
@@ -140,25 +113,10 @@ function SelectItem({
   );
 }
 
-function SelectSeparator({
-  className,
-  ...props
-}: Styled<React.ComponentProps<typeof SelectSeparatorPrimitive>>) {
-  return (
-    <SelectSeparatorPrimitive
-      className={cn("bg-border pointer-events-none -mx-1 my-1 h-px", className)}
-      {...props}
-    />
-  );
-}
-
 export {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 };

@@ -2,15 +2,7 @@
 
 import * as React from "react";
 import { XIcon } from "@repo/ui/icons";
-import {
-  Drawer,
-  DrawerBackdrop,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@ui-sdk/react/drawer";
+import { Drawer, DrawerBackdrop, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "@ui-sdk/react/drawer";
 
 import { cn } from "@repo/ui/lib/cn";
 
@@ -24,14 +16,6 @@ function Sheet({
   ...props
 }: React.ComponentProps<typeof Drawer>) {
   return <Drawer side={side} {...props} />;
-}
-
-function SheetTrigger(props: React.ComponentProps<typeof DrawerTrigger>) {
-  return <DrawerTrigger {...props} />;
-}
-
-function SheetClose(props: React.ComponentProps<typeof DrawerClose>) {
-  return <DrawerClose {...props} />;
 }
 
 function SheetContent({
@@ -80,16 +64,6 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="sheet-footer"
-      className={cn("mt-auto flex flex-col gap-2 p-4", className)}
-      {...props}
-    />
-  );
-}
-
 function SheetTitle({
   className,
   ...props
@@ -116,11 +90,8 @@ function SheetDescription({
 
 export {
   Sheet,
-  SheetTrigger,
-  SheetClose,
   SheetContent,
   SheetHeader,
-  SheetFooter,
   SheetTitle,
   SheetDescription,
 };

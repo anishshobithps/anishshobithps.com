@@ -2,15 +2,7 @@
 
 import * as React from "react";
 import { XIcon } from "@repo/ui/icons";
-import {
-  Dialog as DialogPrimitive,
-  DialogBackdrop,
-  DialogClose as DialogClosePrimitive,
-  DialogContent as DialogContentPrimitive,
-  DialogDescription as DialogDescriptionPrimitive,
-  DialogTitle as DialogTitlePrimitive,
-  DialogTrigger as DialogTriggerPrimitive,
-} from "@ui-sdk/react/dialog";
+import { Dialog as DialogPrimitive, DialogBackdrop, DialogClose as DialogClosePrimitive, DialogContent as DialogContentPrimitive, DialogDescription as DialogDescriptionPrimitive, DialogTitle as DialogTitlePrimitive } from "@ui-sdk/react/dialog";
 
 import { cn } from "@repo/ui/lib/cn";
 import { Button } from "@repo/ui/components/button";
@@ -22,17 +14,6 @@ type WithClassName<T> = Omit<T, "className" | "children"> & {
 
 function Dialog(props: React.ComponentProps<typeof DialogPrimitive>) {
   return <DialogPrimitive {...props} />;
-}
-
-function DialogTrigger({
-  asChild = false,
-  children,
-  ...props
-}: React.ComponentProps<typeof DialogTriggerPrimitive> & { asChild?: boolean }) {
-  if (asChild && React.isValidElement(children)) {
-    return <DialogTriggerPrimitive render={children} {...props} />;
-  }
-  return <DialogTriggerPrimitive {...props}>{children}</DialogTriggerPrimitive>;
 }
 
 function DialogClose({
@@ -147,5 +128,4 @@ export {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-};
+  };
