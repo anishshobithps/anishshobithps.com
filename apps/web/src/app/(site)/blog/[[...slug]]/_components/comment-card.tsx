@@ -1,11 +1,11 @@
 "use client";
 
+import { LikeToggle } from "@/components/engagement/like-toggle";
 import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
 import { Avatar } from "@repo/ui/blocks/avatar";
 import { Composer } from "@/components/engagement/composer";
 import {
   ArrowBendDownRightIcon,
-  HeartIcon,
   PushPinSimpleIcon,
   TrashIcon,
 } from "@repo/ui/icons";
@@ -28,50 +28,6 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 const COMMENT_MAX_LENGTH = 1000;
 const MAX_DEPTH = 2;
-
-function LikeButton({
-  count,
-  liked,
-  pending,
-  onToggle,
-}: {
-  count: number;
-  liked: boolean;
-  pending: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <Button
-      variant={liked ? "default" : "outline"}
-      size="sm"
-      onClick={onToggle}
-      disabled={pending}
-      aria-pressed={liked}
-      aria-busy={pending}
-      aria-label={liked ? `Unlike (${count})` : `Like (${count})`}
-    >
-      {pending ? (
-        <Spinner
-          data-icon="inline-start"
-          className="size-3.5"
-          aria-hidden="true"
-        />
-      ) : (
-        <HeartIcon
-          data-icon="inline-start"
-          size={14}
-          weight={liked ? "fill" : "duotone"}
-          aria-hidden="true"
-        />
-      )}
-      {count > 0 ? (
-        <span className="tabular-nums">{count}</span>
-      ) : (
-        <span className="hidden sm:inline">Like</span>
-      )}
-    </Button>
-  );
-}
 
 export function CommentCard({
   comment,
@@ -183,7 +139,7 @@ export function CommentCard({
 
             <div className="pt-0.5">
               <ButtonGroup>
-                <LikeButton
+                <LikeToggle
                   count={comment.likeCount}
                   liked={comment.likedByMe}
                   pending={isOptimistic || isLikePending}

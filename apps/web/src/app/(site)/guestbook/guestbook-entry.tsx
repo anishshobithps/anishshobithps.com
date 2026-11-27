@@ -1,9 +1,9 @@
 "use client";
 
+import { LikeToggle } from "@/components/engagement/like-toggle";
 import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import { Avatar } from "@repo/ui/blocks/avatar";
 import {
-  HeartIcon,
   PushPinSimpleIcon,
   RepeatIcon,
   TrashIcon,
@@ -175,30 +175,12 @@ export const GuestbookEntry = memo(function GuestbookEntry({
 
           <div className="pt-0.5">
             <ButtonGroup>
-              <Button
-                variant={entry.likedByMe ? "default" : "outline"}
-                size="sm"
-                onClick={() => !isOptimistic && onLike(entry.id)}
-                disabled={isOptimistic || isLikePending}
-                aria-pressed={entry.likedByMe}
-                aria-label={
-                  entry.likedByMe
-                    ? `Unlike (${entry.likeCount})`
-                    : `Like (${entry.likeCount})`
-                }
-              >
-                <HeartIcon
-                  data-icon="inline-start"
-                  size={14}
-                  weight={entry.likedByMe ? "fill" : "duotone"}
-                  aria-hidden="true"
-                />
-                {entry.likeCount > 0 ? (
-                  <span className="tabular-nums">{entry.likeCount}</span>
-                ) : (
-                  <span className="hidden sm:inline">Like</span>
-                )}
-              </Button>
+              <LikeToggle
+                count={entry.likeCount}
+                liked={entry.likedByMe}
+                pending={isOptimistic || isLikePending}
+                onToggle={() => !isOptimistic && onLike(entry.id)}
+              />
 
               {canDelete && !isOptimistic && (
                 <>
