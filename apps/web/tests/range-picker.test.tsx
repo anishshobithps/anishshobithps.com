@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createAgent } from "@ui-sdk/react/agent";
 import { NuqsTestingAdapter, type UrlUpdateEvent } from "nuqs/adapters/testing";
@@ -34,9 +34,11 @@ describe("RangePicker", () => {
     await user.keyboard("{ArrowRight}");
 
     expect(onUrlUpdate.mock.lastCall?.[0].searchParams.get("range")).toBe("90d");
-    expect(
-      screen.getByRole("radio", { name: "Last 90 days" }).getAttribute("aria-checked"),
-    ).toBe("true");
+    await waitFor(() =>
+      expect(
+        screen.getByRole("radio", { name: "Last 90 days" }).getAttribute("aria-checked"),
+      ).toBe("true"),
+    );
   });
 
   test("an agent can pick a range by name", async () => {
