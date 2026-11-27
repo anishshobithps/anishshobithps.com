@@ -37,7 +37,7 @@ describe("toasts", () => {
 
     await user.click(await screen.findByRole("button", { name: "Keep" }));
     expect(onAction).not.toHaveBeenCalled();
-    await waitFor(() => expect(screen.queryByText("Delete this message?")).toBeNull());
+    await waitFor(() => expect(document.querySelector('[data-slot="toast"]')).toBeNull());
 
     act(() =>
       toast("Delete this message?", {
@@ -56,6 +56,6 @@ describe("toasts", () => {
     act(() => typedToast("error", "Couldn't save"));
 
     await user.click(await screen.findByRole("button", { name: "Close" }));
-    await waitFor(() => expect(screen.queryByText("Couldn't save")).toBeNull());
+    await waitFor(() => expect(document.querySelector('[data-slot="toast"]')).toBeNull());
   });
 });
