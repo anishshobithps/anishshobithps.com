@@ -173,7 +173,7 @@ function ReadingMeter({ target }: { target: RefObject<HTMLElement | null> }) {
       <ReadingPublisher progress={progress} engaged={engaged} />
       <div className="flex items-baseline justify-between gap-2">
         <SectionLabel pixel>On this page</SectionLabel>
-        <SectionLabel pixel accent>
+        <SectionLabel pixel accent aria-hidden="true">
           {`${Math.round(progress * 100)}%`}
         </SectionLabel>
       </div>

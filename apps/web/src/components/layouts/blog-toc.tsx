@@ -3,6 +3,7 @@
 import { SectionLabel } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
 import { TOCItem, useActiveAnchor, useActiveAnchors } from "fumadocs-core/toc";
+import { Meter } from "@ui-sdk/react/meter";
 import { useTOCItems } from "fumadocs-ui/components/toc";
 import {
   type ComponentProps,
@@ -98,8 +99,15 @@ export function HalftoneMeter({
 }) {
   const filled = Math.round(progress * columns);
   return (
-    <div aria-hidden="true" className={className}>
+    <Meter
+      value={progress}
+      max={1}
+      format={{ style: "percent" }}
+      aria-label="Reading progress"
+      className={className}
+    >
       <div
+        aria-hidden="true"
         className="grid grid-cols-(--cols) gap-0.75"
         style={{ "--cols": `repeat(${columns}, minmax(0, 1fr))` } as CSSProperties}
       >
@@ -120,7 +128,7 @@ export function HalftoneMeter({
           );
         })}
       </div>
-    </div>
+    </Meter>
   );
 }
 
