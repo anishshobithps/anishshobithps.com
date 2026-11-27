@@ -27,7 +27,7 @@ Every figure is drawn the same way: a two-colour riso print. Black ink and the s
 | Band doodles | [`band-doodle.tsx`](../packages/ui/src/art/band-doodle.tsx) draws five small flat critters on the hatched dividers between sections. Pass `doodle` to `<Section>` |
 | Inline art | [`inline-art.tsx`](../packages/ui/src/art/inline-art.tsx) draws six small green glass pieces that sit inside the home page leads: a bot, a toolbox, a 3am mug, gears, a pencil leaving a trace, and a paper plane. Use `<InlineArt name="..." />` in running text. They share the icons' glass tokens |
 | Icons | `@repo/ui/icons` renders Phosphor's shapes as green glass: the `fill` weight is a tinted body with a soft shadow and the `regular` weight is a gradient rim. The colours are the `--glass-*` tokens in `tokens.css`. `weight="fill"` prints the body solid. Brand logos keep their Phosphor weights. `pnpm --filter web icons` regenerates the set |
-| Cursor glow | [`mouse-glow.tsx`](../apps/web/src/components/shared/mouse-glow.tsx) lights a soft brand-green spotlight that follows the pointer |
+| Cursor glow | [`mouse-glow.tsx`](../packages/ui/src/motion/mouse-glow.tsx) lights a soft brand-green spotlight that follows the pointer |
 
 The `/branding` page shows the type scale, logos, doodles, the cursors, and a live OG preview in one place.
 
