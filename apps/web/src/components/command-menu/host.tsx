@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useShortcut } from "@ui-sdk/react/shortcuts";
 import {
   getCommandMenuOpen,
@@ -22,10 +22,7 @@ export function CommandMenuHost() {
     getCommandMenuServerSnapshot,
   );
   const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (open) setLoaded(true);
-  }, [open]);
+  if (open && !loaded) setLoaded(true);
 
   useShortcut("mod+k", toggleCommandMenu, {
     allowInInput: true,
