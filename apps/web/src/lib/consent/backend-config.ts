@@ -44,7 +44,7 @@ function trustedOrigins(): string[] {
   if (process.env.NODE_ENV !== "production") {
     origins.push("localhost", "127.0.0.1");
   }
-  const preview = process.env.VERCEL_URL;
+  const preview = ENV.VERCEL_URL;
   if (preview) origins.push(preview);
   return origins;
 }
