@@ -1,11 +1,8 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@repo/ui/lib/cn"
-import {
-  fetchGitHubRepoData,
-  formatCount,
-  type GitHubRepoData,
-} from "@/lib/github"
+import { formatCount } from "@repo/core/number"
+import { fetchGitHubRepoData, type GitHubRepoData } from "@/lib/github"
 import { formatRelativeDate } from "@repo/core/date"
 import {
   ArchiveIcon,

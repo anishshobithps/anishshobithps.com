@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { formatShortDate } from "@repo/core/date";
-import { formatCount } from "@/lib/github";
+import { formatCount } from "@repo/core/number";
 import { loadRecentPosts, type PostRow } from "@/lib/svg/data/posts";
 import { limit } from "@repo/ui/cards/params";
 import {

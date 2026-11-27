@@ -5,6 +5,10 @@ const compact = new Intl.NumberFormat("en", {
 
 const whole = new Intl.NumberFormat("en");
 
+export function formatCount(count: number): string {
+  return compact.format(count).toLowerCase();
+}
+
 export function formatNumber(value: number): string {
   return Math.abs(value) >= 10_000 ? compact.format(value) : whole.format(value);
 }
@@ -26,13 +30,4 @@ export function formatDuration(seconds: number): string {
 export function change(current: number, previous: number): number | null {
   if (previous === 0) return current === 0 ? 0 : null;
   return (current - previous) / previous;
-}
-
-export function slugTitle(slug: string): string {
-  const last = slug.split("/").filter(Boolean).pop() ?? slug;
-  return last
-    .split("-")
-    .filter(Boolean)
-    .map((word) => word[0]?.toUpperCase() + word.slice(1))
-    .join(" ");
 }

@@ -1,8 +1,8 @@
-import { describe, expect, test } from "vitest";
-import { formatCount } from "@/lib/github";
+import { describe, expect, it } from "vitest";
+import { formatCount } from "@repo/core/number";
 
 describe("formatCount", () => {
-  test("keeps small counts whole and shortens the rest to one decimal", () => {
+  it("keeps small counts whole and shortens the rest to one decimal", () => {
     expect(formatCount(0)).toBe("0");
     expect(formatCount(999)).toBe("999");
     expect(formatCount(1000)).toBe("1k");

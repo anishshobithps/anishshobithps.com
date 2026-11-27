@@ -18,12 +18,8 @@ import {
 } from "@repo/ui/components/table";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import { assertAdmin } from "@/lib/admin";
-import {
-  formatDuration,
-  formatNumber,
-  formatPercent,
-  slugTitle,
-} from "@/lib/admin-analytics/format";
+import { formatDuration, formatNumber, formatPercent } from "@repo/core/number";
+import { slugTitle } from "@repo/core/text";
 import {
   getBehaviorActivity,
   getBehaviorDetail,

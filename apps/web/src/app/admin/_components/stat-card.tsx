@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/card";
-import { change, formatPercent } from "@/lib/admin-analytics/format";
+import { change, formatPercent } from "@repo/core/number";
 
 export function StatCard({
   label,

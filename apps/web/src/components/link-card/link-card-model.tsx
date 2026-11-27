@@ -17,7 +17,7 @@ import {
   GitForkIcon,
   ClockIcon,
 } from "@repo/ui/icons";
-import { formatCount } from "@/lib/github";
+import { formatCount } from "@repo/core/number";
 import type { LinkPreview } from "@/lib/link-preview/types";
 import { LinkImage } from "@/components/link-card/link-image";
 

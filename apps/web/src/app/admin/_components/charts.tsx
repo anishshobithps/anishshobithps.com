@@ -27,7 +27,7 @@ import {
   formatDuration,
   formatNumber,
   formatPercent,
-} from "@/lib/admin-analytics/format";
+} from "@repo/core/number";
 
 export type ValueFormat = "number" | "seconds" | "percent";
 

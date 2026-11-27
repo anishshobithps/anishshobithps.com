@@ -33,3 +33,12 @@ export function validateLength(
         throw new ValidationError(`${label} must be ${max} characters or fewer.`);
     }
 }
+
+export function slugTitle(slug: string): string {
+  const last = slug.split("/").filter(Boolean).pop() ?? slug;
+  return last
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word[0]?.toUpperCase() + word.slice(1))
+    .join(" ");
+}

@@ -179,12 +179,3 @@ export async function fetchGitHubUser(login: string): Promise<GitHubUserData | n
     publicRepos: asCount(data.public_repos),
   }
 }
-
-const compactCount = new Intl.NumberFormat("en", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-})
-
-export function formatCount(count: number): string {
-  return compactCount.format(count).toLowerCase()
-}

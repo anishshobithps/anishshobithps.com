@@ -44,20 +44,13 @@ import {
 import { formatShortDate } from "@repo/core/date";
 import { cn } from "@repo/ui/lib/cn";
 import type { Route } from "next";
+import { slugTitle } from "@repo/core/text";
 import { ExpandableText } from "@repo/ui/blocks/expandable-text";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),
   pinned: parseAsBoolean.withDefault(false),
 };
-
-function slugToTitle(slug: string): string {
-  const segment = slug.replace(/^\/blog\//, "").replace(/\//g, " / ");
-  return segment
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
 
 export function CommentsPanel() {
   const { data: comments = [] } = useQuery({
@@ -200,7 +193,7 @@ export function CommentsPanel() {
                   className="hover:underline underline-offset-2"
                   title={slug}
                 >
-                  {slugToTitle(slug)}
+                  {slugTitle(slug)}
                 </Link>
               </Text>
               <TypographyMuted className="text-xs shrink-0">

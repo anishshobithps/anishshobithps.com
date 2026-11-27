@@ -18,7 +18,8 @@ import {
 } from "@repo/ui/components/table";
 import { assertAdmin } from "@/lib/admin";
 import { getContentAnalytics } from "@/lib/admin-analytics/database";
-import { formatNumber, slugTitle } from "@/lib/admin-analytics/format";
+import { formatNumber } from "@repo/core/number";
+import { slugTitle } from "@repo/core/text";
 import { analyticsWindow, parseRange } from "@/lib/admin-analytics/range";
 import { AdminPage } from "@/app/admin/_components/admin-page";
 import { DonutChart, RankedBars, StackedBars } from "@/app/admin/_components/charts";
