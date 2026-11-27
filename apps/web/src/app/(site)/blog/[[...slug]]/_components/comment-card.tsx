@@ -1,6 +1,6 @@
 "use client";
 
-import { LikeToggle } from "@/components/engagement/like-toggle";
+import { LikeToggle } from "@repo/ui/blocks/like-toggle";
 import {
   Collapsible,
   CollapsiblePanel,

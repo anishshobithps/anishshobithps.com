@@ -2,7 +2,7 @@
 
 import { AppearanceControl } from "@/components/preferences/appearance-control";
 import { pad, RegisterDial } from "@/components/layouts/blog-toc";
-import { Logo } from "@/components/shared/logo";
+import { Logo } from "@repo/ui/brand/logo";
 import { SoundSwitch } from "@/components/preferences/sound-controls";
 import { ThemeCycle } from "@/components/preferences/theme-toggle";
 import { Button } from "@repo/ui/components/button";

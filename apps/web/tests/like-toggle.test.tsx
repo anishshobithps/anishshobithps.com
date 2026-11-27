@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { createAgent } from "@ui-sdk/react/agent";
 import { useState } from "react";
 import { describe, expect, test, vi } from "vitest";
-import { LikeToggle } from "@/components/engagement/like-toggle";
+import { LikeToggle } from "@repo/ui/blocks/like-toggle";
 
 const agent = createAgent();
 

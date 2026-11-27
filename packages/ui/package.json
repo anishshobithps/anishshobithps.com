@@ -31,6 +31,7 @@
     "./icons": "./src/icons/index.tsx",
     "./icons/*": "./src/icons/*.tsx",
     "./styles/tokens.css": "./src/styles/tokens.css",
+    "./styles/toasts.css": "./src/styles/toasts.css",
     "./styles/*": "./src/styles/*.ts",
     "./scripts/*": "./scripts/*.ts"
   },

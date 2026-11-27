@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo, type LogoProps } from "@/components/shared/logo";
+import { Logo, type LogoProps } from "@repo/ui/brand/logo";
 import { Button } from "@repo/ui/components/button";
 import {
   Select,

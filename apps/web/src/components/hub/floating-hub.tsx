@@ -14,7 +14,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@ui-sdk/react/popover";
-import { useDraggable } from "@/hooks/use-draggable";
+import { useDraggable } from "@repo/ui/hooks/use-draggable";
 
 const loadPanel = () => import("@/components/hub/panel");
 

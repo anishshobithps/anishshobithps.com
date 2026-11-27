@@ -7,7 +7,7 @@ import { toast, typedToast } from "@/lib/toast";
 
 vi.mock("@repo/sounds/sound-player", () => ({ playCue: () => {} }));
 vi.mock("next/dynamic", async () => {
-  const { Toaster } = await import("@/components/shared/toaster");
+  const { Toaster } = await import("@repo/ui/components/toaster");
   return { default: () => Toaster };
 });
 

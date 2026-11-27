@@ -24,7 +24,7 @@ import {
   TypingBubble,
 } from "@/components/shared/doodles";
 import { LoaderCaption, LogoLoader } from "@repo/ui/brand/loader";
-import { Logo } from "@/components/shared/logo";
+import { Logo } from "@repo/ui/brand/logo";
 import {
   TypographyH1,
   TypographyH2,

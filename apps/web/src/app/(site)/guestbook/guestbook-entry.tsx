@@ -1,6 +1,6 @@
 "use client";
 
-import { LikeToggle } from "@/components/engagement/like-toggle";
+import { LikeToggle } from "@repo/ui/blocks/like-toggle";
 import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import { Avatar } from "@repo/ui/blocks/avatar";
 import {

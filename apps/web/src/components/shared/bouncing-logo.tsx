@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo } from "@/components/shared/logo";
+import { Logo } from "@repo/ui/brand/logo";
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@repo/ui/lib/motion-preference";
 
