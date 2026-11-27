@@ -54,7 +54,7 @@ import {
 import { formatShortDate } from "@repo/core/date";
 import { cn } from "@repo/ui/lib/cn";
 import type { Route } from "next";
-import { ExpandableText } from "@/app/admin/_components/expandable-text";
+import { ExpandableText } from "@repo/ui/blocks/expandable-text";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),

@@ -47,7 +47,7 @@ import {
 import { TypographySmall, TypographyMuted } from "@repo/ui/components/typography";
 import { formatShortDate } from "@repo/core/date";
 import { cn } from "@repo/ui/lib/cn";
-import { ExpandableText } from "@/app/admin/_components/expandable-text";
+import { ExpandableText } from "@repo/ui/blocks/expandable-text";
 
 const searchParsers = {
   q: parseAsString.withDefault(""),

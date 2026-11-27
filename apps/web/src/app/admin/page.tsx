@@ -24,7 +24,7 @@ import { getBehaviorSummary, getTraffic } from "@/lib/admin-analytics/posthog";
 import { analyticsWindow, parseRange } from "@/lib/admin-analytics/range";
 import { AdminPage } from "@/app/admin/_components/admin-page";
 import { RankedBars, StackedBars, TrendChart } from "@/app/admin/_components/charts";
-import { PanelCard, SourceNotice } from "@/app/admin/_components/panel-card";
+import { PanelCard, SourceNotice } from "@repo/ui/blocks/panel-card";
 import { RangePicker } from "@/app/admin/_components/range-picker";
 import { StatCard, StatGrid } from "@/app/admin/_components/stat-card";
 import { ResumeRefresh } from "@/app/admin/resume-refresh";

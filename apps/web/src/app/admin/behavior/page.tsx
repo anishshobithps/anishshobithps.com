@@ -39,7 +39,7 @@ import {
   RankedBars,
   TrendChart,
 } from "@/app/admin/_components/charts";
-import { PanelCard, SourceNotice } from "@/app/admin/_components/panel-card";
+import { PanelCard, SourceNotice } from "@repo/ui/blocks/panel-card";
 import { RangePicker } from "@/app/admin/_components/range-picker";
 import { StatCard, StatGrid } from "@/app/admin/_components/stat-card";
 

@@ -22,7 +22,7 @@ import { formatNumber, slugTitle } from "@/lib/admin-analytics/format";
 import { analyticsWindow, parseRange } from "@/lib/admin-analytics/range";
 import { AdminPage } from "@/app/admin/_components/admin-page";
 import { DonutChart, RankedBars, StackedBars } from "@/app/admin/_components/charts";
-import { PanelCard } from "@/app/admin/_components/panel-card";
+import { PanelCard } from "@repo/ui/blocks/panel-card";
 import { RangePicker } from "@/app/admin/_components/range-picker";
 import { StatCard, StatGrid } from "@/app/admin/_components/stat-card";
 
