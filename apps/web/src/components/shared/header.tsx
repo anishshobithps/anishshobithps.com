@@ -19,9 +19,9 @@ import { siteConfig } from "@repo/core/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/components/command-menu/store";
 import { Popover, PopoverContent, PopoverTrigger } from "@ui-sdk/react/popover";
+import { useShortcutHint } from "@ui-sdk/react/shortcuts";
 import { tocPopover, useReading, useReadingSelector } from "@/lib/reading-store";
 import { playCue } from "@repo/sounds/sound-player";
-import { useIsMac } from "@/hooks/use-is-mac";
 import {
   CaretDownIcon,
   ListIcon,
@@ -95,14 +95,15 @@ function ReadingBar() {
   );
 }
 
-function CommandMenuButton({ isMac }: { isMac: boolean }) {
+function CommandMenuButton() {
+  const hint = useShortcutHint("mod+k");
   return (
     <Button
       type="button"
       variant="outline"
       onClick={() => setCommandMenuOpen(true)}
       aria-label="Search and commands"
-      aria-keyshortcuts={isMac ? "Meta+K" : "Control+K"}
+      aria-keyshortcuts={hint.ariaKeyshortcuts}
       className="h-8.5 gap-1.5 rounded-l-full px-2.5 text-muted-foreground hover:text-foreground pointer-coarse:h-11"
     >
       <MagnifyingGlassIcon aria-hidden="true" className="size-4" />
@@ -111,7 +112,7 @@ function CommandMenuButton({ isMac }: { isMac: boolean }) {
         aria-hidden="true"
         className="max-md:hidden rounded-full px-1.5 font-mono text-3xs"
       >
-        {isMac ? "\u2318\u00A0K" : "Ctrl\u00A0K"}
+        {hint.text}
       </Kbd>
     </Button>
   );
@@ -125,7 +126,6 @@ export function Header() {
     (next: boolean) => setOpenPath(next ? pathname : null),
     [pathname],
   );
-  const isMac = useIsMac();
   const navRef = useRef<HTMLDivElement>(null);
   const following = useReadingSelector((state) => state.engaged && state.sections > 0);
   const wide = useWide();
@@ -235,13 +235,13 @@ export function Header() {
               )}
 
               <ButtonGroup className="max-md:hidden">
-                <CommandMenuButton isMac={isMac} />
+                <CommandMenuButton />
                 <SoundSwitch look="button" className="h-8.5 w-9 pointer-coarse:size-11" />
                 <ThemeCycle className="h-8.5 w-9 rounded-r-full pointer-coarse:size-11" />
               </ButtonGroup>
 
               <ButtonGroup className="md:hidden">
-                <CommandMenuButton isMac={isMac} />
+                <CommandMenuButton />
                 <PopoverTrigger
                   render={
                     <Button
