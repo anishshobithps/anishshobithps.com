@@ -1,4 +1,21 @@
 import { ENV } from "varlock/env";
+import { siteConfig } from "@repo/core/site-config";
+
+const GITHUB_API = "https://api.github.com"
+
+export function githubFetch(path: string, init: RequestInit = {}) {
+  return fetch(`${GITHUB_API}${path}`, {
+    signal: AbortSignal.timeout(5000),
+    ...init,
+    headers: {
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      "User-Agent": siteConfig.domain,
+      ...(ENV.GITHUB_TOKEN ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` } : {}),
+      ...init.headers,
+    },
+  })
+}
 
 export interface GitHubRepoData {
   fullName: string
@@ -58,18 +75,9 @@ export async function fetchGitHubRepoData(
   repo: string
 ): Promise<GitHubRepoData | null> {
   try {
-    const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}`,
-      {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-          ...(ENV.GITHUB_TOKEN
-            ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` }
-            : {}),
-        },
-        next: { revalidate: 3600 },
-      }
-    )
+    const response = await githubFetch(`/repos/${owner}/${repo}`, {
+      next: { revalidate: 3600 },
+    })
     if (!response.ok) return null
     const data = await response.json()
 
@@ -111,20 +119,9 @@ export interface GitHubUserData {
   publicRepos: number
 }
 
-const GITHUB_API_TIMEOUT_MS = 5000
-
 async function githubGet(path: string): Promise<Record<string, unknown> | null> {
   try {
-    const response = await fetch(`https://api.github.com${path}`, {
-      headers: {
-        Accept: "application/vnd.github+json",
-        "X-GitHub-Api-Version": "2022-11-28",
-        ...(ENV.GITHUB_TOKEN
-          ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` }
-          : {}),
-      },
-      signal: AbortSignal.timeout(GITHUB_API_TIMEOUT_MS),
-    })
+    const response = await githubFetch(path)
     if (!response.ok) return null
     const data: unknown = await response.json()
     return data && typeof data === "object" ? (data as Record<string, unknown>) : null
@@ -183,14 +180,11 @@ export async function fetchGitHubUser(login: string): Promise<GitHubUserData | n
   }
 }
 
+const compactCount = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+})
+
 export function formatCount(count: number): string {
-  if (count >= 1_000_000) {
-    const value = count / 1_000_000
-    return `${value % 1 === 0 ? value.toFixed(0) : value.toFixed(1)}m`
-  }
-  if (count >= 1_000) {
-    const value = count / 1_000
-    return `${value % 1 === 0 ? value.toFixed(0) : value.toFixed(1)}k`
-  }
-  return count.toLocaleString("en-US")
+  return compactCount.format(count).toLowerCase()
 }

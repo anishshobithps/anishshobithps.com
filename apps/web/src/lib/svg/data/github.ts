@@ -1,26 +1,14 @@
 import { ENV } from "varlock/env";
 import { siteConfig } from "@repo/core/site-config";
+import { githubFetch } from "@/lib/github";
 
 const GITHUB_USER = siteConfig.githubRepo.split("/")[0];
 
+const PAGE_SIZE = 100;
 const TIMEOUT_MS = 5000;
 
-const API = "https://api.github.com";
-const PAGE_SIZE = 100;
-
 async function github<T>(path: string): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    cache: "no-store",
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-    headers: {
-      Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
-      "User-Agent": siteConfig.domain,
-      ...(ENV.GITHUB_TOKEN
-        ? { Authorization: `Bearer ${ENV.GITHUB_TOKEN}` }
-        : {}),
-    },
-  });
+  const res = await githubFetch(path, { cache: "no-store" });
   if (!res.ok) throw new Error(`GitHub ${path} responded ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -65,18 +53,12 @@ export async function loadCommitTimes(pages: number) {
 }
 
 async function graphql<T>(query: string, variables: Record<string, unknown>) {
-  const token = ENV.GITHUB_TOKEN;
-  if (!token) throw new Error("GITHUB_TOKEN is not set");
+  if (!ENV.GITHUB_TOKEN) throw new Error("GITHUB_TOKEN is not set");
 
-  const res = await fetch(`${API}/graphql`, {
+  const res = await githubFetch("/graphql", {
     method: "POST",
     cache: "no-store",
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "User-Agent": siteConfig.domain,
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query, variables }),
   });
   if (!res.ok) throw new Error(`GitHub GraphQL responded ${res.status}`);
