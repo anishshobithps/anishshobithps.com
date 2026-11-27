@@ -131,8 +131,7 @@ export function CommentCard({
             <Text
               as="p"
               variant="none"
-              // eslint-disable-next-line shadcn/no-arbitrary-values
-              className="text-[13px] sm:text-sm leading-relaxed whitespace-pre-wrap wrap-break-word"
+              className="text-compact sm:text-sm leading-relaxed whitespace-pre-wrap wrap-break-word"
             >
               {comment.body}
             </Text>

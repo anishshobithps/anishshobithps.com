@@ -153,8 +153,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
             ref={msgRef}
             variant="none"
             className={cn(
-              // eslint-disable-next-line shadcn/no-arbitrary-values
-              "text-[13px] sm:text-sm leading-relaxed wrap-anywhere",
+              "text-compact sm:text-sm leading-relaxed wrap-anywhere",
               !expanded && "line-clamp-3",
             )}
           >

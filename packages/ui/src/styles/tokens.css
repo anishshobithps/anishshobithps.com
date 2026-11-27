@@ -24,6 +24,7 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-pixel: var(--font-geist-pixel), var(--font-geist-mono), ui-monospace, monospace;
   --font-pixel--font-variation-settings: "ELSH" 25;
+  --text-compact: 0.8125rem;
   --text-2xs: 0.6875rem;
   --text-3xs: 0.625rem;
   --tracking-mega: 0.18em;
