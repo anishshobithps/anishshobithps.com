@@ -6,7 +6,7 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@repo/ui/components/button-group";
-import { ArtStage } from "@/components/layouts/hero-art";
+import { ArtStage } from "@repo/ui/art/hero-art";
 import { Section } from "@/components/layouts/page";
 import { IsoArt } from "@repo/ui/art/iso-art";
 import { workbenchScene } from "@repo/ui/art/scenes/workbench";
@@ -22,7 +22,7 @@ import { HireSign } from "@/app/(site)/_components/hire-sign";
 import { HeroNudges } from "@/app/(site)/_components/hero-nudges";
 import { IceCreamNote, PhotoCallout } from "@/components/shared/doodles";
 import { getLatestPost } from "@/lib/source";
-import { InlineArt } from "@/components/shared/inline-art";
+import { InlineArt } from "@repo/ui/art/inline-art";
 
 const scene = workbenchScene();
 

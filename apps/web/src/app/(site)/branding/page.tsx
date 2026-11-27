@@ -1,6 +1,6 @@
 import NextImage from "next/image";
 import { PageArt } from "@repo/ui/art/page-art";
-import { HeroWithArt } from "@/components/layouts/hero-art";
+import { HeroWithArt } from "@repo/ui/art/hero-art";
 import { SectionMargins } from "@/components/layouts/section-margins";
 import {
   Section,

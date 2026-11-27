@@ -1,5 +1,5 @@
 import { PageArt } from "@repo/ui/art/page-art";
-import { HeroWithArt } from "@/components/layouts/hero-art";
+import { HeroWithArt } from "@repo/ui/art/hero-art";
 import { getGuestbookPreviewPool } from "@/lib/guestbook-preview";
 import { GuestbookClient } from "@/app/(site)/guestbook/guestbook-client";
 import { Section } from "@/components/layouts/page";

@@ -25,7 +25,7 @@ import Link from "next/link";
 import { padIndex } from "@repo/core/text";
 import type { Route } from "next";
 import { Suspense } from "react";
-import { InlineArt } from "@/components/shared/inline-art";
+import { InlineArt } from "@repo/ui/art/inline-art";
 import { getPublicProjects } from "@/lib/projects";
 import { unstable_rethrow } from "next/navigation";
 

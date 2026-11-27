@@ -1,4 +1,4 @@
-import { ArtStage } from "@/components/layouts/hero-art";
+import { ArtStage } from "@repo/ui/art/hero-art";
 import { EndOfPage } from "@/components/shared/end-of-page";
 import { StripArt } from "@repo/ui/art/strip-art";
 import {

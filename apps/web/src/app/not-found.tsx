@@ -2,7 +2,7 @@ import { Button } from "@repo/ui/components/button";
 import { Empty, EmptyContent, EmptyHeader } from "@repo/ui/components/empty";
 import { HouseIcon } from "@repo/ui/icons";
 import { PageArt } from "@repo/ui/art/page-art";
-import { ArtStage } from "@/components/layouts/hero-art";
+import { ArtStage } from "@repo/ui/art/hero-art";
 import {
   Text,
   TypographyMuted,

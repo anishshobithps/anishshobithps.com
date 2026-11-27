@@ -1,6 +1,6 @@
 import { BlogCover } from "@repo/ui/art/blog-cover";
 import { PageArt, type ShelfPost } from "@repo/ui/art/page-art";
-import { HeroWithArt } from "@/components/layouts/hero-art";
+import { HeroWithArt } from "@repo/ui/art/hero-art";
 import { BlogsClient, type BlogPost } from "@/app/(site)/blogs/blogs-client";
 import { BlogsSkeleton } from "@/app/(site)/blogs/blogs-skeleton";
 import { PostGridFiller } from "@/app/(site)/blogs/post-grid-filler";

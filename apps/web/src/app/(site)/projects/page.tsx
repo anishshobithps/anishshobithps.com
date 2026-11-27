@@ -1,5 +1,5 @@
 import { PageArt } from "@repo/ui/art/page-art";
-import { HeroWithArt } from "@/components/layouts/hero-art";
+import { HeroWithArt } from "@repo/ui/art/hero-art";
 import { ProjectGrid } from "@/app/(site)/_components/projects";
 import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
 import { Section } from "@/components/layouts/page";

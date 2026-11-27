@@ -2,7 +2,7 @@ import { SectionMargins } from "@/components/layouts/section-margins";
 import {
   BandDoodle,
   type BandDoodleName,
-} from "@/components/shared/band-doodle";
+} from "@repo/ui/art/band-doodle";
 import { cn } from "@repo/ui/lib/cn";
 import { ComponentPropsWithRef, forwardRef } from "react";
 

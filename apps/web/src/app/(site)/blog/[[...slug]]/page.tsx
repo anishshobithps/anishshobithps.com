@@ -1,5 +1,5 @@
 import { BlogCover } from "@repo/ui/art/blog-cover";
-import { HeroWithArt } from "@/components/layouts/hero-art";
+import { HeroWithArt } from "@repo/ui/art/hero-art";
 import { EndOfPost } from "@/app/(site)/blog/[[...slug]]/_components/end-of-post";
 import {
   EngagementSection,

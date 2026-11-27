@@ -1,7 +1,7 @@
-import { ArtStage } from "@/components/layouts/hero-art";
+import { ArtStage } from "@repo/ui/art/hero-art";
 import { PageArt } from "@repo/ui/art/page-art";
 import Link from "next/link";
-import { InlineArt } from "@/components/shared/inline-art";
+import { InlineArt } from "@repo/ui/art/inline-art";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/ui/icons";
 import { Section } from "@/components/layouts/page";
 import { Reveal } from "@repo/ui/blocks/reveal";

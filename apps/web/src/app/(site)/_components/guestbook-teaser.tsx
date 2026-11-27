@@ -6,12 +6,12 @@ import {
   TypographyLead,
 } from "@repo/ui/components/typography";
 import { Reveal } from "@repo/ui/blocks/reveal";
-import { ArtStage } from "@/components/layouts/hero-art";
+import { ArtStage } from "@repo/ui/art/hero-art";
 import { PageArt } from "@repo/ui/art/page-art";
 import { Button } from "@repo/ui/components/button";
 import { CaretRightIcon } from "@repo/ui/icons";
 import Link from "next/link";
-import { InlineArt } from "@/components/shared/inline-art";
+import { InlineArt } from "@repo/ui/art/inline-art";
 
 export async function GuestbookTeaser() {
   const entries = pickRandom(await getGuestbookPreviewPool(), 15);
