@@ -1,11 +1,11 @@
-import type { ExternalToast } from "sonner";
-
+import type { ToastOptions as SdkToastOptions } from "@ui-sdk/react/toast";
+import type { ReactNode } from "react";
 import type { CueName } from "@repo/sounds/sound-cues";
 import { playCue } from "@repo/sounds/sound-player";
 
-export type ToastType = "error" | "warning" | "info" | "success";
+type ToastOptions = SdkToastOptions<ReactNode>;
 
-type ToastMessage = Parameters<typeof import("sonner").toast>[0];
+export type ToastType = "error" | "warning" | "info" | "success";
 
 const persistentTypes: ReadonlySet<ToastType> = new Set(["error", "warning"]);
 
@@ -47,23 +47,23 @@ export function notifyToasterReady(): void {
 }
 
 async function show(
-    run: (sonner: typeof import("sonner")) => unknown,
+    run: (sdk: typeof import("@ui-sdk/react/toast")) => unknown,
 ): Promise<void> {
     requestToasterHost();
-    const [sonner] = await Promise.all([
-        import("sonner"),
+    const [sdk] = await Promise.all([
+        import("@ui-sdk/react/toast"),
         toasterReady().promise,
     ]);
-    run(sonner);
+    run(sdk);
 }
 
-function plain(message: ToastMessage, data?: ExternalToast): void {
-    void show(({ toast: base }) => base(message, data));
+function plain(message: string, options?: ToastOptions): void {
+    void show(({ toast: base }) => base(message, options));
 }
 
 function typed(type: ToastType) {
-    return (message: ToastMessage, data?: ExternalToast): void => {
-        void show(({ toast: base }) => base[type](message, data));
+    return (message: string, options?: ToastOptions): void => {
+        void show(({ toast: base }) => base[type](message, options));
     };
 }
 
@@ -78,9 +78,7 @@ export function typedToast(type: ToastType, message: string): void {
     playCue(toastCues[type]);
     toast[type](
         message,
-        persistentTypes.has(type)
-            ? { duration: Infinity, closeButton: true }
-            : undefined,
+        persistentTypes.has(type) ? { duration: Infinity } : undefined,
     );
 }
 

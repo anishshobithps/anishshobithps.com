@@ -286,12 +286,12 @@ export function GuestbookClient() {
     toast("Delete this message?", {
       action: {
         label: "Delete",
-        onClick: () => {
+        onAction: () => {
           playCue("remove");
           removeEntry.mutate(id);
         },
       },
-      cancel: { label: "Keep", onClick: () => {} },
+      cancel: { label: "Keep" },
       duration: Infinity,
     });
   }, [removeEntry]);

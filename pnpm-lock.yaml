@@ -203,9 +203,6 @@ importers:
       schema-dts:
         specifier: ^2.1.0
         version: 2.1.0
-      sonner:
-        specifier: ^2.0.8
-        version: 2.0.8(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       svix:
         specifier: ^2.9.1
         version: 2.9.1

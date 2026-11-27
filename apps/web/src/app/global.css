@@ -6,6 +6,7 @@
 @import "shadcn/tailwind.css";
 @import "@repo/ui/styles/tokens.css";
 @import "./cursors.css";
+@import "./toasts.css";
 
 @source "../../../../packages";
 

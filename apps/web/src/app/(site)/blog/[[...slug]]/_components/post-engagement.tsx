@@ -295,12 +295,12 @@ export function PostEngagement({
       toast("Delete this comment?", {
         action: {
           label: "Delete",
-          onClick: () => {
+          onAction: () => {
             playCue("remove");
             removeComment.mutate(id);
           },
         },
-        cancel: { label: "Keep", onClick: () => {} },
+        cancel: { label: "Keep" },
         duration: Infinity,
       });
     },

@@ -9,7 +9,7 @@ import {
 } from "@/lib/toast";
 
 const Toaster = dynamic(
-  () => import("@repo/ui/components/sonner").then((m) => m.Toaster),
+  () => import("@/components/shared/toaster").then((m) => m.Toaster),
   { ssr: false },
 );
 
