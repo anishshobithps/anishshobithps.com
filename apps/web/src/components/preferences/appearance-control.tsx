@@ -1,27 +1,22 @@
 "use client";
 
 import { applyTheme, themes } from "@/components/preferences/theme-toggle";
-import { setSoundOn } from "@/components/preferences/sound-controls";
-import { SpeakerHighIcon, SpeakerSlashIcon } from "@repo/ui/icons";
-import { Button } from "@repo/ui/components/button";
+import { SoundSwitch } from "@/components/preferences/sound-controls";
 import { ToggleGroup, ToggleGroupItem } from "@repo/ui/components/toggle-group";
 import { cn } from "@repo/ui/lib/cn";
 import { themeCue } from "@repo/sounds/sound-cues";
 import { playCue } from "@repo/sounds/sound-player";
-import { useSoundPreferences } from "@repo/sounds/use-sound-preferences";
 import { useTheme } from "next-themes";
 import { type CSSProperties, useSyncExternalStore } from "react";
 
 export function AppearanceControl({ className }: { className?: string }) {
   const { setTheme, theme } = useTheme();
-  const { enabled } = useSoundPreferences();
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
     () => false,
   );
   const index = mounted ? themes.findIndex(([key]) => key === theme) : -1;
-  const SoundIcon = enabled ? SpeakerHighIcon : SpeakerSlashIcon;
 
   return (
     <div
@@ -68,29 +63,7 @@ export function AppearanceControl({ className }: { className?: string }) {
 
       <span aria-hidden="true" className="h-5 w-px bg-line" />
 
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-sm"
-        role="switch"
-        aria-checked={enabled}
-        aria-label="Sound effects"
-        onClick={() => setSoundOn(!enabled)}
-        className="relative rounded-full pointer-coarse:size-10"
-      >
-        <SoundIcon
-          key={String(enabled)}
-          weight="fill"
-          aria-hidden="true"
-          className="size-4 animate-in zoom-in-50 spin-in-12 duration-300 motion-reduce:animate-none"
-        />
-        {enabled && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0.5 rounded-full border border-(--brand) opacity-0 animate-ping [animation-iteration-count:1] motion-reduce:hidden"
-          />
-        )}
-      </Button>
+      <SoundSwitch look="pill" />
     </div>
   );
 }

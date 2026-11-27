@@ -3,7 +3,7 @@
 import { AppearanceControl } from "@/components/preferences/appearance-control";
 import { pad, RegisterDial } from "@/components/layouts/blog-toc";
 import { Logo } from "@/components/shared/logo";
-import { SoundToggle } from "@/components/preferences/sound-controls";
+import { SoundSwitch } from "@/components/preferences/sound-controls";
 import { ThemeCycle } from "@/components/preferences/theme-toggle";
 import { Button } from "@repo/ui/components/button";
 import { ButtonGroup } from "@repo/ui/components/button-group";
@@ -257,7 +257,7 @@ export function Header() {
 
             <ButtonGroup className="max-md:hidden">
               <CommandMenuButton isMac={isMac} />
-              <SoundToggle className="h-8.5 w-9 pointer-coarse:size-11" />
+              <SoundSwitch look="button" className="h-8.5 w-9 pointer-coarse:size-11" />
               <ThemeCycle className="h-8.5 w-9 rounded-r-full pointer-coarse:size-11" />
             </ButtonGroup>
 
