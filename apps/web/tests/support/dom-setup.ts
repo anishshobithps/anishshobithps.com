@@ -12,6 +12,17 @@ Element.prototype.getAnimations = () => [];
 Element.prototype.scrollIntoView = function () {};
 Element.prototype.checkVisibility = () => true;
 Element.prototype.getClientRects = () => [] as unknown as DOMRectList;
+window.matchMedia = (query: string) =>
+  ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener() {},
+    removeEventListener() {},
+    addListener() {},
+    removeListener() {},
+    dispatchEvent: () => false,
+  }) as MediaQueryList;
 document.elementFromPoint = () => null;
 document.elementsFromPoint = () => [];
 globalThis.ResizeObserver ??= class {

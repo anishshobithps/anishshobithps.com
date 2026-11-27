@@ -1,6 +1,11 @@
 "use client";
 
 import { LikeToggle } from "@/components/engagement/like-toggle";
+import {
+  Collapsible,
+  CollapsiblePanel,
+  CollapsibleTrigger,
+} from "@ui-sdk/react/collapsible";
 import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
 import { Avatar } from "@repo/ui/blocks/avatar";
 import { Composer } from "@/components/engagement/composer";
@@ -136,89 +141,87 @@ export function CommentCard({
               {comment.body}
             </Text>
 
-            <div className="pt-0.5">
-              <ButtonGroup>
-                <LikeToggle
-                  count={comment.likeCount}
-                  liked={comment.likedByMe}
-                  pending={isOptimistic || isLikePending}
-                  onToggle={() => onLike(comment.id)}
-                />
+            <Collapsible
+              open={replying}
+              onOpenChange={setReplying}
+              disabled={isPending}
+              className="contents"
+            >
+              <div className="pt-0.5">
+                <ButtonGroup>
+                  <LikeToggle
+                    count={comment.likeCount}
+                    liked={comment.likedByMe}
+                    pending={isOptimistic || isLikePending}
+                    onToggle={() => onLike(comment.id)}
+                  />
 
-                {depth < MAX_DEPTH && !isOptimistic && (
-                  <>
-                    <ButtonGroupSeparator />
-                    {isSignedIn ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setReplying((v) => !v)}
-                        disabled={isPending}
-                        aria-expanded={replying}
-                        aria-busy={isPending}
-                        aria-label="Reply to comment"
-                      >
-                        <ArrowBendDownRightIcon
-                          data-icon="inline-start"
-                          size={14}
-                          aria-hidden="true"
-                        />
-                        Reply
-                        {comment.replies.length > 0 && !replying && (
-                          <span className="tabular-nums opacity-60">
-                            {comment.replies.length}
-                          </span>
-                        )}
-                      </Button>
-                    ) : (
-                      <SignInTrigger>
-                        <Button variant="outline" size="sm">
+                  {depth < MAX_DEPTH && !isOptimistic && (
+                    <>
+                      <ButtonGroupSeparator />
+                      {isSignedIn ? (
+                        <CollapsibleTrigger
+                          render={<Button variant="outline" size="sm" />}
+                          aria-busy={isPending || undefined}
+                          aria-label="Reply to comment"
+                        >
                           <ArrowBendDownRightIcon
                             data-icon="inline-start"
                             size={14}
                             aria-hidden="true"
                           />
                           Reply
-                          <span className="text-xs text-muted-foreground">
-                            (sign in)
-                          </span>
-                        </Button>
-                      </SignInTrigger>
-                    )}
-                  </>
-                )}
+                          {comment.replies.length > 0 && !replying && (
+                            <span className="tabular-nums opacity-60">
+                              {comment.replies.length}
+                            </span>
+                          )}
+                        </CollapsibleTrigger>
+                      ) : (
+                        <SignInTrigger>
+                          <Button variant="outline" size="sm">
+                            <ArrowBendDownRightIcon
+                              data-icon="inline-start"
+                              size={14}
+                              aria-hidden="true"
+                            />
+                            Reply
+                            <span className="text-xs text-muted-foreground">
+                              (sign in)
+                            </span>
+                          </Button>
+                        </SignInTrigger>
+                      )}
+                    </>
+                  )}
 
-                {canDelete && !isOptimistic && (
-                  <>
-                    <ButtonGroupSeparator />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onDelete(comment.id)}
-                      aria-label="Delete comment"
-                      className="text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
-                    >
-                      <TrashIcon
-                        data-icon="inline-start"
-                        size={14}
-                        className="text-destructive"
-                        aria-hidden="true"
-                      />
-                      <span className="hidden sm:inline">Delete</span>
-                    </Button>
-                  </>
-                )}
-              </ButtonGroup>
-            </div>
+                  {canDelete && !isOptimistic && (
+                    <>
+                      <ButtonGroupSeparator />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onDelete(comment.id)}
+                        aria-label="Delete comment"
+                        className="text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
+                      >
+                        <TrashIcon
+                          data-icon="inline-start"
+                          size={14}
+                          className="text-destructive"
+                          aria-hidden="true"
+                        />
+                        <span className="hidden sm:inline">Delete</span>
+                      </Button>
+                    </>
+                  )}
+                </ButtonGroup>
+              </div>
 
-            {replying && (
-              <div
+              <CollapsiblePanel
                 ref={replyRef}
-                className={cn(
-                  "pt-3",
-                  isPending && "pointer-events-none opacity-70",
-                )}
-                aria-busy={isPending}
+                aria-busy={isPending || undefined}
+                className={cn("pt-3", isPending && "pointer-events-none opacity-70")}
               >
                 <Composer
                   maxLength={COMMENT_MAX_LENGTH}
@@ -240,8 +243,8 @@ export function CommentCard({
                   }
                   onCancel={() => setReplying(false)}
                 />
-              </div>
-            )}
+              </CollapsiblePanel>
+            </Collapsible>
           </div>
         </div>
       </div>
