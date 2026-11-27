@@ -123,13 +123,6 @@ export function Composer({
       });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-      e.preventDefault();
-      submit();
-    }
-  };
-
   return (
     <div className={cn("space-y-2", className)}>
       <Textarea
@@ -139,7 +132,8 @@ export function Composer({
           setValue(e.target.value);
           if (emptyError) setEmptyError(false);
         }}
-        onKeyDown={handleKeyDown}
+        submitShortcut="mod+enter"
+        onSubmit={() => submit()}
         rows={rows}
         maxLength={maxLength}
         placeholder={placeholder}

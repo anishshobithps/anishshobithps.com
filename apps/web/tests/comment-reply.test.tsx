@@ -68,4 +68,18 @@ describe("comment reply", () => {
     expect(await screen.findByRole("button", { name: "Reply to comment" })).toBeTruthy();
     expect(screen.queryByRole("textbox", { name: "Write a reply" })).toBeNull();
   });
+
+  test("mod+enter sends the reply, plain enter adds a line", async () => {
+    const user = userEvent.setup();
+    const { reply, onReply } = renderCard();
+    const mod = /Mac|iPhone|iPad/.test(navigator.platform) ? "Meta" : "Control";
+
+    await user.click(reply);
+    const box = screen.getByRole("textbox", { name: "Write a reply" });
+    await user.type(box, "Nice{Enter}post");
+    expect(onReply).not.toHaveBeenCalled();
+
+    await user.keyboard(`{${mod}>}{Enter}{/${mod}}`);
+    expect(onReply).toHaveBeenCalledWith(1, "Nice\npost");
+  });
 });
