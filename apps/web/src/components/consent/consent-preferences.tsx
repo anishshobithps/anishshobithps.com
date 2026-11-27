@@ -50,7 +50,7 @@ function ConsentVendors({ category }: { category: AllConsentNames }) {
         </Text>
         <CaretDownIcon
           aria-hidden="true"
-          className="size-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180"
+          className="size-4 shrink-0 text-muted-foreground transition-transform group-data-open:rotate-180"
         />
       </CollapsibleTrigger>
       <CollapsibleContent
