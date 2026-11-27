@@ -54,7 +54,6 @@
     "culori": "^4.0.2",
     "motion": "^14.7.1",
     "pdfjs-dist": "6.3.289",
-    "radix-ui": "catalog:",
     "react-hook-form": "^7.91.0",
     "react-pdf": "^11.0.0",
     "recharts": "catalog:",

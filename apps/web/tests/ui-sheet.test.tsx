@@ -20,7 +20,7 @@ function Harness() {
         <SheetContent>
           <SheetTitle>Sidebar</SheetTitle>
           <SheetDescription>Admin pages</SheetDescription>
-          <a href="/admin">Overview</a>
+          <button type="button">Overview</button>
         </SheetContent>
       </Sheet>
     </>
@@ -35,7 +35,7 @@ describe("@repo/ui sheet", () => {
     await user.click(screen.getByRole("button", { name: "Open sidebar" }));
     const sheet = await screen.findByRole("dialog", { name: "Sidebar" });
     expect(sheet.getAttribute("data-side")).toBe("left");
-    expect(screen.getByRole("link", { name: "Overview" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Overview" })).toBeTruthy();
 
     await user.keyboard("{Escape}");
     expect(screen.queryByRole("dialog", { name: "Sidebar" })).toBeNull();
