@@ -2,9 +2,29 @@ import { count, desc, eq } from "drizzle-orm";
 import { getClerkUserMap, resolveUser } from "@/lib/clerk-users";
 import { db } from "@repo/db";
 import { guestbookEntries } from "@repo/db/schema";
-import { toDataUri } from "@/lib/svg/data/image";
 
 const AVATAR_SIZE = 64;
+
+const IMAGE_TIMEOUT_MS = 5000;
+const IMAGE_MAX_BYTES = 120 * 1024;
+
+async function toDataUri(url: string | null | undefined) {
+  if (!url) return null;
+  try {
+    const res = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(IMAGE_TIMEOUT_MS),
+      headers: { Accept: "image/jpeg,image/png;q=0.9" },
+    });
+    const type = res.headers.get("content-type")?.split(";")[0] ?? "";
+    if (!res.ok || !type.startsWith("image/")) return null;
+    const bytes = Buffer.from(await res.arrayBuffer());
+    if (bytes.byteLength > IMAGE_MAX_BYTES) return null;
+    return `data:${type};base64,${bytes.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
 
 interface Signature {
   number: number;

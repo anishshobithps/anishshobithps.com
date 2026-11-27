@@ -1,4 +1,3 @@
-import { getLLMText } from '@/lib/get-llm-text';
 import { source } from '@/lib/source';
 import { notFound } from 'next/navigation';
 
@@ -10,7 +9,11 @@ export async function GET(_: Request, { params }: RouteContext<'/llms.mdx/blog/[
 
     if (!page) notFound();
 
-    return new Response(await getLLMText(page), {
+    const text = await page.data
+        .getText('processed')
+        .then((processed) => processed || page.data.getText('raw'));
+
+    return new Response(`# ${page.data.title} (${page.url})\n\n${text}`, {
         headers: { 'Content-Type': 'text/markdown' },
     });
 }

@@ -5,13 +5,13 @@ import {
   combine,
   emptyMatrix,
   formatHour,
+  loadCodingTime,
   type Matrix,
   summarize,
   toLevels,
   WEEKDAYS,
 } from "@/lib/svg/data/activity";
 import { loadCommitTimes } from "@/lib/svg/data/github";
-import { loadCodingTime } from "@/lib/svg/data/wakatime";
 import {
   CardHeader,
   Cell,

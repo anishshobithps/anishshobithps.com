@@ -1,3 +1,5 @@
+import { ENV } from "varlock/env";
+
 export const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const LEVELS = 4;
@@ -124,5 +126,52 @@ export function summarize(matrix: Matrix) {
     peak: `${WEEKDAYS[peak.day]} ${formatHour(peak.hour)}`,
     busiestDay: WEEKDAYS[busiestDay],
     lateShare: sum > 0 ? Math.round((late / sum) * 100) : 0,
+  };
+}
+
+const WAKATIME_TIMEOUT_MS = 5000;
+const WAKATIME_API = "https://wakatime.com/api/v1/users/current";
+
+interface DurationsResponse {
+  data: { time: number; duration: number }[];
+  timezone?: string;
+}
+
+async function wakatime<T>(path: string, key: string): Promise<T> {
+  const res = await fetch(`${WAKATIME_API}${path}`, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(WAKATIME_TIMEOUT_MS),
+    headers: { Authorization: `Basic ${Buffer.from(key).toString("base64")}` },
+  });
+  if (!res.ok) throw new Error(`WakaTime ${path} responded ${res.status}`);
+  return res.json() as Promise<T>;
+}
+
+function recentDates(days: number, now = new Date()) {
+  return Array.from({ length: days }, (_, offset) => {
+    const date = new Date(now);
+    date.setUTCDate(date.getUTCDate() - offset);
+    return date.toISOString().slice(0, 10);
+  });
+}
+
+export async function loadCodingTime(
+  days: number,
+): Promise<{ matrix: Matrix; seconds: number; days: number }> {
+  const key = ENV.WAKATIME_API_KEY;
+  if (!key) throw new Error("WAKATIME_API_KEY is not set");
+
+  const responses = await Promise.all(
+    recentDates(days).map((date) =>
+      wakatime<DurationsResponse>(`/durations?date=${date}`, key),
+    ),
+  );
+  const timeZone = responses.find((res) => res.timezone)?.timezone ?? "UTC";
+  const durations = responses.flatMap((res) => res.data);
+
+  return {
+    matrix: bucketDurations(durations, timeZone),
+    seconds: durations.reduce((sum, { duration }) => sum + duration, 0),
+    days,
   };
 }
