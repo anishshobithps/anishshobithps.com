@@ -47,7 +47,7 @@ export function AppearanceControl({ className }: { className?: string }) {
               playCue(themeCue(key));
               applyTheme(setTheme, key, event);
             }}
-            className="relative z-10 size-8 min-w-0 cursor-pointer rounded-full p-0 text-muted-foreground hover:bg-transparent hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-foreground pointer-coarse:size-10"
+            className="relative z-10 size-8 min-w-0 cursor-pointer rounded-full p-0 text-muted-foreground hover:bg-transparent hover:text-foreground data-pressed:bg-transparent data-pressed:text-foreground pointer-coarse:size-10"
           >
             <Icon
               weight="fill"
