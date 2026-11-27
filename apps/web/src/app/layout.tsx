@@ -8,7 +8,6 @@ import { PhosphorProvider } from "@repo/ui/icons/provider";
 import { SoundEffects } from "@/components/preferences/sound-effects";
 import { ThemeHotkey } from "@/components/preferences/theme-hotkey";
 import { ToasterHost } from "@/components/shared/toaster-host";
-import { TooltipProvider } from "@repo/ui/components/tooltip";
 import { MOTION_INIT_SCRIPT } from "@repo/ui/lib/motion-preference";
 import { siteConfig } from "@repo/core/site-config";
 import { ThemeProvider } from "next-themes";
@@ -110,20 +109,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
-          <TooltipProvider>
-            <PhosphorProvider>
-              <AnalyticsContext />
-              <ThemeHotkey />
-              <SoundEffects />
-              <ConsentRoot>
-                <CommandMenuHost />
-                {children}
-                <ConsentBanner />
-                <ConsentDialog />
-              </ConsentRoot>
-              <ToasterHost />
-            </PhosphorProvider>
-          </TooltipProvider>
+          <PhosphorProvider>
+            <AnalyticsContext />
+            <ThemeHotkey />
+            <SoundEffects />
+            <ConsentRoot>
+              <CommandMenuHost />
+              {children}
+              <ConsentBanner />
+              <ConsentDialog />
+            </ConsentRoot>
+            <ToasterHost />
+          </PhosphorProvider>
         </ThemeProvider>
       </body>
     </html>

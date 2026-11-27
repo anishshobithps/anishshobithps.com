@@ -21,7 +21,6 @@ import { Skeleton } from "@repo/ui/components/skeleton";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@repo/ui/components/tooltip";
 
@@ -121,7 +120,6 @@ function SidebarProvider({
 
   return (
     <SidebarContext.Provider value={contextValue}>
-      <TooltipProvider delayDuration={0}>
         <div
           data-slot="sidebar-wrapper"
           style={
@@ -139,7 +137,6 @@ function SidebarProvider({
         >
           {children}
         </div>
-      </TooltipProvider>
     </SidebarContext.Provider>
   );
 }
@@ -523,14 +520,9 @@ function SidebarMenuButton({
   }
 
   return (
-    <Tooltip>
+    <Tooltip disabled={state !== "collapsed" || isMobile}>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== "collapsed" || isMobile}
-        {...tooltip}
-      />
+      <TooltipContent side="right" align="center" {...tooltip} />
     </Tooltip>
   );
 }
