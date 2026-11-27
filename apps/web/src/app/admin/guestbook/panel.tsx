@@ -17,17 +17,7 @@ import {
 } from "@repo/ui/components/button-group";
 import { Badge } from "@repo/ui/components/badge";
 import { Input } from "@repo/ui/components/input";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@repo/ui/components/alert-dialog";
+import { ConfirmDelete } from "@/app/admin/_components/confirm-delete";
 import {
   TrashIcon,
   PushPinSimpleIcon,
@@ -255,8 +245,9 @@ export function GuestbookPanel() {
                   )}
                 </Button>
                 <ButtonGroupSeparator />
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
+                <ConfirmDelete
+                  compact
+                  trigger={
                     <Button
                       variant="secondary"
                       size="icon-sm"
@@ -266,29 +257,20 @@ export function GuestbookPanel() {
                     >
                       <TrashIcon className="size-4" />
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent size="sm">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Delete entry?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This entry by{" "}
-                        <span className="font-medium text-foreground wrap-anywhere">
-                          {entry.user.name}
-                        </span>{" "}
-                        will be permanently removed and cannot be recovered.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        variant="destructive"
-                        onClick={() => handleDelete(entry.id)}
-                      >
-                        {pendingId === entry.id ? "Deleting…" : "Delete"}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                  }
+                  title="Delete entry?"
+                  description={
+                    <>
+                      This entry by{" "}
+                      <span className="font-medium text-foreground">
+                        {entry.user.name}
+                      </span>{" "}
+                      will be permanently removed and cannot be recovered.
+                    </>
+                  }
+                  confirm={`Permanently deletes the guestbook entry by ${entry.user.name}`}
+                  onConfirm={() => handleDelete(entry.id)}
+                />
               </ButtonGroup>
             </div>
           ))}

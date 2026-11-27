@@ -36,17 +36,7 @@ import {
 import { Input } from "@repo/ui/components/input";
 import { Textarea } from "@repo/ui/components/textarea";
 import { Switch } from "@repo/ui/components/switch";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@repo/ui/components/alert-dialog";
+import { ConfirmDelete } from "@/app/admin/_components/confirm-delete";
 import {
   Dialog,
   DialogContent,
@@ -513,8 +503,8 @@ export function ProjectsPanel() {
                           <PencilIcon className="size-3.5" />
                         </Button>
                         <ButtonGroupSeparator />
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
+                        <ConfirmDelete
+                          trigger={
                             <Button
                               variant="secondary"
                               size="icon"
@@ -524,28 +514,12 @@ export function ProjectsPanel() {
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle className="wrap-anywhere">
-                                Delete &quot;{project.title}&quot;?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This permanently removes the project from the
-                                database. This cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                variant="destructive"
-                                onClick={() => handleDelete(project.id)}
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                          }
+                          title={<>Delete &quot;{project.title}&quot;?</>}
+                          description="This permanently removes the project from the database. This cannot be undone."
+                          confirm={`Permanently deletes the project ${project.title}`}
+                          onConfirm={() => handleDelete(project.id)}
+                        />
                       </ButtonGroup>
                     </TableCell>
                   </TableRow>

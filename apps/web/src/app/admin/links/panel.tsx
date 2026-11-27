@@ -45,17 +45,7 @@ import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { Textarea } from "@repo/ui/components/textarea";
 import { Switch } from "@repo/ui/components/switch";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@repo/ui/components/alert-dialog";
+import { ConfirmDelete } from "@/app/admin/_components/confirm-delete";
 import {
   Dialog,
   DialogContent,
@@ -720,8 +710,8 @@ export function LinksPanel() {
                           <PencilIcon className="size-3.5" />
                         </Button>
                         <ButtonGroupSeparator />
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
+                        <ConfirmDelete
+                          trigger={
                             <Button
                               variant="secondary"
                               size="icon"
@@ -731,28 +721,12 @@ export function LinksPanel() {
                             >
                               <TrashIcon className="size-3.5" />
                             </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle className="wrap-anywhere">
-                                Delete /{primaryPath}?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This permanently removes the link and all its
-                                aliases. This cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                variant="destructive"
-                                onClick={() => handleDelete(link.id)}
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                          }
+                          title={`Delete /${primaryPath}?`}
+                          description="This permanently removes the link and all its aliases. This cannot be undone."
+                          confirm={`Permanently deletes the short link /${primaryPath} and its aliases`}
+                          onConfirm={() => handleDelete(link.id)}
+                        />
                       </ButtonGroup>
                     </TableCell>
                   </TableRow>
