@@ -2,8 +2,8 @@ import { Content, PageLayout } from "@/components/layouts/page";
 import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { JsonLd } from "@/components/shared/json-ld";
-import { MouseGlow } from "@/components/shared/mouse-glow";
-import { OffscreenAnimations } from "@/components/shared/offscreen-animations";
+import { MouseGlow } from "@repo/ui/motion/mouse-glow";
+import { OffscreenAnimations } from "@repo/ui/motion/offscreen-animations";
 import { AuthProvider } from "@/components/shared/site-auth";
 import {
   FloatingHubServer,

@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { useRef } from "react";
 import { BouncingLogos } from "@/components/shared/bouncing-logo";
-import { FlickerText } from "@/components/shared/flicker-text";
+import { FlickerText } from "@repo/ui/motion/flicker-text";
 
 interface ErrorProps {
   reset: () => void;

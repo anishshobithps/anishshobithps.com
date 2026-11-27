@@ -2,7 +2,7 @@ import { createNextConfig } from "@repo/eslint-config/next";
 
 export default createNextConfig({
   uiGlob: "src/{components,hooks,lib,styles}/**",
-  noTailwindFiles: ["src/cards/**/*.tsx"],
+  noTailwindFiles: ["src/cards/**/*.tsx", "src/motion/flicker-text.tsx"],
   extra: [
     {
       files: ["src/components/sonner.tsx"],

@@ -8,6 +8,5 @@ export default createNextConfig({
     'src/app/icon.tsx',
     'src/app/apple-icon.tsx',
     'src/app/global-error.tsx',
-    'src/components/shared/flicker-text.tsx',
   ],
 });
