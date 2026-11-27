@@ -13,7 +13,7 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from "react";
-import { useResizeObserver } from "@wojtekmaj/react-hooks";
+import { useResizeObserver } from "@repo/ui/hooks/use-resize-observer";
 import {
   NumberInput,
   NumberInputControl,
@@ -185,7 +185,7 @@ export const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(
       if (entry) setContainerWidth(entry.contentRect.width);
     }, []);
 
-    useResizeObserver(containerRef, {}, onResize);
+    useResizeObserver(containerRef, onResize);
 
     const reload = useCallback(() => dispatch({ type: "reload" }), []);
     const goToPage = useCallback(

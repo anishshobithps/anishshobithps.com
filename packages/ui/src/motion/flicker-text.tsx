@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
+import { usePrefersReducedMotion } from "@repo/ui/hooks/use-prefers-reduced-motion";
 
 interface FlickerCharProps {
   char: string;
@@ -107,7 +107,7 @@ export function FlickerText({
   className,
   label,
 }: FlickerTextProps) {
-  const animated = useReducedMotion() === false;
+  const animated = usePrefersReducedMotion() === false;
   const totalWidth = chars.length * charWidth;
   const resolvedLabel =
     label ?? chars.map((c) => (c === "logo" ? "A" : c)).join("");

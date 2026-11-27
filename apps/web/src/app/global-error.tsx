@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useReducedMotion } from "motion/react";
+import { usePrefersReducedMotion } from "@repo/ui/hooks/use-prefers-reduced-motion";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -11,7 +11,7 @@ interface GlobalErrorProps {
 
 export default function GlobalError({ reset }: GlobalErrorProps) {
   const [showLogo, setShowLogo] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const noiseRef = useRef<SVGSVGElement>(null);
   const digitsRef = useRef<SVGSVGElement>(null);
 

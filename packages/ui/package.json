@@ -49,7 +49,6 @@
     "@ui-sdk/core": "0.1.0-beta.17",
     "@ui-sdk/react": "0.1.0-beta.17",
     "@videojs/react": "10.7.0",
-    "@wojtekmaj/react-hooks": "^2.3.0",
     "class-variance-authority": "catalog:",
     "cn": "^0.5.0",
     "culori": "^4.0.2",

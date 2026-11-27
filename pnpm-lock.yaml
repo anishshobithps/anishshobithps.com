@@ -143,9 +143,6 @@ importers:
       '@varlock/nextjs-integration':
         specifier: ^2.0.0
         version: 2.0.0(next@16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.24.0))(varlock@1.24.0)
-      '@wojtekmaj/react-hooks':
-        specifier: ^2.3.0
-        version: 2.3.0(@types/react@19.3.0)(react@19.3.1)
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -164,9 +161,6 @@ importers:
       fumadocs-ui:
         specifier: 16.17.9
         version: 16.17.9(@types/mdx@2.0.14)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(fumadocs-core@16.17.9(@mdx-js/mdx@3.1.1(supports-color@7.2.0))(@modelcontextprotocol/server@2.4.0)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.77.0(@types/react@19.3.0)(react@19.3.1))(next@16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.24.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@7.2.0)(zod@4.6.7))(next@16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.24.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)(takumi-js@2.18.2(csstype@3.2.3)(preact@10.29.8)(react@19.3.1))
-      motion:
-        specifier: ^14.7.1
-        version: 14.7.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next:
         specifier: 'catalog:'
         version: 16.4.6(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.24.0)
@@ -191,9 +185,6 @@ importers:
       react-hook-form:
         specifier: ^7.91.0
         version: 7.91.0(@types/react@19.3.0)(react@19.3.1)
-      reading-time:
-        specifier: ^1.5.0
-        version: 1.5.0
       recharts:
         specifier: 'catalog:'
         version: 3.8.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react-is@16.13.1)(react@19.3.1)(redux@5.0.1)
@@ -212,9 +203,6 @@ importers:
       varlock:
         specifier: ^1.24.0
         version: 1.24.0
-      vfile:
-        specifier: ^6.0.3
-        version: 6.0.3
       zod:
         specifier: 'catalog:'
         version: 4.6.7
@@ -436,9 +424,6 @@ importers:
       '@videojs/react':
         specifier: 10.7.0
         version: 10.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@wojtekmaj/react-hooks':
-        specifier: ^2.3.0
-        version: 2.3.0(@types/react@19.3.0)(react@19.3.1)
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -3521,15 +3506,6 @@ packages:
   '@vitest/spy@5.0.5':
     resolution: {integrity: sha512-lwJRExuH417257Q5wv9QYugN9IMJkoxcrKrYxGPQkBzl7wlNpTUxD/5yNX4ESKVUIShKPgkGchYPFMWOOk0wzw==}
 
-  '@wojtekmaj/react-hooks@2.3.0':
-    resolution: {integrity: sha512-VSG+HMyG3siPpXh0LUwfkdcVo6szfIUJebAz9MeKap5Xh/hszsXcz91Y5Vh5MpsLgTStPdY6mG5qmFn9fGJavA==}
-    peerDependencies:
-      '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@yuku-core/binding-android-arm64@0.19.0':
     resolution: {integrity: sha512-wdL2XmTiZixAOaHk9Z0JJZ8u9Qm8d333Zjpc6gaxXFX+UR5BlsfxZ7a2+2Rm71pamppsPYGUGFq2oVLbh6DISw==}
     cpu: [arm64]
@@ -6137,9 +6113,6 @@ packages:
   readdirp@5.1.1:
     resolution: {integrity: sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==}
     engines: {node: '>= 20.19.0'}
-
-  reading-time@1.5.0:
-    resolution: {integrity: sha512-onYyVhBNr4CmAxFsKS7bz+uTLRakypIe4R+5A824vBSkQy/hB3fZepoVEf8OVAxzLvK+H/jm9TzpI3ETSm64Kg==}
 
   recast@0.23.21:
     resolution: {integrity: sha512-mFAyJq9vUbSTARLZUvAEf1z3YxlvAwswbmxMx2mPA/MSm4KmpwvwvhsH/NIrZhyOuwD60Lzyw2qh83uCbgTPYw==}
@@ -9450,12 +9423,6 @@ snapshots:
 
   '@vitest/spy@5.0.5': {}
 
-  '@wojtekmaj/react-hooks@2.3.0(@types/react@19.3.0)(react@19.3.1)':
-    dependencies:
-      react: 19.3.1
-    optionalDependencies:
-      '@types/react': 19.3.0
-
   '@yuku-core/binding-android-arm64@0.19.0':
     optional: true
 
@@ -12355,8 +12322,6 @@ snapshots:
   react@19.3.1: {}
 
   readdirp@5.1.1: {}
-
-  reading-time@1.5.0: {}
 
   recast@0.23.21:
     dependencies:

@@ -2,7 +2,7 @@
 
 import { useReducer, useState } from "react";
 import NextImage from "next/image";
-import { useDebouncedValue } from "@wojtekmaj/react-hooks";
+import { useDebouncedValue } from "@repo/ui/hooks/use-debounced-value";
 import { TypographyMuted } from "@repo/ui/components/typography";
 import { Switch } from "@repo/ui/components/switch";
 import {
