@@ -19,7 +19,7 @@ import { ScrollArea } from "@repo/ui/components/scroll-area";
 import { Button } from "@repo/ui/components/button";
 import { Text, TypographyMuted } from "@repo/ui/components/typography";
 import { ArrowDownIcon, DownloadIcon } from "@repo/ui/icons";
-import { LogoMascot } from "@/components/shared/logo-mascot";
+import { LogoMascot } from "@repo/ui/brand/logo-mascot";
 import { LinkPreviewPanel } from "@/components/preferences/link-preview-panel";
 import { SoundPanel } from "@/components/preferences/sound-panel";
 import { MotionPanel } from "@/components/preferences/motion-panel";

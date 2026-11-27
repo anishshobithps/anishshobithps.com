@@ -23,7 +23,7 @@ import {
   ThemeNudge,
   TypingBubble,
 } from "@/components/shared/doodles";
-import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
+import { LoaderCaption, LogoLoader } from "@repo/ui/brand/loader";
 import { Logo } from "@/components/shared/logo";
 import {
   TypographyH1,

@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { LogoIcon } from "@/components/shared/logo-icon";
+import { LogoIcon } from "@repo/ui/brand/logo-icon";
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";

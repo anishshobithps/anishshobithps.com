@@ -1,6 +1,6 @@
 import { SectionLabel } from "@repo/ui/components/typography";
 import { gitDraw, isoType, nudgeDraw } from "@repo/ui/art/animation";
-import { MascotFigure, type MascotEyes } from "@/components/shared/logo-mascot";
+import { MascotFigure, type MascotEyes } from "@repo/ui/brand/logo-mascot";
 import { cn } from "@repo/ui/lib/cn";
 import type { CSSProperties } from "react";
 

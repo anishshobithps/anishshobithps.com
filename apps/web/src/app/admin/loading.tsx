@@ -1,7 +1,7 @@
 "use client";
 
 import { isoCanvas } from "@repo/ui/art/animation";
-import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
+import { LoaderCaption, LogoLoader } from "@repo/ui/brand/loader";
 import { cn } from "@repo/ui/lib/cn";
 
 export default function AdminLoading() {

@@ -8,6 +8,7 @@
     "./hooks/*": "./src/hooks/*.ts",
     "./lib/*": "./src/lib/*.ts",
     "./blocks/*": "./src/blocks/*.tsx",
+    "./brand/*": "./src/brand/*.tsx",
     "./art/band-doodle": "./src/art/band-doodle.tsx",
     "./art/blog-cover": "./src/art/blog-cover.tsx",
     "./art/git-chaos": "./src/art/git-chaos.tsx",

@@ -23,7 +23,7 @@ import {
   SignOutIcon,
   FolderOpenIcon,
 } from "@repo/ui/icons";
-import { LogoIcon } from "@/components/shared/logo-icon";
+import { LogoIcon } from "@repo/ui/brand/logo-icon";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import type { Route } from "next";

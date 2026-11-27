@@ -5,7 +5,7 @@ import { useCallback, useRef, useState } from "react";
 
 import { Button } from "@repo/ui/components/button";
 import { XIcon } from "@repo/ui/icons";
-import { LogoMascot } from "@/components/shared/logo-mascot";
+import { LogoMascot } from "@repo/ui/brand/logo-mascot";
 import { useDraggable } from "@/hooks/use-draggable";
 import { useIsMobile } from "@repo/ui/hooks/use-mobile";
 import { cn } from "@repo/ui/lib/cn";

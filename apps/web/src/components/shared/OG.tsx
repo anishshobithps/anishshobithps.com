@@ -1,5 +1,5 @@
-import { LogoIcon } from "@/components/shared/logo-icon";
-import { MASCOT_POINTS } from "@/components/shared/logo-mascot";
+import { LogoIcon } from "@repo/ui/brand/logo-icon";
+import { MASCOT_POINTS } from "@repo/ui/brand/logo-mascot";
 import { FONT_STACK, FONTS, PIXEL_SHAPE } from "@repo/ui/cards/fonts";
 import { themeColor } from "@repo/ui/styles/theme-tokens";
 import type { CSSProperties, ReactNode } from "react";

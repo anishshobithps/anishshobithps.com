@@ -20,7 +20,7 @@ import {
   PdfViewerZoom,
 } from "@repo/ui/components/pdf-viewer";
 import { getResumeFilename } from "@/lib/resume";
-import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
+import { LoaderCaption, LogoLoader } from "@repo/ui/brand/loader";
 import { Reveal } from "@repo/ui/blocks/reveal";
 import { buildMeta } from "@/lib/metadata";
 import { siteConfig } from "@repo/core/site-config";
