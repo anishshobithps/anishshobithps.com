@@ -8,6 +8,7 @@ import { PhosphorProvider } from "@repo/ui/icons/provider";
 import { SoundEffects } from "@/components/preferences/sound-effects";
 import { ThemeHotkey } from "@/components/preferences/theme-hotkey";
 import { ToasterHost } from "@/components/shared/toaster-host";
+import { AgentBridge } from "@/components/shared/agent-bridge";
 import { MOTION_INIT_SCRIPT } from "@repo/ui/lib/motion-preference";
 import { siteConfig } from "@repo/core/site-config";
 import { ThemeProvider } from "next-themes";
@@ -120,6 +121,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <ConsentDialog />
             </ConsentRoot>
             <ToasterHost />
+            <AgentBridge />
           </PhosphorProvider>
         </ThemeProvider>
       </body>
