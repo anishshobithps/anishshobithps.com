@@ -1,43 +1,54 @@
 "use client"
 
 import * as React from "react"
-import { HoverCard as HoverCardPrimitive } from "radix-ui"
+import {
+  HoverCard as HoverCardPrimitive,
+  HoverCardContent as HoverCardContentPrimitive,
+  HoverCardTrigger as HoverCardTriggerPrimitive,
+} from "@ui-sdk/react/hover-card"
 
 import { cn } from "@repo/ui/lib/cn"
 
 function HoverCard({
+  openDelay,
+  delay = openDelay,
   ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Root>) {
-  return <HoverCardPrimitive.Root data-slot="hover-card" {...props} />
+}: React.ComponentProps<typeof HoverCardPrimitive> & { openDelay?: number }) {
+  return <HoverCardPrimitive delay={delay} {...props} />
 }
 
 function HoverCardTrigger({
+  asChild = false,
+  children,
   ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Trigger>) {
-  return (
-    <HoverCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
-  )
+}: React.ComponentProps<typeof HoverCardTriggerPrimitive> & { asChild?: boolean }) {
+  if (asChild && React.isValidElement(children)) {
+    return <HoverCardTriggerPrimitive render={children} {...props} />
+  }
+  return <HoverCardTriggerPrimitive {...props}>{children}</HoverCardTriggerPrimitive>
 }
 
 function HoverCardContent({
   className,
   align = "center",
   sideOffset = 8,
+  container = globalThis.document?.body,
   ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Content>) {
+}: Omit<React.ComponentProps<typeof HoverCardContentPrimitive>, "className" | "children"> & {
+  className?: string
+  children?: React.ReactNode
+}) {
   return (
-    <HoverCardPrimitive.Portal data-slot="hover-card-portal">
-      <HoverCardPrimitive.Content
-        data-slot="hover-card-content"
-        align={align}
-        sideOffset={sideOffset}
-        className={cn(
-          "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-auto origin-(--radix-hover-card-content-transform-origin) rounded-lg border p-3 shadow-md outline-hidden",
-          className
-        )}
-        {...props}
-      />
-    </HoverCardPrimitive.Portal>
+    <HoverCardContentPrimitive
+      align={align}
+      sideOffset={sideOffset}
+      container={container}
+      className={cn(
+        "bg-popover text-popover-foreground z-50 w-auto origin-(--transform-origin) rounded-lg border p-3 shadow-md outline-hidden transition-[opacity,scale] duration-150 data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 motion-reduce:transition-none",
+        className
+      )}
+      {...props}
+    />
   )
 }
 
