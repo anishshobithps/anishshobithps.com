@@ -2,7 +2,7 @@
 
 import { CaretDownIcon, ChatCircleIcon } from "@repo/ui/icons";
 import { LogoMascot } from "@/components/shared/logo-mascot";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 import { Button } from "@repo/ui/components/button";
 import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
 import { gitDraw, gitPop } from "@repo/ui/art/animation";

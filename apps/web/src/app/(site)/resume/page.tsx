@@ -21,7 +21,7 @@ import {
 } from "@repo/ui/components/pdf-viewer";
 import { getResumeFilename } from "@/lib/resume";
 import { LoaderCaption, LogoLoader } from "@/components/shared/loader";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 import { buildMeta } from "@/lib/metadata";
 import { siteConfig } from "@repo/core/site-config";
 import type { Metadata } from "next";

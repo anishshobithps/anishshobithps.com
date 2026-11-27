@@ -1,6 +1,6 @@
 import { Section, CardGrid, CardGridItem } from "@/components/layouts/page";
 import { ProjectsSkeleton } from "@/app/(site)/projects/projects-skeleton";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 import { GitChaos } from "@repo/ui/art/git-chaos";
 import { IsoStage } from "@repo/ui/art/iso-stage";
 import { Badge } from "@repo/ui/components/badge";

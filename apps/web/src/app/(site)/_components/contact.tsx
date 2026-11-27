@@ -4,7 +4,7 @@ import Link from "next/link";
 import { InlineArt } from "@/components/shared/inline-art";
 import { EnvelopeIcon, ArrowUpRightIcon } from "@repo/ui/icons";
 import { Section } from "@/components/layouts/page";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 import {
   TypographyH2,
   TypographyLead,

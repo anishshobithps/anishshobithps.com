@@ -1,7 +1,7 @@
 import { LinkIcon } from "@repo/ui/icons";
 import { Text } from "@repo/ui/components/typography";
 import { LinkCard } from "@/components/link-card/link-card";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 
 export interface PostLink {
   url: string;

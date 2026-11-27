@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@repo/ui/components/select";
 import { TypographyMuted } from "@repo/ui/components/typography";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 import { cn } from "@repo/ui/lib/cn";
 import { playCue } from "@repo/sounds/sound-player";
 import { MagnifyingGlassIcon, XIcon } from "@repo/ui/icons";

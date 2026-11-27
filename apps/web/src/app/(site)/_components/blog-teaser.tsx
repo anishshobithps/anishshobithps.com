@@ -5,7 +5,7 @@ import {
   TypographyLead,
   TypographyMuted,
 } from "@repo/ui/components/typography";
-import { Reveal } from "@/components/shared/reveal";
+import { Reveal } from "@repo/ui/blocks/reveal";
 import { ArtStage } from "@/components/layouts/hero-art";
 import { PageArt } from "@repo/ui/art/page-art";
 import { Button } from "@repo/ui/components/button";
