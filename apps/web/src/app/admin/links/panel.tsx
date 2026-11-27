@@ -37,23 +37,15 @@ import {
   FormMessage,
 } from "@repo/ui/components/form";
 import { Button } from "@repo/ui/components/button";
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-} from "@repo/ui/components/button-group";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
 import { Textarea } from "@repo/ui/components/textarea";
 import { Switch } from "@repo/ui/components/switch";
-import { ConfirmDelete } from "@/app/admin/_components/confirm-delete";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@repo/ui/components/dialog";
+  FormActions,
+  FormDialog,
+  RowActions,
+} from "@/app/admin/_components/crud";
 import {
   Table,
   TableBody,
@@ -65,7 +57,6 @@ import { SortableTableHeader } from "@repo/ui/components/sortable-table-header";
 import { useTable, type ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@repo/ui/components/badge";
 import {
-  PencilIcon,
   TrashIcon,
   PlusIcon,
   ImageIcon,
@@ -81,7 +72,10 @@ import {
   EmptyTitle,
 } from "@repo/ui/components/empty";
 import { cn } from "@repo/ui/lib/cn";
-import { TypographyMuted, TypographySmall } from "@repo/ui/components/typography";
+import {
+  TypographyMuted,
+  TypographySmall,
+} from "@repo/ui/components/typography";
 
 const linkColumns: ColumnDef<typeof sortableTableFeatures, AdminLink>[] = [
   {
@@ -455,19 +449,7 @@ function LinkForm({
           disabled={submitting}
         />
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={submitting}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={submitting} aria-busy={submitting}>
-            {submitting ? "Saving…" : "Save"}
-          </Button>
-        </DialogFooter>
+        <FormActions onCancel={onCancel} submitting={submitting} />
       </form>
     </Form>
   );
@@ -699,35 +681,15 @@ export function LinksPanel() {
                     </TableCell>
 
                     <TableCell className="text-right py-3">
-                      <ButtonGroup className="justify-end">
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="size-7"
-                          onClick={() => openEdit(link)}
-                          aria-label="Edit link"
-                        >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <ButtonGroupSeparator />
-                        <ConfirmDelete
-                          trigger={
-                            <Button
-                              variant="secondary"
-                              size="icon"
-                              className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-                              disabled={isRowPending}
-                              aria-label="Delete link"
-                            >
-                              <TrashIcon className="size-3.5" />
-                            </Button>
-                          }
-                          title={`Delete /${primaryPath}?`}
-                          description="This permanently removes the link and all its aliases. This cannot be undone."
-                          confirm={`Permanently deletes the short link /${primaryPath} and its aliases`}
-                          onConfirm={() => handleDelete(link.id)}
-                        />
-                      </ButtonGroup>
+                      <RowActions
+                        noun="link"
+                        disabled={isRowPending}
+                        onEdit={() => openEdit(link)}
+                        onDelete={() => handleDelete(link.id)}
+                        deleteTitle={`Delete /${primaryPath}?`}
+                        deleteDescription="This permanently removes the link and all its aliases. This cannot be undone."
+                        deleteConfirm={`Permanently deletes the short link /${primaryPath} and its aliases`}
+                      />
                     </TableCell>
                   </TableRow>
                 );
@@ -737,16 +699,17 @@ export function LinksPanel() {
         </div>
       )}
 
-      <Dialog open={dialogOpen} onOpenChange={(open) => setDialog((prev) => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editTarget ? "Edit Link" : "Add Link"}</DialogTitle>
-            <DialogDescription>
-              {editTarget
-                ? "Update the short link below."
-                : "Create a short link that redirects to any target."}
-            </DialogDescription>
-          </DialogHeader>
+      <FormDialog
+        open={dialogOpen}
+        onOpenChange={(open) => setDialog((prev) => ({ ...prev, open }))}
+        className="max-h-[85vh] overflow-y-auto"
+        title={editTarget ? "Edit Link" : "Add Link"}
+        description={
+          editTarget
+            ? "Update the short link below."
+            : "Create a short link that redirects to any target."
+        }
+      >
           <LinkForm
             key={editTarget?.id ?? "new"}
             defaultValues={editTarget ? toFormValues(editTarget) : emptyValues}
@@ -754,8 +717,7 @@ export function LinksPanel() {
             onCancel={() => setDialog((prev) => ({ ...prev, open: false }))}
             submitting={save.isPending}
           />
-        </DialogContent>
-      </Dialog>
+      </FormDialog>
     </div>
   );
 }

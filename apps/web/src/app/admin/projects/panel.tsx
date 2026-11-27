@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@repo/ui/components/form";
-import { Spinner } from "@repo/ui/components/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useActionMutation } from "@/lib/query/use-action-mutation";
 import { queryKeys } from "@/lib/query/keys";
@@ -36,20 +35,14 @@ import {
 import { Input } from "@repo/ui/components/input";
 import { Textarea } from "@repo/ui/components/textarea";
 import { Switch } from "@repo/ui/components/switch";
-import { ConfirmDelete } from "@/app/admin/_components/confirm-delete";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@repo/ui/components/dialog";
+  FormActions,
+  FormDialog,
+  RowActions,
+} from "@/app/admin/_components/crud";
 import {
   ArrowUpIcon,
   ArrowDownIcon,
-  PencilIcon,
-  TrashIcon,
   PlusIcon,
   FolderOpenIcon,
 } from "@repo/ui/icons";
@@ -234,20 +227,7 @@ function ProjectForm({
             disabled={submitting}
           />
         ))}
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={submitting}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={submitting} aria-busy={submitting}>
-            {submitting && <Spinner data-icon="inline-start" aria-hidden="true" />}
-            Save
-          </Button>
-        </DialogFooter>
+        <FormActions onCancel={onCancel} submitting={submitting} />
       </form>
     </Form>
   );
@@ -492,35 +472,15 @@ export function ProjectsPanel() {
                     </TableCell>
 
                     <TableCell className="text-right py-3">
-                      <ButtonGroup className="justify-end">
-                        <Button
-                          variant="secondary"
-                          size="icon"
-                          className="size-7"
-                          onClick={() => openEdit(project)}
-                          aria-label="Edit project"
-                        >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <ButtonGroupSeparator />
-                        <ConfirmDelete
-                          trigger={
-                            <Button
-                              variant="secondary"
-                              size="icon"
-                              className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-                              disabled={isRowPending}
-                              aria-label="Delete project"
-                            >
-                              <TrashIcon className="size-3.5" />
-                            </Button>
-                          }
-                          title={<>Delete &quot;{project.title}&quot;?</>}
-                          description="This permanently removes the project from the database. This cannot be undone."
-                          confirm={`Permanently deletes the project ${project.title}`}
-                          onConfirm={() => handleDelete(project.id)}
-                        />
-                      </ButtonGroup>
+                      <RowActions
+                        noun="project"
+                        disabled={isRowPending}
+                        onEdit={() => openEdit(project)}
+                        onDelete={() => handleDelete(project.id)}
+                        deleteTitle={<>Delete &quot;{project.title}&quot;?</>}
+                        deleteDescription="This permanently removes the project from the database. This cannot be undone."
+                        deleteConfirm={`Permanently deletes the project ${project.title}`}
+                      />
                     </TableCell>
                   </TableRow>
                 );
@@ -530,18 +490,16 @@ export function ProjectsPanel() {
         </div>
       )}
 
-      <Dialog open={dialogOpen} onOpenChange={(open) => setDialog((prev) => ({ ...prev, open }))}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>
-              {editTarget ? "Edit Project" : "Add Project"}
-            </DialogTitle>
-            <DialogDescription>
-              {editTarget
-                ? "Update the project details below."
-                : "Fill in the details to add a new project."}
-            </DialogDescription>
-          </DialogHeader>
+      <FormDialog
+        open={dialogOpen}
+        onOpenChange={(open) => setDialog((prev) => ({ ...prev, open }))}
+        title={editTarget ? "Edit Project" : "Add Project"}
+        description={
+          editTarget
+            ? "Update the project details below."
+            : "Fill in the details to add a new project."
+        }
+      >
           <ProjectForm
             initial={
               editTarget
@@ -559,8 +517,7 @@ export function ProjectsPanel() {
             submitting={save.isPending}
             suggestions={highlightSuggestions}
           />
-        </DialogContent>
-      </Dialog>
+      </FormDialog>
     </div>
   );
 }
