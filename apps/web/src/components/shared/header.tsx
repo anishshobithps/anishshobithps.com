@@ -18,6 +18,7 @@ import { SectionLabel, TypographySmall } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/core/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/components/command-menu/store";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui-sdk/react/popover";
 import { setTocOpen, useReading, useReadingSelector } from "@/lib/reading-store";
 import { playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
@@ -127,8 +128,6 @@ export function Header() {
     [pathname],
   );
   const isMac = useIsMac();
-  const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const following = useReadingSelector((state) => state.engaged && state.sections > 0);
   const wide = useWide();
@@ -163,187 +162,157 @@ export function Header() {
     return () => mq.removeEventListener("change", closeOnDesktop);
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (
-        menuRef.current?.contains(target) ||
-        triggerRef.current?.contains(target)
-      ) {
-        return;
-      }
-      setOpenPath(null);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenPath(null);
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-background/80 backdrop-blur [view-transition-name:site-header]">
-      <div className="relative mx-auto max-w-5xl border-x border-line bg-background">
-        <div className="flex h-14 items-center justify-between px-gutter">
-          <Link
-            href="/"
-            prefetch={false}
-            data-sound="tap"
-            aria-label={`${siteConfig.name}, home`}
-            className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
-          >
-            <Logo size={32} showWordmark={!engaged} alive aria-hidden="true" />
-          </Link>
-
-          {engaged && (
-            <div className="mx-2 flex min-w-0 flex-1 animate-in fade-in-0 slide-in-from-bottom-1 duration-300 motion-reduce:animate-none md:mx-6">
-              <ReadingBar />
-            </div>
-          )}
-
-          <div className="flex items-center gap-1">
-            {engaged ? null : (
-            <div
-              ref={navRef}
-              className="relative max-md:hidden animate-in fade-in-0 slide-in-from-top-1 duration-300 motion-reduce:animate-none"
+      <Popover
+        open={open}
+        onOpenChange={(next) => {
+          playCue(next ? "open" : "close");
+          setOpen(next);
+        }}
+      >
+        <div className="relative mx-auto max-w-5xl border-x border-line bg-background">
+          <div className="flex h-14 items-center justify-between px-gutter">
+            <Link
+              href="/"
+              prefetch={false}
+              data-sound="tap"
+              aria-label={`${siteConfig.name}, home`}
+              className="group/logo cursor-pointer rounded-md transition-[scale] duration-150 ease-out active:scale-96"
             >
-            <NavigationMenu aria-label="Main navigation">
-              <NavigationMenuList className="gap-0.5">
-                {siteConfig.nav.map((link) => {
-                  const active = isActive(pathname, link.href);
-                  return (
-                    <NavigationMenuItem key={link.href}>
-                      <NavigationMenuLink
-                        asChild
-                        data-current={active || undefined}
-                        className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-colors data-current:text-foreground"
-                      >
-                        <Link
-                          href={link.href}
-                          data-sound="tap"
-                          aria-current={
-                            pathname === link.href
-                              ? "page"
-                              : active
-                                ? "true"
-                                : undefined
-                          }
-                        >
-                          <TypographySmall>{link.label}</TypographySmall>
-                        </Link>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  );
-                })}
-              </NavigationMenuList>
-            </NavigationMenu>
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-0.5 left-(--rule-left,0) h-0.5 w-(--rule-width,0) translate-x-0.5 translate-y-0.75 rounded-full bg-(--brand) transition-[left,width] delay-75 duration-700 ease-out motion-reduce:transition-none"
-              />
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-0.5 left-(--rule-left,0) h-0.5 w-(--rule-width,0) rounded-full bg-foreground transition-[left,width] duration-200 ease-out motion-reduce:transition-none"
-              />
-            </div>
+              <Logo size={32} showWordmark={!engaged} alive aria-hidden="true" />
+            </Link>
+
+            {engaged && (
+              <div className="mx-2 flex min-w-0 flex-1 animate-in fade-in-0 slide-in-from-bottom-1 duration-300 motion-reduce:animate-none md:mx-6">
+                <ReadingBar />
+              </div>
             )}
 
-            <ButtonGroup className="max-md:hidden">
-              <CommandMenuButton isMac={isMac} />
-              <SoundSwitch look="button" className="h-8.5 w-9 pointer-coarse:size-11" />
-              <ThemeCycle className="h-8.5 w-9 rounded-r-full pointer-coarse:size-11" />
-            </ButtonGroup>
-
-            <ButtonGroup className="md:hidden">
-              <CommandMenuButton isMac={isMac} />
-              <Button
-                ref={triggerRef}
-                className="size-8.5 rounded-r-full pointer-coarse:size-11"
-                variant="outline"
-                size="icon"
-                aria-label={open ? "Close menu" : "Open menu"}
-                aria-expanded={open}
-                aria-controls="mobile-nav"
-                onClick={() => {
-                  playCue(open ? "close" : "open");
-                  setOpen(!open);
-                }}
+            <div className="flex items-center gap-1">
+              {engaged ? null : (
+              <div
+                ref={navRef}
+                className="relative max-md:hidden animate-in fade-in-0 slide-in-from-top-1 duration-300 motion-reduce:animate-none"
               >
-                {open ? (
-                  <XIcon aria-hidden="true" />
-                ) : (
-                  <ListIcon aria-hidden="true" />
-                )}
-              </Button>
-            </ButtonGroup>
-          </div>
-        </div>
-
-        <div
-          ref={menuRef}
-          id="mobile-nav"
-          className={cn(
-            "absolute -inset-x-px top-full mt-px overflow-hidden border border-t-0 border-line bg-background shadow-md transition duration-200 ease-out md:hidden",
-            open
-              ? "visible translate-y-0 opacity-100"
-              : "pointer-events-none invisible -translate-y-1 opacity-0",
-          )}
-        >
-          <nav
-            className="flex flex-col divide-y"
-            aria-label="Mobile navigation"
-          >
-            {siteConfig.nav.map((link, index) => {
-              const active = isActive(pathname, link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  data-sound="tap"
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    "relative px-6 py-3.5 text-foreground transition-[opacity,translate,background-color] delay-(--stagger) duration-300 ease-out hover:bg-accent motion-reduce:transition-none",
-                    open ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0",
-                  )}
-                  style={{ "--stagger": `${open ? 40 + index * 45 : 0}ms` } as CSSProperties}
-                  aria-current={
-                    pathname === link.href
-                      ? "page"
-                      : active
-                        ? "true"
-                        : undefined
-                  }
-                >
-                  {active && (
-                    <>
-                      <span aria-hidden="true" className="absolute inset-y-3 left-3 w-0.5 translate-x-0.5 translate-y-0.5 rounded-full bg-(--brand)" />
-                      <span aria-hidden="true" className="absolute inset-y-3 left-3 w-0.5 rounded-full bg-foreground" />
-                    </>
-                  )}
-                  <TypographySmall>{link.label}</TypographySmall>
-                </Link>
-              );
-            })}
-            <div
-              className={cn(
-                "flex items-center justify-between gap-4 px-6 py-3 transition-[opacity,translate] delay-(--stagger) duration-300 ease-out motion-reduce:transition-none",
-                open ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0",
+              <NavigationMenu aria-label="Main navigation">
+                <NavigationMenuList className="gap-0.5">
+                  {siteConfig.nav.map((link) => {
+                    const active = isActive(pathname, link.href);
+                    return (
+                      <NavigationMenuItem key={link.href}>
+                        <NavigationMenuLink
+                          asChild
+                          data-current={active || undefined}
+                          className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-md px-3 py-2 transition-colors data-current:text-foreground"
+                        >
+                          <Link
+                            href={link.href}
+                            data-sound="tap"
+                            aria-current={
+                              pathname === link.href
+                                ? "page"
+                                : active
+                                  ? "true"
+                                  : undefined
+                            }
+                          >
+                            <TypographySmall>{link.label}</TypographySmall>
+                          </Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    );
+                  })}
+                </NavigationMenuList>
+              </NavigationMenu>
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -bottom-0.5 left-(--rule-left,0) h-0.5 w-(--rule-width,0) translate-x-0.5 translate-y-0.75 rounded-full bg-(--brand) transition-[left,width] delay-75 duration-700 ease-out motion-reduce:transition-none"
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -bottom-0.5 left-(--rule-left,0) h-0.5 w-(--rule-width,0) rounded-full bg-foreground transition-[left,width] duration-200 ease-out motion-reduce:transition-none"
+                />
+              </div>
               )}
-              style={{ "--stagger": `${open ? 40 + siteConfig.nav.length * 45 : 0}ms` } as CSSProperties}
-            >
-              <TypographySmall>Appearance</TypographySmall>
-              <AppearanceControl />
+
+              <ButtonGroup className="max-md:hidden">
+                <CommandMenuButton isMac={isMac} />
+                <SoundSwitch look="button" className="h-8.5 w-9 pointer-coarse:size-11" />
+                <ThemeCycle className="h-8.5 w-9 rounded-r-full pointer-coarse:size-11" />
+              </ButtonGroup>
+
+              <ButtonGroup className="md:hidden">
+                <CommandMenuButton isMac={isMac} />
+                <PopoverTrigger
+                  render={
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="size-8.5 rounded-r-full pointer-coarse:size-11"
+                    />
+                  }
+                  aria-label={open ? "Close menu" : "Open menu"}
+                >
+                  {open ? (
+                    <XIcon aria-hidden="true" />
+                  ) : (
+                    <ListIcon aria-hidden="true" />
+                  )}
+                </PopoverTrigger>
+              </ButtonGroup>
             </div>
-          </nav>
+          </div>
+
+          <PopoverContent
+            inline
+            keepMounted
+            aria-label="Menu"
+            className="absolute -inset-x-px top-full mt-px overflow-hidden border border-t-0 border-line bg-background shadow-md transition duration-200 ease-out data-ending-style:-translate-y-1 data-ending-style:opacity-0 data-starting-style:-translate-y-1 data-starting-style:opacity-0 motion-reduce:transition-none md:hidden"
+          >
+            <nav
+              className="flex flex-col divide-y"
+              aria-label="Mobile navigation"
+            >
+              {siteConfig.nav.map((link, index) => {
+                const active = isActive(pathname, link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    data-sound="tap"
+                    onClick={() => setOpen(false)}
+                    className="relative px-6 py-3.5 text-foreground transition-[opacity,translate,background-color] delay-(--stagger) duration-300 ease-out hover:bg-accent in-data-starting-style:-translate-x-2 in-data-starting-style:opacity-0 motion-reduce:transition-none"
+                    style={{ "--stagger": `${40 + index * 45}ms` } as CSSProperties}
+                    aria-current={
+                      pathname === link.href
+                        ? "page"
+                        : active
+                          ? "true"
+                          : undefined
+                    }
+                  >
+                    {active && (
+                      <>
+                        <span aria-hidden="true" className="absolute inset-y-3 left-3 w-0.5 translate-x-0.5 translate-y-0.5 rounded-full bg-(--brand)" />
+                        <span aria-hidden="true" className="absolute inset-y-3 left-3 w-0.5 rounded-full bg-foreground" />
+                      </>
+                    )}
+                    <TypographySmall>{link.label}</TypographySmall>
+                  </Link>
+                );
+              })}
+              <div
+                className="flex items-center justify-between gap-4 px-6 py-3 transition-[opacity,translate] delay-(--stagger) duration-300 ease-out in-data-starting-style:translate-y-1 in-data-starting-style:opacity-0 motion-reduce:transition-none"
+                style={{ "--stagger": `${40 + siteConfig.nav.length * 45}ms` } as CSSProperties}
+              >
+                <TypographySmall>Appearance</TypographySmall>
+                <AppearanceControl />
+              </div>
+            </nav>
+          </PopoverContent>
         </div>
-      </div>
+      </Popover>
     </header>
   );
 }
