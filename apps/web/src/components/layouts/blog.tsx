@@ -3,12 +3,19 @@
 import { Section } from "@/components/layouts/page";
 import { Button } from "@repo/ui/components/button";
 import { SectionLabel, Text } from "@repo/ui/components/typography";
-import { cn } from "@repo/ui/lib/cn";
 import type { TOCItemType } from "fumadocs-core/toc";
 import { ScrollProvider, useActiveAnchor } from "fumadocs-core/toc";
 import { TOCProvider, TOCScrollArea } from "fumadocs-ui/components/toc";
 import { LinkIcon } from "@repo/ui/icons";
-import { clearReading, setReading, setTocOpen, useReadingSelector } from "@/lib/reading-store";
+import {
+  clearReading,
+  setReading,
+  setTocOpen,
+  tocPopover,
+  useReadingSelector,
+} from "@/lib/reading-store";
+import { playCue } from "@repo/sounds/sound-player";
+import { Popover, PopoverContent } from "@ui-sdk/react/popover";
 import {
   currentSection,
   HalftoneMeter,
@@ -67,7 +74,6 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
   const state = useTOCState();
   const active = useActiveAnchor();
   const open = useReadingSelector((state) => state.tocOpen);
-  const rootRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const disabledAutoScrollRef = useRef<HTMLDivElement>(null);
@@ -94,24 +100,6 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
     }
   }, [active, open]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (e: PointerEvent) => {
-      const target = e.target as Element;
-      if (rootRef.current?.contains(target) || target.closest("[data-reading-trigger]")) return;
-      setTocOpen(false);
-    };
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setTocOpen(false);
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
   useEffect(() => () => setTocOpen(false), []);
 
   if (state.items.length === 0) return null;
@@ -132,42 +120,48 @@ function MobileTOC({ rail, railCount = 0 }: { rail?: ReactNode; railCount?: numb
           aria-hidden
         />
       )}
-      <div ref={rootRef} className="sticky top-14 z-40 h-0 xl:hidden">
-        <div
-          id="post-contents"
-          className={cn(
-            "absolute -inset-x-px top-px overflow-hidden border border-t-0 border-line bg-background shadow-lg transition duration-200 ease-out motion-reduce:transition-none",
-            open
-              ? "visible translate-y-0 opacity-100"
-              : "pointer-events-none invisible -translate-y-1 opacity-0",
-          )}
-        >
-          <div className="px-gutter py-3" ref={scrollContainerRef}>
-            {rail ? (
-              <Tabs defaultValue="contents">
-                <TabsList
-                  aria-label="Post navigation"
-                  className="mb-2 flex gap-1 rounded-md bg-muted p-0.5"
-                >
-                  <DrawerTab value="contents">Contents</DrawerTab>
-                  <DrawerTab value="links">Links {railCount}</DrawerTab>
-                </TabsList>
-                <TabsPanel value="contents" className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
-                  {contents}
-                </TabsPanel>
-                <TabsPanel
-                  value="links"
-                  className="-mx-2.5 max-h-[60svh] overflow-y-auto overscroll-contain py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-                >
-                  {rail}
-                </TabsPanel>
-              </Tabs>
-            ) : (
-              contents
-            )}
-          </div>
+      <Popover
+        controller={tocPopover}
+        open={open}
+        onOpenChange={(next) => {
+          playCue(next ? "open" : "close");
+          setTocOpen(next);
+        }}
+      >
+        <div className="sticky top-14 z-40 h-0 xl:hidden">
+          <PopoverContent
+            inline
+            keepMounted
+            aria-label="Contents"
+            className="absolute -inset-x-px top-px overflow-hidden border border-t-0 border-line bg-background shadow-lg transition duration-200 ease-out data-ending-style:-translate-y-1 data-ending-style:opacity-0 data-starting-style:-translate-y-1 data-starting-style:opacity-0 motion-reduce:transition-none"
+          >
+            <div className="px-gutter py-3" ref={scrollContainerRef}>
+              {rail ? (
+                <Tabs defaultValue="contents">
+                  <TabsList
+                    aria-label="Post navigation"
+                    className="mb-2 flex gap-1 rounded-md bg-muted p-0.5"
+                  >
+                    <DrawerTab value="contents">Contents</DrawerTab>
+                    <DrawerTab value="links">Links {railCount}</DrawerTab>
+                  </TabsList>
+                  <TabsPanel value="contents" className="rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+                    {contents}
+                  </TabsPanel>
+                  <TabsPanel
+                    value="links"
+                    className="-mx-2.5 max-h-[60svh] overflow-y-auto overscroll-contain py-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    {rail}
+                  </TabsPanel>
+                </Tabs>
+              ) : (
+                contents
+              )}
+            </div>
+          </PopoverContent>
         </div>
-      </div>
+      </Popover>
     </>
   );
 }

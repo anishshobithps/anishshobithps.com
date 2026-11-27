@@ -19,7 +19,7 @@ import { siteConfig } from "@repo/core/site-config";
 import { cn } from "@repo/ui/lib/cn";
 import { setCommandMenuOpen } from "@/components/command-menu/store";
 import { Popover, PopoverContent, PopoverTrigger } from "@ui-sdk/react/popover";
-import { setTocOpen, useReading, useReadingSelector } from "@/lib/reading-store";
+import { tocPopover, useReading, useReadingSelector } from "@/lib/reading-store";
 import { playCue } from "@repo/sounds/sound-player";
 import { useIsMac } from "@/hooks/use-is-mac";
 import {
@@ -64,18 +64,16 @@ function useWide() {
 function ReadingBar() {
   const reading = useReading();
   return (
-    <Button
-      type="button"
-      variant="ghost"
-      data-reading-trigger=""
+    <PopoverTrigger
+      controller={tocPopover}
       aria-label={`Table of contents, section ${reading.section} of ${reading.sections}: ${reading.heading}`}
-      aria-expanded={reading.tocOpen}
-      onClick={() => {
-        playCue(reading.tocOpen ? "close" : "open");
-        setTocOpen(!reading.tocOpen);
-      }}
-      size="sm"
-      className="h-9 min-w-0 flex-1 justify-start"
+      render={
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-9 min-w-0 flex-1 justify-start"
+        />
+      }
     >
       <RegisterDial progress={reading.progress} size={16} className="shrink-0" />
       <SectionLabel pixel accent asChild className="shrink-0">
@@ -93,7 +91,7 @@ function ReadingBar() {
           reading.tocOpen && "rotate-180",
         )}
       />
-    </Button>
+    </PopoverTrigger>
   );
 }
 

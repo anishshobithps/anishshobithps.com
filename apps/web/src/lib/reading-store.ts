@@ -1,3 +1,4 @@
+import { createPopoverController } from "@ui-sdk/react/popover";
 import { useSyncExternalStore } from "react";
 
 export interface ReadingState {
@@ -48,6 +49,8 @@ export function clearReading() {
   state = idle;
   emit();
 }
+
+export const tocPopover = createPopoverController();
 
 export function setTocOpen(open: boolean) {
   setReading({ tocOpen: open });
