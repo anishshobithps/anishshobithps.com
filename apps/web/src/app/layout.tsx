@@ -4,7 +4,7 @@ import { CommandMenuHost } from "@/components/command-menu/host";
 import { ConsentBanner } from "@/components/consent/consent-banner";
 import { ConsentDialog } from "@/components/consent/consent-dialog";
 import { ConsentRoot } from "@c15t/nextjs";
-import { PhosphorProvider } from "@/components/shared/phosphor-provider";
+import { PhosphorProvider } from "@repo/ui/icons/provider";
 import { SoundEffects } from "@/components/preferences/sound-effects";
 import { ThemeHotkey } from "@/components/preferences/theme-hotkey";
 import { ToasterHost } from "@/components/shared/toaster-host";

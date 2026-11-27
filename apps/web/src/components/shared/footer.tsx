@@ -16,7 +16,7 @@ import {
   TypographySmall,
 } from "@repo/ui/components/typography";
 import { siteConfig } from "@repo/core/site-config";
-import { getPlatformIcon } from "@/components/shared/platform-icons";
+import { getPlatformIcon } from "@repo/ui/brand/platform-icons";
 import { currentYear } from "@repo/core/date";
 import { ConsentSettingsLink } from "@/components/consent/consent-settings-link";
 import Link from "next/link";
