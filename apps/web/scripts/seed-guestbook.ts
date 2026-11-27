@@ -1,6 +1,6 @@
+import { ENV } from "varlock/env";
+import { db } from "@repo/db";
 import { createClerkClient } from "@clerk/backend";
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
 import { inArray } from "drizzle-orm";
 import { faker } from "@faker-js/faker";
 import { guestbookEntries } from "@repo/db/schema";
@@ -12,15 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SEED_IDS_FILE = resolve(__dirname, ".seed-guestbook-ids.json");
 
 function getClerk() {
-    const key = process.env.CLERK_SECRET_KEY;
-    if (!key) throw new Error("CLERK_SECRET_KEY not set");
-    return createClerkClient({ secretKey: key });
-}
-
-function getDb() {
-    const url = process.env.DATABASE_URL;
-    if (!url) throw new Error("DATABASE_URL not set");
-    return drizzle({ client: neon(url) });
+    return createClerkClient({ secretKey: ENV.CLERK_SECRET_KEY });
 }
 
 function fakeMessage() {
@@ -37,7 +29,6 @@ function fakeMessage() {
 
 async function seed(count: number) {
     const clerk = getClerk();
-    const db = getDb();
 
     console.log(`Creating ${count} Clerk users...\n`);
 
@@ -104,7 +95,6 @@ async function cleanup() {
     }
 
     const clerk = getClerk();
-    const db = getDb();
 
     console.log(`Deleting ${ids.length} entries from DB...`);
     await db.delete(guestbookEntries).where(inArray(guestbookEntries.clerkUserId, ids));

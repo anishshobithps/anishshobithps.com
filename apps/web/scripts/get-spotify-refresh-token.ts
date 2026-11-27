@@ -1,4 +1,5 @@
 import readline from "node:readline/promises";
+import { ENV } from "varlock/env";
 import { stdin as input, stdout as output } from "node:process";
 
 const REDIRECT_URI = "http://127.0.0.1:3000";
@@ -18,10 +19,10 @@ function buildAuthorizeUrl(clientId: string): string {
 }
 
 async function getToken() {
-    const clientId = process.env.SPOTIFY_CLIENT_ID;
+    const clientId = ENV.SPOTIFY_CLIENT_ID;
     if (!clientId) throw new Error("SPOTIFY_CLIENT_ID not set");
 
-    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+    const clientSecret = ENV.SPOTIFY_CLIENT_SECRET;
     if (!clientSecret) throw new Error("SPOTIFY_CLIENT_SECRET not set");
 
     console.log("\n1. Open this URL and approve access:\n");
