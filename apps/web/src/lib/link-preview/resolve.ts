@@ -2,13 +2,15 @@ import { unstable_cache } from "next/cache";
 import { classifyLink, type LinkTarget } from "@repo/core/link-target";
 import { siteConfig } from "@repo/core/site-config";
 import { displayHost, isPublicHttpsUrl } from "@/lib/link-preview/http";
-import { resolveDiscord } from "@/lib/link-preview/providers/discord";
-import { resolveGeneric } from "@/lib/link-preview/providers/generic";
-import { resolveGithub } from "@/lib/link-preview/providers/github";
-import { resolveInternal } from "@/lib/link-preview/providers/internal";
-import { resolveNpm } from "@/lib/link-preview/providers/npm";
-import { resolveWikipedia } from "@/lib/link-preview/providers/wikipedia";
-import { resolveYoutube } from "@/lib/link-preview/providers/youtube";
+import {
+  resolveDiscord,
+  resolveGeneric,
+  resolveGithub,
+  resolveInternal,
+  resolveNpm,
+  resolveWikipedia,
+  resolveYoutube,
+} from "@/lib/link-preview/providers";
 import type { LinkPreview } from "@/lib/link-preview/types";
 
 const SITE_ORIGINS = [siteConfig.baseUrl, `https://${siteConfig.domain}`] as const;
