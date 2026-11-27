@@ -1,5 +1,4 @@
-export async function hashIp(ip: string): Promise<string> {
-    const salt = process.env.IP_HASH_SALT;
+export async function hashIp(ip: string, salt: string | undefined): Promise<string> {
     if (!salt) {
         throw new Error(
             "IP_HASH_SALT is not set. It is required to hash IP addresses; without a secret salt, stored hashes are trivially reversible.",

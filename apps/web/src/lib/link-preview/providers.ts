@@ -15,7 +15,7 @@ import {
   isPublicHttpsUrl,
   num,
   str,
-} from "@/lib/link-preview/http";
+} from "@repo/core/http";
 import type { LinkPreview } from "@/lib/link-preview/types";
 import { source } from "@/lib/source";
 

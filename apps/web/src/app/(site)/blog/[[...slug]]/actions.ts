@@ -3,7 +3,7 @@
 import { ENV } from "varlock/env";
 import { getClerkUserMap, resolveUser, type PublicUser } from "@/lib/clerk-users";
 import { db } from "@repo/db";
-import { getClientIp, hashIp } from "@/lib/ip";
+import { getClientIp, hashIp } from "@repo/core/ip";
 import { safeQuery } from "@/lib/safe-query";
 import { blogCommentLikes, blogComments, blogPosts, blogReactions } from "@repo/db/schema";
 import { source } from "@/lib/source";
@@ -29,7 +29,7 @@ function isValidMood(mood: unknown): mood is MoodId {
 
 async function getIpHash(): Promise<string> {
     const hdrs = await headers();
-    return hashIp(getClientIp(hdrs));
+    return hashIp(getClientIp(hdrs), ENV.IP_HASH_SALT);
 }
 
 const postIds = new Map<string, number>();
