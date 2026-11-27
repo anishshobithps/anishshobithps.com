@@ -4,7 +4,7 @@ import { shortcuts } from "@ui-sdk/react/shortcuts";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { CommandMenuHost } from "@/components/command-menu/host";
 import {
-  getCommandMenuOpen,
+  commandMenu,
   setCommandMenuOpen,
 } from "@/components/command-menu/store";
 import { ThemeHotkey } from "@/components/preferences/theme-hotkey";
@@ -27,9 +27,9 @@ describe("site shortcuts", () => {
     render(<CommandMenuHost />);
 
     await user.keyboard(`{${mod}>}k{/${mod}}`);
-    expect(getCommandMenuOpen()).toBe(true);
+    expect(commandMenu.get()).toBe(true);
     await user.keyboard(`{${mod}>}k{/${mod}}`);
-    expect(getCommandMenuOpen()).toBe(false);
+    expect(commandMenu.get()).toBe(false);
   });
 
   test("mod+shift+d switches the theme", async () => {

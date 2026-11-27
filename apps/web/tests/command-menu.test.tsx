@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { CommandMenu } from "@/components/command-menu/menu";
 import {
-  getCommandMenuOpen,
+  commandMenu,
   setCommandMenuOpen,
 } from "@/components/command-menu/store";
 
@@ -53,7 +53,7 @@ describe("CommandMenu", () => {
     await user.keyboard("{Enter}");
 
     expect(push).toHaveBeenCalledWith("/projects");
-    expect(getCommandMenuOpen()).toBe(false);
+    expect(commandMenu.get()).toBe(false);
   });
 
   test("Escape clears the search, then closes the menu", async () => {
@@ -64,9 +64,9 @@ describe("CommandMenu", () => {
     await user.type(search, "blog");
     await user.keyboard("{Escape}");
     expect((search as HTMLInputElement).value).toBe("");
-    expect(getCommandMenuOpen()).toBe(true);
+    expect(commandMenu.get()).toBe(true);
 
     await user.keyboard("{Escape}");
-    expect(getCommandMenuOpen()).toBe(false);
+    expect(commandMenu.get()).toBe(false);
   });
 });

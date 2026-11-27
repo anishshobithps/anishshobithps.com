@@ -1,13 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { useShortcut } from "@ui-sdk/react/shortcuts";
 import {
-  getCommandMenuOpen,
-  getCommandMenuServerSnapshot,
-  subscribeCommandMenu,
   toggleCommandMenu,
+  useCommandMenuOpen,
 } from "@/components/command-menu/store";
 
 const CommandMenu = dynamic(
@@ -16,11 +14,7 @@ const CommandMenu = dynamic(
 );
 
 export function CommandMenuHost() {
-  const open = useSyncExternalStore(
-    subscribeCommandMenu,
-    getCommandMenuOpen,
-    getCommandMenuServerSnapshot,
-  );
+  const open = useCommandMenuOpen();
   const [loaded, setLoaded] = useState(false);
   if (open && !loaded) setLoaded(true);
 

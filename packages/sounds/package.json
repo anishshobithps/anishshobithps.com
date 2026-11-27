@@ -23,5 +23,8 @@
     "eslint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*"
   }
 }

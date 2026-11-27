@@ -1,69 +1,21 @@
 import { useSyncExternalStore } from "react";
+import { createStoredValue } from "@repo/core/store";
 
-const STORAGE_KEY = "link-previews";
+const linkPreviews = createStoredValue({
+  key: "link-previews",
+  fallback: true,
+  parse: (raw) => raw !== "off",
+  serialize: (enabled) => (enabled ? null : "off"),
+});
 
-let current = true;
-let loaded = false;
-const listeners = new Set<() => void>();
-
-function readStorage(): boolean {
-  try {
-    return window.localStorage.getItem(STORAGE_KEY) !== "off";
-  } catch {
-    return true;
-  }
-}
-
-function emit() {
-  for (const listener of listeners) listener();
-}
-
-function onStorage(event: StorageEvent) {
-  if (event.key !== null && event.key !== STORAGE_KEY) return;
-  loaded = true;
-  const next = event.newValue !== "off";
-  if (next === current) return;
-  current = next;
-  emit();
-}
-
-export function getLinkPreviewsEnabled(): boolean {
-  if (!loaded && typeof window !== "undefined") {
-    loaded = true;
-    current = readStorage();
-  }
-  return current;
-}
-
-function getServerSnapshot(): boolean {
-  return true;
-}
-
-export function subscribeLinkPreviews(listener: () => void): () => void {
-  if (listeners.size === 0) window.addEventListener("storage", onStorage);
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-    if (listeners.size === 0) window.removeEventListener("storage", onStorage);
-  };
-}
-
-export function setLinkPreviewsEnabled(next: boolean) {
-  loaded = true;
-  current = next;
-  try {
-    if (next) window.localStorage.removeItem(STORAGE_KEY);
-    else window.localStorage.setItem(STORAGE_KEY, "off");
-  } catch {
-    void 0;
-  }
-  emit();
-}
+export const getLinkPreviewsEnabled = linkPreviews.get;
+export const subscribeLinkPreviews = linkPreviews.subscribe;
+export const setLinkPreviewsEnabled = linkPreviews.set;
 
 export function useLinkPreviewsEnabled(): boolean {
   return useSyncExternalStore(
-    subscribeLinkPreviews,
-    getLinkPreviewsEnabled,
-    getServerSnapshot,
+    linkPreviews.subscribe,
+    linkPreviews.get,
+    linkPreviews.getServer,
   );
 }

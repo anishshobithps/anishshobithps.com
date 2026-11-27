@@ -14,10 +14,7 @@ import {
   getLinkPreviewsEnabled,
   subscribeLinkPreviews,
 } from "@/lib/link-previews-preference";
-import {
-  getCommandMenuOpen,
-  subscribeCommandMenu,
-} from "@/components/command-menu/store";
+import { commandMenu } from "@/components/command-menu/store";
 import { registerContext, track } from "@/lib/analytics/events";
 
 function watch<T>(
@@ -75,7 +72,7 @@ export function AnalyticsContext() {
         registerContext({ link_previews_enabled: enabled });
         track("link_previews_toggled", { enabled });
       }),
-      watch(subscribeCommandMenu, getCommandMenuOpen, (open) => {
+      watch(commandMenu.subscribe, commandMenu.get, (open) => {
         if (open) track("command_menu_opened");
       }),
     ];

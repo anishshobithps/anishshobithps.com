@@ -1,5 +1,6 @@
 import { createPopoverController } from "@ui-sdk/react/popover";
 import { useSyncExternalStore } from "react";
+import { createStore } from "@repo/core/store";
 
 export interface ReadingState {
   engaged: boolean;
@@ -21,33 +22,16 @@ const idle: ReadingState = {
   tocOpen: false,
 };
 
-let state: ReadingState = idle;
-const listeners = new Set<() => void>();
-
-function emit() {
-  for (const listener of listeners) listener();
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
-}
+const reading = createStore<ReadingState>(idle, (a, b) =>
+  (Object.keys(a) as Array<keyof ReadingState>).every((key) => a[key] === b[key]),
+);
 
 export function setReading(next: Partial<ReadingState>) {
-  const merged = { ...state, ...next };
-  const changed = (Object.keys(merged) as Array<keyof ReadingState>).some(
-    (key) => merged[key] !== state[key],
-  );
-  if (!changed) return;
-  state = merged;
-  emit();
+  reading.set({ ...reading.get(), ...next });
 }
 
 export function clearReading() {
-  state = idle;
-  emit();
+  reading.set(idle);
 }
 
 export const tocPopover = createPopoverController();
@@ -57,17 +41,13 @@ export function setTocOpen(open: boolean) {
 }
 
 export function useReading() {
-  return useSyncExternalStore(
-    subscribe,
-    () => state,
-    () => idle,
-  );
+  return useSyncExternalStore(reading.subscribe, reading.get, reading.getServer);
 }
 
-export function useReadingSelector<T>(select: (reading: ReadingState) => T) {
+export function useReadingSelector<T>(select: (state: ReadingState) => T) {
   return useSyncExternalStore(
-    subscribe,
-    () => select(state),
+    reading.subscribe,
+    () => select(reading.get()),
     () => select(idle),
   );
 }

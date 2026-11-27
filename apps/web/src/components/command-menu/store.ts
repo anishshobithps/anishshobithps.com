@@ -1,30 +1,23 @@
+import { useSyncExternalStore } from "react";
+import { createStore } from "@repo/core/store";
 import { playCue } from "@repo/sounds/sound-player";
 
-let open = false;
-const listeners = new Set<() => void>();
-
-export function subscribeCommandMenu(listener: () => void) {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
-}
-
-export function getCommandMenuOpen() {
-  return open;
-}
-
-export function getCommandMenuServerSnapshot() {
-  return false;
-}
+export const commandMenu = createStore(false);
 
 export function setCommandMenuOpen(next: boolean) {
-  if (open === next) return;
-  open = next;
+  if (commandMenu.get() === next) return;
   playCue(next ? "open" : "close");
-  for (const listener of listeners) listener();
+  commandMenu.set(next);
 }
 
 export function toggleCommandMenu() {
-  setCommandMenuOpen(!open);
+  setCommandMenuOpen(!commandMenu.get());
+}
+
+export function useCommandMenuOpen() {
+  return useSyncExternalStore(
+    commandMenu.subscribe,
+    commandMenu.get,
+    commandMenu.getServer,
+  );
 }

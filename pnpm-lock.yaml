@@ -378,6 +378,9 @@ importers:
 
   packages/sounds:
     dependencies:
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../core
       react:
         specifier: 'catalog:'
         version: 19.3.1

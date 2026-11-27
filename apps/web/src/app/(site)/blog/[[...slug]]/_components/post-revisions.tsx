@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import {
   BookOpenIcon,
   GitCommitIcon,
@@ -17,11 +17,7 @@ import {
 import { Text } from "@repo/ui/components/typography";
 import { cn } from "@repo/ui/lib/cn";
 import { formatShortDate } from "@repo/core/date";
-import {
-  markRevisionSeen,
-  readRevisionSeen,
-  useSeenRevision,
-} from "@/lib/revision-seen";
+import { createStoredValue, type Store } from "@repo/core/store";
 import type { PostUpdateKind } from "@/lib/post-updates";
 import {
   Timeline,
@@ -88,19 +84,34 @@ function RevisionMarker({ active = false }: { active?: boolean }) {
 const eventClassName =
   "group/event relative grid grid-cols-[1rem_minmax(0,1fr)] gap-x-3 rounded-sm pb-5 outline-none last:pb-0 focus-visible:ring-3 focus-visible:ring-ring/50";
 
+const seenStores = new Map<string, Store<string | null>>();
+
+function seenRevision(slug: string) {
+  let store = seenStores.get(slug);
+  if (!store) {
+    store = createStoredValue<string | null>({
+      key: `revision-seen:${slug}`,
+      fallback: null,
+      parse: (raw) => raw,
+      serialize: (day) => day,
+    });
+    seenStores.set(slug, store);
+  }
+  return store;
+}
+
 export function PostRevisions({
   slug,
   entries,
   publishedDay,
 }: PostRevisionsProps) {
-  const seen = useSeenRevision(slug);
+  const store = seenRevision(slug);
+  const seen = useSyncExternalStore(store.subscribe, store.get, store.getServer);
   const latest = entries[0]?.day;
 
   useEffect(() => {
-    if (latest && readRevisionSeen(slug) === null) {
-      markRevisionSeen(slug, latest);
-    }
-  }, [latest, slug]);
+    if (latest && store.get() === null) store.set(latest);
+  }, [latest, store]);
 
   if (!latest) return null;
 
@@ -121,7 +132,7 @@ export function PostRevisions({
   return (
     <Popover
       onOpenChange={(open) => {
-        if (!open) markRevisionSeen(slug, latest);
+        if (!open) store.set(latest);
       }}
     >
       <PopoverTrigger asChild>

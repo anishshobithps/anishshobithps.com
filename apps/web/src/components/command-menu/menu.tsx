@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -49,10 +49,8 @@ import {
   XLogoIcon,
 } from "@repo/ui/icons";
 import {
-  getCommandMenuOpen,
-  getCommandMenuServerSnapshot,
   setCommandMenuOpen,
-  subscribeCommandMenu,
+  useCommandMenuOpen,
 } from "@/components/command-menu/store";
 import { siteConfig } from "@repo/core/site-config";
 import { themeCue } from "@repo/sounds/sound-cues";
@@ -135,11 +133,7 @@ function MenuGroup({
 }
 
 export function CommandMenu() {
-  const open = useSyncExternalStore(
-    subscribeCommandMenu,
-    getCommandMenuOpen,
-    getCommandMenuServerSnapshot,
-  );
+  const open = useCommandMenuOpen();
   const router = useRouter();
   const { setTheme } = useTheme();
   const { enabled: soundEnabled } = useSoundPreferences();
