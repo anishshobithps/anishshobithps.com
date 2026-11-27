@@ -1,5 +1,6 @@
 "use client";
 
+import { DeleteButton } from "@repo/ui/blocks/delete-button";
 import { LikeToggle } from "@repo/ui/blocks/like-toggle";
 import {
   Collapsible,
@@ -12,7 +13,6 @@ import { Composer } from "@/components/engagement/composer";
 import {
   ArrowBendDownRightIcon,
   PushPinSimpleIcon,
-  TrashIcon,
 } from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
@@ -198,21 +198,7 @@ export function CommentCard({
                   {canDelete && !isOptimistic && (
                     <>
                       <ButtonGroupSeparator />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onDelete(comment.id)}
-                        aria-label="Delete comment"
-                        className="text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
-                      >
-                        <TrashIcon
-                          data-icon="inline-start"
-                          size={14}
-                          className="text-destructive"
-                          aria-hidden="true"
-                        />
-                        <span className="hidden sm:inline">Delete</span>
-                      </Button>
+                      <DeleteButton label="Delete comment" onDelete={() => onDelete(comment.id)} />
                     </>
                   )}
                 </ButtonGroup>

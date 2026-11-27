@@ -315,11 +315,10 @@ function ModerationPanel({
                       compact
                       trigger={
                         <Button
-                          variant="secondary"
+                          variant="destructive-soft"
                           size="icon-sm"
                           disabled={pendingId !== null}
                           aria-label={`Delete ${noun} by ${row.user.name}`}
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
                           <TrashIcon className="size-4" />
                         </Button>

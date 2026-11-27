@@ -207,9 +207,9 @@ function SlugPairFields({
         {onRemove && (
           <Button
             type="button"
-            variant="secondary"
+            variant="destructive-soft"
             size="icon"
-            className="size-9 shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="shrink-0"
             onClick={onRemove}
             disabled={disabled}
             aria-label="Remove alias"

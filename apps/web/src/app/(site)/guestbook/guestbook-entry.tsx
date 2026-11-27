@@ -1,12 +1,12 @@
 "use client";
 
+import { DeleteButton } from "@repo/ui/blocks/delete-button";
 import { LikeToggle } from "@repo/ui/blocks/like-toggle";
 import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
 import { Avatar } from "@repo/ui/blocks/avatar";
 import {
   PushPinSimpleIcon,
   RepeatIcon,
-  TrashIcon,
 } from "@repo/ui/icons";
 import { Badge } from "@repo/ui/components/badge";
 import { Separator } from "@repo/ui/components/separator";
@@ -184,21 +184,7 @@ export const GuestbookEntry = memo(function GuestbookEntry({
               {canDelete && !isOptimistic && (
                 <>
                   <ButtonGroupSeparator />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onDelete(entry.id)}
-                    aria-label="Delete message"
-                    className="text-destructive border-destructive/20 hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40"
-                  >
-                    <TrashIcon
-                      data-icon="inline-start"
-                      size={14}
-                      className="text-destructive"
-                      aria-hidden="true"
-                    />
-                    <span className="hidden sm:inline">Delete</span>
-                  </Button>
+                  <DeleteButton label="Delete message" onDelete={() => onDelete(entry.id)} />
                 </>
               )}
             </ButtonGroup>

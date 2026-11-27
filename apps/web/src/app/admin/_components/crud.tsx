@@ -50,9 +50,9 @@ export function RowActions({
       <ConfirmDelete
         trigger={
           <Button
-            variant="secondary"
+            variant="destructive-soft"
             size="icon"
-            className="size-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="size-7"
             disabled={disabled}
             aria-label={`Delete ${noun}`}
           >
