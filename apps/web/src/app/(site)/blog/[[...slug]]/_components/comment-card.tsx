@@ -1,7 +1,7 @@
 "use client";
 
 import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
-import { Avatar } from "@/components/engagement/avatar";
+import { Avatar } from "@repo/ui/blocks/avatar";
 import { Composer } from "@/components/engagement/composer";
 import {
   ArrowBendDownRightIcon,

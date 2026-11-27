@@ -1,7 +1,7 @@
 "use client";
 
 import type { GuestbookEntryWithMeta } from "@/app/(site)/guestbook/actions";
-import { Avatar } from "@/components/engagement/avatar";
+import { Avatar } from "@repo/ui/blocks/avatar";
 import {
   HeartIcon,
   PushPinSimpleIcon,

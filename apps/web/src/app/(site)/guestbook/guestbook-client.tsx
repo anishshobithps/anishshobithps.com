@@ -9,10 +9,10 @@ import {
   type GuestbookEntryWithMeta,
 } from "@/app/(site)/guestbook/actions";
 import { GuestbookEntry } from "@/app/(site)/guestbook/guestbook-entry";
-import { Avatar } from "@/components/engagement/avatar";
+import { Avatar } from "@repo/ui/blocks/avatar";
 import { Composer } from "@/components/engagement/composer";
-import { EngagementEmptyState } from "@/components/engagement/empty-state";
-import { EngagementNudge } from "@/components/engagement/nudge";
+import { EngagementEmptyState } from "@repo/ui/blocks/empty-state";
+import { EngagementNudge } from "@repo/ui/blocks/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
 import { Panel, PanelRow, panelListItem } from "@/components/layouts/page";
 import { BookOpenIcon, SignOutIcon } from "@repo/ui/icons";

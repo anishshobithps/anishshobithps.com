@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@/components/engagement/avatar";
+import { Avatar } from "@repo/ui/blocks/avatar";
 import {
   Composer,
   type ComposerSubmitHandler,

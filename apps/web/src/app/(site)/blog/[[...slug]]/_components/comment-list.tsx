@@ -3,8 +3,8 @@
 import type { CommentWithMeta } from "@/app/(site)/blog/[[...slug]]/actions";
 import { CommentCard } from "@/app/(site)/blog/[[...slug]]/_components/comment-card";
 import { CricketDoodle } from "@/components/shared/doodles";
-import { EngagementEmptyState } from "@/components/engagement/empty-state";
-import { EngagementNudge } from "@/components/engagement/nudge";
+import { EngagementEmptyState } from "@repo/ui/blocks/empty-state";
+import { EngagementNudge } from "@repo/ui/blocks/nudge";
 import { PanelHeader } from "@/components/engagement/panel";
 import { PanelRow, panelListItem } from "@/components/layouts/page";
 import { ScrollArea } from "@repo/ui/components/scroll-area";
