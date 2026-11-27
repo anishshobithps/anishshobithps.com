@@ -2,7 +2,14 @@
 
 import * as React from "react";
 import { XIcon } from "@repo/ui/icons";
-import { Dialog as DialogPrimitive, DialogBackdrop, DialogClose as DialogClosePrimitive, DialogContent as DialogContentPrimitive, DialogDescription as DialogDescriptionPrimitive, DialogTitle as DialogTitlePrimitive } from "@ui-sdk/react/dialog";
+import {
+  Dialog as DialogPrimitive,
+  DialogBackdrop,
+  DialogClose as DialogClosePrimitive,
+  DialogContent as DialogContentPrimitive,
+  DialogDescription as DialogDescriptionPrimitive,
+  DialogTitle as DialogTitlePrimitive,
+} from "@ui-sdk/react/dialog";
 
 import { cn } from "@repo/ui/lib/cn";
 import { Button } from "@repo/ui/components/button";
@@ -128,4 +135,4 @@ export {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  };
+};

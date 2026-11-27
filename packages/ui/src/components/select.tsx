@@ -2,7 +2,15 @@
 
 import * as React from "react";
 import { CheckIcon, CaretDownIcon } from "@repo/ui/icons";
-import { Select as SelectPrimitive, SelectContent as SelectContentPrimitive, SelectItem as SelectItemPrimitive, SelectItemIndicator, SelectTrigger as SelectTriggerPrimitive, SelectValue as SelectValuePrimitive, type SelectProps } from "@ui-sdk/react/select";
+import {
+  Select as SelectPrimitive,
+  SelectContent as SelectContentPrimitive,
+  SelectItem as SelectItemPrimitive,
+  SelectItemIndicator,
+  SelectTrigger as SelectTriggerPrimitive,
+  SelectValue as SelectValuePrimitive,
+  type SelectProps,
+} from "@ui-sdk/react/select";
 
 import { cn } from "@repo/ui/lib/cn";
 

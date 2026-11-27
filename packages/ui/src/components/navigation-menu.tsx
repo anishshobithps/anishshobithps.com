@@ -1,7 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { NavigationMenu as NavigationMenuPrimitive, NavigationMenuItem as NavigationMenuItemPrimitive, NavigationMenuLink as NavigationMenuLinkPrimitive, NavigationMenuList as NavigationMenuListPrimitive } from "@ui-sdk/react/navigation-menu";
+import {
+  NavigationMenu as NavigationMenuPrimitive,
+  NavigationMenuItem as NavigationMenuItemPrimitive,
+  NavigationMenuLink as NavigationMenuLinkPrimitive,
+  NavigationMenuList as NavigationMenuListPrimitive,
+} from "@ui-sdk/react/navigation-menu";
 
 import { cn } from "@repo/ui/lib/cn";
 
