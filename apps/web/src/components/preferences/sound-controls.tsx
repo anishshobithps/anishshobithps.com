@@ -9,7 +9,7 @@ import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@ui-sdk/react/tooltip";
 import type { ComponentProps } from "react";
 
-export function setSoundOn(next: boolean) {
+function setSoundOn(next: boolean) {
   if (next) void enableSound();
   else disableSound();
 }
