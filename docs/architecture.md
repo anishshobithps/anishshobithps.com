@@ -4,144 +4,129 @@ license: CC-BY-NC-ND-4.0
 
 # Architecture
 
-What's in the site, where it lives, and how a request moves through it.
+What's in the site, where it lives, how a request moves, what's stored, and the owner-only admin.
 
 ## Stack
 
-- Next.js (App Router, Turbopack), React, and TypeScript, with Tailwind CSS 4 and shadcn-style primitives in `packages/ui/src/components/`.
-- Posts are MDX, loaded through [fumadocs](https://fumadocs.dev) (`fumadocs-mdx`, `fumadocs-core`).
-- Postgres on Neon, through Drizzle.
-- Clerk for sign-in, with TanStack Query for optimistic updates on the client.
-- OpenGraph images and the `/svg` cards are rendered with [takumi](https://github.com/kane50613/takumi), not Satori.
-- Vitest for tests, pnpm for packages, deployed on Vercel.
+- Next.js (App Router, Turbopack), React, TypeScript, and Tailwind CSS 4.
+- Primitives in `packages/ui/src/components/`, built on [ui-sdk](https://ui-sdk.dev) and styled with shadcn tokens.
+- Posts are MDX, loaded through [fumadocs](https://fumadocs.dev).
+- Postgres on Neon through Drizzle, and Clerk for sign-in, with TanStack Query for optimistic updates.
+- OG images and the `/svg` cards are rendered with [takumi](https://github.com/kane50613/takumi).
+- Environment variables are checked by varlock. Deployed on Vercel.
 
 ## Routes
 
 | Route | What it does |
 | --- | --- |
-| `/` | Hero with doodles, project teasers, latest post, guestbook rotator |
-| `/blogs`, `/blog/*` | MDX posts, printed covers, reading time, anonymous reactions, view counts, threaded comments |
-| `/projects` | Pulled from the database, not a hardcoded array. Ordered and toggled from the admin |
-| `/resume` | PDF rendered inline with react-pdf, streamed from the latest GitHub release. `/api/resume/download` saves it |
-| `/guestbook` | Clerk-authenticated messages with likes, pinning, and soft delete |
-| `/branding` | Type scale, logo downloads (SVG or PNG, 16 to 512 px), the doodle set, and a live OG preview |
+| `/` | Hero, project teasers, latest post, guestbook rotator |
+| `/blogs`, `/blog/*` | MDX posts with covers, reading time, reactions, view counts, and threaded comments |
+| `/projects` | Projects from the database, ordered from the admin |
+| `/resume` | The PDF from the latest GitHub release, rendered inline. `/api/resume/download` saves it |
+| `/guestbook` | Signed-in messages with likes, pinning, and soft delete |
+| `/branding` | Type scale, logo downloads, the doodle set, and a live OG preview |
 | `/privacy-policy` | What gets stored, where, and why |
-| `/admin/*` | Owner-only dashboard. See [Admin](admin.md) |
-| `/og` | Generated OpenGraph cards with the isometric mascot |
-| `/svg` | SVG cards for GitHub READMEs. See [SVG cards](svg-cards.md) |
-| `/blogs/latest` | Redirects to the newest post, so a README link always matches the post card |
-| `/feed.xml` | RSS 2.0 feed of every post, linked from page metadata for autodiscovery |
-| `/llms.txt` | Machine-readable site summary. Every post also serves raw MDX at `/blog/<slug>.mdx` |
-| `/sitemap.xml`, `/robots.txt` | The sitemap is built from the post source, so new posts show up without touching it |
-| `/<slug>`, `/<tag>/<slug>` | Short-link resolver with click counts. See [Short links](short-links.md) |
-| `/api/webhooks/clerk` | Receives Clerk's `user.deleted` event and removes that user's rows |
-| `/api/c15t/*` | The self-hosted consent backend. See [Analytics and consent](analytics.md#consent) |
-| `/stats/*`, `/relay/*` | Rewrites to Umami and PostHog, so analytics stay on this domain |
+| `/admin/*` | The owner-only dashboard, below |
+| `/og`, `/svg` | Link-preview images, and cards for GitHub READMEs. See [Design](design.md#svg-cards) |
+| `/blogs/latest` | Redirects to the newest post |
+| `/feed.xml`, `/sitemap.xml`, `/robots.txt`, `/llms.txt` | Feeds and summaries. Every post also serves raw MDX at `/blog/<slug>.mdx` |
+| `/<slug>`, `/<tag>/<slug>` | Short links, below |
+| `/api/webhooks/clerk` | Removes a deleted Clerk user's rows |
+| `/api/c15t/*` | The consent backend. See [Analytics and consent](analytics.md) |
+| `/stats/*`, `/relay/*` | Rewrites to Umami and PostHog |
 
-On every page:
-
-- <kbd>⌘</kbd> <kbd>K</kbd> (or <kbd>Ctrl</kbd> <kbd>K</kbd>) opens a command palette for navigation, theme switching, the resume, socials, and the sound toggle. <kbd>⇧</kbd> <kbd>⌘</kbd> <kbd>D</kbd> flips the theme without opening anything.
-- A floating quick menu, fronted by the logo mascot. On a post it shows reading progress and jumps to the comments. On `/resume` it downloads the PDF. On the blog and guestbook it holds the sign-in pass. It also holds the sound settings. Drag it anywhere and it remembers the spot.
-- The footer shows what I'm listening to on Spotify, refreshed every minute through the server.
-- Optional UI sounds, off until a visitor turns them on. See [Sound](sound.md).
-- A consent banner where the law asks for one, and "Privacy settings" in the footer and command palette. See [Analytics and consent](analytics.md).
+Every page also has a command palette (<kbd>⌘</kbd> <kbd>K</kbd>), a draggable quick menu fronted by the mascot, Spotify's now playing in the footer, opt-in UI sounds, and the consent banner where the law asks for one.
 
 ## How a request moves
 
-1. **`apps/web/src/proxy.ts`** sees every request first. On the main domain it hands off to Clerk's middleware. If `SHORTLINK_DOMAIN` is set and the request arrives on that host, Clerk is skipped. Slugs pass through, and anything that belongs to the main site is redirected to the main domain with a 308. The list of main-site paths is in `packages/core/src/reserved-segments.ts`.
-2. **`apps/web/src/instrumentation-client.ts`** starts PostHog before hydration in production builds. **`apps/web/src/app/layout.tsx`** sets up the fonts, theme (next-themes), URL state (nuqs), TanStack Query, tooltips, the icon provider, the analytics context, the consent root with its banner and dialog, the command menu, the sound effects, and the toaster.
-3. **`apps/web/src/app/(site)/layout.tsx`** wraps the public pages in `ClerkProvider`, the header, the footer, the floating quick menu, and the page shell. **`apps/web/src/app/admin/layout.tsx`** has its own gate and sidebar.
-4. **Pages** read from Postgres or the MDX source. Reads that can fail go through `safeQuery` (`apps/web/src/lib/safe-query.ts`), which logs the error and returns a fallback, so a database hiccup degrades a number instead of breaking a page.
-5. **Mutations** are server actions in `actions.ts` files next to the pages. They check identity, write, and `revalidatePath` the affected page. The client updates optimistically and rolls back if the action reports a failure.
+1. **`apps/web/src/proxy.ts`** runs Clerk's middleware. On the short-link domain it skips Clerk and redirects anything that belongs to the main site.
+2. **`apps/web/src/instrumentation-client.ts`** starts PostHog before hydration in production. **`app/layout.tsx`** sets up fonts, the theme, icons, analytics context, the consent root, the command menu, sounds, the toaster, and the WebMCP agent bridge.
+3. **`app/(site)/layout.tsx`** adds Clerk, the header, the footer, and the quick menu. **`app/admin/layout.tsx`** has its own gate and sidebar.
+4. **Pages** read from Postgres or the MDX source. Reads that can fail go through `safeQuery`, so a database hiccup degrades a number instead of breaking the page.
+5. **Mutations** are server actions in `actions.ts` files next to their pages. They check identity, write, and revalidate. The client updates optimistically and rolls back on failure.
 
-## Data and caching
-
-| Data | Where it comes from | Cache |
+| Data | From | Cache |
 | --- | --- | --- |
-| Now playing | Spotify Web API, server side | `unstable_cache`, 60 seconds |
-| Resume PDF | The latest GitHub release behind `siteConfig.resumeURL` | `fetch` revalidates every hour, tagged `resume-pdf`. The admin can clear it |
-| Projects | Postgres | `unstable_cache` tagged `public-projects`, cleared by admin edits |
-| Repo card | GitHub API, server side | Cached on the server |
-| `/svg` card data | GitHub, WakaTime, Open-Meteo, Postgres | Per-loader `unstable_cache`. See [SVG cards](svg-cards.md) |
-| Posts | `apps/web/content/blog` through fumadocs | Built at build time |
-| Admin analytics | PostHog's query API and Postgres | PostHog queries cached for five minutes, tagged `admin-analytics` |
+| Now playing | Spotify, on the server | 60 seconds |
+| Resume PDF | The latest release behind `siteConfig.resumeURL` | An hour, tagged `resume-pdf`, clearable from the admin |
+| Projects | Postgres | Tagged `public-projects`, cleared by admin edits |
+| `/svg` card data | GitHub, WakaTime, Open-Meteo, Postgres | Per loader |
+| Posts | `apps/web/content/blog` | Built at build time |
+| Admin analytics | PostHog's query API and Postgres | Five minutes, tagged `admin-analytics` |
 
-Everything the browser needs from a third party goes through this site. Spotify, GitHub, and the resume are fetched on the server, and fonts are self-hosted. [Deployment](deployment.md) lists the few exceptions the CSP allows.
-
-## Project layout
+## Layout
 
 ```
-apps/web/              the Next.js app
-  content/blog/        MDX posts, the only place posts live
-  public/              static files and fonts
-  scripts/             one-off tsx scripts (seeding, Spotify token)
-  tests/               vitest, node environment
-  .env.schema          every environment variable, checked by varlock
+apps/web/
+  content/blog/      MDX posts
+  scripts/           seeding, the Spotify token, cursors, icons
+  tests/             vitest
+  .env.schema        every environment variable
   src/
-    proxy.ts           Clerk middleware and short-link domain routing
-    instrumentation-client.ts  starts PostHog before hydration
-    app/(site)/        public pages
-    app/admin/         owner-only dashboard
-    app/api/           resume proxy, Clerk webhook, and the c15t consent backend
-    app/[...link]/     short-link resolver (catch-all, keep it last)
-    app/og/            OpenGraph image route
-    app/svg/           SVG card route and the dev-only /svg/preview
-    components/
-      shared/          header, footer, quick menu, command palette, doodles, logo and mascot, OG card
-      engagement/      comment and guestbook panels
-      consent/         consent banner, preferences dialog, and settings link
-      layouts/         page, blog, and hero shells
-    hooks/             client hooks (draggable, engagement anchor, ...)
-    lib/               everything not React that belongs to the app
-    lib/svg/           SVG card templates, loaders, and the post data they read
-    lib/analytics/     PostHog init, the typed event catalog, and server-side capture
-    lib/admin-analytics/  the queries behind the admin's analytics pages
-    lib/consent/       the c15t backend config and policy
-  c15t.config.ts       consent client config: mode, copy, and the PostHog consent hook
-packages/              the workspace packages, listed below
-docs/                  these pages
-.github/               CI workflow and the README artwork
+    proxy.ts
+    app/(site)/      public pages
+    app/admin/       the dashboard
+    app/api/         resume, Clerk webhook, consent backend
+    app/[...link]/   short-link resolver, kept last
+    app/og/, app/svg/
+    components/      header, footer, quick menu, engagement, consent, preferences
+    lib/             everything not React: admin, analytics, consent, svg, remark plugins
+packages/
+  core/              pure TypeScript: text, dates, numbers, IP hashing, schemas, site config, the store
+  db/                Drizzle schema, client, and committed migrations
+  sounds/            the sound engine, cues, and preferences
+  ui/                components, blocks, brand, art, cards, icons, hooks, styles
+  eslint-config/, tsconfig/, vitest-config/
 ```
 
-Imports never use relative paths. ESLint enforces this with `no-restricted-imports`. Inside `apps/web`, use the `@/*` alias for `apps/web/src/*`, or `@scripts/*` for `apps/web/scripts/*`. Inside a package, import by the package's own name, such as `@repo/ui/lib/cn`, which resolves through that package's `exports`. The `.source/` folder is generated by `fumadocs-mdx` and git-ignored.
+Every package is private and its `exports` point at source, so nothing builds per package. Inside `@repo/ui`, `components/` holds the primitives, and composed pieces live in `blocks/`, `brand/`, `art/`, and `cards/` so the lint rules only treat primitives as primitives.
 
-## Workspace
+## Database
 
-The repo is a pnpm workspace run by Turborepo. Every package is private and just-in-time: its `exports` point at TypeScript source, so there is no per-package build and Next compiles them with the app.
+The schema is [`packages/db/src/schema.ts`](../packages/db/src/schema.ts).
 
-| Package | Path | Purpose | Depends on |
-| --- | --- | --- | --- |
-| `@repo/core` | `packages/core` | Pure TypeScript: text, date, xml, pagination, schemas, plus the site config (name, links) and the env schema it needs | none |
-| `@repo/db` | `packages/db` | Drizzle schema, client, and committed migrations | none |
-| `@repo/eslint-config` | `packages/eslint-config` | Shared ESLint config with the shadcn rules | none |
-| `@repo/sounds` | `packages/sounds` | Sound engine, player, cues, preferences, and the palette | none |
-| `@repo/tsconfig` | `packages/tsconfig` | Base, Next, and library tsconfig presets | none |
-| `@repo/ui` | `packages/ui` | Everything visual: primitives, art, cards, icons, and tokens (modules below) | core |
-| `@repo/vitest-config` | `packages/vitest-config` | Shared Vitest config | none |
+| Table | Holds |
+| --- | --- |
+| `blog_posts` | One row per slug, created when first needed |
+| `blog_reads`, `blog_reactions` | A read, or a mood, per post and IP hash |
+| `blog_comments`, `blog_comment_likes` | Comments and replies with pin and soft-delete flags, and likes by Clerk user |
+| `guestbook_entries`, `guestbook_likes` | Entries with pin and soft-delete flags, and likes by Clerk user |
+| `projects` | Title, description, highlights, links, `enabled`, `sort_order` |
+| `links`, `link_slugs` | A short link's target, preview fields, and click count, and the paths that resolve to it |
 
-### Inside `@repo/ui`
+Deletes cascade: a post takes its reads, reactions, and comments, and a link takes its slugs. Names, emails, and avatars stay in Clerk and are fetched at render.
 
-Each folder under `packages/ui/src` is one module, imported by its path:
+**Anonymous identity.** Reads and reactions are unique per visitor without knowing who they are. `getClientIp` in [`packages/core/src/ip.ts`](../packages/core/src/ip.ts) takes the first valid address from Vercel's forwarding headers, and `hashIp` stores the SHA-256 of `ip:IP_HASH_SALT`. The raw address is never written, and a missing salt throws. Picking the same mood again deletes the row.
 
-| Module | Import | What it holds |
-| --- | --- | --- |
-| `components/` | `@repo/ui/components/button` | shadcn primitives, Typography, and the site's shared components: the media player (Video.js for playback, fullscreen, hotkeys and auto-hide; ui-sdk for the controls agents can drive), the PDF viewer (react-pdf with a ui-sdk toolbar), the sortable table header, signature, and location tag |
-| `blocks/` | `@repo/ui/blocks/reveal`, `@repo/ui/blocks/chips-combobox` | Composed pieces the app shares: reveal-on-scroll, the chips combobox, avatar, empty state, nudge, panel card, expandable text. Kept out of `components/` so the shadcn lint rules treat only primitives as primitives |
-| `brand/` | `@repo/ui/brand/logo-mascot` | The logo icon, mascot, loader, and the platform logos |
-| `motion/` | `@repo/ui/motion/flicker-text` | Text and cursor effects: flicker text, mouse glow, offscreen animation pausing |
-| `art/` | `@repo/ui/art/page-art`, `@repo/ui/art/print`, `@repo/ui/art/scenes/branding` | The whole art system: the components that draw it (`IsoArt`, `IsoStage`, `IsoMotion`, `PageArt`, `StripArt`, `BlogCover`, `GitChaos`, `HeroWithArt`/`ArtStage`, inline art, band doodle), the two-plate print engine (`geometry`, `figure`, `print`, `classes`, `animation`), and every scene. Kept out of `components/` so the shadcn lint rules treat only primitives as primitives |
-| `cards/` | `@repo/ui/cards/render` | Fonts, palette, primitives, params, templates, and the renderer for the /svg and OG cards |
-| `icons/` | `@repo/ui/icons` | The green-glass Phosphor icons and brand logos; `icons/generated.tsx` is written by `pnpm --filter web icons` |
-| `styles/` | `@repo/ui/styles/tokens.css`, `@repo/ui/styles/theme-tokens` | Design tokens and their server-side resolver; `pnpm --filter @repo/ui generate` rebuilds `tokens.generated.ts` |
-| `hooks/`, `lib/` | `@repo/ui/hooks/use-virtual-list`, `@repo/ui/lib/cn` | UI hooks and helpers |
+**Consent records** live in their own `c15t` schema, created by `pnpm db:consent:migrate`. Drizzle only reads `public`, so it never sees them. Neon's pooled host refuses the `search_path` they need, so these use the direct host.
 
-Commands run through Turborepo from the root: `pnpm dev`, `pnpm build`, `pnpm turbo run types:check test`, and `pnpm lint:ws` (sherif) for dependency consistency. Lint config, tsconfig, and Vitest config come from the three tooling packages, so a rule changes in one place.
+**Migrations** are committed SQL in `packages/db/drizzle/`. To change the schema, edit `schema.ts`, run `pnpm exec drizzle-kit generate`, read and commit the SQL with `drizzle/meta/`, then run `pnpm db:migrate` against development and then production. The build never migrates.
 
-## Things worth knowing
+## Short links
 
-- Reactions and view counts are anonymous, with no account needed. Identity is a SHA-256 of `ip:IP_HASH_SALT` (`apps/web/src/lib/ip.ts`), giving one row per post per hash. The raw IP is never stored. See [Database](database.md).
-- Comments and the guestbook need Clerk. Deleting a Clerk account removes that user's rows through the webhook.
-- Projects, links, and engagement live in Postgres, and posts live in `apps/web/content/blog`. Nothing is hardcoded that shouldn't be.
-- Analytics never leave this domain from the browser. Umami goes through `/stats`, PostHog through `/relay`, and PostHog waits for consent where the law asks for it. See [Analytics and consent](analytics.md).
-- The artwork is authored in code rather than imported as raster exports. The isometric scenes, blog covers, doodles, mascot, and OG card are SVG drawn in TypeScript and TSX, coloured from the same CSS tokens as the rest of the UI, and they respect `prefers-reduced-motion`. See [The art](art.md).
-- The build never migrates the database. Schema changes are applied by hand. See [Database](database.md#migrations).
+Any unclaimed path can be a short link, resolved by `app/[...link]/page.tsx` as `/<slug>` or `/<tag>/<slug>`. A link has one primary slug and up to 24 aliases, all lowercase letters, numbers, and single dashes. Targets are `http(s)` or `mailto:` URLs.
+
+- With no title, description, or OG, it redirects straight away, temporary or permanent.
+- With any of those, it renders a `noindex` preview page with Open Graph tags for unfurling, then redirects in the browser.
+- Clicks are counted in `after()`, and only the counter is stored.
+
+Slugs can't take a path the site owns. The list is [`packages/core/src/reserved-segments.ts`](../packages/core/src/reserved-segments.ts), so add every new top-level route there.
+
+`SHORTLINK_DOMAIN` serves the same links from a shorter domain. The proxy resolves slugs on that host without Clerk and 308s everything else to the main domain. Add the domain to the same Vercel project.
+
+## Admin
+
+`/admin` is gated on `OWNER_CLERK_USER_ID`. Signed-out visitors go to sign-in, and anyone else sees an unauthorized page. Every admin action also calls `assertAdmin()` through `adminMutation`, so calling an action directly doesn't get around the gate.
+
+| Page | What it does |
+| --- | --- |
+| `/admin` | Visitors, views, readers, conversations, link clicks, top pages and posts, and the resume cache button |
+| `/admin/behavior` | PostHog: sessions, frustrated clicks, errors, web vitals, events, referrers, devices |
+| `/admin/content` | Database: readers, reactions, comments, signatures, and likes per day, and every post's numbers |
+| `/admin/guestbook`, `/admin/comments` | Search, pin, and delete |
+| `/admin/projects` | Create, edit, enable, reorder, and delete projects |
+| `/admin/links` | Create, edit, enable, and delete short links and aliases |
+
+The analytics pages share a 7, 30, or 90 day range in `?range=`, each compared with the period before. Umami's numbers stay in Umami, because its API needs a paid plan.
+
+Deleting hides an entry or comment and keeps the row, so replies stay attached. Visitors can delete their own, and the owner can delete and pin anyone's. A deleted Clerk account loses its rows for good through the webhook.

@@ -4,90 +4,106 @@ license: CC-BY-NC-ND-4.0
 
 # Development
 
-Day-to-day commands, the checks that run, and the rules the code follows.
+Run the site locally, the checks it has to pass, and the rules the code follows.
+
+## Requirements
+
+- Node 24 or newer, and pnpm 11. The repo pins `packageManager`, so `corepack enable` is enough.
+- A Postgres database on [Neon](https://neon.tech). The client uses Neon's serverless HTTP driver, so a plain local Postgres won't connect.
+- A [Clerk](https://clerk.com) application. It powers sign-in, the guestbook, comments, and the admin.
+
+Spotify, WakaTime, a GitHub token, Umami, and PostHog are optional.
+
+## First run
+
+```bash
+pnpm install
+pnpm --filter web exec varlock load
+pnpm db:migrate
+pnpm db:consent:migrate
+pnpm dev
+```
+
+Create `apps/web/.env.local` before the migrations, which need `DATABASE_URL`. `pnpm install` also runs `fumadocs-mdx`, which generates the `.source/` folder the blog reads from. Only one `next dev` can run per project, because Next takes a lock.
+
+## Environment variables
+
+[varlock](https://varlock.dev) checks `apps/web/.env.local` against [`apps/web/.env.schema`](../apps/web/.env.schema), which imports the schemas in `packages/core` and `packages/db`. The schema is the full list, with each variable's format and whether it is secret. `varlock load` names anything missing or malformed, and `pnpm dev` and the build stop for the same reason.
+
+Six are required: `DATABASE_URL`, `IP_HASH_SALT`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`, and `OWNER_CLERK_USER_ID`. A few that need explaining:
+
+- `IP_HASH_SALT` is any long random string. Treat it as permanent: changing it makes every past reader count as new.
+- `OWNER_CLERK_USER_ID` is the one Clerk user who gets `/admin`. There is no role system.
+- `NEXT_PUBLIC_BASE_URL` falls back to Vercel's production URL, then `http://localhost:3000`.
+- `POSTHOG_PERSONAL_API_KEY` needs the Query: Read scope, limited to the site's project. Without it the admin's PostHog panels say so and the rest works.
+- `C15T_DATABASE_URL` is optional. The consent backend otherwise uses the direct host of `DATABASE_URL`.
+
+### Clerk
+
+1. Create an application and turn on the providers you want. The privacy policy lists GitHub, Google, and Discord, so edit it if yours differ.
+2. Copy the publishable and secret keys into `.env.local`.
+3. Sign in once and copy your user ID into `OWNER_CLERK_USER_ID`.
+4. Add a webhook at `https://<your-domain>/api/webhooks/clerk` for `user.deleted`, and copy its signing secret into `CLERK_WEBHOOK_SECRET`. When an account is deleted it removes that user's entries, comments, and likes. Clerk can't reach `localhost`, so skip it locally or use a tunnel.
+
+### Spotify
+
+1. Create an app in the [Spotify dashboard](https://developer.spotify.com/dashboard) and register `http://127.0.0.1:3000` as a redirect URI.
+2. Put the client ID and secret in `.env.local`.
+3. Run `pnpm spotify:token`, open the URL it prints, and approve. The redirect page won't load, which is expected. Paste the `code` from its URL into the prompt.
+4. Put the refresh token it prints in `SPOTIFY_REFRESH_TOKEN`.
 
 ## Commands
 
 ```bash
-pnpm dev          # dev server, http://localhost:3000
-pnpm build        # turbo run build
-pnpm start        # production server
-pnpm types:check  # every workspace; the app runs fumadocs codegen and next typegen first
-pnpm lint         # ESLint
-pnpm test         # Vitest, once
-pnpm test:watch   # Vitest, watching
-pnpm knip         # unused code and dependency check
-pnpm lint:ws       # sherif: dependency versions line up across the workspace
+pnpm dev
+pnpm build
+pnpm turbo run types:check test
+pnpm lint
+pnpm knip
+pnpm lint:ws
 
-pnpm db:migrate   # apply committed migrations
-pnpm db:push      # push the schema directly (dev only, skips migrations)
-pnpm db:studio    # Drizzle Studio
-pnpm db:consent:plan     # read-only plan for the c15t consent tables
-pnpm db:consent:migrate  # create or upgrade the c15t consent tables
+pnpm db:migrate
+pnpm db:push
+pnpm db:studio
+pnpm db:consent:plan
+pnpm db:consent:migrate
 
-pnpm db:seed:guestbook          # seed fake guestbook entries
-pnpm db:seed:guestbook:cleanup  # remove the seeded entries
-pnpm db:seed:links              # seed short links
-pnpm spotify:token              # get a Spotify refresh token
+pnpm db:seed:links
+pnpm db:seed:guestbook --count 40
+pnpm db:seed:guestbook:cleanup
+pnpm spotify:token
 ```
 
-The database and seed commands need `apps/web/.env.local`. See [Getting started](getting-started.md).
+`next dev` and `next build` write to separate folders, so you can build while the dev server runs. `db:push` skips migrations and is for throwaway databases only.
 
-`next dev` and `next build` use separate output folders (`.next/dev` and `.next`), so you can build while the dev server is running.
+`db:seed:links` skips slugs that already exist, and its targets are mine, so edit `apps/web/scripts/seed-links.ts` on a fork. `db:seed:guestbook` creates real users in whichever Clerk instance `CLERK_SECRET_KEY` belongs to, so use a development instance. The cleanup deletes the users it recorded in `apps/web/scripts/.seed-guestbook-ids.json`.
 
 ## Checks
 
-### Types
+CI ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)) runs sherif, then `pnpm turbo run types:check test`, on every push to `main` and every pull request.
 
-`pnpm types:check` is the one that matters most. It regenerates the MDX collections and route types first, so it also catches a post with broken frontmatter and a link to a route that doesn't exist (`typedRoutes` is on).
-
-### Tests
-
-Vitest, in a Node environment, running `apps/web/tests/**/*.test.ts`. The tests cover pure logic and contracts rather than rendered pages: date and text helpers, IP hashing and header parsing, pagination, the short-link schema, theme tokens, the `/svg` route and its loaders, XML escaping, inline-script escaping, and the sound preference store and player.
-
-Path aliases work in tests, so import from `@/lib/...` like the app does. For code that touches `window` or `localStorage`, stub the globals with `vi.stubGlobal` and re-import the module after `vi.resetModules()` so module state starts fresh. `packages/sounds/tests/sound-preferences.test.ts` is a worked example.
-
-### Lint
-
-`pnpm lint` runs ESLint 10 with Next's `core-web-vitals` config and the `@shadcn/lint` rules on `apps/web/src/**`:
-
-- `no-restyle`: a shadcn component owns its colour, spacing, shape, and typography. Pick a variant or size instead of passing classes that fight it. Layout classes are allowed.
-- `no-raw-colors`, `no-arbitrary-values`, `no-inline-styles`, `no-unknown-classes`, `require-static-classes`: use tokens and static class names.
-- Raw `<button>`, `<input>`, `<select>`, `<textarea>`, `<label>`, `<hr>`, `<kbd>`, `<dialog>`, `<details>`, `<summary>`, and table elements are banned in TSX. Use the components in `packages/ui/src/components/`.
-
-The shadcn primitives in `packages/ui/src/components/`, plus `hooks/`, `lib/`, and `styles/`, are exempt from the restyle rules, and a few files that render without Tailwind (the OG card, the `/svg` templates, the generated icons) are exempt from the class rules. The shared config is in `packages/eslint-config`.
-
-ESLint is on 10. `eslint-plugin-import`, `eslint-plugin-jsx-a11y` and `eslint-plugin-react` have not widened their peer ranges yet, so `pnpm-workspace.yaml` allows ESLint 10 for them. Lint is not part of CI because the codebase still has existing violations, so a red `pnpm lint` isn't necessarily yours. Compare against `main`, and keep the files you touch clean.
-
-### Knip
-
-`pnpm knip` finds unused files, exports, and dependencies. [`knip.config.mjs`](../knip.config.mjs) lists what it can't see, like MDX-only components and the fumadocs config. If you add something that's reached only from MDX or a generated file, add it there.
-
-### CI
-
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs `pnpm types:check` and `pnpm test` on every push to `main` and every pull request, with a read-only token. Lint and knip are local only.
+- **Types.** The app's `types:check` regenerates the MDX collections and route types first, so it also catches broken frontmatter and links to routes that don't exist (`typedRoutes` is on).
+- **Tests.** Vitest in two projects: `apps/web/tests/**/*.test.ts` runs in Node, and `*.test.tsx` runs in jsdom with Testing Library. Path aliases work, so import from `@/...` like the app does. For code that touches `window` or `localStorage`, stub with `vi.stubGlobal` and re-import after `vi.resetModules()`.
+- **Lint.** ESLint 10 with Next's `core-web-vitals` config and the `@shadcn/lint` rules: a primitive owns its colour, spacing, shape, and type, so pick a variant instead of overriding it, and use tokens and static class names. Raw `<button>`, `<input>`, `<dialog>`, table elements and the like are banned in TSX. Lint isn't in CI because older violations remain, so compare against `main` and keep the files you touch clean.
+- **Knip.** [`knip.config.mjs`](../knip.config.mjs) lists what it can't see, like MDX-only components. Add an entry when something is reached only from MDX or a generated file.
 
 ## Conventions
 
-- **Text uses the Typography components.** `Text`, `TypographyMuted`, `TypographySmall`, the heading components, and the rest in `packages/ui/src/components/typography.tsx`. Not raw `<p>`, `<span>`, or `<small>`. Use `asChild` when text has to be another element, like an `<a>`.
-- **Forms use the shadcn `Form`** (`packages/ui/src/components/form.tsx`, react-hook-form underneath) rather than hand-wired `useState`. With zod 4, resolve with `standardSchemaResolver` from `@hookform/resolvers/standard-schema`, because `zodResolver` has a type mismatch with `@hookform/resolvers` 5.
-- **Icons come from `@repo/ui/icons`**, which renders the Phosphor icons the site uses as green glass. To add one, list it in `packages/ui/src/icons/index.tsx` and run `pnpm --filter web icons`.
-- **Class names merge through `cn`** from `@/lib/cn`.
-- **Server actions return an `ActionResult`** (`packages/core/src/action-result.ts`) instead of throwing, and client code runs them through `useActionMutation`, which turns failures into toasts. Admin mutations go through `adminMutation` so the owner check can't be forgotten.
-- **Reads that can fail use `safeQuery`**, so a database hiccup shows a fallback instead of an error page.
-- **New code has no comments.** Names and types carry the meaning.
+- **No relative imports.** Use `@/*` and `@scripts/*` in `apps/web`, and the package's own name inside a package, such as `@repo/ui/lib/cn`.
+- **Text goes through the Typography components** in `packages/ui/src/components/typography.tsx`, not raw `<p>` or `<span>`.
+- **Forms use the shadcn `Form`** with react-hook-form, resolved with `standardSchemaResolver` from `@hookform/resolvers/standard-schema`.
+- **Icons come from `@repo/ui/icons`.** To add one, list it in `packages/ui/src/icons/index.tsx` and run `pnpm --filter web icons`.
+- **Server actions return an `ActionResult`** (`packages/core/src/action-result.ts`) instead of throwing, and the client runs them through `useActionMutation`, which turns failures into toasts. Admin actions go through `adminMutation` in `apps/web/src/lib/admin.ts`.
+- **Reads that can fail use `safeQuery`**, which logs and returns a fallback.
+- **No code comments.**
 - **Commits are one-line conventional commits**, like `feat(links): add slug helper`.
 
-## Adding a UI component
+New primitives come from the shadcn CLI, configured in [`packages/ui/components.json`](../packages/ui/components.json). If it writes `import { cn } from "cn"`, change it to `@repo/ui/lib/cn`. Keep primitives generic and put site-specific styling in the component that uses them.
 
-The shadcn CLI is configured in [`components.json`](../components.json), with the default registry plus `@diceui`, `@jalco`, and `@soundcn`.
+## When something is off
 
-```bash
-pnpm exec shadcn add slider
-```
-
-The CLI may write `import { cn } from "cn"`. Change it to `@repo/ui/lib/cn` to match the rest of the code. New components land in `packages/ui/src/components/`, and they're exempt from the restyle lint rules, so keep the primitives generic and put site-specific styling in the component that uses them.
-
-## Browser support
-
-[`.browserslistrc`](../.browserslistrc) targets Chrome 96, Firefox 94, Safari 15, and Edge 96, or newer.
+- **`IP_HASH_SALT is not set`**: add it to `.env.local`.
+- **Types or MDX imports are missing**: run `pnpm types:check`, which regenerates `.source/` and the route types.
+- **A second `next dev` exits at once**: one is already running.
+- **"Can't resolve" a file that exists**: delete `apps/web/.next/cache` and restart.
+- **The resume doesn't update**: it is cached for an hour, and the admin overview has a button to clear it.

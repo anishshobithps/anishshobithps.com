@@ -162,7 +162,7 @@ Fork the machinery, not the words.
 - A fork that still contains Part II material unchanged may redistribute that material under CC BY-NC-ND 4.0, subject to its terms: non-commercially, with attribution, and without modification. The MIT-licensed portions of the fork remain governed by Part I.
 - A fork may not redistribute modified versions of the Part II material, and may not use anything in Part III as its own branding.
 
-In practice, remove or replace everything in Part II and Part III before you publish a site built from a fork. The README's "Forking" section has a checklist.
+In practice, remove or replace everything in Part II and Part III before you publish a site built from a fork. The checklist is in the Forking section of `docs/deployment.md`.
 
 ---
 

@@ -53,7 +53,7 @@ The site is the evidence. Its illustrations are drawn in code from real data, it
 - **Name and identity:** Anish Shobith P S, handle `n10nce`, domain anishshobithps.com, role "Software Developer". The name, domain, likeness, photograph, and brand identity are reserved; the logo, wordmark, and mascot are CC BY-NC-ND 4.0 artwork, not licensed as branding.
 - **Voice:** first person, dry, and self-deprecating, with plain claims. The anchor line is "I build interfaces and tooling, the occasional bot, and questionable automation scripts, mostly so I don't have to repeat myself." Small jokes are welcome ("Will ship for ice cream"); hype is not.
 - **Copy habits:** labels are worded so they need no "·" separator.
-- **Illustration language:** the owner chose a two-ink riso print language for all artwork; `docs/art.md` is binding for it. The previous tonal isometric machine look and dimension-drawing work were rejected and must not return.
+- **Illustration language:** the owner chose a two-ink riso print language for all artwork; the art section of `docs/design.md` is binding for it. The previous tonal isometric machine look and dimension-drawing work were rejected and must not return.
 - **Licensing is mixed by design:** code MIT, writing and art CC BY-NC-ND 4.0. See `LICENSE.md`.
 
 ## Evidence on Hand
