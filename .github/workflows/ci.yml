@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgres://ci-placeholder
-      CLERK_SECRET_KEY: ci-placeholder
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ci-placeholder
-      CLERK_WEBHOOK_SECRET: ci-placeholder
-      OWNER_CLERK_USER_ID: ci-placeholder
-      IP_HASH_SALT: ci-placeholder
+      CLERK_SECRET_KEY: sk_test_ci_secret
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ci_publishable
+      CLERK_WEBHOOK_SECRET: whsec_ci_webhook
+      OWNER_CLERK_USER_ID: user_ci_owner
+      IP_HASH_SALT: ci_ip_hash_salt
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
