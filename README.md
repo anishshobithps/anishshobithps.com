@@ -15,28 +15,6 @@
 
 Source code for [anishshobithps.com](https://anishshobithps.com): a portfolio, blog, and guestbook. Interfaces, bots, and questionable automation scripts, mostly so I don't have to repeat myself.
 
-<div align="center">
-
-[![GitHub Stars](https://www.shieldcn.dev/github/stars/anishshobithps/anishshobithps.com.svg?variant=secondary&size=sm)](https://github.com/anishshobithps/anishshobithps.com/stargazers) [![GitHub Forks](https://www.shieldcn.dev/github/forks/anishshobithps/anishshobithps.com.svg?variant=secondary&size=sm)](https://github.com/anishshobithps/anishshobithps.com/network/members) [![Last Commit](https://www.shieldcn.dev/github/last-commit/anishshobithps/anishshobithps.com.svg?variant=secondary&size=sm)](https://github.com/anishshobithps/anishshobithps.com/commits)
-
-[![License](https://www.shieldcn.dev/group/badge/Code-MIT-22C55E%2Bbadge/Writing_%26_art-CC_BY--NC--ND_4.0-F97316%2Bbadge/Brand-Reserved-71717A.svg?size=sm)](LICENSE.md)
-
-![Next.js](https://www.shieldcn.dev/badge/Next.js_16-000000.svg?logo=nextdotjs&logoColor=fff&variant=branded&size=sm) ![React](https://www.shieldcn.dev/badge/React_19-61DAFB.svg?logo=react&logoColor=000&variant=branded&size=sm) ![TypeScript](https://www.shieldcn.dev/badge/TypeScript-3178C6.svg?logo=typescript&logoColor=fff&variant=branded&size=sm) ![Tailwind CSS](https://www.shieldcn.dev/badge/Tailwind_CSS_4-06B6D4.svg?logo=tailwindcss&logoColor=fff&variant=branded&size=sm) ![Drizzle](https://www.shieldcn.dev/badge/Drizzle-C5F74F.svg?logo=drizzle&logoColor=000&variant=branded&size=sm) ![PostgreSQL](https://www.shieldcn.dev/badge/PostgreSQL-4169E1.svg?logo=postgresql&logoColor=fff&variant=branded&size=sm) ![pnpm](https://www.shieldcn.dev/badge/pnpm-F69220.svg?logo=pnpm&logoColor=fff&variant=branded&size=sm) ![ESLint](https://www.shieldcn.dev/badge/ESLint-4B32C3.svg?logo=eslint&logoColor=fff&variant=branded&size=sm)
-
-</div>
-
-> ### License at a glance
->
-> - **Functional code**, including the code examples in this README, the docs, and blog posts: MIT
-> - **Writing, original artwork, and creative copy**, including the prose in this README and in [`docs/`](docs/README.md): CC BY-NC-ND 4.0
-> - **Logo, wordmark, and mascot:** CC BY-NC-ND 4.0 as artwork, not licensed as branding
-> - **Name, domain, likeness, photograph, and brand identity:** reserved
-> - **Third-party material:** its original license
->
-> This repository is intentionally mixed-license, and so are this README and the docs. See [`LICENSE.md`](LICENSE.md) for the exact scope.
-
----
-
 ## What's in here
 
 - A portfolio and a blog. Posts are MDX with printed covers, reading time, anonymous reactions, view counts, and threaded comments.
@@ -54,17 +32,17 @@ The full route list is in [Architecture](docs/architecture.md#routes).
 
 ## Quick start
 
-Node 24+ and pnpm 11 (the repo pins `packageManager`, so `corepack enable` is enough).
+Node 24+ and pnpm 11 (`corepack enable` is enough).
 
 ```bash
 pnpm install
-pnpm --filter web exec varlock load   # checks apps/web/.env.local against the schema
-pnpm db:migrate         # applies the committed migrations in packages/db/drizzle/
-pnpm db:consent:migrate # creates the consent tables in the c15t schema
-pnpm dev                # http://localhost:3000
+pnpm --filter web exec varlock load
+pnpm db:migrate
+pnpm db:consent:migrate
+pnpm dev
 ```
 
-Create `apps/web/.env.local` first. [varlock](https://varlock.dev) checks it against `apps/web/.env.schema`, and six variables are required: `DATABASE_URL` (a [Neon](https://neon.tech) database), `IP_HASH_SALT`, and the [Clerk](https://clerk.com) keys, webhook secret, and owner ID. [Getting started](docs/getting-started.md) has the full variable list, the Clerk webhook, and the Spotify token script.
+Create `apps/web/.env.local` first. [varlock](https://varlock.dev) checks it against `apps/web/.env.schema`, and six variables are required: `DATABASE_URL` (a [Neon](https://neon.tech) database), `IP_HASH_SALT`, and the [Clerk](https://clerk.com) keys, webhook secret, and owner ID. [Development](docs/development.md) has the rest.
 
 ---
 
@@ -72,27 +50,12 @@ Create `apps/web/.env.local` first. [varlock](https://varlock.dev) checks it aga
 
 | | |
 | --- | --- |
-| [Getting started](docs/getting-started.md) | Requirements, environment variables, Clerk, Spotify, seeding |
-| [Architecture](docs/architecture.md) | Routes, request flow, caching, project layout |
-| [Database](docs/database.md) | Tables, anonymous identity hashing, migrations |
-| [Development](docs/development.md) | Commands, tests, lint, CI, and the conventions the code follows |
-| [Writing posts](docs/writing-posts.md) | Frontmatter, MDX components, covers, publishing |
-| [Admin](docs/admin.md) | Access, the analytics pages, moderation, projects, links, the resume cache |
-| [Analytics and consent](docs/analytics.md) | Umami, PostHog through `/relay`, the custom events, the c15t consent banner and backend |
-| [Short links](docs/short-links.md) | Shapes, previews, reserved paths, a second domain |
-| [SVG cards](docs/svg-cards.md) | The `/svg` endpoint, every template, how it's built |
-| [The art](docs/art.md) | The print engine, scenes, mascot, OG cards, colour tokens |
-| [Sound](docs/sound.md) | Opt-in UI sounds: principles, the sound map, adding a sound |
-| [Deployment](docs/deployment.md) | Vercel, Neon, Clerk, headers, the first-deploy checklist |
-| [Forking](docs/forking.md) | What a fork can keep and what to replace before going live |
-
----
-
-## Forking
-
-Fork the machinery, not the words. A fork can keep, modify, and redistribute the MIT code. It can't publish modified versions of the CC BY-NC-ND writing and art, and it can't use my name, logo, or mascot as its own branding. If a fork keeps any of that writing or art unmodified, CC BY-NC-ND 4.0 still applies to it. Forking doesn't turn it into MIT.
-
-The checklist of what to replace before a fork goes live is in [Forking](docs/forking.md).
+| [Development](docs/development.md) | Setup, environment variables, commands, checks, conventions |
+| [Architecture](docs/architecture.md) | Routes, request flow, layout, database, short links, admin |
+| [Writing posts](docs/writing.md) | Frontmatter, revisions, links, citations, covers, publishing |
+| [Design](docs/design.md) | The print art, the `/svg` cards, UI sounds |
+| [Analytics and consent](docs/analytics.md) | Umami, PostHog through `/relay`, events, the c15t banner |
+| [Deployment](docs/deployment.md) | Vercel, the first-deploy checklist, forking |
 
 ---
 
@@ -105,4 +68,4 @@ The checklist of what to replace before a fork goes live is in [Forking](docs/fo
   </picture>
 </p>
 
-Code is [MIT](LICENSE-MIT), including the code blocks in this README and in blog posts. The prose and artwork (including artwork drawn in code) are [CC BY-NC-ND 4.0](LICENSE-CC-BY-NC-ND). Some brand assets, like the logo and mascot, are also covered by that copyright license, but their use as a name, logo, identity, or endorsement is not licensed. [`LICENSE.md`](LICENSE.md) spells out where the line falls, how to attribute, and what a fork may keep. None of it licenses my name, likeness, or brand identity for use as your own.
+Code is [MIT](LICENSE-MIT), including the code blocks in this README, the docs, and blog posts. The prose and artwork, including artwork drawn in code, are [CC BY-NC-ND 4.0](LICENSE-CC-BY-NC-ND). The name, logo, mascot, likeness, and brand identity are not licensed for use as your own. [`LICENSE.md`](LICENSE.md) has the exact scope, and [Deployment](docs/deployment.md#forking) has the checklist for a fork.
